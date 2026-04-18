@@ -711,7 +711,7 @@
             "tipoDia": "SABADO_FESTIVO",
             "tramos": 
             [
-              { "inicio": "13:0:00", "fin": "15:00:00" },
+              { "inicio": "13:00:00", "fin": "15:00:00" },
               { "inicio": "20:00:00", "fin": "22:00:00" }
             ]
           },
