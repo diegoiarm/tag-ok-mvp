@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.tagok.routes_service.domain.dto.response.PorticoResponse;
 import com.tagok.routes_service.repository.PorticoRepository;
+import com.tagok.routes_service.service.mapper.PorticoMapper;
 
 import lombok.RequiredArgsConstructor;
 

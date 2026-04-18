@@ -1,4 +1,4 @@
-package com.tagok.routes_service.service;
+package com.tagok.routes_service.service.mapper;
 
 import java.util.stream.Collectors;
 
@@ -63,6 +63,7 @@ public class PorticoMapper
                 {
                     ReglaTemporal reglaTemporal = new ReglaTemporal();
                     reglaTemporal.setTipoTarifa(rt.getTipoTarifa());
+                    reglaTemporal.setTipoDia(rt.getTipoDia());
 
                     if (rt.getTramos() != null)
                     {
@@ -144,6 +145,7 @@ public class PorticoMapper
     {
         return ReglaTemporalResponse.builder()
             .tipoTarifa(regla.getTipoTarifa())
+            .tipoDia(regla.getTipoDia())
             .tramos(
                 regla.getTramos() != null
                     ? regla.getTramos().stream()

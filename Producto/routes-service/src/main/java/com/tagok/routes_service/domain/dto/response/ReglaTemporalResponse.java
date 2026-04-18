@@ -2,6 +2,7 @@ package com.tagok.routes_service.domain.dto.response;
 
 import java.util.List;
 
+import com.tagok.routes_service.domain.TipoDia;
 import com.tagok.routes_service.domain.TipoTarifa;
 
 import lombok.AllArgsConstructor;
@@ -16,5 +17,6 @@ import lombok.NoArgsConstructor;
 public class ReglaTemporalResponse 
 {
     private TipoTarifa tipoTarifa;
+    private TipoDia tipoDia;
     private List<RangoHorarioResponse> tramos;
 }

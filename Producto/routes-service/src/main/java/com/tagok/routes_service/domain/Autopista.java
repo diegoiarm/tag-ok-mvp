@@ -33,4 +33,16 @@ public class Autopista
     @Builder.Default
     @OneToMany(mappedBy = "autopista", cascade = CascadeType.ALL)
     private List<Portico> porticos = new ArrayList<>();
+
+    public void addPortico(Portico portico)
+    {
+        boolean existe = porticos.stream()
+            .anyMatch(p -> p.getCodigo().equals(portico.getCodigo()));
+
+        if (!existe) 
+        {
+            porticos.add(portico);
+            portico.setAutopista(this);
+        }
+    }
 }

@@ -35,6 +35,9 @@ public class ReglaTemporal
     @Enumerated(EnumType.STRING)
     private TipoTarifa tipoTarifa;
 
+    @Enumerated(EnumType.STRING)
+    private TipoDia tipoDia;
+
     @OneToMany(mappedBy = "regla", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RangoHorario> tramos = new ArrayList<>();
 

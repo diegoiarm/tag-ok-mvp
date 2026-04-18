@@ -1,8 +1,6 @@
 package com.tagok.routes_service.service;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -11,6 +9,8 @@ import com.tagok.routes_service.domain.Portico;
 import com.tagok.routes_service.domain.dto.request.AutopistaRequest;
 import com.tagok.routes_service.domain.dto.response.AutopistaResponse;
 import com.tagok.routes_service.repository.AutopistaRepository;
+import com.tagok.routes_service.service.mapper.AutopistaMapper;
+import com.tagok.routes_service.service.mapper.PorticoMapper;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,21 +29,11 @@ public class AutopistaService
         Autopista autopista = autopistaRepository.findByNombre(request.getAutopista())
                 .orElseGet(() -> autopistaMapper.fromRequest(request));
 
-        Set<String> codigosExistentes = autopista.getPorticos().stream()
-                .map(Portico::getCodigo)
-                .collect(Collectors.toSet());
-
-        List<Portico> porticosNuevos = request.getPorticos().stream()
-                .filter(pr -> !codigosExistentes.contains(pr.getCodigo()))
-                .map(pr -> 
-                {
-                    Portico portico = porticoMapper.fromRequest(pr);
-                    portico.setAutopista(autopista);
-                    return portico;
-                })
-                .toList();
-
-        autopista.getPorticos().addAll(porticosNuevos);
+        request.getPorticos().forEach(porticoRequest -> 
+        {
+            Portico portico = porticoMapper.fromRequest(porticoRequest);
+            autopista.addPortico(portico);
+        });
 
         Autopista autopistaGuardada = autopistaRepository.save(autopista);
         return autopistaMapper.toResponse(autopistaGuardada);

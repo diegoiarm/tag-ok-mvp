@@ -1,4 +1,4 @@
-package com.tagok.routes_service.service;
+package com.tagok.routes_service.service.mapper;
 
 import org.springframework.stereotype.Component;
 
@@ -18,7 +18,10 @@ public class AutopistaMapper
     {
         return Autopista.builder()
             .nombre(request.getAutopista())
-            .build();
+            .porticos(request.getPorticos().stream()
+                .map(porticoMapper::fromRequest)
+                .toList()
+            ).build();
     }
 
     public AutopistaResponse toResponse(Autopista autopista)
@@ -26,11 +29,9 @@ public class AutopistaMapper
         return AutopistaResponse.builder()
             .id(autopista.getId())
             .nombre(autopista.getNombre())
-            .porticos(
-                autopista.getPorticos().stream()
-                    .map(porticoMapper::toResponse)
-                    .toList()
-            )
-            .build();
+            .porticos(autopista.getPorticos().stream()
+                .map(porticoMapper::toResponse)
+                .toList()
+            ).build();
     }
 }
