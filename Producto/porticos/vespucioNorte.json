@@ -937,6 +937,7 @@
     },
     {
       "codigo": "PORTICO 101",
+      "sentido": "Sin Info",
       "latitud": -33.398589926,
       "longitud": -70.615818679,
       "reglas": [
@@ -957,6 +958,7 @@
     },
     {
       "codigo": "PORTICO 102",
+      "sentido": "Sin Info",
       "latitud": -33.398770704,
       "longitud": -70.615181819,
       "reglas": [

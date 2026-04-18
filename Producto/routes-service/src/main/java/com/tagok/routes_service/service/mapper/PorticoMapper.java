@@ -10,6 +10,7 @@ import com.tagok.routes_service.domain.Portico;
 import com.tagok.routes_service.domain.dto.request.PorticoRequest;
 import com.tagok.routes_service.domain.dto.response.CalendarioTarifarioResponse;
 import com.tagok.routes_service.domain.dto.response.PorticoResponse;
+import com.tagok.routes_service.domain.dto.response.PorticoResumenResponse;
 import com.tagok.routes_service.domain.dto.response.ReglaTarifariaResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -53,14 +54,30 @@ public class PorticoMapper
 
     public PorticoResponse toResponse(Portico portico) 
     {
+        String nombreAutopista = null;
+        if (portico.getAutopista() != null)
+                nombreAutopista = portico.getAutopista().getNombre();
+
         return PorticoResponse.builder()
                 .id(portico.getId())
                 .codigo(portico.getCodigo())
                 .sentido(portico.getSentido())
                 .latitud(portico.getLatitud())
                 .longitud(portico.getLongitud())
+                .autopista(nombreAutopista)
                 .reglas(mapReglasToResponse(portico))
                 .calendario(mapCalendarioToResponse(portico))
+                .build();
+    }
+
+    public PorticoResumenResponse toResumenResponse(Portico portico)
+    {
+        return PorticoResumenResponse.builder()
+                .id(portico.getId())
+                .codigo(portico.getCodigo())
+                .sentido(portico.getSentido())
+                .latitud(portico.getLatitud())
+                .longitud(portico.getLongitud())
                 .build();
     }
 
