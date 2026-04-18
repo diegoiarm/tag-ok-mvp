@@ -6,12 +6,14 @@ import org.springframework.stereotype.Component;
 
 import com.tagok.routes_service.domain.CalendarioTarifario;
 import com.tagok.routes_service.domain.Portico;
+import com.tagok.routes_service.domain.RangoHorario;
 import com.tagok.routes_service.domain.ReglaTarifaria;
 import com.tagok.routes_service.domain.ReglaTemporal;
 import com.tagok.routes_service.domain.ValorTarifa;
 import com.tagok.routes_service.domain.dto.request.PorticoRequest;
 import com.tagok.routes_service.domain.dto.response.CalendarioTarifarioResponse;
 import com.tagok.routes_service.domain.dto.response.PorticoResponse;
+import com.tagok.routes_service.domain.dto.response.RangoHorarioResponse;
 import com.tagok.routes_service.domain.dto.response.ReglaTarifariaResponse;
 import com.tagok.routes_service.domain.dto.response.ReglaTemporalResponse;
 import com.tagok.routes_service.domain.dto.response.ValorTarifaResponse;
@@ -61,8 +63,20 @@ public class PorticoMapper
                 {
                     ReglaTemporal reglaTemporal = new ReglaTemporal();
                     reglaTemporal.setTipoTarifa(rt.getTipoTarifa());
-                    reglaTemporal.setHoraInicio(rt.getHoraInicio());
-                    reglaTemporal.setHoraFin(rt.getHoraFin());
+
+                    if (rt.getTramos() != null)
+                    {
+                        rt.getTramos().forEach(t -> 
+                        {
+                            RangoHorario rango = new RangoHorario();
+                            rango.setHoraInicio(t.getInicio());
+                            rango.setHoraFin(t.getFin());
+
+                            rango.setRegla(reglaTemporal);
+
+                            reglaTemporal.addTramo(rango);
+                        });
+                    }
 
                     calendario.addRegla(reglaTemporal);
                 });
@@ -130,8 +144,21 @@ public class PorticoMapper
     {
         return ReglaTemporalResponse.builder()
             .tipoTarifa(regla.getTipoTarifa())
-            .horaInicio(regla.getHoraInicio())
-            .horaFin(regla.getHoraFin())
+            .tramos(
+                regla.getTramos() != null
+                    ? regla.getTramos().stream()
+                        .map(this::toRangoResponse)
+                        .collect(Collectors.toList())
+                    : null
+            )
+            .build();
+    }
+
+    private RangoHorarioResponse toRangoResponse(RangoHorario rango)
+    {
+        return RangoHorarioResponse.builder()
+            .horaInicio(rango.getHoraInicio())
+            .horaFin(rango.getHoraFin())
             .build();
     }
 }

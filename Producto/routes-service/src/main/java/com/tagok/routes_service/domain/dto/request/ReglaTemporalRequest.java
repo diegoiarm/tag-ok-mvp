@@ -1,6 +1,6 @@
 package com.tagok.routes_service.domain.dto.request;
 
-import java.time.LocalTime;
+import java.util.List;
 
 import com.tagok.routes_service.domain.TipoTarifa;
 
@@ -16,6 +16,5 @@ import lombok.NoArgsConstructor;
 public class ReglaTemporalRequest 
 {
     private TipoTarifa tipoTarifa;
-    private LocalTime horaInicio;
-    private LocalTime horaFin;
+    private List<RangoHorarioRequest> tramos;
 }
