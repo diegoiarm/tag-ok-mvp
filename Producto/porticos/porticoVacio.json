@@ -1,0 +1,46 @@
+{
+      "codigo": "Vacío",
+      "sentido": "Vacío",
+      "latitud": 0.0,
+      "longitud": 0.0,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 0.0 },
+            { "tipoTarifa": "TBP", "valor": 0.0 },
+            { "tipoTarifa": "TS", "valor": 0.0 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 0.0 },
+            { "tipoTarifa": "TBP", "valor": 0.0 },
+            { "tipoTarifa": "TS", "valor": 0.0 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 0.0 },
+            { "tipoTarifa": "TBP", "valor": 0.0 },
+            { "tipoTarifa": "TS", "valor": 0.0 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": []
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": []
+          }
+        ]
+      }
+    }

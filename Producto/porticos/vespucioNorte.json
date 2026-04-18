@@ -1,186 +1,207 @@
 {
-	"autopista": "Vespucio Norte",
-	"porticos": 
-	[
-		{
-			"codigo": "P1",
-			"sentido": "PO",
-			"geometria":
-			{
-				"latitud": -33.4834272485718,
-				"longitud": -70.7530622636282
-			},
-			"tarifas": 
+  "autopista": "Vespucio Norte",
+  "porticos": [
+    {
+      "codigo": "P1",
+      "sentido": "PO",
+      "latitud": -33.4834272485718,
+      "longitud": -70.7530622636282,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 120.59 },
+            { "tipoTarifa": "TBP", "valor": 241.17 },
+            { "tipoTarifa": "TS", "valor": 361.76 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 241.17 },
+            { "tipoTarifa": "TBP", "valor": 482.35 },
+            { "tipoTarifa": "TS", "valor": 723.52 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 361.76 },
+            { "tipoTarifa": "TBP", "valor": 723.52 },
+            { "tipoTarifa": "TS", "valor": 1085.28 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "06:30:00", "fin": "07:00:00" },
+              { "inicio": "10:00:00", "fin": "12:30:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [{ "inicio": "07:00:00", "fin": "10:00:00" }]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P2",
+      "sentido": "OP",
+      "latitud": -33.4563765818814,
+      "longitud": -70.7671328774357,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 211.03 },
+            { "tipoTarifa": "TBP", "valor": 422.05 },
+            { "tipoTarifa": "TS", "valor": 633.08 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 422.05 },
+            { "tipoTarifa": "TBP", "valor": 844.11 },
+            { "tipoTarifa": "TS", "valor": 1266.16 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 633.08 },
+            { "tipoTarifa": "TBP", "valor": 1266.16 },
+            { "tipoTarifa": "TS", "valor": 1899.24 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": 
 			[
-				{
-					"categoria": "1 y 4",
-					"aplica_a": ["AUTO", "MOTO", "CAMIONETA"],
-					"valores":
-					{
-						"TBFP": 120.59,
-						"TBP": 241.17,
-						"TS": 361.76
-					}
-				},
-				{
-					"categoria": "2",
-					"aplica_a": ["BUS", "CAMION"],
-					"valores":
-					{
-						"TBFP": 241.17,
-						"TBP": 482.35,
-						"TS": 723.52
-					}
-				},
-				{
-					"categoria": "3",
-					"aplica_a": ["CAMION CON REMOLQUE"],
-					"valores":
-					{
-						"TBFP": 361.76,
-						"TBP": 723.52,
-						"TS": 1085.28
-					}
-				}
-			],
-			"calendario":
-			{
-				"version": 1,
-				"regla_prioridad": ["TS", "TBP", "TBFP"],
-				"TBFP":
-				{  
-					"laboral":
-					{
-						"dias": ["L", "M", "X", "J", "V", "S", "D", "F"], 
-						"horas": [{"inicio": "00:00", "fin": "23:59"}]
-					},
-					"festivos": null
-				},
-				"TBP": 
-				{
-					"laboral":
-					{
-						"dias": ["L", "M", "X", "J", "V"],
-						"horas": [{"inicio": "06:30", "fin": "07:00"}, {"inicio": "10:00", "fin": "12:30"}],
-					},
-					"festivos": null
-				},
-				"TS":
-				{
-					"laboral":
-					{
-						"dias": ["L", "M", "X", "J", "V"],
-						"horas": [{"inicio": "07:00", "fin": "10:00"}]
-					},
-					"festivos": null
-				}
-			}
-		},
-		{
-			"codigo": "P2",
-			"sentido": "OP",
-			"latitud": -33.4563765818814,
-			"longitud": -70.7671328774357
-		},
-		{
-			"codigo": "P3",
-			"sentido": "PO",
-			"latitud": -33.43871415158,
-			"longitud": -70.7831154758986
-		},
-		{
-			"codigo": "P4",
-			"sentido": "OP",
-			"latitud": -33.4312701337385,
-			"longitud": -70.7848518641684
-		},
-		{
-			"codigo": "P5",
-			"sentido": "PO",
-			"latitud": -33.3996041235802,
-			"longitud": -70.7755844353463
-		},
-		{
-			"codigo": "P6",
-			"sentido": "OP",
-			"latitud": -33.3993378453885,
-			"longitud": -70.7755265318179
-		},
-		{
-			"codigo": "P7",
-			"sentido": "PO",
-			"latitud": -33.381341063292,
-			"longitud": -70.7539276575127
-		},
-		{
-			"codigo": "P8",
-			"sentido": "OP",
-			"latitud": -33.3730164573727,
-			"longitud": -70.7112532740411
-		},
-		{
-			"codigo": "P9",
-			"sentido": "PO",
-			"latitud": -33.3688644154117,
-			"longitud": -70.7042874938406
-		},
-		{
-			"codigo": "P10",
-			"sentido": "PO",
-			"latitud": -33.3659584435382,
-			"longitud": -70.6968717358097
-		},
-		{
-			"codigo": "P11",
-			"sentido": "OP",
-			"latitud": -33.3658138052436,
-			"longitud": -70.6950875929491
-		},
-		{
-			"codigo": "P12",
-			"sentido": "PO",
-			"latitud": -33.3734209428453,
-			"longitud": -70.6649403564
-		},
-		{
-			"codigo": "P13",
-			"sentido": "OP",
-			"latitud": -33.3733889299511,
-			"longitud": -70.6646204183338
-		},
-		{
-			"codigo": "P14",
-			"sentido": "PO",
-			"latitud": -33.3886069866827,
-			"longitud": -70.6333120720604
-		},
-		{
-			"codigo": "P15",
-			"sentido": "OP",
-			"latitud": -33.3886722147547,
-			"longitud": -70.6329596636476
-		},
-		{
-			"codigo": "P16",
-			"sentido": "PO",
-			"latitud": -33.4512028608257,
-			"longitud": -70.7729746960523
-		},
-		{
-			"codigo": "P17",
-			"sentido": "OP",
-			"latitud": -33.4837173224664,
-			"longitud": -70.7530962280495
-		},
-		{
-			"codigo": "PORTICO 101",
-			"latitud": -33.398589926,
-			"longitud": -70.615818679
-		},
-		{
-			"codigo": "PORTICO 102",
-			"latitud": -33.398770704,
-			"longitud": -70.615181819
-		}
-	]
+				{ "inicio": "15:30:00", "fin": "17:30:00" },
+				{ "inicio": "19:30:00", "fin": "20:00:00" }
+			]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": 
+			[
+				{ "inicio": "17:30:00", "fin": "19:30:00" }
+			]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P3",
+      "sentido": "PO",
+      "latitud": -33.43871415158,
+      "longitud": -70.7831154758986
+    },
+    {
+      "codigo": "P4",
+      "sentido": "OP",
+      "latitud": -33.4312701337385,
+      "longitud": -70.7848518641684
+    },
+    {
+      "codigo": "P5",
+      "sentido": "PO",
+      "latitud": -33.3996041235802,
+      "longitud": -70.7755844353463
+    },
+    {
+      "codigo": "P6",
+      "sentido": "OP",
+      "latitud": -33.3993378453885,
+      "longitud": -70.7755265318179
+    },
+    {
+      "codigo": "P7",
+      "sentido": "PO",
+      "latitud": -33.381341063292,
+      "longitud": -70.7539276575127
+    },
+    {
+      "codigo": "P8",
+      "sentido": "OP",
+      "latitud": -33.3730164573727,
+      "longitud": -70.7112532740411
+    },
+    {
+      "codigo": "P9",
+      "sentido": "PO",
+      "latitud": -33.3688644154117,
+      "longitud": -70.7042874938406
+    },
+    {
+      "codigo": "P10",
+      "sentido": "PO",
+      "latitud": -33.3659584435382,
+      "longitud": -70.6968717358097
+    },
+    {
+      "codigo": "P11",
+      "sentido": "OP",
+      "latitud": -33.3658138052436,
+      "longitud": -70.6950875929491
+    },
+    {
+      "codigo": "P12",
+      "sentido": "PO",
+      "latitud": -33.3734209428453,
+      "longitud": -70.6649403564
+    },
+    {
+      "codigo": "P13",
+      "sentido": "OP",
+      "latitud": -33.3733889299511,
+      "longitud": -70.6646204183338
+    },
+    {
+      "codigo": "P14",
+      "sentido": "PO",
+      "latitud": -33.3886069866827,
+      "longitud": -70.6333120720604
+    },
+    {
+      "codigo": "P15",
+      "sentido": "OP",
+      "latitud": -33.3886722147547,
+      "longitud": -70.6329596636476
+    },
+    {
+      "codigo": "P16",
+      "sentido": "PO",
+      "latitud": -33.4512028608257,
+      "longitud": -70.7729746960523
+    },
+    {
+      "codigo": "P17",
+      "sentido": "OP",
+      "latitud": -33.4837173224664,
+      "longitud": -70.7530962280495
+    },
+    {
+      "codigo": "PORTICO 101",
+      "latitud": -33.398589926,
+      "longitud": -70.615818679
+    },
+    {
+      "codigo": "PORTICO 102",
+      "latitud": -33.398770704,
+      "longitud": -70.615181819
+    }
+  ]
 }
