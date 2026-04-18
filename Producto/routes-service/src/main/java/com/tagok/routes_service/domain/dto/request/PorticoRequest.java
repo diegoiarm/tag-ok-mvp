@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PorticoRequest 
 {
+    private Long id;
     private String codigo;
     private String sentido;
     private double latitud;

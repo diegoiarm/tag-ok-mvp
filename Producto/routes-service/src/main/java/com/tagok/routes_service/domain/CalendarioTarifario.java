@@ -11,6 +11,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -18,7 +20,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Builder
 public class CalendarioTarifario 
 {
     @Id
@@ -31,6 +35,7 @@ public class CalendarioTarifario
     private Portico portico;
 
     @OneToMany(mappedBy = "calendario", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<ReglaTemporal> reglas = new ArrayList<>();
 
     public void addRegla(ReglaTemporal regla) 

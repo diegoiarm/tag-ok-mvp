@@ -16,6 +16,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -24,6 +26,8 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ReglaTarifaria 
 {
     @Id
@@ -39,9 +43,11 @@ public class ReglaTarifaria
     @CollectionTable(name = "regla_tarifaria_vehiculos", joinColumns = @JoinColumn(name = "regla_id"))
     @Column(name = "tipo_vehiculo")
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private List<TipoVehiculo> aplicaA = new ArrayList<>();
 
     @OneToMany(mappedBy = "regla", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<ValorTarifa> valores = new ArrayList<>();
 
     public void addValor(ValorTarifa valor) 

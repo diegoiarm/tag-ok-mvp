@@ -1,6 +1,6 @@
 package com.tagok.routes_service.domain.dto.response;
 
-import java.util.Set;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CalendarioTarifarioResponse 
 {
-    private Set<ReglaTemporalResponse> reglas;
+    private List<ReglaTemporalResponse> reglas;
 }
