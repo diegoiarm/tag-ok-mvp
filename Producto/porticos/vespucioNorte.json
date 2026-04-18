@@ -86,19 +86,15 @@
           {
             "tipoTarifa": "TBP",
             "tipoDia": "LABORAL",
-            "tramos": 
-			[
-				{ "inicio": "15:30:00", "fin": "17:30:00" },
-				{ "inicio": "19:30:00", "fin": "20:00:00" }
-			]
+            "tramos": [
+              { "inicio": "15:30:00", "fin": "17:30:00" },
+              { "inicio": "19:30:00", "fin": "20:00:00" }
+            ]
           },
           {
             "tipoTarifa": "TS",
             "tipoDia": "LABORAL",
-            "tramos": 
-			[
-				{ "inicio": "17:30:00", "fin": "19:30:00" }
-			]
+            "tramos": [{ "inicio": "17:30:00", "fin": "19:30:00" }]
           }
         ]
       }
@@ -107,101 +103,877 @@
       "codigo": "P3",
       "sentido": "PO",
       "latitud": -33.43871415158,
-      "longitud": -70.7831154758986
+      "longitud": -70.7831154758986,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 351.71 },
+            { "tipoTarifa": "TBP", "valor": 703.42 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 703.42 },
+            { "tipoTarifa": "TBP", "valor": 1406.85 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1055.13 },
+            { "tipoTarifa": "TBP", "valor": 2110.27 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": 
+            [
+              { "inicio": "07:30:00", "fin": "09:30:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "SABADO_FESTIVO",
+            "tramos": 
+            [
+              { "inicio": "18:00:00", "fin": "21:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "DOMINGO",
+            "tramos": 
+            [
+              { "inicio": "19:00:00", "fin": "22:00:00" }
+            ]
+          }
+        ]
+      }
     },
     {
       "codigo": "P4",
       "sentido": "OP",
       "latitud": -33.4312701337385,
-      "longitud": -70.7848518641684
+      "longitud": -70.7848518641684,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 351.71 },
+            { "tipoTarifa": "TBP", "valor": 703.42 },
+            { "tipoTarifa": "TS", "valor": 1055.13 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 703.42 },
+            { "tipoTarifa": "TBP", "valor": 1406.85 },
+            { "tipoTarifa": "TS", "valor": 2110.27 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1055.13 },
+            { "tipoTarifa": "TBP", "valor": 2110.27 },
+            { "tipoTarifa": "TS", "valor": 3165.40 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": 
+            [
+              { "inicio": "15:30:00", "fin": "16:30:00" },
+              { "inicio": "19:30:00", "fin": "20:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": 
+            [
+              { "inicio": "16:30:00", "fin": "19:30:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "SABADO_FESTIVO",
+            "tramos": 
+            [
+              { "inicio": "11:00:00", "fin": "14:00:00" },
+              { "inicio": "19:00:00", "fin": "22:00:00" }
+            ]
+          }
+        ]
+      }
     },
     {
       "codigo": "P5",
       "sentido": "PO",
       "latitud": -33.3996041235802,
-      "longitud": -70.7755844353463
+      "longitud": -70.7755844353463,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 452.20 },
+            { "tipoTarifa": "TBP", "valor": 904.40 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 904.40 },
+            { "tipoTarifa": "TBP", "valor": 1808.80 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1356.60 },
+            { "tipoTarifa": "TBP", "valor": 2713.20 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": 
+            [
+              { "inicio": "07:30:00", "fin": "08:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "SABADO_FESTIVO",
+            "tramos": 
+            [
+              { "inicio": "18:00:00", "fin": "21:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "DOMINGO",
+            "tramos": 
+            [
+              { "inicio": "19:00:00", "fin": "22:00:00" }
+            ]
+          }
+        ]
+      }
     },
     {
       "codigo": "P6",
       "sentido": "OP",
       "latitud": -33.3993378453885,
-      "longitud": -70.7755265318179
+      "longitud": -70.7755265318179,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 452.20 },
+            { "tipoTarifa": "TBP", "valor": 904.40 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 904.40 },
+            { "tipoTarifa": "TBP", "valor": 1808.80 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1356.60 },
+            { "tipoTarifa": "TBP", "valor": 2713.20 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": 
+            [
+              { "inicio": "19:00:00", "fin": "22:00:00" }
+            ]
+          }
+        ]
+      }
     },
     {
       "codigo": "P7",
       "sentido": "PO",
       "latitud": -33.381341063292,
-      "longitud": -70.7539276575127
+      "longitud": -70.7539276575127,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 104.51 },
+            { "tipoTarifa": "TBP", "valor": 209.02 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 209.02 },
+            { "tipoTarifa": "TBP", "valor": 418.03 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 313.53 },
+            { "tipoTarifa": "TBP", "valor": 627.05 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": 
+            [
+              { "inicio": "07:30:00", "fin": "09:00:00" },
+              { "inicio": "10:30:00", "fin": "11:30:00" },
+              { "inicio": "17:30:00", "fin": "20:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "SABADO_FESTIVO",
+            "tramos": 
+            [
+              { "inicio": "13:00:00", "fin": "15:00:00" },
+              { "inicio": "18:00:00", "fin": "21:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "DOMINGO",
+            "tramos": 
+            [
+              { "inicio": "19:00:00", "fin": "22:00:00" }
+            ]
+          }
+        ]
+      }
     },
     {
       "codigo": "P8",
       "sentido": "OP",
       "latitud": -33.3730164573727,
-      "longitud": -70.7112532740411
+      "longitud": -70.7112532740411,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 653.18 },
+            { "tipoTarifa": "TBP", "valor": 1306.36 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1306.36 },
+            { "tipoTarifa": "TBP", "valor": 2612.71 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1959.54 },
+            { "tipoTarifa": "TBP", "valor": 3919.07 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": 
+            [
+              { "inicio": "07:30:00", "fin": "09:30:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "SABADO_FESTIVO",
+            "tramos": 
+            [
+              { "inicio": "13:00:00", "fin": "15:00:00" },
+              { "inicio": "20:00:00", "fin": "22:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "DOMINGO",
+            "tramos": 
+            [
+              { "inicio": "21:00:00", "fin": "23:00:00" }
+            ]
+          }
+        ]
+      }
     },
     {
       "codigo": "P9",
       "sentido": "PO",
       "latitud": -33.3688644154117,
-      "longitud": -70.7042874938406
+      "longitud": -70.7042874938406,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 548.67 },
+            { "tipoTarifa": "TBP", "valor": 1097.34 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1097.34 },
+            { "tipoTarifa": "TBP", "valor": 2194.68 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1646.01 },
+            { "tipoTarifa": "TBP", "valor": 3292.02 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": 
+            [
+              { "inicio": "07:30:00", "fin": "09:00:00" },
+              { "inicio": "10:30:00", "fin": "11:30:00" },
+              { "inicio": "17:30:00", "fin": "20:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "SABADO_FESTIVO",
+            "tramos": 
+            [
+              { "inicio": "13:00:00", "fin": "15:00:00" },
+              { "inicio": "18:00:00", "fin": "21:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "DOMINGO",
+            "tramos": 
+            [
+              { "inicio": "19:00:00", "fin": "22:00:00" }
+            ]
+          }
+        ]
+      }
     },
     {
       "codigo": "P10",
       "sentido": "PO",
       "latitud": -33.3659584435382,
-      "longitud": -70.6968717358097
+      "longitud": -70.6968717358097,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 301.47 },
+            { "tipoTarifa": "TBP", "valor": 602.93 },
+            { "tipoTarifa": "TS", "valor": 904.40 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 602.93 },
+            { "tipoTarifa": "TBP", "valor": 1205.87 },
+            { "tipoTarifa": "TS", "valor": 1808.80 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 904.40 },
+            { "tipoTarifa": "TBP", "valor": 1808.80 },
+            { "tipoTarifa": "TS", "valor": 2713.20 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": 
+            [
+              { "inicio": "07:30:00", "fin": "08:00:00" },
+              { "inicio": "09:00:00", "fin": "09:30:00" },
+              { "inicio": "17:30:00", "fin": "20:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "SABADO_FESTIVO",
+            "tramos": 
+            [
+              { "inicio": "18:00:00", "fin": "21:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "DOMINGO",
+            "tramos": 
+            [
+              { "inicio": "19:00:00", "fin": "22:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": 
+            [
+              { "inicio": "08:00:00", "fin": "09:00:00" }
+            ]
+          }
+        ]
+      }
     },
     {
       "codigo": "P11",
       "sentido": "OP",
       "latitud": -33.3658138052436,
-      "longitud": -70.6950875929491
+      "longitud": -70.6950875929491,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 301.47 },
+            { "tipoTarifa": "TBP", "valor": 602.93 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 602.93 },
+            { "tipoTarifa": "TBP", "valor": 1205.87 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 904.40 },
+            { "tipoTarifa": "TBP", "valor": 1080.80 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": 
+            [
+              { "inicio": "07:30:00", "fin": "09:00:00" },
+              { "inicio": "17:30:00", "fin": "19:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "SABADO_FESTIVO",
+            "tramos": 
+            [
+              { "inicio": "13:00:00", "fin": "15:00:00" },
+              { "inicio": "20:00:00", "fin": "22:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "DOMINGO",
+            "tramos": 
+            [
+              { "inicio": "21:00:00", "fin": "23:00:00" }
+            ]
+          }
+        ]
+      }
     },
     {
       "codigo": "P12",
       "sentido": "PO",
       "latitud": -33.3734209428453,
-      "longitud": -70.6649403564
+      "longitud": -70.6649403564,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 69.34 },
+            { "tipoTarifa": "TBP", "valor": 138.67 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 138.67 },
+            { "tipoTarifa": "TBP", "valor": 277.35 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 208.01 },
+            { "tipoTarifa": "TBP", "valor": 416.02 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": 
+            [
+              { "inicio": "07:30:00", "fin": "09:30:00" }
+            ]
+          }
+        ]
+      }
     },
     {
       "codigo": "P13",
       "sentido": "OP",
       "latitud": -33.3733889299511,
-      "longitud": -70.6646204183338
+      "longitud": -70.6646204183338,
+            "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 412.00 },
+            { "tipoTarifa": "TBP", "valor": 824.01 },
+            { "tipoTarifa": "TS", "valor": 1236.01 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 824.01 },
+            { "tipoTarifa": "TBP", "valor": 1648.02 },
+            { "tipoTarifa": "TS", "valor": 2472.03 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1236.01 },
+            { "tipoTarifa": "TBP", "valor": 2472.03 },
+            { "tipoTarifa": "TS", "valor": 3708.04 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": 
+            [
+              { "inicio": "17:30:00", "fin": "18:30:00" },
+              { "inicio": "19:00:00", "fin": "22:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "SABADO_FESTIVO",
+            "tramos": 
+            [
+              { "inicio": "13:0:00", "fin": "15:00:00" },
+              { "inicio": "20:00:00", "fin": "22:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": 
+            [
+              { "inicio": "18:30:00", "fin": "19:00:00" }
+            ]
+          }
+        ]
+      }
     },
     {
       "codigo": "P14",
       "sentido": "PO",
       "latitud": -33.3886069866827,
-      "longitud": -70.6333120720604
+      "longitud": -70.6333120720604,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 483.35 },
+            { "tipoTarifa": "TBP", "valor": 966.70 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 966.70 },
+            { "tipoTarifa": "TBP", "valor": 1933.41 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1450.06 },
+            { "tipoTarifa": "TBP", "valor": 2900.11 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": 
+            [
+              { "inicio": "07:30:00", "fin": "09:30:00" }
+            ]
+          }
+        ]
+      }
     },
     {
       "codigo": "P15",
       "sentido": "OP",
       "latitud": -33.3886722147547,
-      "longitud": -70.6329596636476
+      "longitud": -70.6329596636476,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 140.68 },
+            { "tipoTarifa": "TBP", "valor": 281.37 },
+            { "tipoTarifa": "TS", "valor": 422.05 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 281.37 },
+            { "tipoTarifa": "TBP", "valor": 562.74 },
+            { "tipoTarifa": "TS", "valor": 844.11 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 422.05 },
+            { "tipoTarifa": "TBP", "valor": 844.11 },
+            { "tipoTarifa": "TS", "valor": 1266.16 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": 
+            [
+              { "inicio": "17:30:00", "fin": "18:30:00" },
+              { "inicio": "19:00:00", "fin": "22:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "SABADO_FESTIVO",
+            "tramos": 
+            [
+              { "inicio": "13:00:00", "fin": "15:00:00" },
+              { "inicio": "20:00:00", "fin": "22:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": 
+            [
+              { "inicio": "18:30:00", "fin": "19:00:00" }
+            ]
+          }
+        ]
+      }
     },
     {
       "codigo": "P16",
       "sentido": "PO",
       "latitud": -33.4512028608257,
-      "longitud": -70.7729746960523
+      "longitud": -70.7729746960523,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 482.35 },
+            { "tipoTarifa": "TBP", "valor": 964.69 },
+            { "tipoTarifa": "TS", "valor": 1447.04 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 964.69 },
+            { "tipoTarifa": "TBP", "valor": 1929.39 },
+            { "tipoTarifa": "TS", "valor": 2894.08 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1447.04 },
+            { "tipoTarifa": "TBP", "valor": 2894.08 },
+            { "tipoTarifa": "TS", "valor": 4341.12 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": 
+            [
+              { "inicio": "06:30:00", "fin": "07:00:00" },
+              { "inicio": "10:00:00", "fin": "12:30:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": 
+            [
+              { "inicio": "07:00:00", "fin": "10:00:00" }
+            ]
+          }
+        ]
+      }
     },
     {
       "codigo": "P17",
       "sentido": "OP",
       "latitud": -33.4837173224664,
-      "longitud": -70.7530962280495
+      "longitud": -70.7530962280495,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 391.91 },
+            { "tipoTarifa": "TBP", "valor": 783.81 },
+            { "tipoTarifa": "TS", "valor": 1175.72 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 783.81 },
+            { "tipoTarifa": "TBP", "valor": 1567.63 },
+            { "tipoTarifa": "TS", "valor": 2351.44 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1175.72 },
+            { "tipoTarifa": "TBP", "valor": 2351.44 },
+            { "tipoTarifa": "TS", "valor": 3527.16 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": 
+            [
+              { "inicio": "15:30:00", "fin": "17:30:00" },
+              { "inicio": "19:30:00", "fin": "20:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": 
+            [
+              { "inicio": "17:30:00", "fin": "19:30:00" }
+            ]
+          }
+        ]
+      }
     },
     {
       "codigo": "PORTICO 101",
       "latitud": -33.398589926,
-      "longitud": -70.615818679
+      "longitud": -70.615818679,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": []
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": []
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": []
+        }
+      ],
+      "calendario": null
     },
     {
       "codigo": "PORTICO 102",
       "latitud": -33.398770704,
-      "longitud": -70.615181819
+      "longitud": -70.615181819,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": []
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": []
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": []
+        }
+      ],
+      "calendario": null
     }
   ]
 }
