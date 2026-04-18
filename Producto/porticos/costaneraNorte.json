@@ -1,0 +1,175 @@
+{
+	"autopista": "Costanera Norte",
+	"porticos": 
+	[
+		{
+		  "codigo": "P0",
+		  "sentido": "PO",
+		  "latitud": "-33.3713630000",
+		  "longitud": "-70.5233800000"
+		},
+		{
+		  "codigo": "P1",
+		  "sentido": "PO",
+		  "latitud": "-33.3757450000",
+		  "longitud": "-70.5431110000"
+		},
+		{
+		  "codigo": "P2.1",
+		  "sentido": "PO",
+		  "latitud": "-33.3851529000",
+		  "longitud": "-70.5932020000"
+		},
+		{
+		  "codigo": "P2.2",
+		  "sentido": "PO",
+		  "latitud": "-33.3996440000",
+		  "longitud": "-70.6043740000"
+		},
+		{
+		  "codigo": "P3",
+		  "sentido": "PO",
+		  "latitud": "-33.4242670000",
+		  "longitud": "-70.6220160000"
+		},
+		{
+		  "codigo": "P4",
+		  "sentido": "PO",
+		  "latitud": "-33.4303500000",
+		  "longitud": "-70.6580250000"
+		},
+		{
+		  "codigo": "P5",
+		  "sentido": "PO",
+		  "latitud": "-33.4264090000",
+		  "longitud": "-70.6701860000"
+		},
+		{
+		  "codigo": "P6.1",
+		  "sentido": "PO",
+		  "latitud": "-33.4118170000",
+		  "longitud": "-70.7395010000"
+		},
+		{
+		  "codigo": "P6.2",
+		  "sentido": "PO",
+		  "latitud": "-33.4130350000",
+		  "longitud": "-70.7667000000"
+		},
+		{
+		  "codigo": "P7",
+		  "sentido": "PO",
+		  "latitud": "-33.3874380000",
+		  "longitud": "-70.5420430000"
+		},
+		{
+		  "codigo": "P8.0",
+		  "sentido": "PO",
+		  "latitud": "-33.4090990000",
+		  "longitud": "-70.6043040000"
+		},
+		{
+		  "codigo": "P8.2",
+		  "sentido": "PO",
+		  "latitud": "-33.4084770000",
+		  "longitud": "-70.6021010000"
+		},
+		{
+		  "codigo": "P8.3",
+		  "sentido": "PO",
+		  "latitud": "-33.4091490000",
+		  "longitud": "-70.6015970000"
+		},
+		{
+		  "codigo": "P9",
+		  "sentido": "PO",
+		  "latitud": "-33.4180390000",
+		  "longitud": "-70.7909820000"
+		},
+
+		{
+		  "codigo": "P0",
+		  "sentido": "OP",
+		  "latitud": "-33.3711290000",
+		  "longitud": "-70.5231730000"
+		},
+		{
+		  "codigo": "P1",
+		  "sentido": "OP",
+		  "latitud": "-33.3757940000",
+		  "longitud": "-70.5426710000"
+		},
+		{
+		  "codigo": "P2.1",
+		  "sentido": "OP",
+		  "latitud": "-33.3850543000",
+		  "longitud": "-70.5932820000"
+		},
+		{
+		  "codigo": "P2.2",
+		  "sentido": "OP",
+		  "latitud": "-33.3996379000",
+		  "longitud": "-70.6045190000"
+		},
+		{
+		  "codigo": "P3",
+		  "sentido": "OP",
+		  "latitud": "-33.4240770000",
+		  "longitud": "-70.6219280000"
+		},
+		{
+		  "codigo": "P5",
+		  "sentido": "OP",
+		  "latitud": "-33.4263730000",
+		  "longitud": "-70.6698530000"
+		},
+		{
+		  "codigo": "P6.1",
+		  "sentido": "OP",
+		  "latitud": "-33.4117080000",
+		  "longitud": "-70.7395070000"
+		},
+		{
+		  "codigo": "P6.2",
+		  "sentido": "OP",
+		  "latitud": "-33.4129210000",
+		  "longitud": "-70.7664100000"
+		},
+		{
+		  "codigo": "P7",
+		  "sentido": "OP",
+		  "latitud": "-33.3876650000",
+		  "longitud": "-70.5429340000"
+		},
+		{
+		  "codigo": "P8.1",
+		  "sentido": "OP",
+		  "latitud": "-33.4080291757",
+		  "longitud": "-70.5990285457"
+		},
+		{
+		  "codigo": "P9",
+		  "sentido": "OP",
+		  "latitud": "-33.4177810000",
+		  "longitud": "-70.7908770000"
+		},
+		{
+		  "codigo": "SB",
+		  "sentido": "OP",
+		  "latitud": "-33.4221551648",
+		  "longitud": "-70.6197886919"
+		},
+		{
+		  "codigo": "EP",
+		  "sentido": "OP",
+		  "latitud": "-33.4346549722",
+		  "longitud": "-70.6394774472"
+		},
+		{
+		  "codigo": "EV",
+		  "sentido": "OP",
+		  "latitud": "-33.4302142218",
+		  "longitud": "-70.6575025767"
+		}
+	]
+}

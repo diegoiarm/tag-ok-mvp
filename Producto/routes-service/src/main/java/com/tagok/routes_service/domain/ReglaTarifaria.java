@@ -1,0 +1,52 @@
+package com.tagok.routes_service.domain;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@NoArgsConstructor
+public class ReglaTarifaria 
+{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "portico_id")
+    private Portico portico;
+
+    @ElementCollection
+    @CollectionTable(name = "regla_tarifaria_vehiculos", joinColumns = @JoinColumn(name = "regla_id"))
+    @Column(name = "tipo_vehiculo")
+    @Enumerated(EnumType.STRING)
+    private List<TipoVehiculo> aplicaA = new ArrayList<>();
+
+    @OneToMany(mappedBy = "regla", cascade = CascadeType.ALL)
+    private List<ValorTarifa> valores = new ArrayList<>();
+
+    public void addValor(ValorTarifa valor) 
+    {
+        valores.add(valor);
+        valor.setRegla(this);
+    }
+}

@@ -1,0 +1,197 @@
+{
+	"autopista": "Autopista Central",
+	"porticos": [
+		{
+		  "codigo": "PA2",
+		  "sentido": "SN",
+		  "latitud": -33.647305,
+		  "longitud": -70.711589 
+		},
+		{
+		  "codigo": "PA3",
+		  "sentido": "SN",
+		  "latitud": -33.622674, 
+		  "longitud": -70.714590
+		},
+		{
+		  "codigo": "PA5",
+		  "sentido": "SN",
+		  "latitud": -33.582641,
+		  "longitud": -70.713840
+		},
+		{
+		  "codigo": "PA7",
+		  "sentido": "SN",
+		  "latitud": -33.547860,
+		  "longitud": -70.696951
+		},
+		{
+		  "codigo": "PA30",
+		  "sentido": "SN",
+		  "latitud": -33.507245,
+		  "longitud": -70.669304
+		},
+		{
+		  "codigo": "PA10",
+		  "sentido": "SN",
+		  "latitud": -33.495613,
+		  "longitud": -70.663846
+		},
+		{
+		  "codigo": "PA31",
+		  "sentido": "SN",
+		  "latitud": -33.468976,
+		  "longitud": -70.656208
+		},
+		{
+		  "codigo": "PA13",
+		  "sentido": "SN",
+		  "latitud": -33.448916,
+		  "longitud": -70.659590
+		},
+		{
+		  "codigo": "PA16",
+		  "sentido": "SN",
+		  "latitud": -33.417172,
+		  "longitud": -70.678720
+		},
+		{
+		  "codigo": "PA17",
+		  "sentido": "SN",
+		  "latitud": -33.368567,
+		  "longitud": -70.699087
+		},
+		{
+		  "codigo": "PA28",
+		  "sentido": "SN",
+		  "latitud": -33.382206,
+		  "longitud": -70.695560
+		},
+		{
+		  "codigo": "PA25",
+		  "sentido": "SN",
+		  "latitud": -33.446579,
+		  "longitud": -70.692065
+		},
+		{
+		  "codigo": "PA23",
+		  "sentido": "SN",
+		  "latitud": -33.469038,
+		  "longitud": -70.688105
+		},
+		{
+		  "codigo": "PA21",
+		  "sentido": "SN",
+		  "latitud": -33.506386,
+		  "longitud": -70.697222
+		},
+		{
+		  "codigo": "PA19",
+		  "sentido": "SN",
+		  "latitud": -33.551379,
+		  "longitud": -70.709056
+		},
+		{
+		  "codigo": "PA1",
+		  "sentido": "NS",
+		  "latitud": -33.695529,
+		  "longitud": -70.723646
+		},
+		{
+		  "codigo": "PA4",
+		  "sentido": "NS",
+		  "latitud": -33.624429,
+		  "longitud": -70.714529
+		},
+		{
+		  "codigo": "PA37",
+		  "sentido": "NS",
+		  "latitud": -33.596873,
+		  "longitud": -70.715804
+		},
+		{
+		  "codigo": "PA6",
+		  "sentido": "NS",
+		  "latitud": -33.582356,
+		  "longitud": -70.713988
+		},
+		{
+		  "codigo": "PA32",
+		  "sentido": "NS",
+		  "latitud": -33.558861,
+		  "longitud": -70.710593
+		},
+		{
+		  "codigo": "PA8",
+		  "sentido": "NS",
+		  "latitud": -33.507112,
+		  "longitud": -70.669405
+		},
+		{
+		  "codigo": "PA9",
+		  "sentido": "NS",
+		  "latitud": -33.547563,
+		  "longitud": -70.696807
+		},
+		{
+		  "codigo": "PA11",
+		  "sentido": "NS",
+		  "latitud": -33.495326,
+		  "longitud": -70.663892
+		},
+		{
+		  "codigo": "PA12",
+		  "sentido": "NS",
+		  "latitud": -33.468843,
+		  "longitud": -70.656549
+		},
+		{
+		  "codigo": "PA14",
+		  "sentido": "NS",
+		  "latitud": -33.448398,
+		  "longitud": -70.660064
+		},
+		{
+		  "codigo": "PA15",
+		  "sentido": "NS",
+		  "latitud": -33.426531,
+		  "longitud": -70.668868
+		},
+		{
+		  "codigo": "PA18",
+		  "sentido": "NS",
+		  "latitud": -33.368289,
+		  "longitud": -70.699428
+		},
+		{
+		  "codigo": "PA20",
+		  "sentido": "NS",
+		  "latitud": -33.536463,
+		  "longitud": -70.707654
+		},
+		{
+		  "codigo": "PA22",
+		  "sentido": "NS",
+		  "latitud": -33.505582,
+		  "longitud": -70.697010
+		},
+		{
+		  "codigo": "PA24",
+		  "sentido": "NS",
+		  "latitud": -33.469813,
+		  "longitud": -70.688239
+		},
+		{
+		  "codigo": "PA26",
+		  "sentido": "NS",
+		  "latitud": -33.447420,
+		  "longitud": -70.692298
+		},
+		{
+		  "codigo": "PA29",
+		  "sentido": "NS",
+		  "latitud": -33.381887,
+		  "longitud": -70.695469
+		}
+	]
+}

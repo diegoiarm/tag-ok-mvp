@@ -1,0 +1,262 @@
+{
+  "autopista": "Vespucio Norte",
+  "porticos": [
+    {
+      "codigo": "P01",
+      "lon": -70.753079,
+      "lat": -33.483395,
+      "tarifas": [
+        {
+          "tarifa": "TBFP",
+          "valores": [
+            { "categoria": "1 y 4", "valor": 120.59 },
+            { "categoria": "2", "valor": 241.17 },
+            { "categoria": "3", "valor": 361.76 }
+          ]
+        },
+        {
+          "tarifa": "TBP",
+          "valores": [
+            { "categoria": "1 y 4", "valor": 241.17 },
+            { "categoria": "2", "valor": 482.35 },
+            { "categoria": "3", "valor": 723.52 }
+          ],
+          "horarios": [
+            { "dia": "Laboral", "horaInicio": "06:30", "horaFin": "07:00" },
+            { "dia": "Laboral", "horaInicio": "10:00", "horaFin": "12:30" }
+          ]
+        }
+      ]
+    },
+    {
+      "codigo": "P16",
+      "lon": -70.772963,
+      "lat": -33.451188,
+      "tarifas": [
+        {
+          "tarifa": "TBFP",
+          "valores": [
+            { "categoria": "1 y 4", "valor": 482.35 },
+            { "categoria": "2", "valor": 964.69 },
+            { "categoria": "3", "valor": 1447.04 }
+          ]
+        },
+        {
+          "tarifa": "TBP",
+          "valores": [
+            { "categoria": "1 y 4", "valor": 964.69 },
+            { "categoria": "2", "valor": 1929.39 },
+            { "categoria": "3", "valor": 2894.08 }
+          ],
+          "horarios": [
+            { "dia": "Laboral", "horaInicio": "06:30", "horaFin": "07:00" },
+            { "dia": "Laboral", "horaInicio": "10:00", "horaFin": "12:30" }
+          ]
+        }
+      ]
+    },
+    {
+      "codigo": "P03",
+      "lon": -70.783126,
+      "lat": -33.438686,
+      "tarifas": [
+        {
+          "tarifa": "TBFP",
+          "valores": [
+            { "categoria": "1 y 4", "valor": 351.71 },
+            { "categoria": "2", "valor": 703.42 },
+            { "categoria": "3", "valor": 1055.13 }
+          ]
+        },
+        {
+          "tarifa": "TBP",
+          "valores": [
+            { "categoria": "1 y 4", "valor": 703.42 },
+            { "categoria": "2", "valor": 1406.85 },
+            { "categoria": "3", "valor": 2110.27 }
+          ],
+          "horarios": [
+            { "dia": "Laboral", "horaInicio": "07:30", "horaFin": "09:30" },
+            {
+              "dia": "Sabado y Festivo",
+              "horaInicio": "18:00",
+              "horaFin": "21:00"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "codigo": "P05",
+      "lon": -70.775594,
+      "lat": -33.399589,
+      "tarifas": [
+        {
+          "tarifa": "TBFP",
+          "valores": [
+            { "categoria": "1 y 4", "valor": 452.2 },
+            { "categoria": "2", "valor": 904.4 },
+            { "categoria": "3", "valor": 1356.6 }
+          ]
+        },
+        {
+          "tarifa": "TBP",
+          "valores": [
+            { "categoria": "1 y 4", "valor": 904.4 },
+            { "categoria": "2", "valor": 1808.8 },
+            { "categoria": "3", "valor": 2713.2 }
+          ],
+          "horarios": [
+            { "dia": "Laboral", "horaInicio": "07:30", "horaFin": "09:30" },
+            {
+              "dia": "Sabado y Festivo",
+              "horaInicio": "18:00",
+              "horaFin": "21:00"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "codigo": "P07",
+      "lon": -70.753948,
+      "lat": -33.381316,
+      "tarifas": [
+        {
+          "tarifa": "TBFP",
+          "valores": [
+            { "categoria": "1 y 4", "valor": 104.51 },
+            { "categoria": "2", "valor": 209.02 },
+            { "categoria": "3", "valor": 313.53 }
+          ]
+        },
+        {
+          "tarifa": "TBP",
+          "valores": [
+            { "categoria": "1 y 4", "valor": 209.02 },
+            { "categoria": "2", "valor": 418.03 },
+            { "categoria": "3", "valor": 627.05 }
+          ],
+          "horarios": [
+            { "dia": "Laboral", "horaInicio": "07:30", "horaFin": "09:30" },
+            { "dia": "Laboral", "horaInicio": "10:30", "horaFin": "11:30" },
+            { "dia": "Laboral", "horaInicio": "17:30", "horaFin": "20:00" },
+            { "dia": "Sabado y Festivo", "horaInicio": "13:00", "horaFin": "15:00" },
+            { "dia": "Sabado y Festivo", "horaInicio": "18:00", "horaFin": "21:00" }
+          ]
+        }
+      ]
+    },
+    {
+      "codigo": "P09",
+      "lon": -70.704297,
+      "lat": -33.368836,
+      "tarifas": [
+        {
+          "tarifa": "TBFP",
+          "valores": [
+            { "categoria": "1 y 4", "valor": 548.67 },
+            { "categoria": "2", "valor": 1097.34 },
+            { "categoria": "3", "valor": 1645.01 }
+          ]
+        },
+        {
+          "tarifa": "TBP",
+          "valores": [
+            { "categoria": "1 y 4", "valor": 1097.34 },
+            { "categoria": "2", "valor": 2194.68 },
+            { "categoria": "3", "valor": 3292.02 }
+          ],
+          "horarios": [
+            { "dia": "Laboral", "horaInicio": "07:30", "horaFin": "09:30" },
+            { "dia": "Laboral", "horaInicio": "10:30", "horaFin": "11:30" },
+            { "dia": "Laboral", "horaInicio": "17:30", "horaFin": "20:00" },
+            { "dia": "Sabado y Festivo", "horaInicio": "13:00", "horaFin": "15:00" },
+            { "dia": "Sabado y Festivo", "horaInicio": "18:00", "horaFin": "21:00" }
+          ]
+        }
+      ]
+    },
+    { 
+      "codigo": "P10", 
+      "lon": -70.696869, 
+      "lat": -33.365942, 
+      "tarifas": [
+        {
+          "tarifa": "TBFP",
+          "valores": [
+            { "categoria": "1 y 4", "valor": 301.47 },
+            { "categoria": "2", "valor": 602.93 },
+            { "categoria": "3", "valor": 904.40 }
+          ]
+        },
+        {
+          "tarifa": "TBP",
+          "valores": [
+            { "categoria": "1 y 4", "valor": 602.93 },
+            { "categoria": "2", "valor": 1205.87 },
+            { "categoria": "3", "valor": 1808.80 }
+          ],
+          "horarios": [
+            { "dia": "Laboral", "horaInicio": "07:30", "horaFin": "08:00" },
+            { "dia": "Laboral", "horaInicio": "09:00", "horaFin": "09:30" },
+            { "dia": "Laboral", "horaInicio": "17:30", "horaFin": "20:00" },
+            { "dia": "Sabado y Festivo", "horaInicio": "18:00", "horaFin": "21:00" }
+          ]
+        }
+      ] 
+    },
+    { 
+      "codigo": "P12", 
+      "lon": -70.664951, 
+      "lat": -33.373406, 
+      "tarifas": [
+        {
+          "tarifa": "TBFP",
+          "valores": [
+            { "categoria": "1 y 4", "valor": 69.34 },
+            { "categoria": "2", "valor": 138.67 },
+            { "categoria": "3", "valor": 208.01 }
+          ]
+        },
+        {
+          "tarifa": "TBP",
+          "valores": [
+            { "categoria": "1 y 4", "valor": 138.67 },
+            { "categoria": "2", "valor": 277.35 },
+            { "categoria": "3", "valor": 416.02 }
+          ],
+          "horarios": [
+            { "dia": "Laboral", "horaInicio": "07:30", "horaFin": "09:30" }
+          ]
+        }
+      ] 
+    },
+    { 
+      "codigo": "P14", 
+      "lon": -70.63333, 
+      "lat": -33.388591, 
+      "tarifas": [
+        {
+          "tarifa": "TBFP",
+          "valores": [
+            { "categoria": "1 y 4", "valor": 483.35 },
+            { "categoria": "2", "valor": 966.70 },
+            { "categoria": "3", "valor": 1450.06 }
+          ]
+        },
+        {
+          "tarifa": "TBP",
+          "valores": [
+            { "categoria": "1 y 4", "valor": 966.70 },
+            { "categoria": "2", "valor": 1933.41 },
+            { "categoria": "3", "valor": 2900.11 }
+          ],
+          "horarios": [
+            { "dia": "Laboral", "horaInicio": "07:30", "horaFin": "09:30" }
+          ]
+        }
+      ] 
+    }
+  ]
+}
