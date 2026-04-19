@@ -1,96 +1,1614 @@
 {
 	"autopista": "Vespucio Sur",
-	"porticos": 
-	[
+	"porticos": [
 		{
-		  "codigo": "5.1",
-		  "sentido": "OP",
-		  "latitud": "-33.4809480000",
-		  "longitud": "-70.5790630000"
+			"codigo": "5.1",
+			"nombre": "Grecia - Quilín",
+			"sentido": "OP",
+			"latitud": -33.4809480000,
+			"longitud": -70.5790630000,
+			"reglas": [
+				{
+					"aplicaA": [
+						"AUTO",
+						"MOTO",
+						"CAMIONETA"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 121.59
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 243.18
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 364.78
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"BUS",
+						"CAMION"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 243.18
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 486.37
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 729.55
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"CAMION_REMOLQUE"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 364.78
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 729.55
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 1094.33
+						}
+					]
+				}
+			],
+			"calendario": {
+				"reglas": [
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "20:00:00",
+								"fin": "22:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "SABADO_FESTIVO",
+						"tramos": [
+							{
+								"inicio": "13:00:00",
+								"fin": "15:00:00"
+							},
+							{
+								"inicio": "20:00:00",
+								"fin": "22:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TS",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "19:00:00",
+								"fin": "20:00:00"
+							}
+						]
+					}
+				]
+			}
 		},
 		{
-		  "codigo": "5.3",
-		  "sentido": "OP",
-		  "latitud": "-33.4955980000",
-		  "longitud": "-70.5844790000"
+			"codigo": "5.3",
+			"nombre": "Quilín - Las Torres",
+			"sentido": "OP",
+			"latitud": -33.4955980000,
+			"longitud": -70.5844790000,
+			"reglas": [
+				{
+					"aplicaA": [
+						"AUTO",
+						"MOTO",
+						"CAMIONETA"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 551.68
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 1103.37
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 1655.05
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"BUS",
+						"CAMION"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 1103.37
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 2206.74
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 3310.11
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"CAMION_REMOLQUE"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 1655.05
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 3310.11
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 4965.16
+						}
+					]
+				}
+			],
+			"calendario": {
+				"reglas": [
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "20:00:00",
+								"fin": "22:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "SABADO_FESTIVO",
+						"tramos": [
+							{
+								"inicio": "13:00:00",
+								"fin": "15:00:00"
+							},
+							{
+								"inicio": "20:00:00",
+								"fin": "22:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TS",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "19:00:00",
+								"fin": "20:00:00"
+							}
+						]
+					}
+				]
+			}
 		},
 		{
-		  "codigo": "4.1",
-		  "sentido": "OP",
-		  "latitud": "-33.5297640000",
-		  "longitud": "-70.6048580000"
+			"codigo": "4.1",
+			"nombre": "Gnmo. de Alderete - Santa Julia",
+			"sentido": "OP",
+			"latitud": -33.5297640000,
+			"longitud": -70.6048580000,
+			"reglas": [
+				{
+					"aplicaA": [
+						"AUTO",
+						"MOTO",
+						"CAMIONETA"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 311.52
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 623.03
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 0.0
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"BUS",
+						"CAMION"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 623.03
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 1246.06
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 0.0
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"CAMION_REMOLQUE"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 934.55
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 1869.10
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 0.0
+						}
+					]
+				}
+			],
+			"calendario": {
+				"reglas": [
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "SABADO_FESTIVO",
+						"tramos": [
+							{
+								"inicio": "13:00:00",
+								"fin": "15:00:00"
+							},
+							{
+								"inicio": "20:00:00",
+								"fin": "22:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "DOMINGO",
+						"tramos": [
+							{
+								"inicio": "21:00:00",
+								"fin": "23:00:00"
+							}
+						]
+					}
+				]
+			}
 		},
 		{
-		  "codigo": "3.1",
-		  "sentido": "OP",
-		  "latitud": "-33.5396060000",
-		  "longitud": "-70.6529820000"
+			"codigo": "3.1",
+			"nombre": "Santa Rosa - Gran Avenida",
+			"sentido": "OP",
+			"latitud": -33.5396060000,
+			"longitud": -70.6529820000,
+			"reglas": [
+				{
+					"aplicaA": [
+						"AUTO",
+						"MOTO",
+						"CAMIONETA"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 332.62
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 665.24
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 997.86
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"BUS",
+						"CAMION"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 665.24
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 1330.47
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 1995.71
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"CAMION_REMOLQUE"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 997.86
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 1995.71
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 2993.57
+						}
+					]
+				}
+			],
+			"calendario": {
+				"reglas": [
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "08:30:00",
+								"fin": "09:30:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "SABADO_FESTIVO",
+						"tramos": [
+							{
+								"inicio": "13:00:00",
+								"fin": "15:00:00"
+							},
+							{
+								"inicio": "20:00:00",
+								"fin": "22:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "DOMINGO",
+						"tramos": [
+							{
+								"inicio": "21:00:00",
+								"fin": "23:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TS",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "07:30:00",
+								"fin": "08:30:00"
+							}
+						]
+					}
+				]
+			}
 		},
 		{
-		  "codigo": "3.3",
-		  "sentido": "OP",
-		  "latitud": "-33.5336010000",
-		  "longitud": "-70.6763230000"
+			"codigo": "3.3",
+			"nombre": "Gran Avenida - Ruta 5",
+			"sentido": "OP",
+			"latitud": -33.5336010000,
+			"longitud": -70.6763230000,
+			"reglas": [
+				{
+					"aplicaA": [
+						"AUTO",
+						"MOTO",
+						"CAMIONETA"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 260.27
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 520.53
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 780.80
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"BUS",
+						"CAMION"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 520.53
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 1041.07
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 1561.60
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"CAMION_REMOLQUE"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 780.80
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 1561.60
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 2342.40
+						}
+					]
+				}
+			],
+			"calendario": {
+				"reglas": [
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "08:30:00",
+								"fin": "09:30:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "SABADO_FESTIVO",
+						"tramos": [
+							{
+								"inicio": "13:00:00",
+								"fin": "15:00:00"
+							},
+							{
+								"inicio": "20:00:00",
+								"fin": "22:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "DOMINGO",
+						"tramos": [
+							{
+								"inicio": "21:00:00",
+								"fin": "23:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TS",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "07:30:00",
+								"fin": "08:30:00"
+							}
+						]
+					}
+				]
+			}
 		},
 		{
-		  "codigo": "2.1",
-		  "sentido": "OP",
-		  "latitud": "-33.5260860000",
-		  "longitud": "-70.6940150000"
+			"codigo": "2.1",
+			"nombre": "Ruta 5 - General Velásquez",
+			"sentido": "OP",
+			"latitud": -33.5260860000,
+			"longitud": -70.6940150000,
+			"reglas": [
+				{
+					"aplicaA": [
+						"AUTO",
+						"MOTO",
+						"CAMIONETA"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 251.22
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 502.45
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 753.67
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"BUS",
+						"CAMION"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 502.45
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 1004.89
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 1507.34
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"CAMION_REMOLQUE"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 753.67
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 1507.34
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 2261.00
+						}
+					]
+				}
+			],
+			"calendario": {
+				"reglas": [
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "08:30:00",
+								"fin": "09:30:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TS",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "07:30:00",
+								"fin": "08:30:00"
+							}
+						]
+					}
+				]
+			}
 		},
 		{
-		  "codigo": "1.1",
-		  "sentido": "OP",
-		  "latitud": "-33.5165830000",
-		  "longitud": "-70.7125170000"
+			"codigo": "1.1",
+			"nombre": "General Velásquez - Ruta 78",
+			"sentido": "OP",
+			"latitud": -33.5165830000,
+			"longitud": -70.7125170000,
+			"reglas": [
+				{
+					"aplicaA": [
+						"AUTO",
+						"MOTO",
+						"CAMIONETA"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 532.59
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 1065.18
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 0.0
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"BUS",
+						"CAMION"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 1065.18
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 2130.37
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 0.0
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"CAMION_REMOLQUE"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 1597.78
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 3195.55
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 0.0
+						}
+					]
+				}
+			],
+			"calendario": {
+				"reglas": [
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "SABADO_FESTIVO",
+						"tramos": [
+							{
+								"inicio": "11:00:00",
+								"fin": "14:00:00"
+							},
+							{
+								"inicio": "19:00:00",
+								"fin": "22:00:00"
+							}
+						]
+					}
+				]
+			}
 		},
 		{
-		  "codigo": "1.3",
-		  "sentido": "PO",
-		  "latitud": "-33.5059150000",
-		  "longitud": "-70.7284950000"
+			"codigo": "1.3",
+			"nombre": "2° Transversal - Camino a Melipilla",
+			"sentido": "PO",
+			"latitud": -33.5059150000,
+			"longitud": -70.7284950000,
+			"reglas": [
+				{
+					"aplicaA": [
+						"AUTO",
+						"MOTO",
+						"CAMIONETA"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 532.59
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 1065.18
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 1597.78
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"BUS",
+						"CAMION"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 1065.18
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 2130.37
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 3195.55
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"CAMION_REMOLQUE"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 1597.78
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 3195.55
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 4793.33
+						}
+					]
+				}
+			],
+			"calendario": {
+				"reglas": [
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "08:30:00",
+								"fin": "09:30:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "SABADO_FESTIVO",
+						"tramos": [
+							{
+								"inicio": "18:00:00",
+								"fin": "21:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "DOMINGO",
+						"tramos": [
+							{
+								"inicio": "19:00:00",
+								"fin": "22:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TS",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "07:30:00",
+								"fin": "08:30:00"
+							}
+						]
+					}
+				]
+			}
 		},
 		{
-		  "codigo": "2.2",
-		  "sentido": "PO",
-		  "latitud": "-33.5262990000",
-		  "longitud": "-70.6941430000"
+			"codigo": "2.2",
+			"nombre": "Gral. Velasquez - Ruta 5",
+			"sentido": "PO",
+			"latitud": -33.5262990000,
+			"longitud": -70.6941430000,
+			"reglas": [
+				{
+					"aplicaA": [
+						"AUTO",
+						"MOTO",
+						"CAMIONETA"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 251.22
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 502.45
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 753.67
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"BUS",
+						"CAMION"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 502.45
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 1004.89
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 1507.34
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"CAMION_REMOLQUE"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 753.67
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 1507.34
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 2261.00
+						}
+					]
+				}
+			],
+			"calendario": {
+				"reglas": [
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "SABADO_FESTIVO",
+						"tramos": [
+							{
+								"inicio": "18:00:00",
+								"fin": "21:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "DOMINGO",
+						"tramos": [
+							{
+								"inicio": "19:00:00",
+								"fin": "22:00:00"
+							}
+						]
+					}
+				]
+			}
 		},
 		{
-		  "codigo": "3.4",
-		  "sentido": "PO",
-		  "latitud": "-33.5338270000",
-		  "longitud": "-70.6765050000"
+			"codigo": "3.4",
+			"nombre": "Ruta 5 - Gran Avenida",
+			"sentido": "PO",
+			"latitud": -33.5338270000,
+			"longitud": -70.6765050000,
+			"reglas": [
+				{
+					"aplicaA": [
+						"AUTO",
+						"MOTO",
+						"CAMIONETA"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 120.59
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 241.17
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 361.76
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"BUS",
+						"CAMION"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 241.17
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 482.35
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 723.52
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"CAMION_REMOLQUE"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 361.76
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 723.52
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 1085.28
+						}
+					]
+				}
+			],
+			"calendario": {
+				"reglas": [
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "18:00:00",
+								"fin": "18:30:00"
+							},
+							{
+								"inicio": "19:30:00",
+								"fin": "20:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "SABADO_FESTIVO",
+						"tramos": [
+							{
+								"inicio": "13:00:00",
+								"fin": "15:00:00"
+							},
+							{
+								"inicio": "18:00:00",
+								"fin": "21:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "DOMINGO",
+						"tramos": [
+							{
+								"inicio": "19:00:00",
+								"fin": "22:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TS",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "18:30:00",
+								"fin": "19:30:00"
+							}
+						]
+					}
+				]
+			}
 		},
 		{
-		  "codigo": "3.2",
-		  "sentido": "PO",
-		  "latitud": "-33.5398630000",
-		  "longitud": "-70.6531080000"
+			"codigo": "3.2",
+			"nombre": "Gran Avenida - Santa Rosa",
+			"sentido": "PO",
+			"latitud": -33.5398630000,
+			"longitud": -70.6531080000,
+			"reglas": [
+				{
+					"aplicaA": [
+						"AUTO",
+						"MOTO",
+						"CAMIONETA"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 472.30
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 944.60
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 1416.89
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"BUS",
+						"CAMION"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 944.60
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 1889.19
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 2833.79
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"CAMION_REMOLQUE"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 1416.89
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 2833.79
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 4250.68
+						}
+					]
+				}
+			],
+			"calendario": {
+				"reglas": [
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "18:00:00",
+								"fin": "18:30:00"
+							},
+							{
+								"inicio": "19:30:00",
+								"fin": "20:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "SABADO_FESTIVO",
+						"tramos": [
+							{
+								"inicio": "13:00:00",
+								"fin": "15:00:00"
+							},
+							{
+								"inicio": "18:00:00",
+								"fin": "21:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "DOMINGO",
+						"tramos": [
+							{
+								"inicio": "19:00:00",
+								"fin": "22:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TS",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "18:30:00",
+								"fin": "19:30:00"
+							}
+						]
+					}
+				]
+			}
 		},
 		{
-		  "codigo": "4.3",
-		  "sentido": "PO",
-		  "latitud": "-33.5411820000",
-		  "longitud": "-70.6151120000"
+			"codigo": "4.3",
+			"nombre": "Coronel - Santa Julia",
+			"sentido": "PO",
+			"latitud": -33.5411820000,
+			"longitud": -70.6151120000,
+			"reglas": [
+				{
+					"aplicaA": [
+						"AUTO",
+						"MOTO",
+						"CAMIONETA"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 45.22
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 90.44
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 135.66
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"BUS",
+						"CAMION"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 90.44
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 180.88
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 271.32
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"CAMION_REMOLQUE"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 135.66
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 271.32
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 406.98
+						}
+					]
+				}
+			],
+			"calendario": {
+				"reglas": [
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "08:30:00",
+								"fin": "09:30:00"
+							},
+							{
+								"inicio": "18:00:00",
+								"fin": "18:30:00"
+							},
+							{
+								"inicio": "19:30:00",
+								"fin": "20:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "SABADO_FESTIVO",
+						"tramos": [
+							{
+								"inicio": "18:00:00",
+								"fin": "21:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "DOMINGO",
+						"tramos": [
+							{
+								"inicio": "19:00:00",
+								"fin": "22:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TS",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "07:30:00",
+								"fin": "08:30:00"
+							},
+							{
+								"inicio": "18:30:00",
+								"fin": "19:30:00"
+							}
+						]
+					}
+				]
+			}
 		},
 		{
-		  "codigo": "4.2",
-		  "sentido": "PO",
-		  "latitud": "-33.5269110000",
-		  "longitud": "-70.6026430000"
+			"codigo": "4.2",
+			"nombre": "Gnmo. de Alderete - V. Mackenna",
+			"sentido": "PO",
+			"latitud": -33.5269110000,
+			"longitud": -70.6026430000,
+			"reglas": [
+				{
+					"aplicaA": [
+						"AUTO",
+						"MOTO",
+						"CAMIONETA"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 266.30
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 532.59
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 798.89
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"BUS",
+						"CAMION"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 532.59
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 1065.18
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 1597.78
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"CAMION_REMOLQUE"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 798.89
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 1597.78
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 2396.66
+						}
+					]
+				}
+			],
+			"calendario": {
+				"reglas": [
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "08:30:00",
+								"fin": "09:30:00"
+							},
+							{
+								"inicio": "18:00:00",
+								"fin": "18:30:00"
+							},
+							{
+								"inicio": "19:30:00",
+								"fin": "20:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "SABADO_FESTIVO",
+						"tramos": [
+							{
+								"inicio": "18:00:00",
+								"fin": "21:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "DOMINGO",
+						"tramos": [
+							{
+								"inicio": "19:00:00",
+								"fin": "22:00:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TS",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "07:30:00",
+								"fin": "08:30:00"
+							},
+							{
+								"inicio": "18:30:00",
+								"fin": "19:30:00"
+							}
+						]
+					}
+				]
+			}
 		},
 		{
-		  "codigo": "5.4",
-		  "sentido": "PO",
-		  "latitud": "-33.4955980000",
-		  "longitud": "-70.5840790000"
+			"codigo": "5.4",
+			"nombre": "Las Torres - Quilín",
+			"sentido": "PO",
+			"latitud": -33.4955980000,
+			"longitud": -70.5840790000,
+			"reglas": [
+				{
+					"aplicaA": [
+						"AUTO",
+						"MOTO",
+						"CAMIONETA"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 382.86
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 765.73
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 1148.59
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"BUS",
+						"CAMION"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 765.73
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 1531.45
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 2297.18
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"CAMION_REMOLQUE"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 1148.59
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 2297.18
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 3445.77
+						}
+					]
+				}
+			],
+			"calendario": {
+				"reglas": [
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "08:30:00",
+								"fin": "09:30:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TS",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "07:30:00",
+								"fin": "08:30:00"
+							}
+						]
+					}
+				]
+			}
 		},
 		{
-		  "codigo": "5.2",
-		  "sentido": "PO",
-		  "latitud": "-33.4806940000",
-		  "longitud": "-70.5788030000"
+			"codigo": "5.2",
+			"nombre": "Quilín - Grecia",
+			"sentido": "PO",
+			"latitud": -33.4806940000,
+			"longitud": -70.5788030000,
+			"reglas": [
+				{
+					"aplicaA": [
+						"AUTO",
+						"MOTO",
+						"CAMIONETA"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 290.41
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 580.83
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 871.24
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"BUS",
+						"CAMION"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 580.83
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 1161.65
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 1742.48
+						}
+					]
+				},
+				{
+					"aplicaA": [
+						"CAMION_REMOLQUE"
+					],
+					"valores": [
+						{
+							"tipoTarifa": "TBFP",
+							"valor": 871.24
+						},
+						{
+							"tipoTarifa": "TBP",
+							"valor": 1742.48
+						},
+						{
+							"tipoTarifa": "TS",
+							"valor": 2613.72
+						}
+					]
+				}
+			],
+			"calendario": {
+				"reglas": [
+					{
+						"tipoTarifa": "TBP",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "08:30:00",
+								"fin": "09:30:00"
+							}
+						]
+					},
+					{
+						"tipoTarifa": "TS",
+						"tipoDia": "LABORAL",
+						"tramos": [
+							{
+								"inicio": "07:30:00",
+								"fin": "08:30:00"
+							}
+						]
+					}
+				]
+			}
 		}
 	]
 }

@@ -5,171 +5,1066 @@
 		{
 		  "codigo": "P0",
 		  "sentido": "PO",
-		  "latitud": "-33.3713630000",
-		  "longitud": "-70.5233800000"
+		  "latitud": -33.3713630000,
+		  "longitud": -70.5233800000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "P1",
 		  "sentido": "PO",
-		  "latitud": "-33.3757450000",
-		  "longitud": "-70.5431110000"
+		  "latitud": -33.3757450000,
+		  "longitud": -70.5431110000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "P2.1",
 		  "sentido": "PO",
-		  "latitud": "-33.3851529000",
-		  "longitud": "-70.5932020000"
+		  "latitud": -33.3851529000,
+		  "longitud": -70.5932020000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "P2.2",
 		  "sentido": "PO",
-		  "latitud": "-33.3996440000",
-		  "longitud": "-70.6043740000"
+		  "latitud": -33.3996440000,
+		  "longitud": -70.6043740000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "P3",
 		  "sentido": "PO",
-		  "latitud": "-33.4242670000",
-		  "longitud": "-70.6220160000"
+		  "latitud": -33.4242670000,
+		  "longitud": -70.6220160000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "P4",
 		  "sentido": "PO",
-		  "latitud": "-33.4303500000",
-		  "longitud": "-70.6580250000"
+		  "latitud": -33.4303500000,
+		  "longitud": -70.6580250000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "P5",
 		  "sentido": "PO",
-		  "latitud": "-33.4264090000",
-		  "longitud": "-70.6701860000"
+		  "latitud": -33.4264090000,
+		  "longitud": -70.6701860000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "P6.1",
 		  "sentido": "PO",
-		  "latitud": "-33.4118170000",
-		  "longitud": "-70.7395010000"
+		  "latitud": -33.4118170000,
+		  "longitud": -70.7395010000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "P6.2",
 		  "sentido": "PO",
-		  "latitud": "-33.4130350000",
-		  "longitud": "-70.7667000000"
+		  "latitud": -33.4130350000,
+		  "longitud": -70.7667000000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "P7",
 		  "sentido": "PO",
-		  "latitud": "-33.3874380000",
-		  "longitud": "-70.5420430000"
+		  "latitud": -33.3874380000,
+		  "longitud": -70.5420430000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "P8.0",
 		  "sentido": "PO",
-		  "latitud": "-33.4090990000",
-		  "longitud": "-70.6043040000"
+		  "latitud": -33.4090990000,
+		  "longitud": -70.6043040000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "P8.2",
 		  "sentido": "PO",
-		  "latitud": "-33.4084770000",
-		  "longitud": "-70.6021010000"
+		  "latitud": -33.4084770000,
+		  "longitud": -70.6021010000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "P8.3",
 		  "sentido": "PO",
-		  "latitud": "-33.4091490000",
-		  "longitud": "-70.6015970000"
+		  "latitud": -33.4091490000,
+		  "longitud": -70.6015970000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "P9",
 		  "sentido": "PO",
-		  "latitud": "-33.4180390000",
-		  "longitud": "-70.7909820000"
+		  "latitud": -33.4180390000,
+		  "longitud": -70.7909820000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
-
 		{
 		  "codigo": "P0",
 		  "sentido": "OP",
-		  "latitud": "-33.3711290000",
-		  "longitud": "-70.5231730000"
+		  "latitud": -33.3711290000,
+		  "longitud": -70.5231730000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "P1",
 		  "sentido": "OP",
-		  "latitud": "-33.3757940000",
-		  "longitud": "-70.5426710000"
+		  "latitud": -33.3757940000,
+		  "longitud": -70.5426710000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "P2.1",
 		  "sentido": "OP",
-		  "latitud": "-33.3850543000",
-		  "longitud": "-70.5932820000"
+		  "latitud": -33.3850543000,
+		  "longitud": -70.5932820000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "P2.2",
 		  "sentido": "OP",
-		  "latitud": "-33.3996379000",
-		  "longitud": "-70.6045190000"
+		  "latitud": -33.3996379000,
+		  "longitud": -70.6045190000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "P3",
 		  "sentido": "OP",
-		  "latitud": "-33.4240770000",
-		  "longitud": "-70.6219280000"
+		  "latitud": -33.4240770000,
+		  "longitud": -70.6219280000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "P5",
 		  "sentido": "OP",
-		  "latitud": "-33.4263730000",
-		  "longitud": "-70.6698530000"
+		  "latitud": -33.4263730000,
+		  "longitud": -70.6698530000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "P6.1",
 		  "sentido": "OP",
-		  "latitud": "-33.4117080000",
-		  "longitud": "-70.7395070000"
+		  "latitud": -33.4117080000,
+		  "longitud": -70.7395070000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "P6.2",
 		  "sentido": "OP",
-		  "latitud": "-33.4129210000",
-		  "longitud": "-70.7664100000"
+		  "latitud": -33.4129210000,
+		  "longitud": -70.7664100000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "P7",
 		  "sentido": "OP",
-		  "latitud": "-33.3876650000",
-		  "longitud": "-70.5429340000"
+		  "latitud": -33.3876650000,
+		  "longitud": -70.5429340000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "P8.1",
 		  "sentido": "OP",
-		  "latitud": "-33.4080291757",
-		  "longitud": "-70.5990285457"
+		  "latitud": -33.4080291757,
+		  "longitud": -70.5990285457,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "P9",
 		  "sentido": "OP",
-		  "latitud": "-33.4177810000",
-		  "longitud": "-70.7908770000"
+		  "latitud": -33.4177810000,
+		  "longitud": -70.7908770000,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "SB",
 		  "sentido": "OP",
-		  "latitud": "-33.4221551648",
-		  "longitud": "-70.6197886919"
+		  "latitud": -33.4221551648,
+		  "longitud": -70.6197886919,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "EP",
 		  "sentido": "OP",
-		  "latitud": "-33.4346549722",
-		  "longitud": "-70.6394774472"
+		  "latitud": -33.4346549722,
+		  "longitud": -70.6394774472,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		},
 		{
 		  "codigo": "EV",
 		  "sentido": "OP",
-		  "latitud": "-33.4302142218",
-		  "longitud": "-70.6575025767"
+		  "latitud": -33.4302142218,
+		  "longitud": -70.6575025767,
+		  "reglas": [
+			{
+			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["BUS", "CAMION"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			},
+			{
+			  "aplicaA": ["CAMION_REMOLQUE"],
+			  "valores": [
+				{ "tipoTarifa": "TBFP", "valor": 0.0 },
+				{ "tipoTarifa": "TBP", "valor": 0.0 },
+				{ "tipoTarifa": "TS", "valor": 0.0 }
+			  ]
+			}
+		  ],
+		  "calendario": {
+			"reglas": [
+			  { "tipoTarifa": "TBP", "tipoDia": "LABORAL", "tramos": [] },
+			  { "tipoTarifa": "TS", "tipoDia": "LABORAL", "tramos": [] }
+			]
+		  }
 		}
 	]
 }
