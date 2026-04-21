@@ -16,6 +16,15 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        // Mapbox SDK — requiere SDK_REGISTRY_TOKEN en ~/.gradle/gradle.properties
+        maven {
+            url = uri("https://api.mapbox.com/downloads/v2/releases/maven")
+            authentication { create<HttpHeaderAuthentication>("header") }
+            credentials(HttpHeaderCredentials::class) {
+                name = "Authorization"
+                value = "Token ${providers.gradleProperty("SDK_REGISTRY_TOKEN").getOrElse("")}"
+            }
+        }
     }
 }
 
