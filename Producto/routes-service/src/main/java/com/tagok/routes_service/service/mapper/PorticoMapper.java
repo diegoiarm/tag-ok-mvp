@@ -26,6 +26,7 @@ public class PorticoMapper
     {
         Portico portico = Portico.builder()
                 .codigo(request.getCodigo())
+                .nombre(request.getNombre())
                 .sentido(request.getSentido())
                 .latitud(request.getLatitud())
                 .longitud(request.getLongitud())
@@ -61,6 +62,7 @@ public class PorticoMapper
         return PorticoResponse.builder()
                 .id(portico.getId())
                 .codigo(portico.getCodigo())
+                .nombre(portico.getNombre())
                 .sentido(portico.getSentido())
                 .latitud(portico.getLatitud())
                 .longitud(portico.getLongitud())
@@ -75,6 +77,7 @@ public class PorticoMapper
         return PorticoResumenResponse.builder()
                 .id(portico.getId())
                 .codigo(portico.getCodigo())
+                .nombre(portico.getNombre())
                 .sentido(portico.getSentido())
                 .latitud(portico.getLatitud())
                 .longitud(portico.getLongitud())

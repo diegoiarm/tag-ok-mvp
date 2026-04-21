@@ -46,7 +46,9 @@ export function PorticoMark({ portico }: Props) {
     >
       <Popup>
         <div style={{ minWidth: "220px" }}>
-          <strong>{portico.codigo}</strong>
+          <strong>Código: {portico.codigo}</strong>
+          <br />
+          <strong>Pórtico: {portico.nombre || "No especificado"}</strong>
           <br />
           Sentido: {portico.sentido || "No especificado"}
           {(portico.autopista || detalle?.autopista) && (

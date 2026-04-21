@@ -15,6 +15,7 @@ public class PorticoRequest
 {
     private Long id;
     private String codigo;
+    private String nombre;
     private String sentido;
     private double latitud;
     private double longitud;

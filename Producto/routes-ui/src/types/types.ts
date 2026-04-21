@@ -16,6 +16,7 @@ export interface RouteSegment {
 export interface PorticoResumen {
   id: number;
   codigo: string;
+  nombre: string;
   sentido: string;
   latitud: number;
   longitud: number;
@@ -72,6 +73,7 @@ export type ReglaTarifariaResponse = {
 export type PorticoResponse = {
   id: number;
   codigo: string;
+  nombre: string;
   sentido: string;
   latitud: number;
   longitud: number;

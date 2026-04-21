@@ -31,6 +31,7 @@ public class Portico
     private Long id;
 
     private String codigo;
+    private String nombre;
     private String sentido;
 
     private double latitud;
@@ -59,5 +60,10 @@ public class Portico
         
         if (calendario != null)
             calendario.setPortico(this);
+    }
+
+    public double calcularValor()
+    {
+        return Double.MAX_VALUE;
     }
 }
