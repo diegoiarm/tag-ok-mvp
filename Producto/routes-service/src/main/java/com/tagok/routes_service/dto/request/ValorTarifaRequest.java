@@ -1,5 +1,7 @@
 package com.tagok.routes_service.dto.request;
 
+import java.math.BigDecimal;
+
 import com.tagok.routes_service.domain.TipoTarifa;
 
 import lombok.AllArgsConstructor;
@@ -14,5 +16,5 @@ import lombok.NoArgsConstructor;
 public class ValorTarifaRequest 
 {
     private TipoTarifa tipoTarifa;
-    private double valor;
+    private BigDecimal valor;
 }
