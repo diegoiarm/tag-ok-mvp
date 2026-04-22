@@ -1,4 +1,4 @@
-package com.tagok.routes_service.service;
+package com.tagok.routes_service.service.application;
 
 import org.springframework.stereotype.Service;
 

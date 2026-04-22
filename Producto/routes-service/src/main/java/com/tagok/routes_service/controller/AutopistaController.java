@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tagok.routes_service.dto.request.AutopistaRequest;
 import com.tagok.routes_service.dto.response.AutopistaResponse;
-import com.tagok.routes_service.service.AutopistaService;
+import com.tagok.routes_service.service.application.AutopistaService;
 
 import lombok.RequiredArgsConstructor;
 

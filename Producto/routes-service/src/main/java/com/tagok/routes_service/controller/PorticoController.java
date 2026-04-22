@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tagok.routes_service.dto.response.PorticoResponse;
 import com.tagok.routes_service.dto.response.PorticoResumenResponse;
-import com.tagok.routes_service.service.PorticoService;
+import com.tagok.routes_service.service.application.PorticoService;
 
 import lombok.RequiredArgsConstructor;
 
