@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tagok.routes_service.domain.dto.response.RouteResponse;
+import com.tagok.routes_service.dto.response.RouteResponse;
 import com.tagok.routes_service.service.RouteService;
 
 import lombok.RequiredArgsConstructor;

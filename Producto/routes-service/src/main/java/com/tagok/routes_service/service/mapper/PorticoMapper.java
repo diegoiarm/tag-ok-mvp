@@ -7,11 +7,11 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import com.tagok.routes_service.domain.Portico;
-import com.tagok.routes_service.domain.dto.request.PorticoRequest;
-import com.tagok.routes_service.domain.dto.response.CalendarioTarifarioResponse;
-import com.tagok.routes_service.domain.dto.response.PorticoResponse;
-import com.tagok.routes_service.domain.dto.response.PorticoResumenResponse;
-import com.tagok.routes_service.domain.dto.response.ReglaTarifariaResponse;
+import com.tagok.routes_service.dto.request.PorticoRequest;
+import com.tagok.routes_service.dto.response.CalendarioTarifarioResponse;
+import com.tagok.routes_service.dto.response.PorticoResponse;
+import com.tagok.routes_service.dto.response.PorticoResumenResponse;
+import com.tagok.routes_service.dto.response.ReglaTarifariaResponse;
 
 import lombok.RequiredArgsConstructor;
 

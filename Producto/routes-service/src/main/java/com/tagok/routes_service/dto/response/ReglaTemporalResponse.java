@@ -1,5 +1,8 @@
-package com.tagok.routes_service.domain.dto.response;
+package com.tagok.routes_service.dto.response;
 
+import java.util.List;
+
+import com.tagok.routes_service.domain.TipoDia;
 import com.tagok.routes_service.domain.TipoTarifa;
 
 import lombok.AllArgsConstructor;
@@ -11,8 +14,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ValorTarifaResponse 
+public class ReglaTemporalResponse 
 {
     private TipoTarifa tipoTarifa;
-    private double valor;
+    private TipoDia tipoDia;
+    private List<RangoHorarioResponse> tramos;
 }

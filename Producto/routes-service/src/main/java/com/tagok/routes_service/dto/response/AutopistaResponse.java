@@ -1,4 +1,4 @@
-package com.tagok.routes_service.domain.dto.request;
+package com.tagok.routes_service.dto.response;
 
 import java.util.List;
 
@@ -11,7 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CalendarioTarifarioRequest 
+public class AutopistaResponse 
 {
-    private List<ReglaTemporalRequest> reglas;
+    private Long id;
+    private String nombre;
+    private List
+    <PorticoResponse> porticos;
 }

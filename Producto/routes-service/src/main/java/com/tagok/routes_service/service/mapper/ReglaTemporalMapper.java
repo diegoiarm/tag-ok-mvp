@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.tagok.routes_service.domain.ReglaTemporal;
-import com.tagok.routes_service.domain.dto.request.ReglaTemporalRequest;
-import com.tagok.routes_service.domain.dto.response.ReglaTemporalResponse;
+import com.tagok.routes_service.dto.request.ReglaTemporalRequest;
+import com.tagok.routes_service.dto.response.ReglaTemporalResponse;
 
 import lombok.RequiredArgsConstructor;
 

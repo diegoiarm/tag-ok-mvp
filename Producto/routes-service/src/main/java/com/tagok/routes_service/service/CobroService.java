@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.tagok.routes_service.domain.Portico;
-import com.tagok.routes_service.domain.dto.request.CobroRequest;
-import com.tagok.routes_service.domain.dto.request.PorticoCobroRequest;
-import com.tagok.routes_service.domain.dto.response.CobroResponse;
+import com.tagok.routes_service.dto.request.CobroRequest;
+import com.tagok.routes_service.dto.request.PorticoCobroRequest;
+import com.tagok.routes_service.dto.response.CobroResponse;
 import com.tagok.routes_service.repository.PorticoRepository;
 import com.tagok.routes_service.service.mapper.PorticoMapper;
 

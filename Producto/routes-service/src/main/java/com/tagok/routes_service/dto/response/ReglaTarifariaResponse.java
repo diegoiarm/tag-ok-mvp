@@ -1,4 +1,4 @@
-package com.tagok.routes_service.domain.dto.request;
+package com.tagok.routes_service.dto.response;
 
 import java.util.List;
 
@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReglaTarifariaRequest 
+public class ReglaTarifariaResponse 
 {
     private List<TipoVehiculo> aplicaA;
-    private List<ValorTarifaRequest> valores;
+    private List<ValorTarifaResponse> valores;
 }

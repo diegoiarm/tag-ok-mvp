@@ -1,6 +1,7 @@
-package com.tagok.routes_service.domain.dto.response;
+package com.tagok.routes_service.dto.response;
 
 import java.util.List;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

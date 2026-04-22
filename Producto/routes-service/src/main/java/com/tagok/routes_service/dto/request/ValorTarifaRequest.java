@@ -1,4 +1,4 @@
-package com.tagok.routes_service.domain.dto.request;
+package com.tagok.routes_service.dto.request;
 
 import com.tagok.routes_service.domain.TipoTarifa;
 

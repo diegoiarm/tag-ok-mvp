@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tagok.routes_service.domain.dto.response.PorticoResponse;
-import com.tagok.routes_service.domain.dto.response.PorticoResumenResponse;
+import com.tagok.routes_service.dto.response.PorticoResponse;
+import com.tagok.routes_service.dto.response.PorticoResumenResponse;
 import com.tagok.routes_service.service.PorticoService;
 
 import lombok.RequiredArgsConstructor;

@@ -3,8 +3,8 @@ package com.tagok.routes_service.service.mapper;
 import org.springframework.stereotype.Component;
 
 import com.tagok.routes_service.domain.RangoHorario;
-import com.tagok.routes_service.domain.dto.request.RangoHorarioRequest;
-import com.tagok.routes_service.domain.dto.response.RangoHorarioResponse;
+import com.tagok.routes_service.dto.request.RangoHorarioRequest;
+import com.tagok.routes_service.dto.response.RangoHorarioResponse;
 
 @Component
 public class RangoHorarioMapper implements IEntityMapper<RangoHorarioResponse, RangoHorarioRequest, RangoHorario>

@@ -3,8 +3,8 @@ package com.tagok.routes_service.service.mapper;
 import org.springframework.stereotype.Component;
 
 import com.tagok.routes_service.domain.ValorTarifa;
-import com.tagok.routes_service.domain.dto.request.ValorTarifaRequest;
-import com.tagok.routes_service.domain.dto.response.ValorTarifaResponse;
+import com.tagok.routes_service.dto.request.ValorTarifaRequest;
+import com.tagok.routes_service.dto.response.ValorTarifaResponse;
 
 @Component
 public class ValorTarifaMapper implements IEntityMapper<ValorTarifaResponse, ValorTarifaRequest, ValorTarifa>

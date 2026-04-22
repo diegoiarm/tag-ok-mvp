@@ -1,9 +1,10 @@
 package com.tagok.routes_service.repository;
 
-import com.tagok.routes_service.domain.dto.RouteSegment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import com.tagok.routes_service.dto.RouteSegment;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -1,4 +1,4 @@
-package com.tagok.routes_service.domain.dto;
+package com.tagok.routes_service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

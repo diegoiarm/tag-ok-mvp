@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.tagok.routes_service.domain.dto.RouteSegment;
-import com.tagok.routes_service.domain.dto.response.RouteResponse;
+import com.tagok.routes_service.dto.RouteSegment;
+import com.tagok.routes_service.dto.response.RouteResponse;
 import com.tagok.routes_service.repository.RouteRepository;
 
 import lombok.RequiredArgsConstructor;
