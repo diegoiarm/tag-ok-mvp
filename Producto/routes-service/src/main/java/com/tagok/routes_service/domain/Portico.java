@@ -61,9 +61,4 @@ public class Portico
         if (calendario != null)
             calendario.setPortico(this);
     }
-
-    public double calcularValor()
-    {
-        return Double.MAX_VALUE;
-    }
 }
