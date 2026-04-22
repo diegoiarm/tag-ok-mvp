@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.tagok.routes_service.domain.Portico;
+import com.tagok.routes_service.domain.portico.Portico;
 import com.tagok.routes_service.dto.response.PorticoResponse;
 import com.tagok.routes_service.dto.response.PorticoResumenResponse;
 import com.tagok.routes_service.repository.PorticoRepository;

@@ -1,16 +1,16 @@
-package com.tagok.routes_service.domain;
+package com.tagok.routes_service.domain.autopista;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.tagok.routes_service.domain.portico.Portico;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,26 +21,30 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
-public class CalendarioTarifario 
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class Autopista 
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "portico_id")
-    private Portico portico;
+    private String nombre;
 
-    @OneToMany(mappedBy = "calendario", cascade = CascadeType.ALL)
     @Builder.Default
-    private List<ReglaTemporal> reglas = new ArrayList<>();
+    @OneToMany(mappedBy = "autopista", cascade = CascadeType.ALL)
+    private List<Portico> porticos = new ArrayList<>();
 
-    public void addRegla(ReglaTemporal regla) 
+    public void addPortico(Portico portico)
     {
-        reglas.add(regla);
-        regla.setCalendario(this);
+        boolean existe = porticos.stream()
+            .anyMatch(p -> p.getCodigo().equals(portico.getCodigo()));
+
+        if (!existe) 
+        {
+            porticos.add(portico);
+            portico.setAutopista(this);
+        }
     }
 }

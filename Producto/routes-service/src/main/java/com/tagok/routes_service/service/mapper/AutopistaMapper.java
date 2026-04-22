@@ -2,7 +2,7 @@ package com.tagok.routes_service.service.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.tagok.routes_service.domain.Autopista;
+import com.tagok.routes_service.domain.autopista.Autopista;
 import com.tagok.routes_service.dto.request.AutopistaRequest;
 import com.tagok.routes_service.dto.response.AutopistaResponse;
 

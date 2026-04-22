@@ -1,7 +1,9 @@
-package com.tagok.routes_service.domain;
+package com.tagok.routes_service.domain.calendario;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.tagok.routes_service.domain.tarifa.TipoTarifa;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

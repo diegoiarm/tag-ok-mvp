@@ -1,4 +1,4 @@
-package com.tagok.routes_service.domain;
+package com.tagok.routes_service.domain.vehiculo;
 
 public enum TipoVehiculo 
 {

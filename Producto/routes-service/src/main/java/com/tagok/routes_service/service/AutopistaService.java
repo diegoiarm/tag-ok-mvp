@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.tagok.routes_service.domain.Autopista;
-import com.tagok.routes_service.domain.Portico;
+import com.tagok.routes_service.domain.autopista.Autopista;
+import com.tagok.routes_service.domain.portico.Portico;
 import com.tagok.routes_service.dto.request.AutopistaRequest;
 import com.tagok.routes_service.dto.response.AutopistaResponse;
 import com.tagok.routes_service.repository.AutopistaRepository;

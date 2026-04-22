@@ -2,7 +2,7 @@ package com.tagok.routes_service.dto.request;
 
 import java.math.BigDecimal;
 
-import com.tagok.routes_service.domain.TipoTarifa;
+import com.tagok.routes_service.domain.tarifa.TipoTarifa;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

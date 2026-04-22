@@ -4,7 +4,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.tagok.routes_service.domain.ReglaTemporal;
+import com.tagok.routes_service.domain.calendario.ReglaTemporal;
 import com.tagok.routes_service.dto.request.ReglaTemporalRequest;
 import com.tagok.routes_service.dto.response.ReglaTemporalResponse;
 

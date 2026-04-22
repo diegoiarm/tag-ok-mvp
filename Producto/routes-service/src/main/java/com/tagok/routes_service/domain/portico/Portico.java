@@ -1,7 +1,11 @@
-package com.tagok.routes_service.domain;
+package com.tagok.routes_service.domain.portico;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.tagok.routes_service.domain.autopista.Autopista;
+import com.tagok.routes_service.domain.calendario.CalendarioTarifario;
+import com.tagok.routes_service.domain.tarifa.ReglaTarifaria;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

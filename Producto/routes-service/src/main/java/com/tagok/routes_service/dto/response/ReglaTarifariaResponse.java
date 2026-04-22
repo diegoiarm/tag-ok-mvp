@@ -2,7 +2,7 @@ package com.tagok.routes_service.dto.response;
 
 import java.util.List;
 
-import com.tagok.routes_service.domain.TipoVehiculo;
+import com.tagok.routes_service.domain.vehiculo.TipoVehiculo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -2,8 +2,8 @@ package com.tagok.routes_service.dto.request;
 
 import java.util.List;
 
-import com.tagok.routes_service.domain.TipoDia;
-import com.tagok.routes_service.domain.TipoTarifa;
+import com.tagok.routes_service.domain.calendario.TipoDia;
+import com.tagok.routes_service.domain.tarifa.TipoTarifa;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
