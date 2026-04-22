@@ -43,7 +43,7 @@ public class Portico
 
     @Builder.Default
     @OneToMany(mappedBy = "portico", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ReglaTarifaria> reglas = new ArrayList<>();
+    private final List<ReglaTarifaria> reglas = new ArrayList<>();
 
     @OneToOne(mappedBy = "portico", cascade = CascadeType.ALL, orphanRemoval = true)
     private CalendarioTarifario calendario;
@@ -56,6 +56,12 @@ public class Portico
     {
         reglas.add(regla);
         regla.setPortico(this);
+    }
+
+    public void removeRegla(ReglaTarifaria regla)
+    {
+        reglas.remove(regla);
+        regla.setPortico(null);
     }
 
     public void setCalendario(CalendarioTarifario calendario) 
