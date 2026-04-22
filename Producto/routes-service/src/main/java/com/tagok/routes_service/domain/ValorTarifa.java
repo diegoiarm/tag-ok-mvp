@@ -1,5 +1,7 @@
 package com.tagok.routes_service.domain;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -34,5 +36,5 @@ public class ValorTarifa
     @Enumerated(EnumType.STRING)
     private TipoTarifa tipoTarifa;
 
-    private double valor;
+    private BigDecimal valor;
 }
