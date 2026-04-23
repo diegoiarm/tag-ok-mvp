@@ -3,8 +3,8 @@ package com.tagok.routes_service.domain.tarifa;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.tagok.routes_service.domain.portico.Cruce;
 import com.tagok.routes_service.domain.portico.Portico;
-import com.tagok.routes_service.domain.portico.PorticoCruzado;
 import com.tagok.routes_service.domain.vehiculo.TipoVehiculo;
 
 public class CalculadorTarifa
@@ -16,7 +16,7 @@ public class CalculadorTarifa
     {
         BigDecimal monto = portico.calcularTarifa(vehiculo, fechaHora);
 
-        PorticoCruzado cruce = new PorticoCruzado(portico.getId(), portico.getCodigo(), monto);
+        var cruce = new Cruce(portico.getId(), portico.getCodigo(), monto);
 
         return new TarifaCalculada(monto, cruce, fechaHora);
     }

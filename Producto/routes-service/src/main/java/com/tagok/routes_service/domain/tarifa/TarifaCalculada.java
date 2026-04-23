@@ -3,10 +3,10 @@ package com.tagok.routes_service.domain.tarifa;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import com.tagok.routes_service.domain.portico.PorticoCruzado;
+import com.tagok.routes_service.domain.portico.Cruce;
 
 public record TarifaCalculada(
     BigDecimal total,
-    PorticoCruzado portico,
+    Cruce portico,
     LocalDateTime fechaHora) 
 {}
