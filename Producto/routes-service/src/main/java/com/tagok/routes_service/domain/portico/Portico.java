@@ -8,6 +8,7 @@ import java.util.List;
 import com.tagok.routes_service.domain.autopista.Autopista;
 import com.tagok.routes_service.domain.calendario.CalendarioTarifario;
 import com.tagok.routes_service.domain.tarifa.ReglaTarifaria;
+import com.tagok.routes_service.domain.tarifa.Tarifa;
 import com.tagok.routes_service.domain.tarifa.TipoTarifa;
 import com.tagok.routes_service.domain.vehiculo.TipoVehiculo;
 
@@ -85,15 +86,17 @@ public class Portico
                     "No hay regla para el vehiculo: " + tipoVehiculo));
     }
 
-    public BigDecimal calcularTarifa(TipoVehiculo vehiculo,LocalDateTime fecha)
+    public Tarifa calcularTarifa(TipoVehiculo vehiculo,LocalDateTime fecha)
     {
-        ReglaTarifaria regla =buscarReglaPara(vehiculo);
+        ReglaTarifaria regla = buscarReglaPara(vehiculo);
 
         TipoTarifa tipoTarifa = calendario != null
                 ? calendario.obtenerTipoTarifa(fecha)
                 : TipoTarifa.TBFP;
 
-        return regla.obtenerValor(tipoTarifa)
+        BigDecimal monto = regla.obtenerValor(tipoTarifa)
                     .getValor();
+
+        return new Tarifa(monto, tipoTarifa);
     }
 }
