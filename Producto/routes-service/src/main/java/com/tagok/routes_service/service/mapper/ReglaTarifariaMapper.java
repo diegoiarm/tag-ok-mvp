@@ -21,10 +21,10 @@ public class ReglaTarifariaMapper implements IEntityMapper<ReglaTarifariaRespons
     public ReglaTarifaria fromRequest(ReglaTarifariaRequest request) 
     {
         ReglaTarifaria regla = ReglaTarifaria.builder()
-                .aplicaA(request.getAplicaA())
+                .aplicaA(request.aplicaA())
                 .build();
 
-        Optional.ofNullable(request.getValores())
+        Optional.ofNullable(request.valores())
                 .ifPresent(valores -> valores.stream()
                         .map(valorTarifaMapper::fromRequest)
                         .forEach(regla::addValor));

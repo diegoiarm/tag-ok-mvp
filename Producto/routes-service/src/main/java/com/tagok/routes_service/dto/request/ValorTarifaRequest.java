@@ -4,17 +4,9 @@ import java.math.BigDecimal;
 
 import com.tagok.routes_service.domain.tarifa.TipoTarifa;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class ValorTarifaRequest 
+public record ValorTarifaRequest(
+    TipoTarifa tipoTarifa,
+    BigDecimal valor) 
 {
-    private TipoTarifa tipoTarifa;
-    private BigDecimal valor;
+
 }

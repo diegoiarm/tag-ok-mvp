@@ -13,8 +13,8 @@ public class ValorTarifaMapper implements IEntityMapper<ValorTarifaResponse, Val
     public ValorTarifa fromRequest(ValorTarifaRequest request) 
     {
         return ValorTarifa.builder()
-                .tipoTarifa(request.getTipoTarifa())
-                .valor(request.getValor())
+                .tipoTarifa(request.tipoTarifa())
+                .valor(request.valor())
                 .build();
     }
 

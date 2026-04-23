@@ -25,11 +25,11 @@ public class PorticoMapper
     public Portico fromRequest(PorticoRequest request) 
     {
         Portico portico = Portico.builder()
-                .codigo(request.getCodigo())
-                .nombre(request.getNombre())
-                .sentido(request.getSentido())
-                .latitud(request.getLatitud())
-                .longitud(request.getLongitud())
+                .codigo(request.codigo())
+                .nombre(request.nombre())
+                .sentido(request.sentido())
+                .latitud(request.latitud())
+                .longitud(request.longitud())
                 .build();
 
         mapReglasFromRequest(request, portico);
@@ -40,7 +40,7 @@ public class PorticoMapper
 
     private void mapReglasFromRequest(PorticoRequest request, Portico portico) 
     {
-        Optional.ofNullable(request.getReglas())
+        Optional.ofNullable(request.reglas())
                 .ifPresent(reglas -> reglas.stream()
                         .map(reglaTarifariaMapper::fromRequest)
                         .forEach(portico::addRegla));
@@ -48,7 +48,7 @@ public class PorticoMapper
 
     private void mapCalendarioFromRequest(PorticoRequest request, Portico portico) 
     {
-        Optional.ofNullable(request.getCalendario())
+        Optional.ofNullable(request.calendario())
                 .map(calendarioTarifarioMapper::fromRequest)
                 .ifPresent(portico::setCalendario);
     }

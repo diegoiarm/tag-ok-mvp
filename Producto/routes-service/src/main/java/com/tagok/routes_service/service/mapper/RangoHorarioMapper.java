@@ -13,8 +13,8 @@ public class RangoHorarioMapper implements IEntityMapper<RangoHorarioResponse, R
     public RangoHorario fromRequest(RangoHorarioRequest request)
     {
         RangoHorario rango = new RangoHorario();
-        rango.setHoraInicio(request.getInicio());
-        rango.setHoraFin(request.getFin());
+        rango.setHoraInicio(request.inicio());
+        rango.setHoraFin(request.fin());
         return rango;
     }
 

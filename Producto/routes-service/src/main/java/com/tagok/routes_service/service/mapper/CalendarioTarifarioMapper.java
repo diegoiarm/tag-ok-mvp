@@ -22,7 +22,7 @@ public class CalendarioTarifarioMapper implements IEntityMapper<CalendarioTarifa
     {
         CalendarioTarifario calendario = new CalendarioTarifario();
         
-        Optional.ofNullable(request.getReglas())
+        Optional.ofNullable(request.reglas())
                 .ifPresent(reglas -> reglas.stream()
                         .map(reglaTemporalMapper::fromRequest)
                         .forEach(calendario::addRegla));

@@ -5,17 +5,9 @@ import java.util.List;
 import com.tagok.routes_service.domain.vehiculo.TipoVehiculo;
 import com.tagok.routes_service.dto.request.ValorTarifaRequest;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class ReglaTarifariaRequest 
+public record ReglaTarifariaRequest(
+    List<TipoVehiculo> aplicaA,
+    List<ValorTarifaRequest> valores) 
 {
-    private List<TipoVehiculo> aplicaA;
-    private List<ValorTarifaRequest> valores;
+
 }

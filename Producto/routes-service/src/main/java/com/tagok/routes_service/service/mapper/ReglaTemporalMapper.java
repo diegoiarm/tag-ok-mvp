@@ -19,11 +19,11 @@ public class ReglaTemporalMapper implements IEntityMapper<ReglaTemporalResponse,
     public ReglaTemporal fromRequest(ReglaTemporalRequest request)
     {
         ReglaTemporal regla = new ReglaTemporal();
-        regla.setTipoTarifa(request.getTipoTarifa());
-        regla.setTipoDia(request.getTipoDia());
+        regla.setTipoTarifa(request.tipoTarifa());
+        regla.setTipoDia(request.tipoDia());
 
-        if (request.getTramos() != null)
-            request.getTramos()
+        if (request.tramos() != null)
+            request.tramos()
                     .stream()
                     .map(rangoHorarioMapper::fromRequest)
                     .forEach(regla::addTramo);
