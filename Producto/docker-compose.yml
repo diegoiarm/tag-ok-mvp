@@ -11,6 +11,19 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  db-historial:
+    image: mongo:7
+    container_name: db-historial
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: historial_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin_container
