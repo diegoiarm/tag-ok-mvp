@@ -11,6 +11,17 @@ Actualmente, los conductores urbanos enfrentan incertidumbre financiera y falta 
 TAG OK soluciona esta problemática mediante un ecosistema compuesto por una **aplicación móvil** orientada al cliente (B2C) y un **panel web administrativo**, todo conectado a través de una API centralizada en la nube.
 
 ## Características principales:
+### Módulo de rutas (Java, Springboot, PostgreSQL, PostGIS)
+* Información de pórticos del sistema TAG en Santiago.
+* Información de calles de Santiago.
+* Cálculo de tarifas asociado al cruce de pórticos del sistema TAG.
+* Generación de ruta en la ciudad de Santiago, calculando el valor monetario asociado.
+
+### Módulo de historial (Java, Springboot, MongoDB)
+* Guarda el historial de cruce de pórticos del sistema TAG.
+
+### Módulo de preferencias (Java, Springboot, PostgreSQL)
+* Guarda las preferencias del usuario (Vehículos, Presupuestos, etc)
 
 ### 📱 Aplicación móvil (para conductores)
 * Visualización de autopistas urbanas y el estado actual de los pórticos TAG a través de un mapa interactivo.
@@ -28,8 +39,9 @@ TAG OK soluciona esta problemática mediante un ecosistema compuesto por una **a
 El proyecto está construido bajo una arquitectura modular y escalable, utilizando los siguientes lenguajes y herramientas:
 
 * **Frontend móvil:** Kotlin con Jetpack Compose (Android).
-* **Backend:** Java con Spring Framework (Arquitectura RESTful).
-* **Base de Datos:** PostgreSQL con extensiones espaciales **PostGIS** y **pgRouting** para el motor de mapas y rutas.
+* **Backend:** Java con Spring Framework (Arquitectura de microservicios dirigida por eventos).
+* **Base de Datos:** PostgreSQL con extensiones espaciales **PostGIS** y **pgRouting** para el motor de mapas y rutas, MongoDB para el servicio de historial.
+* **Gestor de eventos:** Apache Kafka
 
 ### Infraestructura cloud
 El despliegue aprovecha los modelos IaaS, PaaS y SaaS con enfoque en el Tier Gratuito para las 12 semanas de desarrollo:
