@@ -1,9 +1,6 @@
 package com.tagok.routes_service.domain.tarifa;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.tagok.routes_service.domain.portico.Portico;
 import com.tagok.routes_service.domain.vehiculo.TipoVehiculo;
