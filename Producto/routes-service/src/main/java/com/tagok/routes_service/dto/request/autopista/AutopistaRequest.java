@@ -4,13 +4,9 @@ import java.util.List;
 
 import com.tagok.routes_service.dto.request.portico.PorticoRequest;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@NoArgsConstructor
-public class AutopistaRequest 
+public record AutopistaRequest(
+    String autopista,
+    List<PorticoRequest> porticos) 
 {
-    private String autopista;
-    private List<PorticoRequest> porticos;
+
 }

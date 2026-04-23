@@ -26,14 +26,15 @@ public class AutopistaService
     @Transactional
     public AutopistaResponse saveAutopistaWithPorticos(AutopistaRequest request) 
     {
-        Autopista autopista = autopistaRepository.findByNombre(request.getAutopista())
+        Autopista autopista = autopistaRepository.findByNombre(request.autopista())
                 .orElseGet(() -> autopistaMapper.fromRequest(request));
 
-        request.getPorticos().forEach(porticoRequest -> 
-        {
-            Portico portico = porticoMapper.fromRequest(porticoRequest);
-            autopista.addPortico(portico);
-        });
+        request.porticos()
+            .forEach(porticoRequest -> 
+            {
+                Portico portico = porticoMapper.fromRequest(porticoRequest);
+                autopista.addPortico(portico);
+            });
 
         Autopista autopistaGuardada = autopistaRepository.save(autopista);
         return autopistaMapper.toResponse(autopistaGuardada);
