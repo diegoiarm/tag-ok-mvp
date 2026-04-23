@@ -1,6 +1,8 @@
-package com.tagok.routes_service.dto.request;
+package com.tagok.routes_service.dto.request.autopista;
 
 import java.util.List;
+
+import com.tagok.routes_service.dto.request.portico.PorticoRequest;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

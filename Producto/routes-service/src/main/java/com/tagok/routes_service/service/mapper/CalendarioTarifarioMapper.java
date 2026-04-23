@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import com.tagok.routes_service.domain.calendario.CalendarioTarifario;
-import com.tagok.routes_service.dto.request.CalendarioTarifarioRequest;
+import com.tagok.routes_service.dto.request.portico.CalendarioTarifarioRequest;
 import com.tagok.routes_service.dto.response.CalendarioTarifarioResponse;
 
 import lombok.RequiredArgsConstructor;

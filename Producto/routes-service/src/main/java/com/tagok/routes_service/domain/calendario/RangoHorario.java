@@ -27,4 +27,9 @@ public class RangoHorario
 
     private LocalTime horaInicio;
     private LocalTime horaFin;
+
+    public boolean estaEnRango(LocalTime hora)
+    {
+        return !hora.isBefore(horaInicio) && hora.isBefore(horaFin);
+    }
 }

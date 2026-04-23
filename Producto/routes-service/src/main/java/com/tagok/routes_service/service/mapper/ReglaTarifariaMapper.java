@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import com.tagok.routes_service.domain.tarifa.ReglaTarifaria;
-import com.tagok.routes_service.dto.request.ReglaTarifariaRequest;
+import com.tagok.routes_service.dto.request.portico.ReglaTarifariaRequest;
 import com.tagok.routes_service.dto.response.ReglaTarifariaResponse;
 
 import lombok.RequiredArgsConstructor;

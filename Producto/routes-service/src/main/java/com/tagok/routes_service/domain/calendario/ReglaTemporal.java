@@ -1,5 +1,7 @@
 package com.tagok.routes_service.domain.calendario;
 
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,5 +49,31 @@ public class ReglaTemporal
     {
         tramos.add(tramo);
         tramo.setRegla(this);
+    }
+
+    public boolean aplica(LocalDateTime horaFecha)
+    {
+        return esDiaAplicable(horaFecha) && tramos.stream()
+            .anyMatch(t -> t.estaEnRango(horaFecha.toLocalTime()));
+    }
+
+    private boolean esDiaAplicable(LocalDateTime horaFecha)
+    {
+        switch (tipoDia)
+        {
+            case LABORAL:
+                DayOfWeek d = horaFecha.getDayOfWeek();
+
+                return d != DayOfWeek.SATURDAY && d != DayOfWeek.SUNDAY;
+
+            case SABADO_FESTIVO:
+                return horaFecha.getDayOfWeek() == DayOfWeek.SATURDAY;
+
+            case DOMINGO:
+                return horaFecha.getDayOfWeek() == DayOfWeek.SUNDAY;
+
+            default:
+                throw new IllegalStateException("Tipo de día inválido");
+        }
     }
 }

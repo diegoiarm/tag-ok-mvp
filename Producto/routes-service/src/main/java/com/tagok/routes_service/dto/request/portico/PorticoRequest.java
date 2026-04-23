@@ -1,4 +1,4 @@
-package com.tagok.routes_service.dto.request;
+package com.tagok.routes_service.dto.request.portico;
 
 import java.util.List;
 

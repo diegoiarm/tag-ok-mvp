@@ -1,9 +1,11 @@
 package com.tagok.routes_service.domain.calendario;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.tagok.routes_service.domain.portico.Portico;
+import com.tagok.routes_service.domain.tarifa.TipoTarifa;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -44,5 +46,14 @@ public class CalendarioTarifario
     {
         reglas.add(regla);
         regla.setCalendario(this);
+    }
+
+    public TipoTarifa obtenerTipoTarifa(LocalDateTime horaFecha)
+    {
+        return reglas.stream()
+                .filter(r -> r.aplica(horaFecha))
+                .map(ReglaTemporal::getTipoTarifa)
+                .findFirst()
+                .orElse(TipoTarifa.TBFP);
     }
 }

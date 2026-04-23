@@ -1,11 +1,15 @@
 package com.tagok.routes_service.domain.portico;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.tagok.routes_service.domain.autopista.Autopista;
 import com.tagok.routes_service.domain.calendario.CalendarioTarifario;
 import com.tagok.routes_service.domain.tarifa.ReglaTarifaria;
+import com.tagok.routes_service.domain.tarifa.TipoTarifa;
+import com.tagok.routes_service.domain.vehiculo.TipoVehiculo;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -70,5 +74,26 @@ public class Portico
         
         if (calendario != null)
             calendario.setPortico(this);
+    }
+
+    private ReglaTarifaria buscarReglaPara(TipoVehiculo tipoVehiculo)
+    {
+        return reglas.stream()
+                .filter(r -> r.aplicaATipo(tipoVehiculo))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(
+                    "No hay regla para el vehiculo: " + tipoVehiculo));
+    }
+
+    public BigDecimal calcularTarifa(TipoVehiculo vehiculo,LocalDateTime fecha)
+    {
+        ReglaTarifaria regla =buscarReglaPara(vehiculo);
+
+        TipoTarifa tipoTarifa = calendario != null
+                ? calendario.obtenerTipoTarifa(fecha)
+                : TipoTarifa.TBFP;
+
+        return regla.obtenerValor(tipoTarifa)
+                    .getValor();
     }
 }

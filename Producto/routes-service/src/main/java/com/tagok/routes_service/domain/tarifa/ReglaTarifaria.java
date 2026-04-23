@@ -58,4 +58,18 @@ public class ReglaTarifaria
         valores.add(valor);
         valor.setRegla(this);
     }
+
+    public boolean aplicaATipo(TipoVehiculo tipo)
+    {
+        return aplicaA.contains(tipo);
+    }
+
+    public ValorTarifa obtenerValor(TipoTarifa tipoTarifa)
+    {
+        return valores.stream()
+                .filter(v -> v.getTipoTarifa() == tipoTarifa)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(
+                    "No hay valor para tarifa " + tipoTarifa));
+    }
 }

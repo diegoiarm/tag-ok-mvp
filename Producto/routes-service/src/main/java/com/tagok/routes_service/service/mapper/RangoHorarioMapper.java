@@ -3,7 +3,7 @@ package com.tagok.routes_service.service.mapper;
 import org.springframework.stereotype.Component;
 
 import com.tagok.routes_service.domain.calendario.RangoHorario;
-import com.tagok.routes_service.dto.request.RangoHorarioRequest;
+import com.tagok.routes_service.dto.request.portico.RangoHorarioRequest;
 import com.tagok.routes_service.dto.response.RangoHorarioResponse;
 
 @Component

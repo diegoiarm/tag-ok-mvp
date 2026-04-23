@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tagok.routes_service.dto.request.AutopistaRequest;
+import com.tagok.routes_service.dto.request.autopista.AutopistaRequest;
 import com.tagok.routes_service.dto.response.AutopistaResponse;
 import com.tagok.routes_service.service.application.AutopistaService;
 
