@@ -15,6 +15,5 @@ public class AutopistaResponse
 {
     private Long id;
     private String nombre;
-    private List
-    <PorticoResponse> porticos;
+    private List<PorticoResponse> porticos;
 }

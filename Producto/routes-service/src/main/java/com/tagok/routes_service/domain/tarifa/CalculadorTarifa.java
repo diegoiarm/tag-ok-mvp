@@ -3,7 +3,6 @@ package com.tagok.routes_service.domain.tarifa;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import com.tagok.routes_service.domain.portico.Cruce;
 import com.tagok.routes_service.domain.portico.Portico;
 import com.tagok.routes_service.domain.vehiculo.TipoVehiculo;
 

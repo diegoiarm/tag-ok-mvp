@@ -1,4 +1,4 @@
-package com.tagok.routes_service.domain.portico;
+package com.tagok.routes_service.domain.tarifa;
 
 import java.math.BigDecimal;
 
