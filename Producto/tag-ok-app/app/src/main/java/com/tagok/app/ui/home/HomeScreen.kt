@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.DirectionsBus
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.History
@@ -56,10 +57,12 @@ private enum class TipoVehiculo(val label: String, val icon: ImageVector) {
 
 @Composable
 fun HomeScreen(
-    onPlanificarViaje: () -> Unit,
+    nombre: String = "Usuario",
+    onPlanificarViaje: (vehiculo: String) -> Unit,
     onHistorialViajes: () -> Unit,
-    onIrARuta: () -> Unit,
+    onIrARuta: (vehiculo: String) -> Unit,
     onBoletaMensual: () -> Unit,
+    onLogout: () -> Unit = {},
 ) {
     var vehiculoSeleccionado by remember { mutableStateOf(TipoVehiculo.AUTO) }
 
@@ -71,7 +74,7 @@ fun HomeScreen(
     ) {
         Spacer(Modifier.height(52.dp))
 
-        // Header: avatar + saludo
+        // Header: avatar + saludo + logout
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
                 modifier = Modifier
@@ -90,7 +93,7 @@ fun HomeScreen(
             Spacer(Modifier.width(14.dp))
             Column {
                 Text(
-                    text = "Hola, Usuario",
+                    text = "Hola, $nombre",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
@@ -99,6 +102,14 @@ fun HomeScreen(
                     text = "¿A dónde vas hoy?",
                     style = MaterialTheme.typography.bodySmall,
                     color = TextSecondary,
+                )
+            }
+            Spacer(Modifier.weight(1f))
+            androidx.compose.material3.IconButton(onClick = onLogout) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.Logout,
+                    contentDescription = "Cerrar sesión",
+                    tint = TextSecondary,
                 )
             }
         }
@@ -147,7 +158,7 @@ fun HomeScreen(
         ActionButton(
             label = "Planificar viaje",
             icon = Icons.Filled.Map,
-            onClick = onPlanificarViaje,
+            onClick = { onPlanificarViaje(vehiculoSeleccionado.name) },
         )
         Spacer(Modifier.height(12.dp))
         ActionButton(
@@ -159,7 +170,7 @@ fun HomeScreen(
         ActionButton(
             label = "Ir a la ruta",
             icon = Icons.Filled.Navigation,
-            onClick = onIrARuta,
+            onClick = { onIrARuta(vehiculoSeleccionado.name) },
         )
         Spacer(Modifier.height(12.dp))
         ActionButton(

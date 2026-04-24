@@ -79,7 +79,7 @@ dependencies {
     implementation(libs.supabase.auth)
 
     // Ktor (HTTP client + JSON para backend API)
-    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.okhttp)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.kotlinx.serialization.json)

@@ -2,22 +2,39 @@ package com.tagok.app.data
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.engine.android.Android
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import okhttp3.Protocol
 
-// Emulador → 10.0.2.2 mapea a localhost de la máquina host
-// Dispositivo físico → reemplazar por la IP local de tu máquina (ej. 192.168.x.x)
-private const val BASE_URL = "http://10.0.2.2:8000"
+// adb reverse tcp:8000 tcp:8000 → localhost en el dispositivo apunta al PC
+private const val BASE_URL = "http://localhost:8000"
 
-private val httpClient = HttpClient(Android) {
+private val httpClient = HttpClient(OkHttp) {
+    engine {
+        config {
+            protocols(listOf(Protocol.HTTP_1_1))
+        }
+    }
+    install(HttpTimeout) {
+        connectTimeoutMillis = 8_000
+        requestTimeoutMillis = 15_000
+        socketTimeoutMillis = 15_000
+    }
     install(ContentNegotiation) {
-        json(Json { ignoreUnknownKeys = true })
+        json(Json {
+            ignoreUnknownKeys = true
+            isLenient = true
+        })
     }
 }
 
@@ -47,6 +64,38 @@ data class PorticoResumen(
     val longitud: Double,
 )
 
+// --- Tarifa ---
+
+@Serializable
+data class PorticoCruzadoRequest(
+    val porticoId: Long,
+    val horaFechaCruce: String,   // ISO-8601: "2026-04-23T14:30:00"
+)
+
+@Serializable
+data class TarifaRequest(
+    val porticosCruzados: List<PorticoCruzadoRequest>,
+    val vehiculo: String,
+)
+
+@Serializable
+data class Cruce(
+    val porticoId: Long,
+    val codigo: String,
+    val nombre: String? = null,
+    val autopista: String? = null,
+    val tarifa: String? = null,
+    val valor: Double = 0.0,
+    // horaFechaCruce omitido — solo necesitamos los valores monetarios
+)
+
+@Serializable
+data class TarifaCalculada(
+    val total: Double,
+    val portico: List<Cruce>,   // campo "portico" en el backend
+    val vehiculo: String,
+)
+
 object RouteApiService {
 
     suspend fun getRoute(lon1: Double, lat1: Double, lon2: Double, lat2: Double): RouteResponse =
@@ -59,4 +108,10 @@ object RouteApiService {
 
     suspend fun getPorticos(): List<PorticoResumen> =
         httpClient.get("$BASE_URL/porticos").body()
+
+    suspend fun calculateTarifa(request: TarifaRequest): TarifaCalculada =
+        httpClient.post("$BASE_URL/tarifas/calcular") {
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }.body()
 }
