@@ -1,1677 +1,1611 @@
 {
-	"autopista": "Costanera Norte",
-	"porticos": 
-	[
-		{
-		  "codigo": "P0",
-		  "sentido": "PO",
-		  "nombre": "P. San Francisco - Puente Padre Arteaga", 
-		  "latitud": -33.3713630000,
-		  "longitud": -70.5233800000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 149.80 },
-				{ "tipoTarifa": "TBP", "valor": 288.40 },
-				{ "tipoTarifa": "TS", "valor": 436.80 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 299.60 },
-				{ "tipoTarifa": "TBP", "valor": 576.80 },
-				{ "tipoTarifa": "TS", "valor": 873.60 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 449.40 },
-				{ "tipoTarifa": "TBP", "valor": 865.20 },
-				{ "tipoTarifa": "TS", "valor": 1310.40 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "12:00:00", "fin": "13:00:00" },
-					{ "inicio": "14:00:00", "fin": "15:00:00" },
-					{ "inicio": "18:00:00", "fin": "18:30:00" },
-					{ "inicio": "19:30:00", "fin": "21:00:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "13:00:00", "fin": "14:00:00" },
-					{ "inicio": "18:00:00", "fin": "19:30:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P1",
-		  "sentido": "PO",
-		  "nombre": "Gran Vía – Puente San Francisco",
-		  "latitud": -33.3757450000,
-		  "longitud": -70.5431110000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 449.40 },
-				{ "tipoTarifa": "TBP", "valor": 865.20 },
-				{ "tipoTarifa": "TS", "valor": 1340.40 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 898.80 },
-				{ "tipoTarifa": "TBP", "valor": 1730.40 },
-				{ "tipoTarifa": "TS", "valor": 2620.80 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1348.20 },
-				{ "tipoTarifa": "TBP", "valor": 2595.60 },
-				{ "tipoTarifa": "TS", "valor": 3931.20 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "12:00:00", "fin": "13:00:00" },
-					{ "inicio": "14:00:00", "fin": "15:00:00" },
-					{ "inicio": "18:00:00", "fin": "18:30:00" },
-					{ "inicio": "19:30:00", "fin": "21:00:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "13:00:00", "fin": "14:00:00" },
-					{ "inicio": "18:00:00", "fin": "19:30:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P2.1",
-		  "sentido": "PO",
-		  "nombre": "Centenario – Gran Vía",
-		  "latitud": -33.3851529000,
-		  "longitud": -70.5932020000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 425.86 },
-				{ "tipoTarifa": "TBP", "valor": 819.88 },
-				{ "tipoTarifa": "TS", "valor": 1241.76 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 851.72 },
-				{ "tipoTarifa": "TBP", "valor": 1639.76 },
-				{ "tipoTarifa": "TS", "valor": 2483.52 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1277.58 },
-				{ "tipoTarifa": "TBP", "valor": 2459.64 },
-				{ "tipoTarifa": "TS", "valor": 3725.28 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "12:00:00", "fin": "13:00:00" },
-					{ "inicio": "14:00:00", "fin": "15:00:00" },
-					{ "inicio": "18:00:00", "fin": "18:30:00" },
-					{ "inicio": "19:30:00", "fin": "21:00:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "13:00:00", "fin": "14:00:00" },
-					{ "inicio": "18:00:00", "fin": "19:30:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P2.2",
-		  "sentido": "PO",
-		  "nombre": "Puente Lo Saldes – Centenario",
-		  "latitud": -33.3996440000,
-		  "longitud": -70.6043740000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 264.29 },
-				{ "tipoTarifa": "TBP", "valor": 508.82 },
-				{ "tipoTarifa": "TS", "valor": 770.64 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 528.58 },
-				{ "tipoTarifa": "TBP", "valor": 1017.64 },
-				{ "tipoTarifa": "TS", "valor": 1541.28 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 792.87 },
-				{ "tipoTarifa": "TBP", "valor": 1526.46 },
-				{ "tipoTarifa": "TS", "valor": 2311.92 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "12:00:00", "fin": "13:00:00" },
-					{ "inicio": "14:00:00", "fin": "15:00:00" },
-					{ "inicio": "18:00:00", "fin": "18:30:00" },
-					{ "inicio": "19:30:00", "fin": "21:00:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "13:00:00", "fin": "14:00:00" },
-					{ "inicio": "18:00:00", "fin": "19:30:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P3",
-		  "sentido": "PO",
-		  "nombre": "Torres Tajamar – Puente Lo Saldes",
-		  "latitud": -33.4242670000,
-		  "longitud": -70.6220160000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 306.02 },
-				{ "tipoTarifa": "TBP", "valor": 589.16 },
-				{ "tipoTarifa": "TS", "valor": 892.32 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 612.04 },
-				{ "tipoTarifa": "TBP", "valor": 1178.32 },
-				{ "tipoTarifa": "TS", "valor": 1784.64 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 918.06 },
-				{ "tipoTarifa": "TBP", "valor": 1767.48 },
-				{ "tipoTarifa": "TS", "valor": 2676.96 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "06:30:00", "fin": "07:00:00" },
-					{ "inicio": "15:00:00", "fin": "15:30:00" },
-					{ "inicio": "19:30:00", "fin": "21:00:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TBP",
-				"tipoDia": "SABADO_FESTIVO",
-				"tramos": 
-				[
-				  { "inicio": "08:30:00", "fin": "13:00:00" },
-				  { "inicio": "14:00:00", "fin": "17:30:00" },
-				  { "inicio": "18:00:00", "fin": "20:30:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:00:00", "fin": "15:00:00" },
-					{ "inicio": "15:30:00", "fin": "19:30:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "SABADO_FESTIVO",
-				"tramos": 
-				[
-				  { "inicio": "13:00:00", "fin": "14:00:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P4",
-		  "sentido": "PO",
-		  "nombre": "Vivaceta – Torres Tajamar",
-		  "latitud": -33.4303500000,
-		  "longitud": -70.6580250000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 413.02 },
-				{ "tipoTarifa": "TBP", "valor": 795.16 },
-				{ "tipoTarifa": "TS", "valor": 1204.32 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 826.04 },
-				{ "tipoTarifa": "TBP", "valor": 1590.32 },
-				{ "tipoTarifa": "TS", "valor": 2408.64 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1239.06 },
-				{ "tipoTarifa": "TBP", "valor": 2385.48 },
-				{ "tipoTarifa": "TS", "valor": 3612.96 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "06:30:00", "fin": "07:00:00" },
-					{ "inicio": "15:00:00", "fin": "15:30:00" },
-					{ "inicio": "19:30:00", "fin": "21:00:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TBP",
-				"tipoDia": "SABADO_FESTIVO",
-				"tramos": 
-				[
-				  { "inicio": "08:30:00", "fin": "13:00:00" },
-				  { "inicio": "14:00:00", "fin": "17:30:00" },
-				  { "inicio": "18:00:00", "fin": "20:30:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:00:00", "fin": "15:00:00" },
-					{ "inicio": "15:30:00", "fin": "19:30:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "SABADO_FESTIVO",
-				"tramos": 
-				[
-				  { "inicio": "13:00:00", "fin": "14:00:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P5",
-		  "sentido": "PO",
-		  "nombre": "Carrascal – Vivaceta",
-		  "latitud": -33.4264090000,
-		  "longitud": -70.6701860000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 715.83 },
-				{ "tipoTarifa": "TBP", "valor": 1378.14 },
-				{ "tipoTarifa": "TS", "valor": 2087.28 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1431.66 },
-				{ "tipoTarifa": "TBP", "valor": 2756.28 },
-				{ "tipoTarifa": "TS", "valor": 4174.56 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 2147.49 },
-				{ "tipoTarifa": "TBP", "valor": 4134.42 },
-				{ "tipoTarifa": "TS", "valor": 6261.84 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:00:00", "fin": "07:30:00" },
-					{ "inicio": "08:00:00", "fin": "08:30:00" },
-					{ "inicio": "10:00:00", "fin": "10:30:00" },
-					{ "inicio": "12:00:00", "fin": "15:00:00" },
-					{ "inicio": "17:00:00", "fin": "19:00:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:30:00", "fin": "08:00:00" },
-					{ "inicio": "08:30:00", "fin": "10:00:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P6.1",
-		  "sentido": "PO",
-		  "nombre": "Petersen – Carrascal",<
-		  "latitud": -33.4118170000,
-		  "longitud": -70.7395010000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 239.68 },
-				{ "tipoTarifa": "TBP", "valor": 461.44 },
-				{ "tipoTarifa": "TS", "valor": 698.88 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 479.36 },
-				{ "tipoTarifa": "TBP", "valor": 922.88 },
-				{ "tipoTarifa": "TS", "valor": 1397.76 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 719.04 },
-				{ "tipoTarifa": "TBP", "valor": 1384.32 },
-				{ "tipoTarifa": "TS", "valor": 2096.64 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:00:00", "fin": "07:30:00" },
-					{ "inicio": "08:00:00", "fin": "08:30:00" },
-					{ "inicio": "10:00:00", "fin": "10:30:00" },
-					{ "inicio": "12:00:00", "fin": "15:00:00" },
-					{ "inicio": "17:00:00", "fin": "19:00:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:30:00", "fin": "08:00:00" },
-					{ "inicio": "08:30:00", "fin": "10:00:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P6.2",
-		  "sentido": "PO",
-		  "nombre": "Américo Vespucio Poniente – Petersen",
-		  "latitud": -33.4130350000,
-		  "longitud": -70.7667000000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 364.87 },
-				{ "tipoTarifa": "TBP", "valor": 702.46 },
-				{ "tipoTarifa": "TS", "valor": 1063.92 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 729.74 },
-				{ "tipoTarifa": "TBP", "valor": 1404.92 },
-				{ "tipoTarifa": "TS", "valor": 2127.84 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1094.61 },
-				{ "tipoTarifa": "TBP", "valor": 2107.38 },
-				{ "tipoTarifa": "TS", "valor": 3191.76 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:00:00", "fin": "07:30:00" },
-					{ "inicio": "08:00:00", "fin": "08:30:00" },
-					{ "inicio": "10:00:00", "fin": "10:30:00" },
-					{ "inicio": "12:00:00", "fin": "15:00:00" },
-					{ "inicio": "17:00:00", "fin": "19:00:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:30:00", "fin": "08:00:00" },
-					{ "inicio": "08:30:00", "fin": "10:00:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P7",
-		  "sentido": "PO",
-		  "nombre": "Las Tranqueras – Estoril",
-		  "latitud": -33.3874380000,
-		  "longitud": -70.5420430000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 250.21 },
-				{ "tipoTarifa": "TBP", "valor": 481.73 },
-				{ "tipoTarifa": "TS", "valor": 729.61 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 500.43 },
-				{ "tipoTarifa": "TBP", "valor": 963.46 },
-				{ "tipoTarifa": "TS", "valor": 1459.22 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 750.65 },
-				{ "tipoTarifa": "TBP", "valor": 1445.19 },
-				{ "tipoTarifa": "TS", "valor": 2188.83 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "12:00:00", "fin": "13:00:00" },
-					{ "inicio": "14:00:00", "fin": "15:00:00" },
-					{ "inicio": "16:00:00", "fin": "18:30:00" },
-					{ "inicio": "19:30:00", "fin": "21:00:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "13:00:00", "fin": "14:00:00" },
-					{ "inicio": "18:30:00", "fin": "19:30:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P8.0",
-		  "sentido": "PO",
-		  "nombre": "Costanera Norte – Las Tranqueras",
-		  "latitud": -33.4090990000,
-		  "longitud": -70.6043040000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 583.84 },
-				{ "tipoTarifa": "TBP", "valor": 1124.03 },
-				{ "tipoTarifa": "TS", "valor": 1702.42 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1167.69 },
-				{ "tipoTarifa": "TBP", "valor": 2248.07 },
-				{ "tipoTarifa": "TS", "valor": 3404.85 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1751.53 },
-				{ "tipoTarifa": "TBP", "valor": 3372.11 },
-				{ "tipoTarifa": "TS", "valor": 5107.28 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "12:00:00", "fin": "13:00:00" },
-					{ "inicio": "14:00:00", "fin": "15:00:00" },
-					{ "inicio": "16:00:00", "fin": "18:30:00" },
-					{ "inicio": "19:30:00", "fin": "21:00:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "13:00:00", "fin": "14:00:00" },
-					{ "inicio": "18:30:00", "fin": "19:30:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P8.2",
-		  "sentido": "PO",
-		  "nombre": "Costanera Norte – Las Tranqueras",
-		  "latitud": -33.4084770000,
-		  "longitud": -70.6021010000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 583.84 },
-				{ "tipoTarifa": "TBP", "valor": 1124.03 },
-				{ "tipoTarifa": "TS", "valor": 1702.42 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1167.69 },
-				{ "tipoTarifa": "TBP", "valor": 2248.07 },
-				{ "tipoTarifa": "TS", "valor": 3404.85 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1751.53 },
-				{ "tipoTarifa": "TBP", "valor": 3372.11 },
-				{ "tipoTarifa": "TS", "valor": 5107.28 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "12:00:00", "fin": "13:00:00" },
-					{ "inicio": "14:00:00", "fin": "15:00:00" },
-					{ "inicio": "16:00:00", "fin": "18:30:00" },
-					{ "inicio": "19:30:00", "fin": "21:00:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "13:00:00", "fin": "14:00:00" },
-					{ "inicio": "18:30:00", "fin": "19:30:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P8.3",
-		  "sentido": "PO",
-		  "nombre": "Costanera Norte – Las Tranqueras",
-		  "latitud": -33.4091490000,
-		  "longitud": -70.6015970000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 583.84 },
-				{ "tipoTarifa": "TBP", "valor": 1124.03 },
-				{ "tipoTarifa": "TS", "valor": 1702.42 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1167.69 },
-				{ "tipoTarifa": "TBP", "valor": 2248.07 },
-				{ "tipoTarifa": "TS", "valor": 3404.85 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1751.53 },
-				{ "tipoTarifa": "TBP", "valor": 3372.11 },
-				{ "tipoTarifa": "TS", "valor": 5107.28 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "12:00:00", "fin": "13:00:00" },
-					{ "inicio": "14:00:00", "fin": "15:00:00" },
-					{ "inicio": "16:00:00", "fin": "18:30:00" },
-					{ "inicio": "19:30:00", "fin": "21:00:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "13:00:00", "fin": "14:00:00" },
-					{ "inicio": "18:30:00", "fin": "19:30:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P9",
-		  "sentido": "PO",
-		  "nombre": "Ruta 68 – Américo Vespucio Poniente",
-		  "latitud": -33.4180390000,
-		  "longitud": -70.7909820000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 535.00 },
-				{ "tipoTarifa": "TBP", "valor": 1030.00 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1070.00 },
-				{ "tipoTarifa": "TBP", "valor": 2060.00 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1605.00 },
-				{ "tipoTarifa": "TBP", "valor": 3090.00 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:00:00", "fin": "10:00:00" },
-					{ "inicio": "12:00:00", "fin": "15:00:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P0",
-		  "sentido": "OP",
-		  "nombre": "Puente Padre Arteaga - P. San Francisco",
-		  "latitud": -33.3711290000,
-		  "longitud": -70.5231730000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 149.80 },
-				{ "tipoTarifa": "TBP", "valor": 288.40 },
-				{ "tipoTarifa": "TS", "valor": 436.80 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 299.60 },
-				{ "tipoTarifa": "TBP", "valor": 576.80 },
-				{ "tipoTarifa": "TS", "valor": 873.60 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 449.40 },
-				{ "tipoTarifa": "TBP", "valor": 865.20 },
-				{ "tipoTarifa": "TS", "valor": 1310.40 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:00:00", "fin": "07:30:00" },
-					{ "inicio": "08:30:00", "fin": "10:00:00" },
-					{ "inicio": "12:00:00", "fin": "13:00:00" },
-					{ "inicio": "14:00:00", "fin": "15:00:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:30:00", "fin": "08:30:00" },
-					{ "inicio": "13:00:00", "fin": "14:00:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P1",
-		  "sentido": "OP",
-		  "nombre": "Puente San Francisco – Gran Vía",
-		  "latitud": -33.3757940000,
-		  "longitud": -70.5426710000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 449.40 },
-				{ "tipoTarifa": "TBP", "valor": 865.20 },
-				{ "tipoTarifa": "TS", "valor": 1310.40 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 898.80 },
-				{ "tipoTarifa": "TBP", "valor": 1730.40 },
-				{ "tipoTarifa": "TS", "valor": 2620.80 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1348.20 },
-				{ "tipoTarifa": "TBP", "valor": 2595.60 },
-				{ "tipoTarifa": "TS", "valor": 3931.20 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:00:00", "fin": "07:30:00" },
-					{ "inicio": "08:30:00", "fin": "10:00:00" },
-					{ "inicio": "12:00:00", "fin": "13:00:00" },
-					{ "inicio": "14:00:00", "fin": "15:00:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:30:00", "fin": "08:30:00" },
-					{ "inicio": "13:00:00", "fin": "14:00:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P2.1",
-		  "sentido": "OP",
-		  "nombre": "Gran Vía – Centenario",
-		  "latitud": -33.3850543000,
-		  "longitud": -70.5932820000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 425.86 },
-				{ "tipoTarifa": "TBP", "valor": 819.88 },
-				{ "tipoTarifa": "TS", "valor": 1241.76 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 851.72 },
-				{ "tipoTarifa": "TBP", "valor": 1639.76 },
-				{ "tipoTarifa": "TS", "valor": 2483.52 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1277.58 },
-				{ "tipoTarifa": "TBP", "valor": 2459.64 },
-				{ "tipoTarifa": "TS", "valor": 3725.28 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:00:00", "fin": "07:30:00" },
-					{ "inicio": "08:30:00", "fin": "10:00:00" },
-					{ "inicio": "12:00:00", "fin": "13:00:00" },
-					{ "inicio": "14:00:00", "fin": "15:00:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:30:00", "fin": "08:30:00" },
-					{ "inicio": "13:00:00", "fin": "14:00:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P2.2",
-		  "sentido": "OP",
-		  "nombre": "Centenario – Puente Lo Saldes",
-		  "latitud": -33.3996379000,
-		  "longitud": -70.6045190000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 264.29 },
-				{ "tipoTarifa": "TBP", "valor": 508.82 },
-				{ "tipoTarifa": "TS", "valor": 770.64 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 528.58 },
-				{ "tipoTarifa": "TBP", "valor": 1017.64 },
-				{ "tipoTarifa": "TS", "valor": 1541.28 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 792.87 },
-				{ "tipoTarifa": "TBP", "valor": 1526.46 },
-				{ "tipoTarifa": "TS", "valor": 2311.92 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:00:00", "fin": "07:30:00" },
-					{ "inicio": "08:30:00", "fin": "10:00:00" },
-					{ "inicio": "12:00:00", "fin": "13:00:00" },
-					{ "inicio": "14:00:00", "fin": "15:00:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:30:00", "fin": "08:30:00" },
-					{ "inicio": "13:00:00", "fin": "14:00:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P3",
-		  "sentido": "OP",
-		  "nombre": "Puente Lo Saldes – Vivaceta",
-		  "latitud": -33.4240770000,
-		  "longitud": -70.6219280000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 719.04 },
-				{ "tipoTarifa": "TBP", "valor": 1384.32 },
-				{ "tipoTarifa": "TS", "valor": 2096.64 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1438.08 },
-				{ "tipoTarifa": "TBP", "valor": 2768.64 },
-				{ "tipoTarifa": "TS", "valor": 4193.28 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 2157.12 },
-				{ "tipoTarifa": "TBP", "valor": 4152.96 },
-				{ "tipoTarifa": "TS", "valor": 6289.92 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-			  {
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:00:00", "fin": "07:30:00" },
-					{ "inicio": "08:30:00", "fin": "10:00:00" },
-					{ "inicio": "11:30:00", "fin": "13:00:00" },
-					{ "inicio": "14:00:00", "fin": "16:30:00" },
-					{ "inicio": "19:30:00", "fin": "21:00:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TBP",
-				"tipoDia": "SABADO_FESTIVO",
-				"tramos": 
-				[
-					{ "inicio": "11:30:00", "fin": "15:00:00" },
-					{ "inicio": "16:30:00", "fin": "17:00:00" },
-					{ "inicio": "18:30:00", "fin": "19:30:00" }
-				]
-			  }
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:30:00", "fin": "08:30:00" },
-					{ "inicio": "13:00:00", "fin": "14:00:00" },
-					{ "inicio": "16:30:00", "fin": "19:30:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P5",
-		  "sentido": "OP",
-		  "nombre": "Vivaceta – Carrascal",
-		  "latitud": -33.4263730000,
-		  "longitud": -70.6698530000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 715.83 },
-				{ "tipoTarifa": "TBP", "valor": 1378.14 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1431.66 },
-				{ "tipoTarifa": "TBP", "valor": 2756.28 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 2147.49 },
-				{ "tipoTarifa": "TBP", "valor": 4134.42 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "12:00:00", "fin": "15:00:00" },
-					{ "inicio": "18:00:00", "fin": "21:00:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P6.1",
-		  "sentido": "OP",
-		  "nombre": "Carrascal – Petersen",
-		  "latitud": -33.4117080000,
-		  "longitud": -70.7395070000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 239.68 },
-				{ "tipoTarifa": "TBP", "valor": 461.44 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 479.36 },
-				{ "tipoTarifa": "TBP", "valor": 922.88 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 719.04 },
-				{ "tipoTarifa": "TBP", "valor": 1348.32 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "12:00:00", "fin": "15:00:00" },
-					{ "inicio": "18:00:00", "fin": "21:00:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P6.2",
-		  "sentido": "OP",
-		  "nombre": "Petersen – Américo Vespucio Poniente",
-		  "latitud": -33.4129210000,
-		  "longitud": -70.7664100000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 364.87 },
-				{ "tipoTarifa": "TBP", "valor": 702.46 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 729.74 },
-				{ "tipoTarifa": "TBP", "valor": 1404.92 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1094.61 },
-				{ "tipoTarifa": "TBP", "valor": 2107.38 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "12:00:00", "fin": "15:00:00" },
-					{ "inicio": "18:00:00", "fin": "21:00:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P7",
-		  "sentido": "OP",
-		  "nombre": "Estoril – Las Tranqueras",
-		  "latitud": -33.3876650000,
-		  "longitud": -70.5429340000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 250.21 },
-				{ "tipoTarifa": "TBP", "valor": 481.73 },
-				{ "tipoTarifa": "TS", "valor": 729.61 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 500.43 },
-				{ "tipoTarifa": "TBP", "valor": 963.46 },
-				{ "tipoTarifa": "TS", "valor": 1459.22}
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 750.65 },
-				{ "tipoTarifa": "TBP", "valor": 1445.19 },
-				{ "tipoTarifa": "TS", "valor": 2188.83 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:00:00", "fin": "07:30:00" },
-					{ "inicio": "08:30:00", "fin": "10:00:00" },
-					{ "inicio": "12:00:00", "fin": "13:00:00" },
-					{ "inicio": "14:00:00", "fin": "15:00:00" },
-					{ "inicio": "17:30:00", "fin": "19:30:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:30:00", "fin": "08:30:00" },
-					{ "inicio": "13:00:00", "fin": "14:00:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P8.0",
-		  "sentido": "OP",
-		  "nombre": "Las Tranqueras – Costanera Norte",
-		  "latitud": -33.4081640000,
-		  "longitud": -70.5995920000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 583.84 },
-				{ "tipoTarifa": "TBP", "valor": 1124.03 },
-				{ "tipoTarifa": "TS", "valor": 1702.42 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1164.69 },
-				{ "tipoTarifa": "TBP", "valor": 2248.07 },
-				{ "tipoTarifa": "TS", "valor": 3404.85 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1751.53 },
-				{ "tipoTarifa": "TBP", "valor": 3372.11 },
-				{ "tipoTarifa": "TS", "valor": 5107.28 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:00:00", "fin": "07:30:00" },
-					{ "inicio": "08:30:00", "fin": "10:00:00" },
-					{ "inicio": "12:00:00", "fin": "13:00:00" },
-					{ "inicio": "14:00:00", "fin": "15:00:00" },
-					{ "inicio": "17:30:00", "fin": "19:30:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:30:00", "fin": "08:30:00" },
-					{ "inicio": "13:00:00", "fin": "14:00:00" }
-				]
-			  }
-			]
-		  }
-		}
-		{
-		  "codigo": "P8.1",
-		  "sentido": "OP",
-		  "nombre": "Las Tranqueras – Costanera Norte";
-		  "latitud": -33.4080291757,
-		  "longitud": -70.5990285457,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 583.84 },
-				{ "tipoTarifa": "TBP", "valor": 1124.03 },
-				{ "tipoTarifa": "TS", "valor": 1702.42 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1164.69 },
-				{ "tipoTarifa": "TBP", "valor": 2248.07 },
-				{ "tipoTarifa": "TS", "valor": 3404.85 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1751.53 },
-				{ "tipoTarifa": "TBP", "valor": 3372.11 },
-				{ "tipoTarifa": "TS", "valor": 5107.28 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:00:00", "fin": "07:30:00" },
-					{ "inicio": "08:30:00", "fin": "10:00:00" },
-					{ "inicio": "12:00:00", "fin": "13:00:00" },
-					{ "inicio": "14:00:00", "fin": "15:00:00" },
-					{ "inicio": "17:30:00", "fin": "19:30:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:30:00", "fin": "08:30:00" },
-					{ "inicio": "13:00:00", "fin": "14:00:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "P9",
-		  "sentido": "OP",
-		  "nombre": "Américo Vespucio Poniente – Ruta 68",
-		  "latitud": -33.4177810000,
-		  "longitud": -70.7908770000,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 535.00 },
-				{ "tipoTarifa": "TBP", "valor": 1030.00 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1070.00 },
-				{ "tipoTarifa": "TBP", "valor": 2060.00 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 1605.00 },
-				{ "tipoTarifa": "TBP", "valor": 3090.00 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-				{
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "12:00:00", "fin": "15:00:00" },
-					{ "inicio": "18:00:00", "fin": "21:00:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "SB",
-		  "sentido": "OP",
-		  "nombre": "Salida Bellavista",
-		  "latitud": -33.4221551648,
-		  "longitud": -70.6197886919,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 233.79 },
-				{ "tipoTarifa": "TBP", "valor": 450.11 },
-				{ "tipoTarifa": "TS", "valor": 681.72 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 467.59 },
-				{ "tipoTarifa": "TBP", "valor": 900.22 },
-				{ "tipoTarifa": "TS", "valor": 1363.44 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 701.38 },
-				{ "tipoTarifa": "TBP", "valor": 1350.33 },
-				{ "tipoTarifa": "TS", "valor": 2045.16 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-			  {
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:00:00", "fin": "07:30:00" },
-					{ "inicio": "08:30:00", "fin": "10:00:00" },
-					{ "inicio": "11:30:00", "fin": "13:00:00" },
-					{ "inicio": "14:00:00", "fin": "16:30:00" },
-					{ "inicio": "19:30:00", "fin": "21:00:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TBP",
-				"tipoDia": "SABADO_FESTIVO",
-				"tramos": 
-				[
-					{ "inicio": "11:30:00", "fin": "15:00:00" },
-					{ "inicio": "16:30:00", "fin": "17:00:00" },
-					{ "inicio": "18:30:00", "fin": "19:30:00" }
-				]
-			  }
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:30:00", "fin": "08:30:00" },
-					{ "inicio": "13:00:00", "fin": "14:00:00" },
-					{ "inicio": "16:30:00", "fin": "19:30:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "EP",
-		  "sentido": "OP",
-		  "nombre": "Entrada Purísima",
-		  "latitud": -33.4346549722,
-		  "longitud": -70.6394774472,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 225.77 },
-				{ "tipoTarifa": "TBP", "valor": 434.66 },
-				{ "tipoTarifa": "TS", "valor": 658.32 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 451.54 },
-				{ "tipoTarifa": "TBP", "valor": 869.32 },
-				{ "tipoTarifa": "TS", "valor": 1316.64 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 677.31 },
-				{ "tipoTarifa": "TBP", "valor": 1303.98 },
-				{ "tipoTarifa": "TS", "valor": 1044.57 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-			  {
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:00:00", "fin": "07:30:00" },
-					{ "inicio": "08:30:00", "fin": "10:00:00" },
-					{ "inicio": "11:30:00", "fin": "13:00:00" },
-					{ "inicio": "14:00:00", "fin": "16:30:00" },
-					{ "inicio": "19:30:00", "fin": "21:00:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TBP",
-				"tipoDia": "SABADO_FESTIVO",
-				"tramos": 
-				[
-					{ "inicio": "11:30:00", "fin": "15:00:00" },
-					{ "inicio": "16:30:00", "fin": "17:00:00" },
-					{ "inicio": "18:30:00", "fin": "19:30:00" }
-				]
-			  }
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:30:00", "fin": "08:30:00" },
-					{ "inicio": "13:00:00", "fin": "14:00:00" },
-					{ "inicio": "16:30:00", "fin": "19:30:00" }
-				]
-			  }
-			]
-		  }
-		},
-		{
-		  "codigo": "EV",
-		  "sentido": "OP",
-		  "nombre": "Entrada Vivaceta",
-		  "latitud": -33.4302142218,
-		  "longitud": -70.6575025767,
-		  "reglas": [
-			{
-			  "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 119.41 },
-				{ "tipoTarifa": "TBP", "valor": 229.89 },
-				{ "tipoTarifa": "TS", "valor": 348.19 }
-			  ]
-			},
-			{
-			  "aplicaA": ["BUS", "CAMION"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 238.82 },
-				{ "tipoTarifa": "TBP", "valor": 459.79 },
-				{ "tipoTarifa": "TS", "valor": 696.38 }
-			  ]
-			},
-			{
-			  "aplicaA": ["CAMION_REMOLQUE"],
-			  "valores": [
-				{ "tipoTarifa": "TBFP", "valor": 358.23 },
-				{ "tipoTarifa": "TBP", "valor": 689.68 },
-				{ "tipoTarifa": "TS", "valor": 1044.57 }
-			  ]
-			}
-		  ],
-		  "calendario": {
-			"reglas": [
-			  {
-				"tipoTarifa": "TBP",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:00:00", "fin": "07:30:00" },
-					{ "inicio": "08:30:00", "fin": "10:00:00" },
-					{ "inicio": "11:30:00", "fin": "13:00:00" },
-					{ "inicio": "14:00:00", "fin": "16:30:00" },
-					{ "inicio": "19:30:00", "fin": "21:00:00" }
-				]
-			  },
-			  {
-				"tipoTarifa": "TBP",
-				"tipoDia": "SABADO_FESTIVO",
-				"tramos": 
-				[
-					{ "inicio": "11:30:00", "fin": "15:00:00" },
-					{ "inicio": "16:30:00", "fin": "17:00:00" },
-					{ "inicio": "18:30:00", "fin": "19:30:00" }
-				]
-			  }
-			  {
-				"tipoTarifa": "TS",
-				"tipoDia": "LABORAL",
-				"tramos": 
-				[
-					{ "inicio": "07:30:00", "fin": "08:30:00" },
-					{ "inicio": "13:00:00", "fin": "14:00:00" },
-					{ "inicio": "16:30:00", "fin": "19:30:00" }
-				]
-			  }
-			]
-		  }
-		}
-	]
+  "autopista": "Costanera Norte",
+  "porticos": [
+    {
+      "codigo": "P0",
+      "sentido": "PO",
+      "nombre": "P. San Francisco - Puente Padre Arteaga",
+      "latitud": -33.371363,
+      "longitud": -70.52338,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 149.8 },
+            { "tipoTarifa": "TBP", "valor": 288.4 },
+            { "tipoTarifa": "TS", "valor": 436.8 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 299.6 },
+            { "tipoTarifa": "TBP", "valor": 576.8 },
+            { "tipoTarifa": "TS", "valor": 873.6 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 449.4 },
+            { "tipoTarifa": "TBP", "valor": 865.2 },
+            { "tipoTarifa": "TS", "valor": 1310.4 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "12:00:00", "fin": "13:00:00" },
+              { "inicio": "14:00:00", "fin": "15:00:00" },
+              { "inicio": "18:00:00", "fin": "18:30:00" },
+              { "inicio": "19:30:00", "fin": "21:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "13:00:00", "fin": "14:00:00" },
+              { "inicio": "18:00:00", "fin": "19:30:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P1",
+      "sentido": "PO",
+      "nombre": "Gran Vía – Puente San Francisco",
+      "latitud": -33.375745,
+      "longitud": -70.543111,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 449.4 },
+            { "tipoTarifa": "TBP", "valor": 865.2 },
+            { "tipoTarifa": "TS", "valor": 1340.4 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 898.8 },
+            { "tipoTarifa": "TBP", "valor": 1730.4 },
+            { "tipoTarifa": "TS", "valor": 2620.8 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1348.2 },
+            { "tipoTarifa": "TBP", "valor": 2595.6 },
+            { "tipoTarifa": "TS", "valor": 3931.2 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "12:00:00", "fin": "13:00:00" },
+              { "inicio": "14:00:00", "fin": "15:00:00" },
+              { "inicio": "18:00:00", "fin": "18:30:00" },
+              { "inicio": "19:30:00", "fin": "21:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "13:00:00", "fin": "14:00:00" },
+              { "inicio": "18:00:00", "fin": "19:30:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P2.1",
+      "sentido": "PO",
+      "nombre": "Centenario – Gran Vía",
+      "latitud": -33.3851529,
+      "longitud": -70.593202,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 425.86 },
+            { "tipoTarifa": "TBP", "valor": 819.88 },
+            { "tipoTarifa": "TS", "valor": 1241.76 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 851.72 },
+            { "tipoTarifa": "TBP", "valor": 1639.76 },
+            { "tipoTarifa": "TS", "valor": 2483.52 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1277.58 },
+            { "tipoTarifa": "TBP", "valor": 2459.64 },
+            { "tipoTarifa": "TS", "valor": 3725.28 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "12:00:00", "fin": "13:00:00" },
+              { "inicio": "14:00:00", "fin": "15:00:00" },
+              { "inicio": "18:00:00", "fin": "18:30:00" },
+              { "inicio": "19:30:00", "fin": "21:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "13:00:00", "fin": "14:00:00" },
+              { "inicio": "18:00:00", "fin": "19:30:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P2.2",
+      "sentido": "PO",
+      "nombre": "Puente Lo Saldes – Centenario",
+      "latitud": -33.399644,
+      "longitud": -70.604374,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 264.29 },
+            { "tipoTarifa": "TBP", "valor": 508.82 },
+            { "tipoTarifa": "TS", "valor": 770.64 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 528.58 },
+            { "tipoTarifa": "TBP", "valor": 1017.64 },
+            { "tipoTarifa": "TS", "valor": 1541.28 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 792.87 },
+            { "tipoTarifa": "TBP", "valor": 1526.46 },
+            { "tipoTarifa": "TS", "valor": 2311.92 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "12:00:00", "fin": "13:00:00" },
+              { "inicio": "14:00:00", "fin": "15:00:00" },
+              { "inicio": "18:00:00", "fin": "18:30:00" },
+              { "inicio": "19:30:00", "fin": "21:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "13:00:00", "fin": "14:00:00" },
+              { "inicio": "18:00:00", "fin": "19:30:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P3",
+      "sentido": "PO",
+      "nombre": "Torres Tajamar – Puente Lo Saldes",
+      "latitud": -33.424267,
+      "longitud": -70.622016,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 306.02 },
+            { "tipoTarifa": "TBP", "valor": 589.16 },
+            { "tipoTarifa": "TS", "valor": 892.32 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 612.04 },
+            { "tipoTarifa": "TBP", "valor": 1178.32 },
+            { "tipoTarifa": "TS", "valor": 1784.64 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 918.06 },
+            { "tipoTarifa": "TBP", "valor": 1767.48 },
+            { "tipoTarifa": "TS", "valor": 2676.96 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "06:30:00", "fin": "07:00:00" },
+              { "inicio": "15:00:00", "fin": "15:30:00" },
+              { "inicio": "19:30:00", "fin": "21:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "SABADO_FESTIVO",
+            "tramos": [
+              { "inicio": "08:30:00", "fin": "13:00:00" },
+              { "inicio": "14:00:00", "fin": "17:30:00" },
+              { "inicio": "18:00:00", "fin": "20:30:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:00:00", "fin": "15:00:00" },
+              { "inicio": "15:30:00", "fin": "19:30:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "SABADO_FESTIVO",
+            "tramos": [{ "inicio": "13:00:00", "fin": "14:00:00" }]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P4",
+      "sentido": "PO",
+      "nombre": "Vivaceta – Torres Tajamar",
+      "latitud": -33.43035,
+      "longitud": -70.658025,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 413.02 },
+            { "tipoTarifa": "TBP", "valor": 795.16 },
+            { "tipoTarifa": "TS", "valor": 1204.32 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 826.04 },
+            { "tipoTarifa": "TBP", "valor": 1590.32 },
+            { "tipoTarifa": "TS", "valor": 2408.64 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1239.06 },
+            { "tipoTarifa": "TBP", "valor": 2385.48 },
+            { "tipoTarifa": "TS", "valor": 3612.96 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "06:30:00", "fin": "07:00:00" },
+              { "inicio": "15:00:00", "fin": "15:30:00" },
+              { "inicio": "19:30:00", "fin": "21:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "SABADO_FESTIVO",
+            "tramos": [
+              { "inicio": "08:30:00", "fin": "13:00:00" },
+              { "inicio": "14:00:00", "fin": "17:30:00" },
+              { "inicio": "18:00:00", "fin": "20:30:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:00:00", "fin": "15:00:00" },
+              { "inicio": "15:30:00", "fin": "19:30:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "SABADO_FESTIVO",
+            "tramos": [{ "inicio": "13:00:00", "fin": "14:00:00" }]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P5",
+      "sentido": "PO",
+      "nombre": "Carrascal – Vivaceta",
+      "latitud": -33.426409,
+      "longitud": -70.670186,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 715.83 },
+            { "tipoTarifa": "TBP", "valor": 1378.14 },
+            { "tipoTarifa": "TS", "valor": 2087.28 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1431.66 },
+            { "tipoTarifa": "TBP", "valor": 2756.28 },
+            { "tipoTarifa": "TS", "valor": 4174.56 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 2147.49 },
+            { "tipoTarifa": "TBP", "valor": 4134.42 },
+            { "tipoTarifa": "TS", "valor": 6261.84 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:00:00", "fin": "07:30:00" },
+              { "inicio": "08:00:00", "fin": "08:30:00" },
+              { "inicio": "10:00:00", "fin": "10:30:00" },
+              { "inicio": "12:00:00", "fin": "15:00:00" },
+              { "inicio": "17:00:00", "fin": "19:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:30:00", "fin": "08:00:00" },
+              { "inicio": "08:30:00", "fin": "10:00:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P6.1",
+      "sentido": "PO",
+      "nombre": "Petersen – Carrascal",
+      "latitud": -33.411817,
+      "longitud": -70.739501,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 239.68 },
+            { "tipoTarifa": "TBP", "valor": 461.44 },
+            { "tipoTarifa": "TS", "valor": 698.88 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 479.36 },
+            { "tipoTarifa": "TBP", "valor": 922.88 },
+            { "tipoTarifa": "TS", "valor": 1397.76 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 719.04 },
+            { "tipoTarifa": "TBP", "valor": 1384.32 },
+            { "tipoTarifa": "TS", "valor": 2096.64 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:00:00", "fin": "07:30:00" },
+              { "inicio": "08:00:00", "fin": "08:30:00" },
+              { "inicio": "10:00:00", "fin": "10:30:00" },
+              { "inicio": "12:00:00", "fin": "15:00:00" },
+              { "inicio": "17:00:00", "fin": "19:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:30:00", "fin": "08:00:00" },
+              { "inicio": "08:30:00", "fin": "10:00:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P6.2",
+      "sentido": "PO",
+      "nombre": "Américo Vespucio Poniente – Petersen",
+      "latitud": -33.413035,
+      "longitud": -70.7667,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 364.87 },
+            { "tipoTarifa": "TBP", "valor": 702.46 },
+            { "tipoTarifa": "TS", "valor": 1063.92 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 729.74 },
+            { "tipoTarifa": "TBP", "valor": 1404.92 },
+            { "tipoTarifa": "TS", "valor": 2127.84 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1094.61 },
+            { "tipoTarifa": "TBP", "valor": 2107.38 },
+            { "tipoTarifa": "TS", "valor": 3191.76 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:00:00", "fin": "07:30:00" },
+              { "inicio": "08:00:00", "fin": "08:30:00" },
+              { "inicio": "10:00:00", "fin": "10:30:00" },
+              { "inicio": "12:00:00", "fin": "15:00:00" },
+              { "inicio": "17:00:00", "fin": "19:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:30:00", "fin": "08:00:00" },
+              { "inicio": "08:30:00", "fin": "10:00:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P7",
+      "sentido": "PO",
+      "nombre": "Las Tranqueras – Estoril",
+      "latitud": -33.387438,
+      "longitud": -70.542043,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 250.21 },
+            { "tipoTarifa": "TBP", "valor": 481.73 },
+            { "tipoTarifa": "TS", "valor": 729.61 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 500.43 },
+            { "tipoTarifa": "TBP", "valor": 963.46 },
+            { "tipoTarifa": "TS", "valor": 1459.22 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 750.65 },
+            { "tipoTarifa": "TBP", "valor": 1445.19 },
+            { "tipoTarifa": "TS", "valor": 2188.83 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "12:00:00", "fin": "13:00:00" },
+              { "inicio": "14:00:00", "fin": "15:00:00" },
+              { "inicio": "16:00:00", "fin": "18:30:00" },
+              { "inicio": "19:30:00", "fin": "21:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "13:00:00", "fin": "14:00:00" },
+              { "inicio": "18:30:00", "fin": "19:30:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P8.0",
+      "sentido": "PO",
+      "nombre": "Costanera Norte – Las Tranqueras",
+      "latitud": -33.409099,
+      "longitud": -70.604304,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 583.84 },
+            { "tipoTarifa": "TBP", "valor": 1124.03 },
+            { "tipoTarifa": "TS", "valor": 1702.42 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1167.69 },
+            { "tipoTarifa": "TBP", "valor": 2248.07 },
+            { "tipoTarifa": "TS", "valor": 3404.85 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1751.53 },
+            { "tipoTarifa": "TBP", "valor": 3372.11 },
+            { "tipoTarifa": "TS", "valor": 5107.28 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "12:00:00", "fin": "13:00:00" },
+              { "inicio": "14:00:00", "fin": "15:00:00" },
+              { "inicio": "16:00:00", "fin": "18:30:00" },
+              { "inicio": "19:30:00", "fin": "21:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "13:00:00", "fin": "14:00:00" },
+              { "inicio": "18:30:00", "fin": "19:30:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P8.2",
+      "sentido": "PO",
+      "nombre": "Costanera Norte – Las Tranqueras",
+      "latitud": -33.408477,
+      "longitud": -70.602101,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 583.84 },
+            { "tipoTarifa": "TBP", "valor": 1124.03 },
+            { "tipoTarifa": "TS", "valor": 1702.42 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1167.69 },
+            { "tipoTarifa": "TBP", "valor": 2248.07 },
+            { "tipoTarifa": "TS", "valor": 3404.85 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1751.53 },
+            { "tipoTarifa": "TBP", "valor": 3372.11 },
+            { "tipoTarifa": "TS", "valor": 5107.28 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "12:00:00", "fin": "13:00:00" },
+              { "inicio": "14:00:00", "fin": "15:00:00" },
+              { "inicio": "16:00:00", "fin": "18:30:00" },
+              { "inicio": "19:30:00", "fin": "21:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "13:00:00", "fin": "14:00:00" },
+              { "inicio": "18:30:00", "fin": "19:30:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P8.3",
+      "sentido": "PO",
+      "nombre": "Costanera Norte – Las Tranqueras",
+      "latitud": -33.409149,
+      "longitud": -70.601597,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 583.84 },
+            { "tipoTarifa": "TBP", "valor": 1124.03 },
+            { "tipoTarifa": "TS", "valor": 1702.42 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1167.69 },
+            { "tipoTarifa": "TBP", "valor": 2248.07 },
+            { "tipoTarifa": "TS", "valor": 3404.85 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1751.53 },
+            { "tipoTarifa": "TBP", "valor": 3372.11 },
+            { "tipoTarifa": "TS", "valor": 5107.28 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "12:00:00", "fin": "13:00:00" },
+              { "inicio": "14:00:00", "fin": "15:00:00" },
+              { "inicio": "16:00:00", "fin": "18:30:00" },
+              { "inicio": "19:30:00", "fin": "21:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "13:00:00", "fin": "14:00:00" },
+              { "inicio": "18:30:00", "fin": "19:30:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P9",
+      "sentido": "PO",
+      "nombre": "Ruta 68 – Américo Vespucio Poniente",
+      "latitud": -33.418039,
+      "longitud": -70.790982,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 535.0 },
+            { "tipoTarifa": "TBP", "valor": 1030.0 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1070.0 },
+            { "tipoTarifa": "TBP", "valor": 2060.0 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1605.0 },
+            { "tipoTarifa": "TBP", "valor": 3090.0 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:00:00", "fin": "10:00:00" },
+              { "inicio": "12:00:00", "fin": "15:00:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P0",
+      "sentido": "OP",
+      "nombre": "Puente Padre Arteaga - P. San Francisco",
+      "latitud": -33.371129,
+      "longitud": -70.523173,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 149.8 },
+            { "tipoTarifa": "TBP", "valor": 288.4 },
+            { "tipoTarifa": "TS", "valor": 436.8 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 299.6 },
+            { "tipoTarifa": "TBP", "valor": 576.8 },
+            { "tipoTarifa": "TS", "valor": 873.6 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 449.4 },
+            { "tipoTarifa": "TBP", "valor": 865.2 },
+            { "tipoTarifa": "TS", "valor": 1310.4 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:00:00", "fin": "07:30:00" },
+              { "inicio": "08:30:00", "fin": "10:00:00" },
+              { "inicio": "12:00:00", "fin": "13:00:00" },
+              { "inicio": "14:00:00", "fin": "15:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:30:00", "fin": "08:30:00" },
+              { "inicio": "13:00:00", "fin": "14:00:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P1",
+      "sentido": "OP",
+      "nombre": "Puente San Francisco – Gran Vía",
+      "latitud": -33.375794,
+      "longitud": -70.542671,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 449.4 },
+            { "tipoTarifa": "TBP", "valor": 865.2 },
+            { "tipoTarifa": "TS", "valor": 1310.4 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 898.8 },
+            { "tipoTarifa": "TBP", "valor": 1730.4 },
+            { "tipoTarifa": "TS", "valor": 2620.8 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1348.2 },
+            { "tipoTarifa": "TBP", "valor": 2595.6 },
+            { "tipoTarifa": "TS", "valor": 3931.2 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:00:00", "fin": "07:30:00" },
+              { "inicio": "08:30:00", "fin": "10:00:00" },
+              { "inicio": "12:00:00", "fin": "13:00:00" },
+              { "inicio": "14:00:00", "fin": "15:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:30:00", "fin": "08:30:00" },
+              { "inicio": "13:00:00", "fin": "14:00:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P2.1",
+      "sentido": "OP",
+      "nombre": "Gran Vía – Centenario",
+      "latitud": -33.3850543,
+      "longitud": -70.593282,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 425.86 },
+            { "tipoTarifa": "TBP", "valor": 819.88 },
+            { "tipoTarifa": "TS", "valor": 1241.76 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 851.72 },
+            { "tipoTarifa": "TBP", "valor": 1639.76 },
+            { "tipoTarifa": "TS", "valor": 2483.52 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1277.58 },
+            { "tipoTarifa": "TBP", "valor": 2459.64 },
+            { "tipoTarifa": "TS", "valor": 3725.28 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:00:00", "fin": "07:30:00" },
+              { "inicio": "08:30:00", "fin": "10:00:00" },
+              { "inicio": "12:00:00", "fin": "13:00:00" },
+              { "inicio": "14:00:00", "fin": "15:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:30:00", "fin": "08:30:00" },
+              { "inicio": "13:00:00", "fin": "14:00:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P2.2",
+      "sentido": "OP",
+      "nombre": "Centenario – Puente Lo Saldes",
+      "latitud": -33.3996379,
+      "longitud": -70.604519,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 264.29 },
+            { "tipoTarifa": "TBP", "valor": 508.82 },
+            { "tipoTarifa": "TS", "valor": 770.64 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 528.58 },
+            { "tipoTarifa": "TBP", "valor": 1017.64 },
+            { "tipoTarifa": "TS", "valor": 1541.28 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 792.87 },
+            { "tipoTarifa": "TBP", "valor": 1526.46 },
+            { "tipoTarifa": "TS", "valor": 2311.92 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:00:00", "fin": "07:30:00" },
+              { "inicio": "08:30:00", "fin": "10:00:00" },
+              { "inicio": "12:00:00", "fin": "13:00:00" },
+              { "inicio": "14:00:00", "fin": "15:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:30:00", "fin": "08:30:00" },
+              { "inicio": "13:00:00", "fin": "14:00:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P3",
+      "sentido": "OP",
+      "nombre": "Puente Lo Saldes – Vivaceta",
+      "latitud": -33.424077,
+      "longitud": -70.621928,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 719.04 },
+            { "tipoTarifa": "TBP", "valor": 1384.32 },
+            { "tipoTarifa": "TS", "valor": 2096.64 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1438.08 },
+            { "tipoTarifa": "TBP", "valor": 2768.64 },
+            { "tipoTarifa": "TS", "valor": 4193.28 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 2157.12 },
+            { "tipoTarifa": "TBP", "valor": 4152.96 },
+            { "tipoTarifa": "TS", "valor": 6289.92 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:00:00", "fin": "07:30:00" },
+              { "inicio": "08:30:00", "fin": "10:00:00" },
+              { "inicio": "11:30:00", "fin": "13:00:00" },
+              { "inicio": "14:00:00", "fin": "16:30:00" },
+              { "inicio": "19:30:00", "fin": "21:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "SABADO_FESTIVO",
+            "tramos": [
+              { "inicio": "11:30:00", "fin": "15:00:00" },
+              { "inicio": "16:30:00", "fin": "17:00:00" },
+              { "inicio": "18:30:00", "fin": "19:30:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:30:00", "fin": "08:30:00" },
+              { "inicio": "13:00:00", "fin": "14:00:00" },
+              { "inicio": "16:30:00", "fin": "19:30:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P5",
+      "sentido": "OP",
+      "nombre": "Vivaceta – Carrascal",
+      "latitud": -33.426373,
+      "longitud": -70.669853,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 715.83 },
+            { "tipoTarifa": "TBP", "valor": 1378.14 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1431.66 },
+            { "tipoTarifa": "TBP", "valor": 2756.28 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 2147.49 },
+            { "tipoTarifa": "TBP", "valor": 4134.42 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "12:00:00", "fin": "15:00:00" },
+              { "inicio": "18:00:00", "fin": "21:00:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P6.1",
+      "sentido": "OP",
+      "nombre": "Carrascal – Petersen",
+      "latitud": -33.411708,
+      "longitud": -70.739507,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 239.68 },
+            { "tipoTarifa": "TBP", "valor": 461.44 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 479.36 },
+            { "tipoTarifa": "TBP", "valor": 922.88 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 719.04 },
+            { "tipoTarifa": "TBP", "valor": 1348.32 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "12:00:00", "fin": "15:00:00" },
+              { "inicio": "18:00:00", "fin": "21:00:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P6.2",
+      "sentido": "OP",
+      "nombre": "Petersen – Américo Vespucio Poniente",
+      "latitud": -33.412921,
+      "longitud": -70.76641,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 364.87 },
+            { "tipoTarifa": "TBP", "valor": 702.46 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 729.74 },
+            { "tipoTarifa": "TBP", "valor": 1404.92 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1094.61 },
+            { "tipoTarifa": "TBP", "valor": 2107.38 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "12:00:00", "fin": "15:00:00" },
+              { "inicio": "18:00:00", "fin": "21:00:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P7",
+      "sentido": "OP",
+      "nombre": "Estoril – Las Tranqueras",
+      "latitud": -33.387665,
+      "longitud": -70.542934,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 250.21 },
+            { "tipoTarifa": "TBP", "valor": 481.73 },
+            { "tipoTarifa": "TS", "valor": 729.61 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 500.43 },
+            { "tipoTarifa": "TBP", "valor": 963.46 },
+            { "tipoTarifa": "TS", "valor": 1459.22 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 750.65 },
+            { "tipoTarifa": "TBP", "valor": 1445.19 },
+            { "tipoTarifa": "TS", "valor": 2188.83 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:00:00", "fin": "07:30:00" },
+              { "inicio": "08:30:00", "fin": "10:00:00" },
+              { "inicio": "12:00:00", "fin": "13:00:00" },
+              { "inicio": "14:00:00", "fin": "15:00:00" },
+              { "inicio": "17:30:00", "fin": "19:30:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:30:00", "fin": "08:30:00" },
+              { "inicio": "13:00:00", "fin": "14:00:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P8.0",
+      "sentido": "OP",
+      "nombre": "Las Tranqueras – Costanera Norte",
+      "latitud": -33.408164,
+      "longitud": -70.599592,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 583.84 },
+            { "tipoTarifa": "TBP", "valor": 1124.03 },
+            { "tipoTarifa": "TS", "valor": 1702.42 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1164.69 },
+            { "tipoTarifa": "TBP", "valor": 2248.07 },
+            { "tipoTarifa": "TS", "valor": 3404.85 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1751.53 },
+            { "tipoTarifa": "TBP", "valor": 3372.11 },
+            { "tipoTarifa": "TS", "valor": 5107.28 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:00:00", "fin": "07:30:00" },
+              { "inicio": "08:30:00", "fin": "10:00:00" },
+              { "inicio": "12:00:00", "fin": "13:00:00" },
+              { "inicio": "14:00:00", "fin": "15:00:00" },
+              { "inicio": "17:30:00", "fin": "19:30:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:30:00", "fin": "08:30:00" },
+              { "inicio": "13:00:00", "fin": "14:00:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P8.1",
+      "sentido": "OP",
+      "nombre": "Las Tranqueras – Costanera Norte",
+      "latitud": -33.4080291757,
+      "longitud": -70.5990285457,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 583.84 },
+            { "tipoTarifa": "TBP", "valor": 1124.03 },
+            { "tipoTarifa": "TS", "valor": 1702.42 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1164.69 },
+            { "tipoTarifa": "TBP", "valor": 2248.07 },
+            { "tipoTarifa": "TS", "valor": 3404.85 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1751.53 },
+            { "tipoTarifa": "TBP", "valor": 3372.11 },
+            { "tipoTarifa": "TS", "valor": 5107.28 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:00:00", "fin": "07:30:00" },
+              { "inicio": "08:30:00", "fin": "10:00:00" },
+              { "inicio": "12:00:00", "fin": "13:00:00" },
+              { "inicio": "14:00:00", "fin": "15:00:00" },
+              { "inicio": "17:30:00", "fin": "19:30:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:30:00", "fin": "08:30:00" },
+              { "inicio": "13:00:00", "fin": "14:00:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "P9",
+      "sentido": "OP",
+      "nombre": "Américo Vespucio Poniente – Ruta 68",
+      "latitud": -33.417781,
+      "longitud": -70.790877,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 535.0 },
+            { "tipoTarifa": "TBP", "valor": 1030.0 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1070.0 },
+            { "tipoTarifa": "TBP", "valor": 2060.0 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 1605.0 },
+            { "tipoTarifa": "TBP", "valor": 3090.0 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "12:00:00", "fin": "15:00:00" },
+              { "inicio": "18:00:00", "fin": "21:00:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "SB",
+      "sentido": "OP",
+      "nombre": "Salida Bellavista",
+      "latitud": -33.4221551648,
+      "longitud": -70.6197886919,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 233.79 },
+            { "tipoTarifa": "TBP", "valor": 450.11 },
+            { "tipoTarifa": "TS", "valor": 681.72 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 467.59 },
+            { "tipoTarifa": "TBP", "valor": 900.22 },
+            { "tipoTarifa": "TS", "valor": 1363.44 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 701.38 },
+            { "tipoTarifa": "TBP", "valor": 1350.33 },
+            { "tipoTarifa": "TS", "valor": 2045.16 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:00:00", "fin": "07:30:00" },
+              { "inicio": "08:30:00", "fin": "10:00:00" },
+              { "inicio": "11:30:00", "fin": "13:00:00" },
+              { "inicio": "14:00:00", "fin": "16:30:00" },
+              { "inicio": "19:30:00", "fin": "21:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "SABADO_FESTIVO",
+            "tramos": [
+              { "inicio": "11:30:00", "fin": "15:00:00" },
+              { "inicio": "16:30:00", "fin": "17:00:00" },
+              { "inicio": "18:30:00", "fin": "19:30:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:30:00", "fin": "08:30:00" },
+              { "inicio": "13:00:00", "fin": "14:00:00" },
+              { "inicio": "16:30:00", "fin": "19:30:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "EP",
+      "sentido": "OP",
+      "nombre": "Entrada Purísima",
+      "latitud": -33.4346549722,
+      "longitud": -70.6394774472,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 225.77 },
+            { "tipoTarifa": "TBP", "valor": 434.66 },
+            { "tipoTarifa": "TS", "valor": 658.32 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 451.54 },
+            { "tipoTarifa": "TBP", "valor": 869.32 },
+            { "tipoTarifa": "TS", "valor": 1316.64 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 677.31 },
+            { "tipoTarifa": "TBP", "valor": 1303.98 },
+            { "tipoTarifa": "TS", "valor": 1044.57 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:00:00", "fin": "07:30:00" },
+              { "inicio": "08:30:00", "fin": "10:00:00" },
+              { "inicio": "11:30:00", "fin": "13:00:00" },
+              { "inicio": "14:00:00", "fin": "16:30:00" },
+              { "inicio": "19:30:00", "fin": "21:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "SABADO_FESTIVO",
+            "tramos": [
+              { "inicio": "11:30:00", "fin": "15:00:00" },
+              { "inicio": "16:30:00", "fin": "17:00:00" },
+              { "inicio": "18:30:00", "fin": "19:30:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:30:00", "fin": "08:30:00" },
+              { "inicio": "13:00:00", "fin": "14:00:00" },
+              { "inicio": "16:30:00", "fin": "19:30:00" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "codigo": "EV",
+      "sentido": "OP",
+      "nombre": "Entrada Vivaceta",
+      "latitud": -33.4302142218,
+      "longitud": -70.6575025767,
+      "reglas": [
+        {
+          "aplicaA": ["AUTO", "MOTO", "CAMIONETA"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 119.41 },
+            { "tipoTarifa": "TBP", "valor": 229.89 },
+            { "tipoTarifa": "TS", "valor": 348.19 }
+          ]
+        },
+        {
+          "aplicaA": ["BUS", "CAMION"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 238.82 },
+            { "tipoTarifa": "TBP", "valor": 459.79 },
+            { "tipoTarifa": "TS", "valor": 696.38 }
+          ]
+        },
+        {
+          "aplicaA": ["CAMION_REMOLQUE"],
+          "valores": [
+            { "tipoTarifa": "TBFP", "valor": 358.23 },
+            { "tipoTarifa": "TBP", "valor": 689.68 },
+            { "tipoTarifa": "TS", "valor": 1044.57 }
+          ]
+        }
+      ],
+      "calendario": {
+        "reglas": [
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:00:00", "fin": "07:30:00" },
+              { "inicio": "08:30:00", "fin": "10:00:00" },
+              { "inicio": "11:30:00", "fin": "13:00:00" },
+              { "inicio": "14:00:00", "fin": "16:30:00" },
+              { "inicio": "19:30:00", "fin": "21:00:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TBP",
+            "tipoDia": "SABADO_FESTIVO",
+            "tramos": [
+              { "inicio": "11:30:00", "fin": "15:00:00" },
+              { "inicio": "16:30:00", "fin": "17:00:00" },
+              { "inicio": "18:30:00", "fin": "19:30:00" }
+            ]
+          },
+          {
+            "tipoTarifa": "TS",
+            "tipoDia": "LABORAL",
+            "tramos": [
+              { "inicio": "07:30:00", "fin": "08:30:00" },
+              { "inicio": "13:00:00", "fin": "14:00:00" },
+              { "inicio": "16:30:00", "fin": "19:30:00" }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }
