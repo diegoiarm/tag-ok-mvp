@@ -31,10 +31,13 @@
       ],
       "calendario": {
         "reglas": [
-          {
+			{
             "tipoTarifa": "TBP",
             "tipoDia": "LABORAL",
-            "tramos": []
+            "tramos": 
+			[
+				{ "inicio": "00:00:00", "fin": "00:00:00" }
+			]
           },
           {
             "tipoTarifa": "TS",
