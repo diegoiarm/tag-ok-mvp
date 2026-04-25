@@ -10,18 +10,19 @@ import com.tagok.infrastructure.middleware.FilterResult;
 import com.tagok.infrastructure.middleware.MapToDomainMiddleware;
 import com.tagok.infrastructure.middleware.Pipeline;
 import com.tagok.infrastructure.middleware.PipelineRunner;
+import com.tagok.infrastructure.middleware.SqlExportMiddleware;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.sql.DataSource;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import com.tagok.domain.model.Element;
 
 public class OsmJsonParser 
 {
@@ -29,12 +30,13 @@ public class OsmJsonParser
     private final ObjectMapper mapper;
     private final PipelineRunner pipeline;
 
-    public OsmJsonParser(BoundingBoxFilter boundingBoxFilter) 
+    public OsmJsonParser(BoundingBoxFilter boundingBoxFilter, DataSource dataSource) 
     {
         this.mapper = new ObjectMapper();
         this.pipeline = new Pipeline()
-            .addBoundsFilter(boundingBoxFilter)
+            //.addBoundsFilter(boundingBoxFilter)
             .add(new MapToDomainMiddleware())
+            .add(new SqlExportMiddleware(dataSource))
             .build();
     }
 
@@ -104,15 +106,7 @@ public class OsmJsonParser
                     }
                 }
 
-                List<Element> firstFiveElements = List.of();
-                if (context.containsKey(MapToDomainMiddleware.ELEMENT_LIST_KEY)) 
-                {
-                    @SuppressWarnings("unchecked")
-                    List<Element> fullList = (List<Element>) context.get(MapToDomainMiddleware.ELEMENT_LIST_KEY);
-                    firstFiveElements = fullList.stream().limit(5).collect(Collectors.toList());
-                }
-
-            return new ParseResult(fileName, accepted, rejected, errors, firstFiveElements);
+            return new ParseResult(fileName, accepted, rejected, errors);
 
         } 
         catch (IOException e) 

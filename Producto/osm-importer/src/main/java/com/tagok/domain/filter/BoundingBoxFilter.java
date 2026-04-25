@@ -13,13 +13,12 @@ public class BoundingBoxFilter
 
     public static BoundingBoxFilter santiagoFiltering() 
     {
-
         return new BoundingBoxFilter(
             new BoundingBox(
-                -34.5, // minLat
-                -71.5, // minLon
-                -33.0, // maxLat
-                -70.0  // maxLon
+                -33.643725, // minLat
+                -70.877593, // minLon
+                -33.284708, // maxLat
+                -70.458263  // maxLon
             ));
     }
 

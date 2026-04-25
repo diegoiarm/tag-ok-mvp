@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
+import { MapContainer, TileLayer, GeoJSON, Marker } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { Coord } from "../types/types";
@@ -21,6 +21,7 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 export function Mapa({ start, end }: { start: Coord; end: Coord }) {
   const { data: segments } = useRoute(start, end);
+  //const { data: segments } = useCalle();
   const { data: porticos } = usePorticos();
 
   const [geoJsonData, setGeoJsonData] = useState<any>(null);
@@ -90,6 +91,9 @@ export function Mapa({ start, end }: { start: Coord; end: Coord }) {
             style={{ color: "#007bff", weight: 5 }}
           />
         )}
+
+        <Marker position={[start.lat, start.lon]} />
+        <Marker position={[end.lat, end.lon]} />
 
         {/* Capa de pórticos */}
         {porticos?.map((p) => (

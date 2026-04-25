@@ -17,7 +17,10 @@ public class RouteRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public List<RouteSegment> getRouteSegments(double lon1, double lat1, double lon2, double lat2) {
+    public List<RouteSegment> getRouteSegments(double lon1, double lat1, double lon2, double lat2) 
+    {
+        System.out.println("latInicio: "+ lat1 + " - lonInicio: " + lon1);
+        System.out.println("latFin: "+ lat2 + " - lonFin: " + lon1);
         // Buscar vértice de inicio
         Long startId = findNearestVertex(lon1, lat1)
                 .orElseThrow(() -> new RuntimeException("No se encontró vértice cercano a inicio: " + lon1 + "," + lat1));
@@ -65,6 +68,28 @@ public class RouteRepository {
                 (rs, rowNum) -> rs.getLong("id"),
                 lon, lat);
         return ids.isEmpty() ? Optional.empty() : Optional.of(ids.get(0));
+    }
+
+    public List<RouteSegment> getAllRoads() 
+    {
+
+        String sql = """
+            SELECT
+                id,
+                name,
+                type,
+                ST_AsGeoJSON(geometry) AS geometry
+            FROM edge
+            WHERE geometry IS NOT NULL
+        """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+            RouteSegment.builder()
+                .edgeId(rs.getLong("id"))
+                .name(rs.getString("name"))
+                .geometry(rs.getString("geometry"))
+                .build()
+        );
     }
 
     private RouteSegment mapRowToRouteSegment(ResultSet rs) throws SQLException {

@@ -1,7 +1,7 @@
 package com.tagok;
 
 import com.tagok.domain.filter.BoundingBoxFilter;
-import com.tagok.domain.model.Element;
+import com.tagok.infrastructure.DataBaseConfiguration;
 import com.tagok.infrastructure.filesystem.JsonFileScanner;
 import com.tagok.infrastructure.parser.OsmJsonParser;
 import com.tagok.infrastructure.parser.ParseResult;
@@ -11,14 +11,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
+import javax.sql.DataSource;
+
 public class Main 
 {
     public static void main(String[] args) throws Exception 
     {
+        DataSource ds = DataBaseConfiguration.getDataSource();
+
         JsonFileScanner scanner = new JsonFileScanner("src/main/resources/datos-calles");
         List<Path> files = scanner.scanJsonFiles();
 
-        OsmJsonParser parser = new OsmJsonParser(BoundingBoxFilter.santiagoFiltering());
+        OsmJsonParser parser = new OsmJsonParser(BoundingBoxFilter.santiagoFiltering(), ds);
 
         int numThreads = Runtime.getRuntime().availableProcessors();
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
@@ -42,15 +46,7 @@ public class Main
                 else
                 {
                     System.out.printf("%s accepted=%d rejected=%d errors=%d%n",
-                            result.fileName(), result.accepted(), result.rejected(), result.errors());
-
-                    List<Element> elements = result.firstFiveElements();
-                    
-                    if (!elements.isEmpty()) 
-                    {
-                        System.out.println("  Primeros 5 elementos:");
-                        elements.forEach(e -> System.out.println("    " + e));
-                    }                
+                            result.fileName(), result.accepted(), result.rejected(), result.errors());              
                 }
             } 
             catch (ExecutionException e) 

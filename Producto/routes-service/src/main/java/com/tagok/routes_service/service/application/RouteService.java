@@ -16,6 +16,16 @@ public class RouteService
 {
     private final RouteRepository routeRepository;
 
+    public RouteResponse finAllRoads()
+    {
+        List<RouteSegment> segments = routeRepository.getAllRoads();
+
+        return RouteResponse.builder()
+            .segments(segments)
+            .totalCost(0)
+            .build();
+    }
+
     public RouteResponse getRoute(double lon1, double lat1, double lon2, double lat2) 
     {
 

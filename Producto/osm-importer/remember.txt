@@ -1,0 +1,6 @@
+SELECT pgr_createTopology(
+    'edge',
+    0.000045,
+    'geometry',
+    'id'
+);
