@@ -1,0 +1,22 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="32dp"
+    android:height="32dp"
+    android:viewportWidth="32"
+    android:viewportHeight="32">
+    <!-- Pin azul — pórtico en la ruta actual -->
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M16,2C10.48,2 6,6.48 6,12C6,19.5 16,30 16,30C16,30 26,19.5 26,12C26,6.48 21.52,2 16,2Z"/>
+    <!-- Barrera interior: poste izquierdo -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M11,9L12.5,9L12.5,15L11,15Z"/>
+    <!-- Barrera interior: poste derecho -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M19.5,9L21,9L21,15L19.5,15Z"/>
+    <!-- Barrera interior: barra horizontal -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M11,11.5L21,11.5L21,13L11,13Z"/>
+</vector>

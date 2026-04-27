@@ -19,9 +19,6 @@ public class AutopistaMapper implements IEntityMapper<AutopistaResponse, Autopis
     {
         return Autopista.builder()
             .nombre(request.autopista())
-            .porticos(request.porticos().stream()
-                .map(porticoMapper::fromRequest)
-                .toList())
             .build();
     }
 

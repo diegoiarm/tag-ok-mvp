@@ -1,6 +1,6 @@
 package com.tagok.routes_service.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +18,7 @@ public class TarifaController
 {
     private final TarifaService tarifaService;
 
-    @GetMapping("/calcular")
+    @PostMapping("/calcular")
     public TarifaCalculada calcular(@RequestBody TarifaRequest request)
     {
         return tarifaService.calcularTarifa(request);

@@ -18,7 +18,7 @@ public class CalculadorTarifa
             portico.getId(), 
             portico.getCodigo(), 
             portico.getNombre(),
-            portico.getAutopista().getNombre(),
+            portico.getAutopista() != null ? portico.getAutopista().getNombre() : null,
             tarifa.tipoTarifa(),
             tarifa.monto(),
             fechaHora);
