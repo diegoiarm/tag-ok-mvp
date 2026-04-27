@@ -1,4 +1,4 @@
-package com.tagok.domain.model;
+package com.roony.domain.model;
 
 import java.util.List;
 

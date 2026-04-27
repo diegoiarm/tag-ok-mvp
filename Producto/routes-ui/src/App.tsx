@@ -1,7 +1,7 @@
 import { Mapa } from "./components/Mapa";
 
 function App() {
-  const start = parseLatLng("-33.43493553396331, -70.68721702924955");
+  const start = parseLatLng("-33.405601494886064, -70.59792203418581");
   const end   = parseLatLng("-33.40287674453009, -70.64327623144905");
 
   return <Mapa start={start} end={end} />;

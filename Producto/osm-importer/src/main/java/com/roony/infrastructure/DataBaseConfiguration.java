@@ -1,4 +1,4 @@
-package com.tagok.infrastructure;
+package com.roony.infrastructure;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

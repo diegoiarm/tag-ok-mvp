@@ -1,6 +1,6 @@
-package com.tagok.domain.filter;
+package com.roony.domain.filter;
 
-import com.tagok.domain.model.Bounds;
+import com.roony.domain.model.Bounds;
 
 public class BoundingBoxFilter 
 {

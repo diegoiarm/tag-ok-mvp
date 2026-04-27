@@ -1,4 +1,4 @@
-package com.tagok.domain.filter;
+package com.roony.domain.filter;
 
 public record BoundingBox(
    double minLat,

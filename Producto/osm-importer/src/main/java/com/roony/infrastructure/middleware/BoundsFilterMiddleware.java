@@ -1,11 +1,11 @@
-package com.tagok.infrastructure.middleware;
+package com.roony.infrastructure.middleware;
 
 import java.util.Map;
 import java.util.logging.Logger;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.tagok.domain.filter.BoundingBoxFilter;
-import com.tagok.domain.model.Bounds;
+import com.roony.domain.filter.BoundingBoxFilter;
+import com.roony.domain.model.Bounds;
 
 public class BoundsFilterMiddleware implements ElementMiddleware
 {

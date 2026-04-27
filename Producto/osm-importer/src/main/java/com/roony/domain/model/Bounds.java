@@ -1,4 +1,4 @@
-package com.tagok.domain.model;
+package com.roony.domain.model;
 
 public record Bounds(
     double minlat,

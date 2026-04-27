@@ -1,9 +1,9 @@
-package com.tagok.infrastructure.middleware;
+package com.roony.infrastructure.middleware;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tagok.domain.filter.BoundingBoxFilter;
+import com.roony.domain.filter.BoundingBoxFilter;
 
 public class Pipeline 
 {
