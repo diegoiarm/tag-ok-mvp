@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs cat *)",
+      "Bash(xargs grep *)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d, indent=2\\)\\)\")",
+      "Bash(curl -s --max-time 5 \"http://localhost:8000/porticos\")",
+      "Bash(curl -v --max-time 5 \"http://localhost:8000/porticos\")",
+      "Bash(python -c \" import sys, json data = json.load\\(sys.stdin\\) porticos = data.get\\('porticos', data\\) if isinstance\\(data, dict\\) else data for p in \\(porticos[:5] if isinstance\\(porticos, list\\) else []\\): print\\(p\\) \")",
+      "Bash(python -c \" import sys, json data = json.load\\(sys.stdin\\) porticos = data.get\\('porticos', data\\) if isinstance\\(data, dict\\) else data for p in \\(porticos[:3] if isinstance\\(porticos, list\\) else []\\): print\\(p\\) \")",
+      "Bash(curl -s \"http://localhost:8000/porticos\")",
+      "Bash(python -c \" import sys, json data = json.load\\(sys.stdin\\) print\\(f'Total porticos en BD: {len\\(data\\)}'\\) for p in data[:8]: print\\(f\\\\\" id={p['id']} codigo={p['codigo']} lat={p['latitud']} lon={p['longitud']}\\\\\"\\) \")",
+      "Bash(python -c ' *)",
+      "Bash(curl -s \"http://localhost:8000/autopistas\")",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' -X DELETE http://localhost:8000/autopistas/__TRACKED_VAR__)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(f'Pórticos tras borrar: {len\\(d\\)}'\\)\")",
+      "Bash(docker exec db-rutas *)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(f'Porticos actuales: {len\\(d\\)}'\\)\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -X POST http://localhost:8000/autopistas -H \"Content-Type: application/json\" -d @Producto/porticos/vespucioNorte.json)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -X POST http://localhost:8000/autopistas -H \"Content-Type: application/json\" -d @Producto/porticos/vespucioSur.json)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -X POST http://localhost:8000/autopistas -H \"Content-Type: application/json\" -d @Producto/porticos/costaneraNorte.json)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -X POST http://localhost:8000/autopistas -H \"Content-Type: application/json\" -d @Producto/porticos/autopistaCentral.json)",
+      "Bash(curl -s http://localhost:8000/porticos)",
+      "Bash(python3 -c \"import json,sys; data=json.load\\(sys.stdin\\); print\\(f'Total: {len\\(data\\)}'\\); print\\('Primero:', json.dumps\\(data[0], indent=2\\)\\)\")"
+    ]
+  }
+}

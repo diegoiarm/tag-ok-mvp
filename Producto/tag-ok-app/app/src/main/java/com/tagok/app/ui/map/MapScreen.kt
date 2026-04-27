@@ -1,5 +1,8 @@
 package com.tagok.app.ui.map
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,20 +37,35 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mapbox.geojson.Point
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
+import com.mapbox.maps.extension.compose.annotation.IconImage
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 import com.mapbox.maps.extension.compose.annotation.generated.PolylineAnnotation
+import com.tagok.app.R
 import com.tagok.app.ui.theme.Blue40
 import com.tagok.app.ui.theme.InputBackground
 import com.tagok.app.ui.theme.TextSecondary
 
 private val SANTIAGO = Point.fromLngLat(-70.6483, -33.4569)
+
+internal fun vectorToBitmap(context: android.content.Context, @DrawableRes resId: Int): Bitmap? {
+    val drawable = ContextCompat.getDrawable(context, resId) ?: return null
+    val w = drawable.intrinsicWidth.takeIf { it > 0 } ?: 64
+    val h = drawable.intrinsicHeight.takeIf { it > 0 } ?: 64
+    val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(bitmap)
+    drawable.setBounds(0, 0, w, h)
+    drawable.draw(canvas)
+    return bitmap
+}
 
 @Composable
 fun MapScreen(
@@ -78,6 +96,10 @@ fun MapScreen(
         }
     }
 
+    val context = LocalContext.current
+    val bitmapNormal = remember { vectorToBitmap(context, R.drawable.ic_portico) }
+    val bitmapActivo = remember { vectorToBitmap(context, R.drawable.ic_portico_activo) }
+
     Box(modifier = Modifier.fillMaxSize()) {
 
         MapboxMap(
@@ -93,13 +115,15 @@ fun MapScreen(
             }
 
             val cruzadosIds = uiState.porticosCruzados.map { it.id }.toSet()
-
             uiState.porticos.forEach { portico ->
-                PointAnnotation(
-                    point = Point.fromLngLat(portico.longitud, portico.latitud),
-                ) {
-                    if (portico.id in cruzadosIds) {
-                        iconSize = 1.4
+                val activo = portico.id in cruzadosIds
+                val bitmap = if (activo) bitmapActivo else bitmapNormal
+                if (bitmap != null) {
+                    PointAnnotation(
+                        point = Point.fromLngLat(portico.longitud, portico.latitud),
+                    ) {
+                        iconImage = IconImage(bitmap)
+                        iconSize = if (activo) 1.5 else 1.0
                     }
                 }
             }

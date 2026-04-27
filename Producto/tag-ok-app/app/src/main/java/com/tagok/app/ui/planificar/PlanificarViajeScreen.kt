@@ -47,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -55,9 +56,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mapbox.geojson.Point
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
+import com.mapbox.maps.extension.compose.annotation.IconImage
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 import com.mapbox.maps.extension.compose.annotation.generated.PolylineAnnotation
+import com.tagok.app.R
 import com.tagok.app.ui.map.MapViewModel
+import com.tagok.app.ui.map.vectorToBitmap
 import com.tagok.app.ui.theme.Blue40
 import com.tagok.app.ui.theme.InputBackground
 import com.tagok.app.ui.theme.TextSecondary
@@ -105,6 +109,10 @@ fun PlanificarViajeScreen(
         }
     }
 
+    val context = LocalContext.current
+    val bitmapNormal = remember { vectorToBitmap(context, R.drawable.ic_portico) }
+    val bitmapActivo = remember { vectorToBitmap(context, R.drawable.ic_portico_activo) }
+
     Box(modifier = Modifier.fillMaxSize()) {
 
         // Mapa base
@@ -122,10 +130,15 @@ fun PlanificarViajeScreen(
 
             val cruzadosIds = uiState.porticosCruzados.map { it.id }.toSet()
             uiState.porticos.forEach { portico ->
-                PointAnnotation(
-                    point = Point.fromLngLat(portico.longitud, portico.latitud),
-                ) {
-                    if (portico.id in cruzadosIds) iconSize = 1.4
+                val activo = portico.id in cruzadosIds
+                val bitmap = if (activo) bitmapActivo else bitmapNormal
+                if (bitmap != null) {
+                    PointAnnotation(
+                        point = Point.fromLngLat(portico.longitud, portico.latitud),
+                    ) {
+                        iconImage = IconImage(bitmap)
+                        iconSize = if (activo) 1.5 else 1.0
+                    }
                 }
             }
         }
