@@ -6,6 +6,7 @@ import com.tagok.routes_service.dto.request.portico.PorticoRequest;
 
 public record AutopistaRequest(
     String autopista,
+    String codigo,
     List<PorticoRequest> porticos) 
 {
 

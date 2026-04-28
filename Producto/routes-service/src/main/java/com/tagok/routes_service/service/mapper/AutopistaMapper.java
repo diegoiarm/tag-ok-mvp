@@ -19,6 +19,7 @@ public class AutopistaMapper implements IEntityMapper<AutopistaResponse, Autopis
     {
         return Autopista.builder()
             .nombre(request.autopista())
+            .codigo(request.codigo())
             .build();
     }
 
@@ -28,6 +29,7 @@ public class AutopistaMapper implements IEntityMapper<AutopistaResponse, Autopis
         return AutopistaResponse.builder()
             .id(autopista.getId())
             .nombre(autopista.getNombre())
+            .codigo(autopista.getCodigo())
             .porticos(autopista.getPorticos().stream()
                 .map(porticoMapper::toResponse)
                 .toList())

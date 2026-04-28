@@ -31,6 +31,7 @@ public class Autopista
     private Long id;
 
     private String nombre;
+    private String codigo;
 
     @Builder.Default
     @OneToMany(mappedBy = "autopista", cascade = CascadeType.ALL)
