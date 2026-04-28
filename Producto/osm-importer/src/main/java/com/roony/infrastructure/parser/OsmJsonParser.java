@@ -3,11 +3,11 @@ package com.roony.infrastructure.parser;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.roony.domain.filter.BoundingBoxFilter;
+import com.roony.domain.model.Element;
 import com.roony.infrastructure.middleware.FilterResult;
-import com.roony.infrastructure.middleware.MapToDomainMiddleware;
 import com.roony.infrastructure.middleware.Pipeline;
 import com.roony.infrastructure.middleware.PipelineRunner;
 import com.roony.infrastructure.middleware.SqlExportMiddleware;
@@ -21,21 +21,21 @@ import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class OsmJsonParser 
 {
     private static final Logger logger = Logger.getLogger(OsmJsonParser.class.getName());
-    private final ObjectMapper mapper;
     private final PipelineRunner pipeline;
+    private static final JsonFactory JSON_FACTORY = new JsonFactory();
+    private static final ObjectMapper MAPPER = new ObjectMapper()
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false)
+        .configure(DeserializationFeature.FAIL_ON_NULL_CREATOR_PROPERTIES,false)
+        .configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES,false);
+    private static final ElementMapper ELEMENT_MAPPER = new ElementMapper();
 
     public OsmJsonParser(BoundingBoxFilter boundingBoxFilter, DataSource dataSource) 
     {
-        this.mapper = new ObjectMapper();
         this.pipeline = new Pipeline()
             //.addBoundsFilter(boundingBoxFilter)
-            .add(new MapToDomainMiddleware())
             .add(new SqlExportMiddleware(dataSource))
             .build();
     }
@@ -43,7 +43,7 @@ public class OsmJsonParser
     public ParseResult parse(Path file) 
     {
         try (InputStream is = Files.newInputStream(file);
-            JsonParser jp = new JsonFactory().createParser(is)) 
+            JsonParser jp = JSON_FACTORY.createParser(is)) 
             {
 
                 if (jp.nextToken() != JsonToken.START_OBJECT) 
@@ -90,19 +90,37 @@ public class OsmJsonParser
                 String fileName = file.getFileName().toString();
                 int index = 0;
 
-                Map<String, Object> context = new HashMap<>();
-
-                while (jp.nextToken() != JsonToken.END_ARRAY) 
+                while (jp.nextToken() != JsonToken.END_ARRAY)
                 {
                     index++;
-                    JsonNode node = mapper.readTree(jp);
-                    FilterResult result = pipeline.run(node, index, fileName, context);
 
-                    switch (result) 
+                    try
                     {
-                        case ACCEPTED -> accepted++;
-                        case REJECTED -> rejected++;
-                        case ERROR -> errors++;
+                        Element element = ELEMENT_MAPPER.map(jp);
+
+                        FilterResult result = pipeline.run(
+                                element,
+                                index,
+                                fileName);
+
+                        switch (result)
+                        {
+                            case ACCEPTED -> accepted++;
+                            case REJECTED -> rejected++;
+                            case ERROR -> errors++;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        errors++;
+
+                        logger.warning(
+                            "Error en elemento "
+                            + index
+                            + " de "
+                            + fileName
+                            + ": "
+                            + e.getMessage());
                     }
                 }
 

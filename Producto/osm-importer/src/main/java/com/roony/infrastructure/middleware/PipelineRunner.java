@@ -1,9 +1,8 @@
 package com.roony.infrastructure.middleware;
 
 import java.util.List;
-import java.util.Map;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.roony.domain.model.Element;
 
 public class PipelineRunner 
 {
@@ -14,23 +13,37 @@ public class PipelineRunner
         this.chain = buildChain(middlewares, 0);
     }
 
-    private ElementMiddleware buildChain(List<ElementMiddleware> list, int index) 
+    private ElementMiddleware buildChain(
+        List<ElementMiddleware> list,
+        int index) 
     {
-        if (index >= list.size()) 
-        {
-            return (node, i, name, ctx, next) -> FilterResult.ACCEPTED;
-        }
+
+        if (index >= list.size())
+            return (element, i, name, next) ->
+                FilterResult.ACCEPTED;
 
         ElementMiddleware current = list.get(index);
         ElementMiddleware rest = buildChain(list, index + 1);
-        return (node, i, name, ctx, next) ->
-            current.process(node, i, name, ctx,
-                (n, idx, fname, c) -> rest.process(n, idx, fname, c, next));
+
+        return (element, i, name, next) ->
+            current.process(
+                element,
+                i,
+                name,
+                (n, idx, fname) ->
+                    rest.process(n, idx, fname, next));
     }
 
-    public FilterResult run(JsonNode node, int index, String fileName, Map<String, Object> context) 
+    public FilterResult run(
+        Element element,
+        int index,
+        String fileName) 
     {
-        return chain.process(node, index, fileName, context,
-                (n, i, f, c) -> FilterResult.ACCEPTED);
+
+        return chain.process(
+            element,
+            index,
+            fileName,
+            (n, i, f) -> FilterResult.ACCEPTED);
     }
 }

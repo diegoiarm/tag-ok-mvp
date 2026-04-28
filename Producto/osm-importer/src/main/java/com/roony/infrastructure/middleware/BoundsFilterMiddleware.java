@@ -1,11 +1,10 @@
 package com.roony.infrastructure.middleware;
 
-import java.util.Map;
 import java.util.logging.Logger;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.roony.domain.filter.BoundingBoxFilter;
 import com.roony.domain.model.Bounds;
+import com.roony.domain.model.Element;
 
 public class BoundsFilterMiddleware implements ElementMiddleware
 {
@@ -18,11 +17,10 @@ public class BoundsFilterMiddleware implements ElementMiddleware
     }
 
     @Override
-    public FilterResult process(JsonNode node, int index, String fileName, Map<String, Object> context, Next next) 
+    public FilterResult process(Element element, int index, String fileName, Next next) 
     {
-        JsonNode boundsNode = node.get("bounds");
 
-        if (boundsNode == null)
+        if (element.bounds() == null)
         {
             logger.fine(() -> "Elemento " + index + " en " + fileName + " sin bounds");
             return FilterResult.ERROR;
@@ -30,16 +28,12 @@ public class BoundsFilterMiddleware implements ElementMiddleware
 
         try 
         {
-            Bounds b = new Bounds(
-                boundsNode.get("minlat").asDouble(),
-                boundsNode.get("minlon").asDouble(),
-                boundsNode.get("maxlat").asDouble(),
-                boundsNode.get("maxlon").asDouble());
+            Bounds b = element.bounds();
 
             if (!filter.intersects(b))
                 return FilterResult.REJECTED;
 
-            return next.invoke(node, index, fileName, context);
+            return next.invoke(element, index, fileName);
         } 
         catch (Exception e) 
         {

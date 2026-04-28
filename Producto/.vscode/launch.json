@@ -1,14 +1,3 @@
-{
-    "configurations": [
-        {
-            "type": "java",
-            "name": "Spring Boot-RoutesServiceApplication<routes-service>",
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "mainClass": "com.tagok.routes_service.RoutesServiceApplication",
-            "projectName": "routes-service",
-            "args": "",
-            "envFile": "${workspaceFolder}/.env"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:e4eae663c154058cb728e7a3d8568d126e398cb9efc2a52fdd003741698c47d4
+size 642

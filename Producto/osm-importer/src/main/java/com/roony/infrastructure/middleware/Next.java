@@ -1,11 +1,9 @@
 package com.roony.infrastructure.middleware;
 
-import java.util.Map;
-
-import com.fasterxml.jackson.databind.JsonNode;
+import com.roony.domain.model.Element;
 
 @FunctionalInterface
 public interface Next 
 {
-    FilterResult invoke(JsonNode node, int index, String fileName, Map<String, Object> context);
+    FilterResult invoke(Element element, int index, String fileName);
 }

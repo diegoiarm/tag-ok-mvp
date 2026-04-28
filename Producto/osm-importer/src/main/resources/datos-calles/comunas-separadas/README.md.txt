@@ -1,0 +1,1 @@
+No funciona bien no une los grafos por separado!
