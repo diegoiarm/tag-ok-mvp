@@ -10,7 +10,14 @@ export interface RouteSegment {
   cost: number;
   aggCost: number;
   name: string;
-  geometry: string; // GeoJSON como string
+  geometry: string;
+  portico: PorticoRuta;
+}
+
+export interface PorticoRuta {
+  nombre: string;
+  latitud: number;
+  longitud: number;
 }
 
 export interface PorticoResumen {

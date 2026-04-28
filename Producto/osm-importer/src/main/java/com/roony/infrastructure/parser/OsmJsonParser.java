@@ -35,7 +35,7 @@ public class OsmJsonParser
     public OsmJsonParser(BoundingBoxFilter boundingBoxFilter, DataSource dataSource) 
     {
         this.pipeline = new Pipeline()
-            //.addBoundsFilter(boundingBoxFilter)
+            .addBoundsFilter(boundingBoxFilter)
             .add(new SqlExportMiddleware(dataSource))
             .build();
     }

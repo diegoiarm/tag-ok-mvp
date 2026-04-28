@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.tagok.routes_service.dto.PorticoRuta;
 import com.tagok.routes_service.dto.RouteSegment;
 
 import java.sql.ResultSet;
@@ -41,12 +42,20 @@ public class RouteRepository {
                 r.agg_cost,
                 e.name,
                 e.type,
-                ST_AsGeoJSON(e.geometry)::json AS geometry
+                ST_AsGeoJSON(e.geometry)::json AS geometry,
+                p.nombre as portico_nombre,
+                p.longitud as portico_longitud,
+                p.latitud as portico_latitud
             FROM pgr_dijkstra(
                 'SELECT id, source, target, cost, reverse_cost FROM edge',
                 ?, ?, directed := true
             ) r
             JOIN edge e ON r.edge = e.id
+            LEFT JOIN portico p ON ST_DWithin(
+                e.geometry,
+                ST_SetSRID(ST_MakePoint(p.longitud, p.latitud), 4326)::geography,
+                5
+            )
             ORDER BY r.seq
         """;
 
@@ -55,6 +64,7 @@ public class RouteRepository {
                 startId, endId
         );
         System.out.println(">>> Total segmentos obtenidos: " + segments.size());
+        
         return segments;
     }
 
@@ -94,13 +104,17 @@ public class RouteRepository {
 
     private RouteSegment mapRowToRouteSegment(ResultSet rs) throws SQLException {
         return RouteSegment.builder()
-                .seq(rs.getInt("seq"))
-                .edgeId(rs.getLong("edge"))
-                .node(rs.getLong("node"))
-                .cost(rs.getDouble("cost"))
-                .aggCost(rs.getDouble("agg_cost"))
-                .name(rs.getString("name"))
-                .geometry(rs.getString("geometry"))
-                .build();
+            .seq(rs.getInt("seq"))
+            .edgeId(rs.getLong("edge"))
+            .node(rs.getLong("node"))
+            .cost(rs.getDouble("cost"))
+            .aggCost(rs.getDouble("agg_cost"))
+            .name(rs.getString("name"))
+            .geometry(rs.getString("geometry"))
+            .portico(
+                new PorticoRuta(rs.getString("portico_nombre"), 
+                rs.getDouble("portico_latitud"), 
+                rs.getDouble("portico_longitud")))
+            .build();
     }
 }

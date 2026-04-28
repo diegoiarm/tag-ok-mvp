@@ -21,4 +21,6 @@ public class RouteSegment
     private String name;
 
     private String geometry;
+
+    private PorticoRuta portico;
 }

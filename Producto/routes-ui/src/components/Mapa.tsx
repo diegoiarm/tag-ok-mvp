@@ -19,6 +19,12 @@ const DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
+const GreenIcon = L.icon({
+  iconUrl: "https://maps.google.com/mapfiles/ms/icons/green-dot.png",
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+});
+
 export function Mapa({ start, end }: { start: Coord; end: Coord }) {
   const { data: segments } = useRoute(start, end);
   //const { data: segments } = useCalle();
@@ -72,6 +78,10 @@ export function Mapa({ start, end }: { start: Coord; end: Coord }) {
     });
   }, [segments]);
 
+  const routePorticos = segments
+    ?.map((s) => s.portico)
+    .filter((p) => p !== null && p !== undefined);
+
   return (
     <div style={{ height: "100vh", width: "100%" }}>
       <MapContainer
@@ -91,6 +101,14 @@ export function Mapa({ start, end }: { start: Coord; end: Coord }) {
             style={{ color: "#007bff", weight: 5 }}
           />
         )}
+        
+        {routePorticos?.map((p) => (
+          <Marker
+            key={`route-${p.nombre}`}
+            position={[p.latitud, p.longitud]}
+            icon={GreenIcon}
+          />
+        ))}
 
         <Marker position={[start.lat, start.lon]} />
         <Marker position={[end.lat, end.lon]} />
