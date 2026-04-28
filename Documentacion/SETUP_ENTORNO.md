@@ -174,7 +174,25 @@ El frontend estará disponible en: **http://localhost:5173**
 
 ---
 
-## PASO 6 — Cargar los datos de pórticos (si es la primera vez)
+## PASO 6 — Conectar la app Android al backend local
+
+> Solo necesario si vas a testear la app en un **dispositivo físico** o **emulador** contra el backend corriendo en tu PC.
+
+El dispositivo Android tiene su propio `localhost`, por lo que no puede alcanzar el puerto 8000 de tu máquina directamente. Este comando crea el puente:
+
+```powershell
+adb reverse tcp:8000 tcp:8000
+```
+
+Requisitos:
+- El dispositivo debe estar conectado por USB (o el emulador activo en Android Studio)
+- La depuración USB debe estar habilitada en el teléfono
+
+Verifica que `adb` está disponible ejecutando `adb devices` — deberías ver tu dispositivo listado.
+
+---
+
+## PASO 7 — Cargar los datos de pórticos (si es la primera vez)
 
 > Los archivos JSON de pórticos están en `Producto/porticos/`.
 

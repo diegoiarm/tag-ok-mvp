@@ -1,3 +1,5 @@
+import java.util.Properties
+
 pluginManagement {
     repositories {
         google {
@@ -11,18 +13,24 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
+val localProps = Properties().apply {
+    val f = file("local.properties")
+    if (f.exists()) f.inputStream().use { load(it) }
+}
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
-        // Mapbox SDK — requiere SDK_REGISTRY_TOKEN en ~/.gradle/gradle.properties
+        // Mapbox SDK — requiere SDK_REGISTRY_TOKEN en local.properties
         maven {
             url = uri("https://api.mapbox.com/downloads/v2/releases/maven")
             authentication { create<HttpHeaderAuthentication>("header") }
             credentials(HttpHeaderCredentials::class) {
                 name = "Authorization"
-                value = "Token ${providers.gradleProperty("SDK_REGISTRY_TOKEN").getOrElse("")}"
+                value = "Token ${localProps.getProperty("SDK_REGISTRY_TOKEN", "")}"
             }
         }
     }
