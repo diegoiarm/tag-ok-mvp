@@ -77,6 +77,7 @@ dependencies {
     // Supabase
     implementation(platform(libs.supabase.bom))
     implementation(libs.supabase.auth)
+    implementation(libs.supabase.postgrest)
 
     // Ktor (HTTP client + JSON para backend API)
     implementation(libs.ktor.client.okhttp)
