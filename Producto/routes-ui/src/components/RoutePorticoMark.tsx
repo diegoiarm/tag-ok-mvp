@@ -28,7 +28,7 @@ export function RoutePorticoMark({ portico }: { portico: PorticoRouteResponse })
           <strong>Cruce estimado:</strong>
           <br />
           Hora:{" "}
-          {new Date(portico.fechaHora + "Z").toLocaleTimeString("es-CL")}
+          {new Date(portico.fechaHora).toLocaleTimeString("es-CL")}
           <br />
           Tarifa: {portico.tarifa}
           <br />

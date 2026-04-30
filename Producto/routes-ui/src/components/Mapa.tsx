@@ -123,7 +123,7 @@ export function Mapa({ start, end }: { start: Coord; end: Coord }) {
             <br />
             Total:{" "}
             {route
-              ? `$${route.totalCost}`
+              ? `$${route.totalCost.toLocaleString("es-CL")}`
               : "..."}
           </Popup>
         </Marker>
