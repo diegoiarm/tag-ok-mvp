@@ -16,6 +16,6 @@ import lombok.NoArgsConstructor;
 public class RouteResponse 
 {
     private List<RouteSegment> segments;
-    private List<String> porticos;
+    private List<PorticoRouteResponse> porticos;
     private double totalCost;
 }

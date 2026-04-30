@@ -43,9 +43,9 @@ public class RouteRepository {
                 e.name,
                 e.type,
                 ST_AsGeoJSON(e.geometry)::json AS geometry,
-                p.nombre as portico_nombre,
-                p.longitud as portico_longitud,
-                p.latitud as portico_latitud
+                ST_Length(e.geometry::geography) AS distance,
+                e.maxspeed,
+                p.id as portico_id
             FROM pgr_dijkstra(
                 'SELECT id, source, target, cost, reverse_cost FROM edge',
                 ?, ?, directed := true
@@ -111,10 +111,10 @@ public class RouteRepository {
             .aggCost(rs.getDouble("agg_cost"))
             .name(rs.getString("name"))
             .geometry(rs.getString("geometry"))
+            .distance(rs.getDouble("distance"))
+            .maxSpeed(rs.getDouble("maxspeed"))
             .portico(
-                new PorticoRuta(rs.getString("portico_nombre"), 
-                rs.getDouble("portico_latitud"), 
-                rs.getDouble("portico_longitud")))
+                new PorticoRuta(rs.getLong("portico_id")))
             .build();
     }
 }

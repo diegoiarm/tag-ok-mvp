@@ -7,9 +7,9 @@ import { useRoute } from "../hooks/useRoute";
 import { usePorticos } from "../hooks/usePorticos";
 import { PorticoMark } from "../components/PorticoMark";
 
-// Íconos (puedes dejarlos aquí o importarlos de un archivo aparte)
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
+import { RoutePorticoMark } from "./RoutePorticoMark";
 
 const DefaultIcon = L.icon({
   iconUrl: icon,
@@ -19,18 +19,14 @@ const DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-const GreenIcon = L.icon({
-  iconUrl: "https://maps.google.com/mapfiles/ms/icons/green-dot.png",
-  iconSize: [32, 32],
-  iconAnchor: [16, 32],
-});
-
 export function Mapa({ start, end }: { start: Coord; end: Coord }) {
-  const { data: segments } = useRoute(start, end);
-  //const { data: segments } = useCalle();
+  const { data: route } = useRoute(start, end);
   const { data: porticos } = usePorticos();
 
   const [geoJsonData, setGeoJsonData] = useState<any>(null);
+
+  const segments = route?.segments;
+  const routePorticos = route?.porticos;
 
   useEffect(() => {
     if (!segments || segments.length === 0) {
@@ -76,11 +72,7 @@ export function Mapa({ start, end }: { start: Coord; end: Coord }) {
         },
       ],
     });
-  }, [segments]);
-
-  const routePorticos = segments
-    ?.map((s) => s.portico)
-    .filter((p) => p !== null && p !== undefined);
+  }, [route]);
 
   return (
     <div style={{ height: "100vh", width: "100%" }}>
@@ -103,11 +95,7 @@ export function Mapa({ start, end }: { start: Coord; end: Coord }) {
         )}
         
         {routePorticos?.map((p) => (
-          <Marker
-            key={`route-${p.nombre}`}
-            position={[p.latitud, p.longitud]}
-            icon={GreenIcon}
-          />
+          <RoutePorticoMark key={p.codigo} portico={p} />
         ))}
 
         <Marker position={[start.lat, start.lon]} />

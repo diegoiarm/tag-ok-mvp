@@ -3,7 +3,8 @@ export interface Coord {
   lon: number;
 }
 
-export interface RouteSegment {
+export interface RouteSegment 
+{
   seq: number;
   edgeId: number;
   node: number;
@@ -11,13 +12,26 @@ export interface RouteSegment {
   aggCost: number;
   name: string;
   geometry: string;
-  portico: PorticoRuta;
 }
 
-export interface PorticoRuta {
+export interface PorticoRouteResponse 
+{
   nombre: string;
-  latitud: number;
+  codigo: string;
+  autopista: string;
+  codigoAutopista: string;
   longitud: number;
+  latitud: number;
+  tarifa: string;
+  valor: number;
+  fechaHora: string;
+}
+
+export interface RouteResponse 
+{
+  segments: RouteSegment[];
+  porticos: PorticoRouteResponse[];
+  totalCost: number;
 }
 
 export interface PorticoResumen {

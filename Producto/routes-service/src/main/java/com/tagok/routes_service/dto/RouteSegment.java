@@ -22,5 +22,8 @@ public class RouteSegment
 
     private String geometry;
 
+    private Double distance;
+    private Double maxSpeed;
+
     private PorticoRuta portico;
 }
