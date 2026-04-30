@@ -40,7 +40,8 @@ public class RouteService
     {
         List<RouteSegment> segments = routeRepository.getRouteSegments(lon1, lat1, lon2, lat2);
 
-        LocalDateTime tiempoActual = LocalDateTime.now();
+        LocalDateTime tiempoInicio = LocalDateTime.now();
+        LocalDateTime tiempoActual = tiempoInicio;
 
         List<PorticoRouteResponse> porticos = new ArrayList<>();
 
@@ -49,7 +50,7 @@ public class RouteService
             if (s.getDistance() != null && s.getMaxSpeed() != null && s.getMaxSpeed() > 0) 
             {
                 double velocidadMs = s.getMaxSpeed() / 3.6;
-                long segundos = (long) (s.getDistance() / velocidadMs);
+                long segundos = Math.round(s.getDistance() / velocidadMs);
 
                 tiempoActual = tiempoActual.plusSeconds(segundos);
             }
@@ -58,16 +59,20 @@ public class RouteService
             {
                 var optional = porticoRepository.findById(s.getPortico().id());
 
-                if (optional.isPresent())
+                if (optional.isPresent()) 
                     porticos.add(toResponse(optional.get(), tiempoActual));
             }
         }
+
+        LocalDateTime tiempoFinal = tiempoActual;
 
         BigDecimal totalCost = porticos.stream()
             .map(PorticoRouteResponse::valor)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         return RouteResponse.builder()
+            .fechaHoraInicio(tiempoInicio)
+            .fechaHoraFin(tiempoFinal)
             .segments(segments)
             .totalCost(totalCost)
             .porticos(porticos)

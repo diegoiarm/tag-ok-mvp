@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, GeoJSON, Marker } from "react-leaflet";
+import { MapContainer, TileLayer, GeoJSON, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { Coord } from "../types/types";
 import { useRoute } from "../hooks/useRoute";
 import { usePorticos } from "../hooks/usePorticos";
 import { PorticoMark } from "../components/PorticoMark";
+import { RoutePorticoMark } from "./RoutePorticoMark";
 
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
-import { RoutePorticoMark } from "./RoutePorticoMark";
 
 const DefaultIcon = L.icon({
   iconUrl: icon,
@@ -18,6 +18,16 @@ const DefaultIcon = L.icon({
   iconAnchor: [12, 41],
 });
 L.Marker.prototype.options.icon = DefaultIcon;
+
+const StartIcon = L.icon({
+  iconUrl: "https://maps.google.com/mapfiles/ms/icons/green-dot.png",
+  iconSize: [32, 32],
+});
+
+const EndIcon = L.icon({
+  iconUrl: "https://maps.google.com/mapfiles/ms/icons/red-dot.png",
+  iconSize: [32, 32],
+});
 
 export function Mapa({ start, end }: { start: Coord; end: Coord }) {
   const { data: route } = useRoute(start, end);
@@ -56,9 +66,6 @@ export function Mapa({ start, end }: { start: Coord; end: Coord }) {
       return;
     }
 
-    // Si necesitas la función removeLoopCoords, agrégala aquí
-    // const cleaned = removeLoopCoords(allCoords);
-
     setGeoJsonData({
       type: "FeatureCollection",
       features: [
@@ -67,7 +74,7 @@ export function Mapa({ start, end }: { start: Coord; end: Coord }) {
           properties: {},
           geometry: {
             type: "LineString",
-            coordinates: allCoords, // o cleaned
+            coordinates: allCoords,
           },
         },
       ],
@@ -83,25 +90,44 @@ export function Mapa({ start, end }: { start: Coord; end: Coord }) {
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          attribution='&copy; OpenStreetMap contributors'
         />
 
-        {/* Capa de ruta directa con GeoJSON */}
         {geoJsonData && (
-          <GeoJSON
-            data={geoJsonData}
-            style={{ color: "#007bff", weight: 5 }}
-          />
+          <GeoJSON data={geoJsonData} style={{ color: "#007bff", weight: 5 }} />
         )}
-        
+
         {routePorticos?.map((p) => (
           <RoutePorticoMark key={p.codigo} portico={p} />
         ))}
 
-        <Marker position={[start.lat, start.lon]} />
-        <Marker position={[end.lat, end.lon]} />
+        <Marker position={[start.lat, start.lon]} icon={StartIcon}>
+          <Popup>
+            <strong>Inicio</strong>
+            <br />
+            Hora:{" "}
+            {route
+              ? new Date(route.fechaHoraInicio).toLocaleTimeString("es-CL")
+              : "Calculando..."}
+          </Popup>
+        </Marker>
 
-        {/* Capa de pórticos */}
+        <Marker position={[end.lat, end.lon]} icon={EndIcon}>
+          <Popup>
+            <strong>Destino</strong>
+            <br />
+            Hora llegada:{" "}
+            {route
+              ? new Date(route.fechaHoraFin).toLocaleTimeString("es-CL")
+              : "Calculando..."}
+            <br />
+            Total:{" "}
+            {route
+              ? `$${route.totalCost}`
+              : "..."}
+          </Popup>
+        </Marker>
+
         {porticos?.map((p) => (
           <PorticoMark key={p.id} portico={p} />
         ))}

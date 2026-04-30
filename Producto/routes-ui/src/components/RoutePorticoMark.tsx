@@ -1,4 +1,3 @@
-// components/RoutePorticoMark.tsx
 import { Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import type { PorticoRouteResponse } from "../types/types";
@@ -13,16 +12,9 @@ const greenIcon = L.icon({
   popupAnchor: [1, -34],
 });
 
-type Props = {
-  portico: PorticoRouteResponse;
-};
-
-export function RoutePorticoMark({ portico }: Props) {
+export function RoutePorticoMark({ portico }: { portico: PorticoRouteResponse }) {
   return (
-    <Marker
-      position={[portico.latitud, portico.longitud]}
-      icon={greenIcon}
-    >
+    <Marker position={[portico.latitud, portico.longitud]} icon={greenIcon}>
       <Popup>
         <div style={{ minWidth: "220px" }}>
           <strong>{portico.nombre}</strong>
@@ -32,13 +24,16 @@ export function RoutePorticoMark({ portico }: Props) {
           Autopista: {portico.autopista}
           <br />
           <br />
-          <strong>Tarifa aplicada:</strong>
+
+          <strong>Cruce estimado:</strong>
           <br />
-          Tipo: {portico.tarifa}
+          Hora:{" "}
+          {new Date(portico.fechaHora + "Z").toLocaleTimeString("es-CL")}
           <br />
-          Valor: ${portico.valor}
+          Tarifa: {portico.tarifa}
           <br />
-          Hora: {new Date(portico.fechaHora).toLocaleString()}
+          Valor: $
+          {portico.valor.toLocaleString("es-CL")}
         </div>
       </Popup>
     </Marker>

@@ -32,6 +32,8 @@ export interface RouteResponse
   segments: RouteSegment[];
   porticos: PorticoRouteResponse[];
   totalCost: number;
+  fechaHoraInicio: string;
+  fechaHoraFin: string;
 }
 
 export interface PorticoResumen {
