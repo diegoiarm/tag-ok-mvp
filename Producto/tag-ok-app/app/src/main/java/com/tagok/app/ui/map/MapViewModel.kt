@@ -4,8 +4,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mapbox.geojson.Point
+import com.tagok.app.data.Cruce
 import com.tagok.app.data.PorticoCruzadoRequest
 import com.tagok.app.data.PorticoResumen
+import com.tagok.app.data.PorticoRuta
 import com.tagok.app.data.RouteApiService
 import com.tagok.app.data.TarifaCalculada
 import com.tagok.app.data.TarifaRequest
@@ -59,20 +61,50 @@ class MapViewModel : ViewModel() {
             runCatching {
                 RouteApiService.getRoute(lon1, lat1, lon2, lat2)
             }.onSuccess { response ->
-                Log.d(TAG, "getRoute OK — ${response.segments.size} segmentos, costo=${response.totalCost}")
                 val points = response.segments.flatMap { parseLineString(it.geometry) }
-                val cruzados = findCrossedPorticos(points, _uiState.value.porticos)
-                Log.d(TAG, "Pórticos cruzados: ${cruzados.size} — ${cruzados.map { it.codigo }}")
+                val porticosRuta = response.porticos
+                val allPorticos = _uiState.value.porticos
+                Log.d(TAG, "getRoute OK — ${response.segments.size} segmentos, costo=${response.totalCost}, pórticos=${porticosRuta.size} — ${porticosRuta.map { it.codigo }}")
+
+                // Match backend-detected pórticos to loaded PorticoResumen for map pin highlighting
+                val cruzados = porticosRuta.mapNotNull { pr ->
+                    allPorticos.minByOrNull { p ->
+                        distanceMeters(p.latitud, p.longitud, pr.latitud, pr.longitud)
+                    }?.takeIf { p ->
+                        distanceMeters(p.latitud, p.longitud, pr.latitud, pr.longitud) < 100.0
+                    }
+                }.distinctBy { it.id }
+
+                // Build tariff summary from backend data — no extra POST needed
+                val tarifaCalculada = if (porticosRuta.isNotEmpty()) {
+                    TarifaCalculada(
+                        total = response.totalCost,
+                        portico = porticosRuta.map { pr ->
+                            Cruce(
+                                porticoId = allPorticos.minByOrNull { p ->
+                                    distanceMeters(p.latitud, p.longitud, pr.latitud, pr.longitud)
+                                }?.takeIf { p ->
+                                    distanceMeters(p.latitud, p.longitud, pr.latitud, pr.longitud) < 100.0
+                                }?.id ?: 0L,
+                                codigo = pr.codigo,
+                                nombre = pr.nombre,
+                                autopista = pr.autopista,
+                                tarifa = pr.tarifa,
+                                valor = pr.valor,
+                            )
+                        },
+                        vehiculo = _uiState.value.vehiculo,
+                    )
+                } else null
+
                 _uiState.update {
                     it.copy(
                         routePoints = points,
                         totalCost = response.totalCost,
                         porticosCruzados = cruzados,
+                        tarifaCalculada = tarifaCalculada,
                         isLoadingRoute = false,
                     )
-                }
-                if (cruzados.isNotEmpty()) {
-                    calculateTarifa(cruzados.map { it.id })
                 }
             }.onFailure { e ->
                 Log.e(TAG, "getRoute FAIL: ${e::class.simpleName} — ${e.message}", e)

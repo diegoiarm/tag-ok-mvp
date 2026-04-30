@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MyLocation
@@ -47,9 +47,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -60,17 +61,27 @@ import com.mapbox.maps.extension.compose.annotation.IconImage
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 import com.mapbox.maps.extension.compose.annotation.generated.PolylineAnnotation
 import com.tagok.app.R
+import com.tagok.app.data.GeocodeSuggestion
+import com.tagok.app.data.GeocodingRepository
 import com.tagok.app.ui.map.MapViewModel
 import com.tagok.app.ui.map.vectorToBitmap
 import com.tagok.app.ui.theme.Blue40
 import com.tagok.app.ui.theme.InputBackground
 import com.tagok.app.ui.theme.TextSecondary
+import kotlinx.coroutines.delay
 
 private val SANTIAGO = Point.fromLngLat(-70.6483, -33.4569)
 
-// Ruta que cruza Vespucio Norte (pórticos P1–P3 con tarifas reales cargadas)
-private const val EJEMPLO_ORIGEN = "-33.5100, -70.7000"
-private const val EJEMPLO_DESTINO = "-33.4200, -70.8000"
+private val EJEMPLO_ORIGEN = GeocodeSuggestion(
+    placeName = "Costanera Norte, Vitacura, Santiago",
+    lon = -70.7000,
+    lat = -33.5100,
+)
+private val EJEMPLO_DESTINO = GeocodeSuggestion(
+    placeName = "Lo Barnechea, Santiago",
+    lon = -70.8000,
+    lat = -33.4200,
+)
 
 @Composable
 fun PlanificarViajeScreen(
@@ -81,23 +92,50 @@ fun PlanificarViajeScreen(
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
 
+    // Origen
     var origenText by rememberSaveable { mutableStateOf("") }
+    var origenSeleccionado by remember { mutableStateOf<GeocodeSuggestion?>(null) }
+    var origenSugerencias by remember { mutableStateOf<List<GeocodeSuggestion>>(emptyList()) }
+    var buscandoOrigen by remember { mutableStateOf(false) }
+
+    // Destino
     var destinoText by rememberSaveable { mutableStateOf("") }
-    var origenError by remember { mutableStateOf(false) }
-    var destinoError by remember { mutableStateOf(false) }
+    var destinoSeleccionado by remember { mutableStateOf<GeocodeSuggestion?>(null) }
+    var destinoSugerencias by remember { mutableStateOf<List<GeocodeSuggestion>>(emptyList()) }
+    var buscandoDestino by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) { viewModel.setVehiculo(vehiculo) }
-
-    // Limpia el estado al salir para evitar que el RenderThread nativo de Mapbox
-    // intente seguir usando una Surface ya destruida.
-    DisposableEffect(Unit) {
-        onDispose { viewModel.resetMap() }
-    }
-
+    DisposableEffect(Unit) { onDispose { viewModel.resetMap() } }
     LaunchedEffect(uiState.error) {
         uiState.error?.let {
             snackbarHostState.showSnackbar(it)
             viewModel.clearError()
+        }
+    }
+
+    // Debounce geocoding — origen
+    LaunchedEffect(origenText) {
+        if (origenSeleccionado != null) return@LaunchedEffect
+        origenSugerencias = emptyList()
+        if (origenText.length >= 3) {
+            delay(600)
+            buscandoOrigen = true
+            runCatching { GeocodingRepository.buscar(origenText) }
+                .onSuccess { origenSugerencias = it }
+            buscandoOrigen = false
+        }
+    }
+
+    // Debounce geocoding — destino
+    LaunchedEffect(destinoText) {
+        if (destinoSeleccionado != null) return@LaunchedEffect
+        destinoSugerencias = emptyList()
+        if (destinoText.length >= 3) {
+            delay(600)
+            buscandoDestino = true
+            runCatching { GeocodingRepository.buscar(destinoText) }
+                .onSuccess { destinoSugerencias = it }
+            buscandoDestino = false
         }
     }
 
@@ -127,15 +165,12 @@ fun PlanificarViajeScreen(
                     lineOpacity = 0.9
                 }
             }
-
             val cruzadosIds = uiState.porticosCruzados.map { it.id }.toSet()
             uiState.porticos.forEach { portico ->
                 val activo = portico.id in cruzadosIds
                 val bitmap = if (activo) bitmapActivo else bitmapNormal
                 if (bitmap != null) {
-                    PointAnnotation(
-                        point = Point.fromLngLat(portico.longitud, portico.latitud),
-                    ) {
+                    PointAnnotation(point = Point.fromLngLat(portico.longitud, portico.latitud)) {
                         iconImage = IconImage(bitmap)
                         iconSize = if (activo) 1.5 else 1.0
                     }
@@ -143,7 +178,7 @@ fun PlanificarViajeScreen(
             }
         }
 
-        // Panel superior: inputs de origen y destino
+        // Panel superior: campos de búsqueda
         Card(
             modifier = Modifier
                 .align(Alignment.TopCenter)
@@ -187,24 +222,40 @@ fun PlanificarViajeScreen(
 
                 Spacer(Modifier.height(10.dp))
 
-                CoordField(
+                DireccionField(
                     value = origenText,
-                    onValueChange = { origenText = it; origenError = false },
+                    onValueChange = { nuevo ->
+                        origenText = nuevo
+                        if (origenSeleccionado?.placeName != nuevo) origenSeleccionado = null
+                    },
+                    sugerencias = origenSugerencias,
+                    onSugerenciaClick = { s ->
+                        origenText = s.placeName
+                        origenSeleccionado = s
+                        origenSugerencias = emptyList()
+                    },
                     label = "Origen",
-                    placeholder = "ej. -33.5892, -70.7152",
                     leadingIcon = Icons.Filled.MyLocation,
-                    isError = origenError,
+                    cargando = buscandoOrigen,
                 )
 
                 Spacer(Modifier.height(8.dp))
 
-                CoordField(
+                DireccionField(
                     value = destinoText,
-                    onValueChange = { destinoText = it; destinoError = false },
+                    onValueChange = { nuevo ->
+                        destinoText = nuevo
+                        if (destinoSeleccionado?.placeName != nuevo) destinoSeleccionado = null
+                    },
+                    sugerencias = destinoSugerencias,
+                    onSugerenciaClick = { s ->
+                        destinoText = s.placeName
+                        destinoSeleccionado = s
+                        destinoSugerencias = emptyList()
+                    },
                     label = "Destino",
-                    placeholder = "ej. -33.4508, -70.6588",
                     leadingIcon = Icons.Filled.Place,
-                    isError = destinoError,
+                    cargando = buscandoDestino,
                 )
 
                 Spacer(Modifier.height(10.dp))
@@ -216,32 +267,30 @@ fun PlanificarViajeScreen(
                 ) {
                     TextButton(
                         onClick = {
-                            origenText = EJEMPLO_ORIGEN
-                            destinoText = EJEMPLO_DESTINO
+                            origenText = EJEMPLO_ORIGEN.placeName
+                            origenSeleccionado = EJEMPLO_ORIGEN
+                            destinoText = EJEMPLO_DESTINO.placeName
+                            destinoSeleccionado = EJEMPLO_DESTINO
                         },
                         modifier = Modifier.weight(1f),
                         colors = ButtonDefaults.textButtonColors(contentColor = TextSecondary),
                     ) {
-                        Text(
-                            text = "Usar ejemplo",
-                            style = MaterialTheme.typography.labelMedium,
-                        )
+                        Text("Usar ejemplo", style = MaterialTheme.typography.labelMedium)
                     }
 
                     Button(
                         onClick = {
-                            val origen = parseCoordenada(origenText)
-                            val destino = parseCoordenada(destinoText)
-                            origenError = origen == null
-                            destinoError = destino == null
-                            if (origen != null && destino != null) {
-                                viewModel.calculateRoute(
-                                    lon1 = origen.second, lat1 = origen.first,
-                                    lon2 = destino.second, lat2 = destino.first,
-                                )
-                            }
+                            val o = origenSeleccionado ?: return@Button
+                            val d = destinoSeleccionado ?: return@Button
+                            viewModel.calculateRoute(
+                                lon1 = o.lon, lat1 = o.lat,
+                                lon2 = d.lon, lat2 = d.lat,
+                            )
                         },
-                        enabled = !uiState.isLoadingRoute && !uiState.isLoadingTarifa,
+                        enabled = origenSeleccionado != null
+                                && destinoSeleccionado != null
+                                && !uiState.isLoadingRoute
+                                && !uiState.isLoadingTarifa,
                         modifier = Modifier
                             .weight(2f)
                             .height(44.dp),
@@ -255,18 +304,14 @@ fun PlanificarViajeScreen(
                                 strokeWidth = 2.dp,
                             )
                         } else {
-                            Text(
-                                text = "Calcular ruta",
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 14.sp,
-                            )
+                            Text(text = "Calcular ruta", fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
                         }
                     }
                 }
             }
         }
 
-        // Panel inferior: resultados de la tarifa
+        // Panel inferior: resultados de tarifa
         if (uiState.routePoints.isNotEmpty() || uiState.isLoadingTarifa || uiState.tarifaCalculada != null) {
             Card(
                 modifier = Modifier
@@ -278,8 +323,6 @@ fun PlanificarViajeScreen(
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
             ) {
                 Column(modifier = Modifier.padding(20.dp)) {
-
-                    // Stats de ruta
                     if (uiState.routePoints.isNotEmpty()) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -310,7 +353,6 @@ fun PlanificarViajeScreen(
                         }
                     }
 
-                    // Sección de tarifa
                     when {
                         uiState.isLoadingTarifa -> {
                             Spacer(Modifier.height(10.dp))
@@ -336,7 +378,6 @@ fun PlanificarViajeScreen(
                             Spacer(Modifier.height(10.dp))
                             HorizontalDivider(color = InputBackground)
                             Spacer(Modifier.height(10.dp))
-
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -361,7 +402,6 @@ fun PlanificarViajeScreen(
                                     color = Blue40,
                                 )
                             }
-
                             if (tarifa.portico.isNotEmpty()) {
                                 Spacer(Modifier.height(8.dp))
                                 tarifa.portico.take(4).forEach { cruce ->
@@ -416,49 +456,89 @@ fun PlanificarViajeScreen(
 }
 
 @Composable
-private fun CoordField(
+private fun DireccionField(
     value: String,
     onValueChange: (String) -> Unit,
+    sugerencias: List<GeocodeSuggestion>,
+    onSugerenciaClick: (GeocodeSuggestion) -> Unit,
     label: String,
-    placeholder: String,
-    leadingIcon: androidx.compose.ui.graphics.vector.ImageVector,
-    isError: Boolean,
+    leadingIcon: ImageVector,
+    cargando: Boolean,
 ) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        modifier = Modifier.fillMaxWidth(),
-        label = { Text(label, style = MaterialTheme.typography.bodySmall) },
-        placeholder = { Text(placeholder, style = MaterialTheme.typography.bodySmall) },
-        leadingIcon = {
-            Icon(
-                imageVector = leadingIcon,
-                contentDescription = null,
-                tint = if (isError) MaterialTheme.colorScheme.error else Blue40,
-                modifier = Modifier.size(18.dp),
-            )
-        },
-        isError = isError,
-        supportingText = if (isError) {
-            { Text("Formato: latitud, longitud  (ej. -33.45, -70.65)") }
-        } else null,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-        singleLine = true,
-        shape = RoundedCornerShape(12.dp),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = Blue40,
-            unfocusedBorderColor = InputBackground,
-            focusedLabelColor = Blue40,
-        ),
-    )
-}
+    Column {
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(label, style = MaterialTheme.typography.bodySmall) },
+            placeholder = { Text("Dirección, negocio o lugar", style = MaterialTheme.typography.bodySmall) },
+            leadingIcon = {
+                Icon(
+                    imageVector = leadingIcon,
+                    contentDescription = null,
+                    tint = Blue40,
+                    modifier = Modifier.size(18.dp),
+                )
+            },
+            trailingIcon = {
+                if (cargando) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(16.dp),
+                        strokeWidth = 2.dp,
+                        color = Blue40,
+                    )
+                }
+            },
+            singleLine = true,
+            shape = RoundedCornerShape(12.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Blue40,
+                unfocusedBorderColor = InputBackground,
+                focusedLabelColor = Blue40,
+            ),
+        )
 
-private fun parseCoordenada(text: String): Pair<Double, Double>? {
-    val parts = text.split(",").map { it.trim() }
-    if (parts.size != 2) return null
-    return try {
-        Pair(parts[0].toDouble(), parts[1].toDouble())
-    } catch (_: NumberFormatException) {
-        null
+        if (sugerencias.isNotEmpty()) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 2.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+            ) {
+                Column {
+                    sugerencias.take(5).forEachIndexed { index, sugerencia ->
+                        TextButton(
+                            onClick = { onSugerenciaClick(sugerencia) },
+                            modifier = Modifier.fillMaxWidth(),
+                            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Place,
+                                contentDescription = null,
+                                tint = TextSecondary,
+                                modifier = Modifier.size(14.dp),
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text(
+                                text = sugerencia.placeName,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(1f),
+                            )
+                        }
+                        if (index < sugerencias.size - 1) {
+                            HorizontalDivider(
+                                modifier = Modifier.padding(horizontal = 14.dp),
+                                color = InputBackground,
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 }
