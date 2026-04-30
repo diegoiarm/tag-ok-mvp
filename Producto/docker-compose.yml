@@ -24,6 +24,30 @@ services:
     volumes:
       - pgadmin_data:/var/lib/postgresql/data
 
+  mongo:
+    image: mongo:7
+    container_name: db-historial
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    ports:
+      - "5678:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo_express
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: admin
+      ME_CONFIG_MONGODB_SERVER: mongo
+    ports:
+      - "8001:8081"
+    depends_on:
+      - mongo
+
 volumes:
   postgres_data:
   pgadmin_data:
+  mongo_data:

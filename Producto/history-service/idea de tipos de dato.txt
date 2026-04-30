@@ -1,0 +1,56 @@
+{
+	_id: idMongo,
+	idToken: string,
+	días: 
+	[
+		fechaDia: IsoDate,
+		porticos: 
+		[
+			{
+				codigo,
+				nombrePortico,
+				autopista,
+				sentido,
+				tipoTarifa,
+				valor,
+				fechaHoraCruce,
+				vehiculo: 
+				{
+					patente: string,
+					tipoVehiculo: string
+				}
+			}
+		]
+	]
+}
+
+// Ruta guardada
+
+{
+	_id,
+	idToken: string,
+	segments: 
+	[
+		{
+			name: string;
+			geometry: string;
+		}
+	],
+	porticos:
+	[
+		{
+			nombre: string,
+			codigo: string,
+			autopista: string,
+			codigoAutopista: string,
+			longitud: double,
+			latitud: double,
+			tipoTarifa: string,
+			valor: (BigDecimal o double da igual),
+			fechaHora: IsoDate
+		}
+	],
+	fechaHoraInicio: IsoDate,
+	fechaHoraFin: IsoDate,
+	totalCost: (BigDecimal o double da igual)
+}
