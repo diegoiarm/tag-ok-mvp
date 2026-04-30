@@ -21,7 +21,13 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" -X POST http://localhost:8000/autopistas -H \"Content-Type: application/json\" -d @Producto/porticos/costaneraNorte.json)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" -X POST http://localhost:8000/autopistas -H \"Content-Type: application/json\" -d @Producto/porticos/autopistaCentral.json)",
       "Bash(curl -s http://localhost:8000/porticos)",
-      "Bash(python3 -c \"import json,sys; data=json.load\\(sys.stdin\\); print\\(f'Total: {len\\(data\\)}'\\); print\\('Primero:', json.dumps\\(data[0], indent=2\\)\\)\")"
+      "Bash(python3 -c \"import json,sys; data=json.load\\(sys.stdin\\); print\\(f'Total: {len\\(data\\)}'\\); print\\('Primero:', json.dumps\\(data[0], indent=2\\)\\)\")",
+      "Bash(curl -s http://localhost:8000/autopistas)",
+      "Bash(docker exec *)",
+      "Bash(curl -s \"http://localhost:8000/api/routes?lon1=-70.6506&lat1=-33.4373&lon2=-70.7437&lat2=-33.4457\")",
+      "Bash(curl -v http://localhost:8000/autopistas)",
+      "Bash(curl -s \"http://localhost:8000/autopistas\" -H \"Accept: application/json\")",
+      "Bash(curl -s \"http://localhost:8000/actuator/health\")"
     ]
   }
 }

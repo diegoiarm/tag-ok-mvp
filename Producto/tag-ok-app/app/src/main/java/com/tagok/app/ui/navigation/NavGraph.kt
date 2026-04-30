@@ -32,6 +32,7 @@ import com.tagok.app.ui.register.RegisterScreen
 import com.tagok.app.ui.register.RegisterViewModel
 import com.tagok.app.ui.map.MapScreen
 import com.tagok.app.ui.perfil.PerfilScreen
+import com.tagok.app.ui.vehiculos.VehiculosScreen
 import com.tagok.app.ui.planificar.PlanificarViajeScreen
 import com.tagok.app.ui.presupuesto.PresupuestoScreen
 import com.tagok.app.ui.theme.Blue40
@@ -80,7 +81,8 @@ fun NavGraph() {
         }
     }
 
-    val showBottomBar = bottomNavScreens.any { it.route == currentDestination?.route }
+    val routesSinBottomBar = setOf("login", "register")
+    val showBottomBar = currentDestination?.route !in routesSinBottomBar
 
     Scaffold(
         bottomBar = {
@@ -175,7 +177,12 @@ fun NavGraph() {
                 )
             }
             composable(Screen.Presupuesto.route) { PresupuestoScreen() }
-            composable(Screen.Perfil.route) { PerfilScreen() }
+            composable(Screen.Perfil.route) {
+                PerfilScreen(onVehiculos = { navController.navigate("vehiculos") })
+            }
+            composable("vehiculos") {
+                VehiculosScreen(onBack = { navController.popBackStack() })
+            }
 
             // Planificación de viaje: input de origen/destino + estimación de tarifa
             composable(

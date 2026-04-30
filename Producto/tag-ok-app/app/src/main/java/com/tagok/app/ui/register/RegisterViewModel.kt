@@ -2,6 +2,8 @@ package com.tagok.app.ui.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tagok.app.data.NuevoVehiculo
+import com.tagok.app.data.VehiculoRepository
 import com.tagok.app.supabase
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
@@ -81,11 +83,24 @@ class RegisterViewModel : ViewModel() {
                         put("ciudad", f.ciudad)
                         put("comuna", f.comuna)
                         put("celular", f.celular)
-                        put("tipo_vehiculo", f.tipoVehiculo)
-                        put("categoria", f.categoria)
-                        put("patente", f.patente)
-                        put("numero_tag", f.numeroTag)
                     }
+                }
+                // Persiste el vehículo solo si la sesión quedó activa (confirmación de email desactivada)
+                val userId = supabase.auth.currentUserOrNull()?.id
+                if (userId != null && f.patente.isNotBlank()) {
+                    runCatching {
+                        VehiculoRepository().insertVehiculo(
+                            NuevoVehiculo(
+                                userId = userId,
+                                patente = f.patente.trim().uppercase(),
+                                tipoVehiculo = f.tipoVehiculo.ifBlank { "AUTO" },
+                                categoria = f.categoria.toIntOrNull() ?: 2,
+                                numeroTag = f.numeroTag.trim().takeIf { it.isNotBlank() },
+                                esPrincipal = true,
+                            )
+                        )
+                    }
+                    // Si falla el insert del vehículo, el registro igual se completa
                 }
             }.onSuccess {
                 _uiState.value = RegisterUiState.Success
