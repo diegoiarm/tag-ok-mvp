@@ -3,8 +3,6 @@ package com.roony.infrastructure.parser;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.roony.domain.filter.BoundingBoxFilter;
 import com.roony.domain.model.Element;
 import com.roony.infrastructure.middleware.FilterResult;
@@ -24,20 +22,13 @@ import javax.sql.DataSource;
 public class OsmJsonParser 
 {
     private static final Logger logger = Logger.getLogger(OsmJsonParser.class.getName());
-    private final PipelineRunner pipeline;
     private static final JsonFactory JSON_FACTORY = new JsonFactory();
-    private static final ObjectMapper MAPPER = new ObjectMapper()
-        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false)
-        .configure(DeserializationFeature.FAIL_ON_NULL_CREATOR_PROPERTIES,false)
-        .configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES,false);
     private static final ElementMapper ELEMENT_MAPPER = new ElementMapper();
+    private final SqlExportMiddleware middleware;
 
     public OsmJsonParser(BoundingBoxFilter boundingBoxFilter, DataSource dataSource) 
     {
-        this.pipeline = new Pipeline()
-            .addBoundsFilter(boundingBoxFilter)
-            .add(new SqlExportMiddleware(dataSource))
-            .build();
+        this.middleware = new SqlExportMiddleware(dataSource);
     }
 
     public ParseResult parse(Path file) 
@@ -51,6 +42,11 @@ public class OsmJsonParser
                     logger.warning(() -> "El archivo no comienza con un objeto JSON: " + file);
                     return new ParseResult(file.getFileName().toString(), 0, 0, -1);
                 }
+
+                PipelineRunner pipeline = new Pipeline()
+                    //.addBoundsFilter(boundingBoxFilter)
+                    .add(middleware)
+                    .build();
 
                 boolean found = false;
                 while (jp.nextToken() != JsonToken.END_OBJECT) 

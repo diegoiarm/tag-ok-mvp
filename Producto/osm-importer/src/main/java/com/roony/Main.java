@@ -42,8 +42,7 @@ public class Main
     {
         try 
         {
-            JsonFileScanner scanner =
-                new JsonFileScanner("datos-calles");
+            JsonFileScanner scanner = new JsonFileScanner("datos-calles");
 
             List<Path> files =
                 scanner.scanJsonFiles();
