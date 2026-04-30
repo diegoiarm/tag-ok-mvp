@@ -1,5 +1,6 @@
 package com.tagok.routes_service.service.application;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,17 +32,13 @@ public class RouteService
 
         return RouteResponse.builder()
             .segments(segments)
-            .totalCost(0)
+            .totalCost(BigDecimal.ZERO)
             .build();
     }
 
     public RouteResponse getRoute(double lon1, double lat1, double lon2, double lat2) 
     {
         List<RouteSegment> segments = routeRepository.getRouteSegments(lon1, lat1, lon2, lat2);
-
-        double totalCost = segments.stream()
-            .mapToDouble(RouteSegment::getCost)
-            .sum();
 
         LocalDateTime tiempoActual = LocalDateTime.now();
 
@@ -65,6 +62,10 @@ public class RouteService
                     porticos.add(toResponse(optional.get(), tiempoActual));
             }
         }
+
+        BigDecimal totalCost = porticos.stream()
+            .map(PorticoRouteResponse::valor)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         return RouteResponse.builder()
             .segments(segments)

@@ -1,5 +1,6 @@
 package com.tagok.routes_service.dto.response;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.tagok.routes_service.dto.RouteSegment;
@@ -17,5 +18,5 @@ public class RouteResponse
 {
     private List<RouteSegment> segments;
     private List<PorticoRouteResponse> porticos;
-    private double totalCost;
+    private BigDecimal totalCost;
 }
