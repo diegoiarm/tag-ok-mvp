@@ -15,7 +15,7 @@ import com.roony.domain.model.Geometry;
 import com.roony.domain.model.MaxSpeed;
 import com.roony.domain.model.Tags;
 
-public class SqlExportMiddleware implements ElementMiddleware
+public class SqlExportMiddleware implements ElementMiddleware, AutoCloseable
 {
     private static final Logger logger = Logger.getLogger(SqlExportMiddleware.class.getName());
     private static final String INSERT_SQL = """
@@ -161,7 +161,8 @@ public class SqlExportMiddleware implements ElementMiddleware
     }
 
 
-    public void flush()
+    @Override
+    public void close()
     {
         try
         {
@@ -176,10 +177,7 @@ public class SqlExportMiddleware implements ElementMiddleware
         }
         catch(SQLException e)
         {
-            logger.warning(
-                "Error cerrando batch: "
-                + e.getMessage()
-            );
+            logger.warning("Error cerrando batch: " + e.getMessage());
         }
     }
 

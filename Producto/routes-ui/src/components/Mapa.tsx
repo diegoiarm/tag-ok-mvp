@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, GeoJSON, Marker } from "react-leaflet";
+import { MapContainer, TileLayer, GeoJSON, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { Coord } from "../types/types";
 import { useRoute } from "../hooks/useRoute";
 import { usePorticos } from "../hooks/usePorticos";
 import { PorticoMark } from "../components/PorticoMark";
+import { RoutePorticoMark } from "./RoutePorticoMark";
 
-// Íconos (puedes dejarlos aquí o importarlos de un archivo aparte)
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
 
@@ -19,18 +19,24 @@ const DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-const GreenIcon = L.icon({
+const StartIcon = L.icon({
   iconUrl: "https://maps.google.com/mapfiles/ms/icons/green-dot.png",
   iconSize: [32, 32],
-  iconAnchor: [16, 32],
+});
+
+const EndIcon = L.icon({
+  iconUrl: "https://maps.google.com/mapfiles/ms/icons/red-dot.png",
+  iconSize: [32, 32],
 });
 
 export function Mapa({ start, end }: { start: Coord; end: Coord }) {
-  const { data: segments } = useRoute(start, end);
-  //const { data: segments } = useCalle();
+  const { data: route } = useRoute(start, end);
   const { data: porticos } = usePorticos();
 
   const [geoJsonData, setGeoJsonData] = useState<any>(null);
+
+  const segments = route?.segments;
+  const routePorticos = route?.porticos;
 
   useEffect(() => {
     if (!segments || segments.length === 0) {
@@ -60,9 +66,6 @@ export function Mapa({ start, end }: { start: Coord; end: Coord }) {
       return;
     }
 
-    // Si necesitas la función removeLoopCoords, agrégala aquí
-    // const cleaned = removeLoopCoords(allCoords);
-
     setGeoJsonData({
       type: "FeatureCollection",
       features: [
@@ -71,16 +74,12 @@ export function Mapa({ start, end }: { start: Coord; end: Coord }) {
           properties: {},
           geometry: {
             type: "LineString",
-            coordinates: allCoords, // o cleaned
+            coordinates: allCoords,
           },
         },
       ],
     });
-  }, [segments]);
-
-  const routePorticos = segments
-    ?.map((s) => s.portico)
-    .filter((p) => p !== null && p !== undefined);
+  }, [route]);
 
   return (
     <div style={{ height: "100vh", width: "100%" }}>
@@ -91,29 +90,44 @@ export function Mapa({ start, end }: { start: Coord; end: Coord }) {
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          attribution='&copy; OpenStreetMap contributors'
         />
 
-        {/* Capa de ruta directa con GeoJSON */}
         {geoJsonData && (
-          <GeoJSON
-            data={geoJsonData}
-            style={{ color: "#007bff", weight: 5 }}
-          />
+          <GeoJSON data={geoJsonData} style={{ color: "#007bff", weight: 5 }} />
         )}
-        
+
         {routePorticos?.map((p) => (
-          <Marker
-            key={`route-${p.nombre}`}
-            position={[p.latitud, p.longitud]}
-            icon={GreenIcon}
-          />
+          <RoutePorticoMark key={p.codigo} portico={p} />
         ))}
 
-        <Marker position={[start.lat, start.lon]} />
-        <Marker position={[end.lat, end.lon]} />
+        <Marker position={[start.lat, start.lon]} icon={StartIcon}>
+          <Popup>
+            <strong>Inicio</strong>
+            <br />
+            Hora:{" "}
+            {route
+              ? new Date(route.fechaHoraInicio).toLocaleTimeString("es-CL")
+              : "Calculando..."}
+          </Popup>
+        </Marker>
 
-        {/* Capa de pórticos */}
+        <Marker position={[end.lat, end.lon]} icon={EndIcon}>
+          <Popup>
+            <strong>Destino</strong>
+            <br />
+            Hora llegada:{" "}
+            {route
+              ? new Date(route.fechaHoraFin).toLocaleTimeString("es-CL")
+              : "Calculando..."}
+            <br />
+            Total:{" "}
+            {route
+              ? `$${route.totalCost.toLocaleString("es-CL")}`
+              : "..."}
+          </Popup>
+        </Marker>
+
         {porticos?.map((p) => (
           <PorticoMark key={p.id} portico={p} />
         ))}

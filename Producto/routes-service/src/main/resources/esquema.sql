@@ -1,11 +1,3 @@
-CREATE EXTENSION IF NOT EXISTS postgis WITH SCHEMA public;
-
-COMMENT ON EXTENSION postgis IS 'PostGIS geometry and geography spatial types and functions';
-
-CREATE EXTENSION IF NOT EXISTS pgrouting WITH SCHEMA public;
-
-COMMENT ON EXTENSION pgrouting IS 'pgRouting Extension';
-
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;

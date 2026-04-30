@@ -1,4 +1,4 @@
-import type { RouteSegment } from "../types/types";
+import type { RouteResponse } from "../types/types";
 import { api } from "./axios";
 
 export const getRoute = async (start: any, end: any) => {
@@ -11,5 +11,5 @@ export const getRoute = async (start: any, end: any) => {
     },
   });
 
-  return data.segments as RouteSegment[];
+  return data as RouteResponse;
 };
