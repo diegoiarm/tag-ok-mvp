@@ -115,8 +115,8 @@ class MapViewModel : ViewModel() {
         }
     }
 
-    // Corredor Vespucio Norte — cruza pórticos P1-P3 con tarifas reales
-    fun calculateTestRoute() = calculateRoute(-70.7000, -33.5100, -70.8000, -33.4200)
+    // Maipú → Quilicura forzando el corredor de Vespucio Norte
+    fun calculateTestRoute() = calculateRoute(-70.7614, -33.5123, -70.7275, -33.3596)
 
     // Prueba directa de la API de tarifas usando el primer pórtico cargado
     fun calculateTestTarifa() {

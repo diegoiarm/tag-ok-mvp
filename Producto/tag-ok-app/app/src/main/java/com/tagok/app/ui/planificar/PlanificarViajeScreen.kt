@@ -1,5 +1,12 @@
 package com.tagok.app.ui.planificar
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.LocationManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,11 +20,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.ZoomOutMap
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -32,6 +43,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -46,6 +58,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -53,9 +66,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mapbox.geojson.Point
+import com.mapbox.maps.CameraOptions
+import com.mapbox.maps.extension.compose.MapEffect
 import com.mapbox.maps.extension.compose.MapboxMap
+import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import com.mapbox.maps.extension.compose.annotation.IconImage
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
@@ -83,6 +100,45 @@ private val EJEMPLO_DESTINO = GeocodeSuggestion(
     lat = -33.4200,
 )
 
+@SuppressLint("MissingPermission")
+private fun flyToCurrentLocation(context: Context, mapViewportState: MapViewportState) {
+    val lm = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    val location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        ?: lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+        ?: lm.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER)
+    location?.let {
+        mapViewportState.easeTo(
+            CameraOptions.Builder()
+                .center(Point.fromLngLat(it.longitude, it.latitude))
+                .zoom(15.0)
+                .build()
+        )
+    }
+}
+
+@Composable
+private fun MapControlButton(
+    icon: ImageVector,
+    contentDescription: String,
+    onClick: () -> Unit,
+) {
+    Surface(
+        onClick = onClick,
+        modifier = Modifier
+            .size(44.dp)
+            .shadow(4.dp, CircleShape),
+        shape = CircleShape,
+        color = Color.White,
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = contentDescription,
+            modifier = Modifier.padding(10.dp),
+            tint = Color(0xFF374151),
+        )
+    }
+}
+
 @Composable
 fun PlanificarViajeScreen(
     vehiculo: String = "AUTO",
@@ -91,6 +147,53 @@ fun PlanificarViajeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
+    var currentZoom by remember { mutableStateOf(11.5) }
+
+    val mapViewportState = rememberMapViewportState {
+        setCameraOptions {
+            center(SANTIAGO)
+            zoom(11.5)
+            pitch(0.0)
+        }
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) flyToCurrentLocation(context, mapViewportState)
+    }
+
+    fun requestLocation() {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+            == PackageManager.PERMISSION_GRANTED
+        ) {
+            flyToCurrentLocation(context, mapViewportState)
+        } else {
+            permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
+
+    fun fitRoute() {
+        val points = uiState.routePoints
+        if (points.isEmpty()) return
+        val lons = points.map { it.longitude() }
+        val lats = points.map { it.latitude() }
+        val span = maxOf(lons.max() - lons.min(), lats.max() - lats.min())
+        mapViewportState.easeTo(
+            CameraOptions.Builder()
+                .center(Point.fromLngLat((lons.min() + lons.max()) / 2.0, (lats.min() + lats.max()) / 2.0))
+                .zoom(when {
+                    span < 0.01 -> 14.0
+                    span < 0.03 -> 13.0
+                    span < 0.06 -> 12.0
+                    span < 0.12 -> 11.0
+                    span < 0.3  -> 10.0
+                    else        -> 9.0
+                })
+                .build()
+        )
+    }
 
     // Origen
     var origenText by rememberSaveable { mutableStateOf("") }
@@ -139,15 +242,6 @@ fun PlanificarViajeScreen(
         }
     }
 
-    val mapViewportState = rememberMapViewportState {
-        setCameraOptions {
-            center(SANTIAGO)
-            zoom(11.5)
-            pitch(0.0)
-        }
-    }
-
-    val context = LocalContext.current
     val bitmapNormal = remember { vectorToBitmap(context, R.drawable.ic_portico) }
     val bitmapActivo = remember { vectorToBitmap(context, R.drawable.ic_portico_activo) }
 
@@ -158,6 +252,11 @@ fun PlanificarViajeScreen(
             modifier = Modifier.fillMaxSize(),
             mapViewportState = mapViewportState,
         ) {
+            MapEffect(Unit) { mapView ->
+                mapView.mapboxMap.subscribeCameraChanged {
+                    currentZoom = mapView.mapboxMap.cameraState.zoom
+                }
+            }
             if (uiState.routePoints.size >= 2) {
                 PolylineAnnotation(points = uiState.routePoints) {
                     lineColor = Blue40
@@ -178,18 +277,58 @@ fun PlanificarViajeScreen(
             }
         }
 
-        // Panel superior: campos de búsqueda
+        // Controles de mapa — esquina superior derecha
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(top = 24.dp, end = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            MapControlButton(
+                icon = Icons.Filled.MyLocation,
+                contentDescription = "Mi ubicación",
+                onClick = { requestLocation() },
+            )
+            MapControlButton(
+                icon = Icons.Filled.Add,
+                contentDescription = "Acercar",
+                onClick = {
+                    mapViewportState.easeTo(
+                        CameraOptions.Builder().zoom(currentZoom + 1.0).build()
+                    )
+                },
+            )
+            MapControlButton(
+                icon = Icons.Filled.Remove,
+                contentDescription = "Alejar",
+                onClick = {
+                    mapViewportState.easeTo(
+                        CameraOptions.Builder().zoom(currentZoom - 1.0).build()
+                    )
+                },
+            )
+            if (uiState.routePoints.isNotEmpty()) {
+                MapControlButton(
+                    icon = Icons.Filled.ZoomOutMap,
+                    contentDescription = "Ver ruta completa",
+                    onClick = { fitRoute() },
+                )
+            }
+        }
+
+        // Panel inferior unificado: búsqueda + resultados
         Card(
             modifier = Modifier
-                .align(Alignment.TopCenter)
+                .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+                .padding(horizontal = 16.dp, vertical = 16.dp),
             shape = RoundedCornerShape(20.dp),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         ) {
             Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)) {
 
+                // Cabecera: volver + título + badge vehículo
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = onBack, modifier = Modifier.size(32.dp)) {
                         Icon(
@@ -308,21 +447,13 @@ fun PlanificarViajeScreen(
                         }
                     }
                 }
-            }
-        }
 
-        // Panel inferior: resultados de tarifa
-        if (uiState.routePoints.isNotEmpty() || uiState.isLoadingTarifa || uiState.tarifaCalculada != null) {
-            Card(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 24.dp),
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-            ) {
-                Column(modifier = Modifier.padding(20.dp)) {
+                // Resultados de la ruta (aparecen bajo el formulario en la misma Card)
+                if (uiState.routePoints.isNotEmpty() || uiState.isLoadingTarifa || uiState.tarifaCalculada != null) {
+                    Spacer(Modifier.height(8.dp))
+                    HorizontalDivider(color = InputBackground)
+                    Spacer(Modifier.height(8.dp))
+
                     if (uiState.routePoints.isNotEmpty()) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -375,9 +506,7 @@ fun PlanificarViajeScreen(
 
                         uiState.tarifaCalculada != null -> {
                             val tarifa = uiState.tarifaCalculada!!
-                            Spacer(Modifier.height(10.dp))
-                            HorizontalDivider(color = InputBackground)
-                            Spacer(Modifier.height(10.dp))
+                            Spacer(Modifier.height(6.dp))
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -403,7 +532,7 @@ fun PlanificarViajeScreen(
                                 )
                             }
                             if (tarifa.portico.isNotEmpty()) {
-                                Spacer(Modifier.height(8.dp))
+                                Spacer(Modifier.height(6.dp))
                                 tarifa.portico.take(4).forEach { cruce ->
                                     Row(
                                         modifier = Modifier
@@ -443,7 +572,7 @@ fun PlanificarViajeScreen(
             hostState = snackbarHostState,
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .padding(top = 130.dp, start = 16.dp, end = 16.dp),
+                .padding(top = 24.dp, start = 16.dp, end = 16.dp),
         ) { data ->
             Snackbar(
                 snackbarData = data,

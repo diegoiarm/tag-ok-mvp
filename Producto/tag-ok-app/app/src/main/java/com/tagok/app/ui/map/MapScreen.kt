@@ -1,7 +1,14 @@
 package com.tagok.app.ui.map
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.location.LocationManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,28 +22,40 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.MyLocation
+import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.ZoomOutMap
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -44,7 +63,10 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mapbox.geojson.Point
+import com.mapbox.maps.CameraOptions
+import com.mapbox.maps.extension.compose.MapEffect
 import com.mapbox.maps.extension.compose.MapboxMap
+import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import com.mapbox.maps.extension.compose.annotation.IconImage
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
@@ -67,6 +89,45 @@ internal fun vectorToBitmap(context: android.content.Context, @DrawableRes resId
     return bitmap
 }
 
+@SuppressLint("MissingPermission")
+private fun flyToCurrentLocation(context: Context, mapViewportState: MapViewportState) {
+    val lm = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    val location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        ?: lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+        ?: lm.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER)
+    location?.let {
+        mapViewportState.easeTo(
+            CameraOptions.Builder()
+                .center(Point.fromLngLat(it.longitude, it.latitude))
+                .zoom(15.0)
+                .build()
+        )
+    }
+}
+
+@Composable
+private fun MapControlButton(
+    icon: ImageVector,
+    contentDescription: String,
+    onClick: () -> Unit,
+) {
+    Surface(
+        onClick = onClick,
+        modifier = Modifier
+            .size(44.dp)
+            .shadow(4.dp, CircleShape),
+        shape = CircleShape,
+        color = Color.White,
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = contentDescription,
+            modifier = Modifier.padding(10.dp),
+            tint = Color(0xFF374151),
+        )
+    }
+}
+
 @Composable
 fun MapScreen(
     vehiculo: String = "AUTO",
@@ -74,6 +135,8 @@ fun MapScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
+    var currentZoom by remember { mutableStateOf(12.5) }
 
     LaunchedEffect(Unit) { viewModel.setVehiculo(vehiculo) }
 
@@ -96,9 +159,48 @@ fun MapScreen(
         }
     }
 
-    val context = LocalContext.current
     val bitmapNormal = remember { vectorToBitmap(context, R.drawable.ic_portico) }
     val bitmapActivo = remember { vectorToBitmap(context, R.drawable.ic_portico_activo) }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) flyToCurrentLocation(context, mapViewportState)
+    }
+
+    fun requestLocation() {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+            == PackageManager.PERMISSION_GRANTED
+        ) {
+            flyToCurrentLocation(context, mapViewportState)
+        } else {
+            permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
+
+    fun fitRoute() {
+        val points = uiState.routePoints
+        if (points.isEmpty()) return
+        val lons = points.map { it.longitude() }
+        val lats = points.map { it.latitude() }
+        val centerLon = (lons.min() + lons.max()) / 2.0
+        val centerLat = (lats.min() + lats.max()) / 2.0
+        val span = maxOf(lons.max() - lons.min(), lats.max() - lats.min())
+        val zoom = when {
+            span < 0.01 -> 14.0
+            span < 0.03 -> 13.0
+            span < 0.06 -> 12.0
+            span < 0.12 -> 11.0
+            span < 0.3  -> 10.0
+            else        -> 9.0
+        }
+        mapViewportState.easeTo(
+            CameraOptions.Builder()
+                .center(Point.fromLngLat(centerLon, centerLat))
+                .zoom(zoom)
+                .build()
+        )
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -106,6 +208,12 @@ fun MapScreen(
             modifier = Modifier.fillMaxSize(),
             mapViewportState = mapViewportState,
         ) {
+            MapEffect(Unit) { mapView ->
+                mapView.mapboxMap.subscribeCameraChanged {
+                    currentZoom = mapView.mapboxMap.cameraState.zoom
+                }
+            }
+
             if (uiState.routePoints.size >= 2) {
                 PolylineAnnotation(points = uiState.routePoints) {
                     lineColor = Blue40
@@ -129,6 +237,43 @@ fun MapScreen(
             }
         }
 
+        // Controles flotantes — columna derecha
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(top = 24.dp, end = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            MapControlButton(
+                icon = Icons.Filled.MyLocation,
+                contentDescription = "Mi ubicación",
+                onClick = { requestLocation() },
+            )
+            MapControlButton(
+                icon = Icons.Filled.Add,
+                contentDescription = "Acercar",
+                onClick = {
+                    val newZoom = (currentZoom + 1.0).coerceAtMost(20.0)
+                    mapViewportState.easeTo(CameraOptions.Builder().zoom(newZoom).build())
+                },
+            )
+            MapControlButton(
+                icon = Icons.Filled.Remove,
+                contentDescription = "Alejar",
+                onClick = {
+                    val newZoom = (currentZoom - 1.0).coerceAtLeast(1.0)
+                    mapViewportState.easeTo(CameraOptions.Builder().zoom(newZoom).build())
+                },
+            )
+            if (uiState.routePoints.isNotEmpty()) {
+                MapControlButton(
+                    icon = Icons.Filled.ZoomOutMap,
+                    contentDescription = "Ver ruta completa",
+                    onClick = { fitRoute() },
+                )
+            }
+        }
+
         Card(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -140,7 +285,6 @@ fun MapScreen(
         ) {
             Column(modifier = Modifier.padding(20.dp)) {
 
-                // Título + chip de vehículo
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -166,7 +310,6 @@ fun MapScreen(
                     }
                 }
 
-                // Info de ruta si está calculada
                 if (uiState.routePoints.isNotEmpty()) {
                     Spacer(Modifier.height(6.dp))
                     Row(
@@ -190,7 +333,6 @@ fun MapScreen(
                     }
                 }
 
-                // Sección de tarifa
                 when {
                     uiState.isLoadingTarifa -> {
                         Spacer(Modifier.height(10.dp))
@@ -268,7 +410,6 @@ fun MapScreen(
 
                 Spacer(Modifier.height(14.dp))
 
-                // Botón principal: calcular ruta
                 Button(
                     onClick = viewModel::calculateTestRoute,
                     enabled = !uiState.isLoadingRoute,
@@ -289,7 +430,6 @@ fun MapScreen(
                     }
                 }
 
-                // Botón secundario: probar API de tarifas directamente
                 if (uiState.porticos.isNotEmpty() && !uiState.isLoadingTarifa && !uiState.isLoadingRoute) {
                     Spacer(Modifier.height(8.dp))
                     Button(
