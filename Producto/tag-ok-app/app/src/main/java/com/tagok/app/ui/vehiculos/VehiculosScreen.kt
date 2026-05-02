@@ -1,5 +1,6 @@
 package com.tagok.app.ui.vehiculos
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -219,7 +220,8 @@ private fun VehiculoCard(vehiculo: Vehiculo, onDelete: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = CardDark),
+        border = BorderStroke(1.dp, Blue40),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
         Row(
             modifier = Modifier
@@ -231,13 +233,13 @@ private fun VehiculoCard(vehiculo: Vehiculo, onDelete: () -> Unit) {
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape)
-                    .background(Color.White.copy(alpha = 0.12f)),
+                    .background(Blue40.copy(alpha = 0.10f)),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     imageVector = tipoIcon(vehiculo.tipoVehiculo),
                     contentDescription = null,
-                    tint = Color.White,
+                    tint = Blue40,
                     modifier = Modifier.size(26.dp),
                 )
             }
@@ -249,13 +251,13 @@ private fun VehiculoCard(vehiculo: Vehiculo, onDelete: () -> Unit) {
                     text = tipoDisplay(vehiculo.tipoVehiculo).uppercase(),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onSurface,
                     letterSpacing = 0.5.sp,
                 )
                 Text(
                     text = "CATEGORÍA ${vehiculo.categoria}",
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color.White.copy(alpha = 0.55f),
+                    color = TextSecondary,
                 )
                 Spacer(Modifier.height(8.dp))
                 Row(
@@ -264,23 +266,25 @@ private fun VehiculoCard(vehiculo: Vehiculo, onDelete: () -> Unit) {
                 ) {
                     Box(
                         modifier = Modifier
-                            .background(Color.White.copy(alpha = 0.14f), RoundedCornerShape(6.dp))
+                            .background(InputBackground, RoundedCornerShape(6.dp))
                             .padding(horizontal = 8.dp, vertical = 3.dp),
                     ) {
                         Text(
                             text = vehiculo.patente,
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.SemiBold,
-                            color = Color.White,
+                            color = Blue40,
                             letterSpacing = 1.sp,
                         )
                     }
-                    Spacer(Modifier.weight(1f))
-                    Text(
-                        text = "— pórticos este mes",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color.White.copy(alpha = 0.45f),
-                    )
+                    vehiculo.alias?.takeIf { it.isNotBlank() }?.let { alias ->
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            text = alias,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = TextSecondary,
+                        )
+                    }
                 }
             }
 
@@ -290,7 +294,7 @@ private fun VehiculoCard(vehiculo: Vehiculo, onDelete: () -> Unit) {
                 Icon(
                     imageVector = Icons.Filled.Delete,
                     contentDescription = "Eliminar",
-                    tint = Color.White.copy(alpha = 0.4f),
+                    tint = TextSecondary,
                     modifier = Modifier.size(18.dp),
                 )
             }

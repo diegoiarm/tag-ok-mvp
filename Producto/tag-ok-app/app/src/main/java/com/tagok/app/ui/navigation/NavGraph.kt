@@ -168,10 +168,10 @@ fun NavGraph() {
                     onHistorialViajes = { /* TODO: HistorialScreen */ },
                     onIrARuta = { v -> navController.navigate("map/$v") },
                     onBoletaMensual = { /* TODO: BoletaScreen */ },
+                    onAgregarVehiculo = { navController.navigate("vehiculos") },
                     onLogout = {
                         scope.launch {
                             supabase.auth.signOut()
-                            // La observación de sessionStatus navega a login automáticamente
                         }
                     },
                 )
