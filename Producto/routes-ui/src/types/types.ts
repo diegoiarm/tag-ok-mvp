@@ -34,6 +34,7 @@ export interface RouteResponse
   totalCost: number;
   fechaHoraInicio: string;
   fechaHoraFin: string;
+  mergedRouteGeometry?: string
 }
 
 export interface PorticoResumen {

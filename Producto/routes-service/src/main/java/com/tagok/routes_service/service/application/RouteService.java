@@ -38,45 +38,50 @@ public class RouteService
 
     public RouteResponse getRoute(double lon1, double lat1, double lon2, double lat2) 
     {
-        List<RouteSegment> segments = routeRepository.getRouteSegments(lon1, lat1, lon2, lat2);
+        Long startId = routeRepository.findNearestVertex(lon1, lat1)
+                .orElseThrow(() -> new RuntimeException("No se encontró vértice cercano a inicio"));
+        Long endId = routeRepository.findNearestVertex(lon2, lat2)
+                .orElseThrow(() -> new RuntimeException("No se encontró vértice cercano a fin"));
+
+        List<RouteSegment> segments = routeRepository.getRouteSegments(startId, endId);
+
+        String mergedGeometry = routeRepository.findMergedRouteGeometry(startId, endId)
+            .orElse(null);
 
         LocalDateTime tiempoInicio = LocalDateTime.now();
         LocalDateTime tiempoActual = tiempoInicio;
-
         List<PorticoRouteResponse> porticos = new ArrayList<>();
 
         for (RouteSegment s : segments) 
-        {
+            {
             if (s.getDistance() != null && s.getMaxSpeed() != null && s.getMaxSpeed() > 0) 
             {
                 double velocidadMs = s.getMaxSpeed() / 3.6;
                 long segundos = Math.round(s.getDistance() / velocidadMs);
-
                 tiempoActual = tiempoActual.plusSeconds(segundos);
             }
 
             if (s.getPortico() != null && s.getPortico().id() != null) 
             {
                 var optional = porticoRepository.findById(s.getPortico().id());
-
-                if (optional.isPresent()) 
+                if (optional.isPresent())
                     porticos.add(toResponse(optional.get(), tiempoActual));
             }
         }
 
         LocalDateTime tiempoFinal = tiempoActual;
-
         BigDecimal totalCost = porticos.stream()
-            .map(PorticoRouteResponse::valor)
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .map(PorticoRouteResponse::valor)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         return RouteResponse.builder()
-            .fechaHoraInicio(tiempoInicio)
-            .fechaHoraFin(tiempoFinal)
-            .segments(segments)
-            .totalCost(totalCost)
-            .porticos(porticos)
-            .build();
+                .fechaHoraInicio(tiempoInicio)
+                .fechaHoraFin(tiempoFinal)
+                .segments(segments)
+                .totalCost(totalCost)
+                .porticos(porticos)
+                .mergedRouteGeometry(mergedGeometry)
+                .build();
     }
 
     private PorticoRouteResponse toResponse(Portico portico, LocalDateTime horaFecha)

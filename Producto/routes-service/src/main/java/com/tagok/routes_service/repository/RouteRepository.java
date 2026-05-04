@@ -14,25 +14,12 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class RouteRepository {
-
+public class RouteRepository 
+{
     private final JdbcTemplate jdbcTemplate;
 
-    public List<RouteSegment> getRouteSegments(double lon1, double lat1, double lon2, double lat2) 
-    {
-        System.out.println("latInicio: "+ lat1 + " - lonInicio: " + lon1);
-        System.out.println("latFin: "+ lat2 + " - lonFin: " + lon1);
-        // Buscar vértice de inicio
-        Long startId = findNearestVertex(lon1, lat1)
-                .orElseThrow(() -> new RuntimeException("No se encontró vértice cercano a inicio: " + lon1 + "," + lat1));
-        System.out.println(">>> Start vertex ID: " + startId);
-
-        // Buscar vértice de fin
-        Long endId = findNearestVertex(lon2, lat2)
-                .orElseThrow(() -> new RuntimeException("No se encontró vértice cercano a fin: " + lon2 + "," + lat2));
-        System.out.println(">>> End vertex ID: " + endId);
-
-        // Consulta de ruta
+    public List<RouteSegment> getRouteSegments(long startVertexId, long endVertexId) {
+        // Ya no necesitamos las coordenadas aquí
         String routeSql = """
             SELECT
                 r.seq,
@@ -59,16 +46,12 @@ public class RouteRepository {
             ORDER BY r.seq
         """;
 
-        List<RouteSegment> segments = jdbcTemplate.query(routeSql,
+        return jdbcTemplate.query(routeSql,
                 (rs, rowNum) -> mapRowToRouteSegment(rs),
-                startId, endId
-        );
-        System.out.println(">>> Total segmentos obtenidos: " + segments.size());
-        
-        return segments;
+                startVertexId, endVertexId);
     }
 
-    private Optional<Long> findNearestVertex(double lon, double lat) {
+    public Optional<Long> findNearestVertex(double lon, double lat) {
         String sql = """
             SELECT id FROM edge_vertices_pgr
             ORDER BY the_geom <-> ST_SetSRID(ST_Point(?, ?), 4326)
@@ -78,6 +61,27 @@ public class RouteRepository {
                 (rs, rowNum) -> rs.getLong("id"),
                 lon, lat);
         return ids.isEmpty() ? Optional.empty() : Optional.of(ids.get(0));
+    }
+
+    public Optional<String> findMergedRouteGeometry(long startVertexId, long endVertexId) 
+    {
+        String sql = """
+            SELECT ST_AsGeoJSON(ST_LineMerge(ST_Collect(e.geometry))) AS merged_geo
+            FROM pgr_dijkstra(
+                'SELECT id, source, target, cost, reverse_cost FROM edge',
+                ?, ?, directed := true
+            ) r
+            JOIN edge e ON r.edge = e.id
+            WHERE r.edge <> -1
+        """;
+
+        List<String> results = jdbcTemplate.query(sql,
+                (rs, rowNum) -> rs.getString("merged_geo"),
+                startVertexId, endVertexId);
+
+        return results.stream()
+                .filter(java.util.Objects::nonNull)   // ← evita el null
+                .findFirst();
     }
 
     public List<RouteSegment> getAllRoads() 

@@ -1,5 +1,6 @@
 package com.tagok.routes_service.domain.tarifa;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Entity
 @Data
@@ -31,6 +33,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Slf4j
 public class ReglaTarifaria 
 {
     @Id
@@ -67,9 +70,14 @@ public class ReglaTarifaria
     public ValorTarifa obtenerValor(TipoTarifa tipoTarifa)
     {
         return valores.stream()
-                .filter(v -> v.getTipoTarifa() == tipoTarifa)
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException(
-                    "No hay valor para tarifa " + tipoTarifa));
+            .filter(v -> v.getTipoTarifa() == tipoTarifa)
+            .findFirst()
+            .orElseGet(() -> {
+                log.warn("Falta tarifa {}", tipoTarifa);
+                return ValorTarifa.builder()
+                    .tipoTarifa(tipoTarifa)
+                    .valor(BigDecimal.ZERO)
+                    .build();
+            });
     }
 }
