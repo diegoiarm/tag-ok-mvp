@@ -17,6 +17,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.double
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
@@ -61,12 +63,19 @@ class MapViewModel : ViewModel() {
             runCatching {
                 RouteApiService.getRoute(lon1, lat1, lon2, lat2)
             }.onSuccess { response ->
-                val points = response.segments.flatMap { parseLineString(it.geometry) }
+                // ─── NUEVA LÓGICA ─────────────────────────────
+                val points = response.mergedRouteGeometry?.let { geoJson ->
+                    // Si el backend entregó la geometría fusionada, la usamos
+                    parseMergedRouteGeometry(geoJson)
+                } ?: run {
+                    // Fallback: construir desde los segmentos
+                    response.segments.flatMap { parseLineString(it.geometry) }
+                }
+
                 val porticosRuta = response.porticos
                 val allPorticos = _uiState.value.porticos
-                Log.d(TAG, "getRoute OK — ${response.segments.size} segmentos, costo=${response.totalCost}, pórticos=${porticosRuta.size} — ${porticosRuta.map { it.codigo }}")
 
-                // Match backend-detected pórticos to loaded PorticoResumen for map pin highlighting
+                // Match backend-detected pórticos (sin cambios)
                 val cruzados = porticosRuta.mapNotNull { pr ->
                     allPorticos.minByOrNull { p ->
                         distanceMeters(p.latitud, p.longitud, pr.latitud, pr.longitud)
@@ -202,6 +211,43 @@ class MapViewModel : ViewModel() {
             tarifaCalculada = null,
             totalCost = 0.0,
         )
+    }
+
+    fun parseMergedRouteGeometry(geoJsonString: String): List<Point>
+    {
+        return try {
+            val json = Json.parseToJsonElement(geoJsonString).jsonObject
+            extractPoints(json)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
+        }
+    }
+
+    private fun extractPoints(json: JsonObject): List<Point> {
+        val type = json["type"]?.jsonPrimitive?.content ?: return emptyList()
+        return when (type) {
+            "LineString" -> extractCoords(json["coordinates"]?.jsonArray)
+            "MultiLineString" -> {
+                val array = json["coordinates"]?.jsonArray ?: return emptyList()
+                array.flatMap { element -> extractCoords(element.jsonArray) }
+            }
+            "GeometryCollection" -> {
+                val geoms = json["geometries"]?.jsonArray ?: return emptyList()
+                geoms.flatMap { element -> extractPoints(element.jsonObject) }
+            }
+            else -> emptyList()
+        }
+    }
+
+    private fun extractCoords(coords: JsonArray?): List<Point> {
+        if (coords == null) return emptyList()
+        return coords.map { elem ->
+            val pointArray = elem.jsonArray
+            val lon = pointArray[0].jsonPrimitive.double
+            val lat = pointArray[1].jsonPrimitive.double
+            Point.fromLngLat(lon, lat)
+        }
     }
 
     companion object {
