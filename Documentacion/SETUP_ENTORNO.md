@@ -74,6 +74,17 @@ Deberías ver dos contenedores activos:
 - Email: `admin@admin.com`
 - Contraseña: `admin`
 
+> ⚠️ pgAdmin no detecta el servidor automáticamente. Debes registrarlo manualmente la primera vez:
+> 1. Click en **Add New Server** (o click derecho en Servers → Register → Server)
+> 2. Tab **General** → Name: `routes-db` (cualquier nombre)
+> 3. Tab **Connection**:
+>    - Host: `db-rutas` (nombre del servicio Docker, **no** `localhost`)
+>    - Port: `5432`
+>    - Database: `db_rutas`
+>    - Username: `admin`
+>    - Password: `admin`
+> 4. Click **Save**
+
 ---
 
 ## PASO 3 — Inicializar la base de datos
@@ -190,6 +201,22 @@ Requisitos:
 
 Verifica que `adb` está disponible ejecutando `adb devices` — deberías ver tu dispositivo listado.
 
+> Si `adb` no está en el PATH del sistema, usa la ruta completa:
+> ```powershell
+> & "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" reverse tcp:8000 tcp:8000
+> ```
+> Para evitar esto a futuro, agrega `%LOCALAPPDATA%\Android\Sdk\platform-tools` a las variables de entorno del sistema (Panel de control → Variables de entorno → Path).
+
+### Alternativa con emulador de Android Studio
+
+Si usas un emulador (en vez de dispositivo físico), `adb reverse` no es necesario pero `localhost` tampoco funciona — el emulador usa `10.0.2.2` para referirse al PC host. En ese caso edita temporalmente la constante `BASE_URL` en `tag-ok-app/app/.../data/RouteApiService.kt`:
+
+```kotlin
+private const val BASE_URL = "http://10.0.2.2:8000"
+```
+
+Recuerda revertirlo a `http://localhost:8000` antes de hacer commit.
+
 ---
 
 ## PASO 7 — Cargar los datos de pórticos (si es la primera vez)
@@ -240,3 +267,8 @@ docker compose down -v
 | `relation "edge_vertices_pgr" does not exist` | BD no inicializada | Ejecutar el Paso 3 completo |
 | `npm: command not found` | Node.js no instalado | Instalar Node.js desde nodejs.org |
 | Puerto 5432 ya en uso | Otra instancia de PostgreSQL local corriendo | Detener el servicio local de PostgreSQL |
+| pgAdmin muestra "No servers" al entrar | El servidor no se registra automáticamente | Seguir las instrucciones del Paso 2 para agregar el servidor manualmente con host `db-rutas` |
+| `adb: command not found` / `El término 'adb' no se reconoce` | `adb` no está en el PATH | Usar la ruta completa: `& "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe"` |
+| App Android: `Connection refused` al llamar al backend | `adb reverse` no está activo o el backend no está corriendo | Verificar que el backend está en puerto 8000 y volver a correr `adb reverse tcp:8000 tcp:8000` |
+| App Android en emulador no conecta al backend | El emulador usa `10.0.2.2`, no `localhost` | Cambiar `BASE_URL` en `RouteApiService.kt` a `http://10.0.2.2:8000` |
+| La app no muestra pórticos en ninguna ruta | Pórticos no cargados en la BD | Ejecutar el Paso 7 para cargar los JSON de pórticos |
