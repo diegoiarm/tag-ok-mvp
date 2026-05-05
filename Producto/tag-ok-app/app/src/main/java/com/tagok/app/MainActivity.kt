@@ -24,6 +24,10 @@ class MainActivity : ComponentActivity() {
                 NavGraph()
             }
         }
+        // Handles the OAuth redirect when Android kills the process and relaunches it
+        lifecycleScope.launch {
+            supabase.handleDeeplinks(intent = intent)
+        }
     }
 
     override fun onNewIntent(intent: Intent) {
