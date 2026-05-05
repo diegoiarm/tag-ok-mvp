@@ -29,16 +29,34 @@ const EndIcon = L.icon({
   iconSize: [32, 32],
 });
 
-export function Mapa({ start, end }: { start: Coord; end: Coord }) {
+export function Mapa({ start, end }: { start: Coord; end: Coord }) 
+{
   const { data: route } = useRoute(start, end);
   const { data: porticos } = usePorticos();
 
   const [geoJsonData, setGeoJsonData] = useState<any>(null);
 
-  const segments = route?.segments;
   const routePorticos = route?.porticos;
 
   useEffect(() => {
+    if (!route) {
+      setGeoJsonData(null);
+      return;
+    }
+
+    if (route.mergedRouteGeometry) 
+    {
+      try {
+        const merged = JSON.parse(route.mergedRouteGeometry);
+
+        setGeoJsonData(merged);
+        return;
+      } catch (err) {
+        console.error("Error al parsear mergedRouteGeometry", err);
+      }
+    }
+
+    const segments = route.segments;
     if (!segments || segments.length === 0) {
       setGeoJsonData(null);
       return;

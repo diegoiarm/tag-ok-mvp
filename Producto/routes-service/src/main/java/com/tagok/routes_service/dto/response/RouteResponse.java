@@ -22,4 +22,5 @@ public class RouteResponse
     private BigDecimal totalCost;
     private LocalDateTime fechaHoraInicio;
     private LocalDateTime fechaHoraFin;
+    private String mergedRouteGeometry;
 }

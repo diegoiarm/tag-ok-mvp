@@ -17,7 +17,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.Protocol
 
 // adb reverse tcp:8000 tcp:8000 → localhost en el dispositivo apunta al PC
-private const val BASE_URL = "http://localhost:8000"
+private const val BASE_URL = "http://192.168.1.4:8000"
 
 private val httpClient = HttpClient(OkHttp) {
     engine {
@@ -40,10 +40,10 @@ private val httpClient = HttpClient(OkHttp) {
 
 @Serializable
 data class PorticoRuta(
-    val nombre: String = "",
+    val nombre: String? = "",
     val codigo: String = "",
     val autopista: String = "",
-    val codigoAutopista: String = "",
+    val codigoAutopista: String? = "",
     val longitud: Double = 0.0,
     val latitud: Double = 0.0,
     val tarifa: String = "",
@@ -55,6 +55,7 @@ data class RouteResponse(
     val segments: List<RouteSegment>,
     val totalCost: Double,
     val porticos: List<PorticoRuta> = emptyList(),
+    val mergedRouteGeometry: String? = null
 )
 
 @Serializable
