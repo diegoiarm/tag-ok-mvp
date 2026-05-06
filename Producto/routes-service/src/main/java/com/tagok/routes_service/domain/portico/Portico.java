@@ -78,15 +78,6 @@ public class Portico
             calendario.setPortico(this);
     }
 
-    private ReglaTarifaria buscarReglaPara(TipoVehiculo tipoVehiculo)
-    {
-        return reglas.stream()
-                .filter(r -> r.aplicaATipo(tipoVehiculo))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException(
-                    "No hay regla para el vehiculo: " + tipoVehiculo));
-    }
-
     public Optional<Tarifa> calcularTarifa(TipoVehiculo vehiculo, LocalDateTime fecha)
     {
         // 1. Validaciones base

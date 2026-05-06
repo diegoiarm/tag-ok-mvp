@@ -1,6 +1,5 @@
 package com.tagok.routes_service.domain.tarifa;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
