@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AutopistaMapper implements IEntityMapper<AutopistaResponse, AutopistaRequest, Autopista>
 {
+    private final TramoMapper tramoMapper;
     private final PorticoMapper porticoMapper;
 
     @Override
@@ -20,6 +21,7 @@ public class AutopistaMapper implements IEntityMapper<AutopistaResponse, Autopis
         return Autopista.builder()
             .nombre(request.autopista())
             .codigo(request.codigo())
+            .tipoCobro(request.tipoCobro())
             .build();
     }
 
@@ -30,8 +32,12 @@ public class AutopistaMapper implements IEntityMapper<AutopistaResponse, Autopis
             .id(autopista.getId())
             .nombre(autopista.getNombre())
             .codigo(autopista.getCodigo())
+            .tipoCobro(autopista.getTipoCobro())
             .porticos(autopista.getPorticos().stream()
                 .map(porticoMapper::toResponse)
+                .toList())
+            .tramos(autopista.getTramos().stream()
+                .map(tramoMapper::toResponse)
                 .toList())
             .build();
     }

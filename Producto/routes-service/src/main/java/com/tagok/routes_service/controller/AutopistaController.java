@@ -43,4 +43,11 @@ public class AutopistaController
         autopistaService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAll()
+    {
+        autopistaService.deleteAll();
+        return ResponseEntity.noContent().build();
+    }
 }

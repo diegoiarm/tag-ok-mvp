@@ -11,7 +11,8 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 
 import com.tagok.routes_service.domain.portico.Portico;
-import com.tagok.routes_service.domain.tarifa.CalculadorTarifa;
+import com.tagok.routes_service.domain.tarifa.calculo.CalculadorTarifaFactory;
+import com.tagok.routes_service.domain.tarifa.calculo.CalculoContexto;
 import com.tagok.routes_service.domain.vehiculo.TipoVehiculo;
 import com.tagok.routes_service.dto.RouteSegment;
 import com.tagok.routes_service.dto.response.PorticoRouteResponse;
@@ -27,7 +28,7 @@ public class RouteService
 {
     private final RouteRepository routeRepository;
     private final PorticoRepository porticoRepository;
-    private final CalculadorTarifa calculadorTarifa = new CalculadorTarifa();
+    private final CalculadorTarifaFactory calculadorFactory;
 
     public RouteResponse finAllRoads()
     {
@@ -99,11 +100,23 @@ public class RouteService
                 .build();
     }
 
-    private Optional<PorticoRouteResponse> toResponse(Portico portico, LocalDateTime horaFecha)
+    private Optional<PorticoRouteResponse> toResponse(
+        Portico portico,
+        LocalDateTime horaFecha)
     {
         var tipoVehiculo = TipoVehiculo.AUTO;
 
-        return calculadorTarifa.calcular(portico.getCalendario(), portico.getReglas(), tipoVehiculo, horaFecha)
+        var contexto = CalculoContexto.builder()
+            .autopista(portico.getAutopista())
+            .portico(portico)
+            .vehiculo(tipoVehiculo)
+            .fecha(horaFecha)
+            .build();
+
+        var strategy = calculadorFactory
+            .getStrategy(portico.getAutopista());
+
+        return strategy.calcular(contexto)
             .map(tarifa -> new PorticoRouteResponse(
                 portico.getNombre(),
                 portico.getCodigo(),
@@ -114,6 +127,7 @@ public class RouteService
                 portico.getLatitud(),
                 tarifa.tipoTarifa(),
                 tarifa.monto(),
-                horaFecha));
+                horaFecha
+            ));
     }
 }

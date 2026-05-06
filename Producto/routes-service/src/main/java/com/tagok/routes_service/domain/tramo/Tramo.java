@@ -1,10 +1,11 @@
-package com.tagok.routes_service.domain.portico;
+package com.tagok.routes_service.domain.tramo;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.tagok.routes_service.domain.autopista.Autopista;
 import com.tagok.routes_service.domain.calendario.CalendarioTarifario;
+import com.tagok.routes_service.domain.portico.Portico;
 import com.tagok.routes_service.domain.tarifa.ReglaTarifaria;
 
 import jakarta.persistence.CascadeType;
@@ -21,29 +22,29 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+@Entity
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
-public class Portico 
+public class Tramo 
 {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    private Long id;
+    private long id;
 
-    private String codigo;
-    private String nombre;
-    private String sentido;
+    @ManyToOne
+    private Portico entrada;
 
-    private double latitud;
-    private double longitud;
+    @ManyToOne
+    private Portico salida;
+
+    private double distanciaKm;
 
     @Builder.Default
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "portico_id")
+    @JoinColumn(name = "tramo_id")
     private List<ReglaTarifaria> reglas = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)

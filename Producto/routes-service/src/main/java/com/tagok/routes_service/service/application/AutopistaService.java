@@ -53,4 +53,9 @@ public class AutopistaService
     {
         autopistaRepository.deleteById(id);
     }
+
+    public void deleteAll()
+    {
+        autopistaRepository.deleteAll();
+    }
 }

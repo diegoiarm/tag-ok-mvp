@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tagok.routes_service.domain.portico.Portico;
 import com.tagok.routes_service.domain.tarifa.TipoTarifa;
 
 import jakarta.persistence.CascadeType;
@@ -12,9 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,22 +24,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
-public class CalendarioTarifario 
+public class CalendarioTarifario
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "portico_id")
-    private Portico portico;
-
     @OneToMany(mappedBy = "calendario", cascade = CascadeType.ALL)
     @Builder.Default
     private List<ReglaTemporal> reglas = new ArrayList<>();
 
-    public void addRegla(ReglaTemporal regla) 
+    public void addRegla(ReglaTemporal regla)
     {
         reglas.add(regla);
         regla.setCalendario(this);
@@ -51,9 +44,9 @@ public class CalendarioTarifario
     public TipoTarifa obtenerTipoTarifa(LocalDateTime horaFecha)
     {
         return reglas.stream()
-                .filter(r -> r.aplica(horaFecha))
-                .map(ReglaTemporal::getTipoTarifa)
-                .findFirst()
-                .orElse(TipoTarifa.TBFP);
+            .filter(r -> r.aplica(horaFecha))
+            .map(ReglaTemporal::getTipoTarifa)
+            .findFirst()
+            .orElse(TipoTarifa.TBFP);
     }
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tagok.routes_service.domain.portico.Portico;
+import com.tagok.routes_service.domain.tramo.Tramo;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -30,12 +31,18 @@ public class Autopista
     @EqualsAndHashCode.Include
     private Long id;
 
+    private TipoCobro tipoCobro;
+
     private String nombre;
     private String codigo;
 
     @Builder.Default
-    @OneToMany(mappedBy = "autopista", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "autopista", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Portico> porticos = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "autopista", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Tramo> tramos = new ArrayList<>();
 
     public void addPortico(Portico portico)
     {
@@ -46,6 +53,18 @@ public class Autopista
         {
             porticos.add(portico);
             portico.setAutopista(this);
+        }
+    }
+
+    public void addTramo(Tramo tramo)
+    {
+        boolean existe = tramos.stream()
+            .anyMatch(t -> t.getEntrada().getCodigo().equals(tramo.getEntrada().getCodigo()) && t.getSalida().getCodigo().equals(tramo.getSalida().getCodigo()));
+
+        if (!existe) 
+        {
+            tramos.add(tramo);
+            tramo.setAutopista(this);
         }
     }
 }
