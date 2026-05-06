@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.tagok.routes_service.domain.portico.Portico;
 import com.tagok.routes_service.domain.tarifa.CalculadorTarifa;
 import com.tagok.routes_service.domain.tarifa.Cruce;
+import com.tagok.routes_service.domain.tarifa.Tarifa;
 import com.tagok.routes_service.domain.tarifa.TarifaCalculada;
 import com.tagok.routes_service.dto.request.tarifa.TarifaRequest;
 import com.tagok.routes_service.repository.PorticoRepository;
@@ -54,14 +55,23 @@ public class TarifaService
             Portico portico = entry.getKey();
             LocalDateTime fechaHora = entry.getValue();
 
-            Optional<Cruce> cruceOpt = calculadorTarifa.calcular(portico, request.vehiculo(), fechaHora);
-
-            if (cruceOpt.isPresent()) 
+            Optional<Tarifa> tarifaOpt = calculadorTarifa.calcular(portico.getCalendario(), portico.getReglas(), request.vehiculo(), fechaHora);
+            
+            if (tarifaOpt.isPresent()) 
             {
-                Cruce cruce = cruceOpt.get();
+                Tarifa tarifa = tarifaOpt.get();
 
-                total = total.add(cruce.valor());
-                cruces.add(cruce);
+                total = total.add(tarifa.monto());
+
+                cruces.add(new Cruce(
+                    portico.getId(),
+                    portico.getCodigo(),
+                    portico.getNombre(),
+                    portico.getAutopista() != null ? portico.getAutopista().getNombre() : null,
+                    tarifa.tipoTarifa(),
+                    tarifa.monto(),
+                    fechaHora
+                ));
             }
         }
 

@@ -103,8 +103,8 @@ public class RouteService
     {
         var tipoVehiculo = TipoVehiculo.AUTO;
 
-        return calculadorTarifa.calcular(portico, tipoVehiculo, horaFecha)
-            .map(cruce -> new PorticoRouteResponse(
+        return calculadorTarifa.calcular(portico.getCalendario(), portico.getReglas(), tipoVehiculo, horaFecha)
+            .map(tarifa -> new PorticoRouteResponse(
                 portico.getNombre(),
                 portico.getCodigo(),
                 portico.getAutopista().getNombre(),
@@ -112,9 +112,8 @@ public class RouteService
                 portico.getSentido(),
                 portico.getLongitud(),
                 portico.getLatitud(),
-                cruce.tarifa(),
-                cruce.valor(),
-                cruce.horaFechaCruce()
-            ));
+                tarifa.tipoTarifa(),
+                tarifa.monto(),
+                horaFecha));
     }
 }

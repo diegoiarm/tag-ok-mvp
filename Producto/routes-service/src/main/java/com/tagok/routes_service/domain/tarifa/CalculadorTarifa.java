@@ -1,31 +1,31 @@
 package com.tagok.routes_service.domain.tarifa;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
-import com.tagok.routes_service.domain.portico.Portico;
+import com.tagok.routes_service.domain.calendario.CalendarioTarifario;
 import com.tagok.routes_service.domain.vehiculo.TipoVehiculo;
 
 public class CalculadorTarifa
 {
-    public Optional<Cruce> calcular(
-        Portico portico,
+    public Optional<Tarifa> calcular(
+        CalendarioTarifario calendario,
+        List<ReglaTarifaria> reglas,
         TipoVehiculo vehiculo,
-        LocalDateTime fechaHora)
+        LocalDateTime fecha)
     {
-        return portico.calcularTarifa(vehiculo, fechaHora)
-            .map(tarifa -> 
-                new Cruce(
-                    portico.getId(), 
-                    portico.getCodigo(), 
-                    portico.getNombre(),
-                    portico.getAutopista() != null 
-                        ? portico.getAutopista().getNombre() 
-                        : null,
-                    tarifa.tipoTarifa(),
-                    tarifa.monto(),
-                    fechaHora
-                )
-            );
+        if (calendario == null || reglas == null || reglas.isEmpty())
+            return Optional.empty();
+
+        return reglas.stream()
+            .filter(r -> r.aplicaATipo(vehiculo))
+            .findFirst()
+            .map(regla -> 
+            {
+                var tipoTarifa = calendario.obtenerTipoTarifa(fecha);
+                var monto = regla.obtenerValor(tipoTarifa).getValor();
+                return new Tarifa(monto, tipoTarifa);
+            });
     }
 }
