@@ -6,8 +6,8 @@ import { AuthProvider } from "./app/context/AuthContext";
 import { Login } from "./app/pages/Login";
 
 function MapaPage() {
-  const start = parseLatLng("-33.360303450688654, -70.73614973649066");
-  const end   = parseLatLng("-33.38975850714581, -70.5267993850012");
+  const start = parseLatLng("-33.44384105405843, -70.80068110142963");
+  const end   = parseLatLng("-33.526647849467594, -70.60596777473236");
 
   return <Mapa start={start} end={end} />;
 }

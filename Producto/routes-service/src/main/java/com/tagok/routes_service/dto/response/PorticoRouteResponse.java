@@ -10,6 +10,7 @@ public record PorticoRouteResponse(
     String codigo,
     String autopista,
     String codigoAutopista,
+    String sentido,
     double longitud,
     double latitud,
     TipoTarifa tarifa,

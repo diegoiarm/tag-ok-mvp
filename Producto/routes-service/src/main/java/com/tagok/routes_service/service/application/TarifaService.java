@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -29,10 +30,20 @@ public class TarifaService
     public TarifaCalculada calcularTarifa(TarifaRequest request)
     {
         Map<Portico, LocalDateTime> porticoFechaMap = request.porticosCruzados().stream()
+            .map(c -> 
+            {
+                Portico portico = porticoRepository.findById(c.porticoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Pórtico no encontrado"));
+                return Map.entry(portico, c.horaFechaCruce());
+            })
+            .filter(entry -> 
+                entry.getKey().getCalendario() != null &&
+                entry.getKey().getReglas() != null &&
+                !entry.getKey().getReglas().isEmpty()
+            )
             .collect(Collectors.toMap(
-                c -> porticoRepository.findById(c.porticoId())
-                        .orElseThrow(() -> new IllegalArgumentException("Pórtico no encontrado")),
-                c -> c.horaFechaCruce()
+                Map.Entry::getKey,
+                Map.Entry::getValue
             ));
 
         BigDecimal total = BigDecimal.ZERO;
@@ -43,11 +54,15 @@ public class TarifaService
             Portico portico = entry.getKey();
             LocalDateTime fechaHora = entry.getValue();
 
-            var cruce = calculadorTarifa.calcular(portico, request.vehiculo(), fechaHora);
+            Optional<Cruce> cruceOpt = calculadorTarifa.calcular(portico, request.vehiculo(), fechaHora);
 
-            total = total.add(cruce.valor());
+            if (cruceOpt.isPresent()) 
+            {
+                Cruce cruce = cruceOpt.get();
 
-            cruces.add(cruce);
+                total = total.add(cruce.valor());
+                cruces.add(cruce);
+            }
         }
 
         return new TarifaCalculada(total, cruces, request.vehiculo());

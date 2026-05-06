@@ -3,7 +3,10 @@ package com.tagok.routes_service.service.application;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -28,10 +31,7 @@ public class RouteService
 
     public RouteResponse finAllRoads()
     {
-        List<RouteSegment> segments = routeRepository.getAllRoads();
-
         return RouteResponse.builder()
-            .segments(segments)
             .totalCost(BigDecimal.ZERO)
             .build();
     }
@@ -52,8 +52,10 @@ public class RouteService
         LocalDateTime tiempoActual = tiempoInicio;
         List<PorticoRouteResponse> porticos = new ArrayList<>();
 
+        Set<Long> porticosProcesados = new HashSet<>();
+
         for (RouteSegment s : segments) 
-            {
+        {
             if (s.getDistance() != null && s.getMaxSpeed() != null && s.getMaxSpeed() > 0) 
             {
                 double velocidadMs = s.getMaxSpeed() / 3.6;
@@ -63,9 +65,22 @@ public class RouteService
 
             if (s.getPortico() != null && s.getPortico().id() != null) 
             {
-                var optional = porticoRepository.findById(s.getPortico().id());
-                if (optional.isPresent())
-                    porticos.add(toResponse(optional.get(), tiempoActual));
+                Long porticoId = s.getPortico().id();
+
+                if (porticosProcesados.contains(porticoId)) 
+                    continue;
+
+                var optional = porticoRepository.findById(porticoId);
+
+                if (optional.isPresent()) 
+                {
+                    toResponse(optional.get(), tiempoActual)
+                        .ifPresent(p -> 
+                        {
+                            porticos.add(p);
+                            porticosProcesados.add(porticoId);
+                        });
+                }
             }
         }
 
@@ -77,28 +92,29 @@ public class RouteService
         return RouteResponse.builder()
                 .fechaHoraInicio(tiempoInicio)
                 .fechaHoraFin(tiempoFinal)
-                .segments(segments)
+            //    .segments(segments)
                 .totalCost(totalCost)
                 .porticos(porticos)
                 .mergedRouteGeometry(mergedGeometry)
                 .build();
     }
 
-    private PorticoRouteResponse toResponse(Portico portico, LocalDateTime horaFecha)
+    private Optional<PorticoRouteResponse> toResponse(Portico portico, LocalDateTime horaFecha)
     {
         var tipoVehiculo = TipoVehiculo.AUTO;
-        var cruce = calculadorTarifa.calcular(portico, tipoVehiculo, horaFecha);
 
-        return new PorticoRouteResponse(
-            portico.getNombre(),
-            portico.getCodigo(),
-            portico.getAutopista().getNombre(),
-            portico.getAutopista().getCodigo(),
-            portico.getLongitud(),
-            portico.getLatitud(),
-            cruce.tarifa(),
-            cruce.valor(),
-            cruce.horaFechaCruce()
-        );
+        return calculadorTarifa.calcular(portico, tipoVehiculo, horaFecha)
+            .map(cruce -> new PorticoRouteResponse(
+                portico.getNombre(),
+                portico.getCodigo(),
+                portico.getAutopista().getNombre(),
+                portico.getAutopista().getCodigo(),
+                portico.getSentido(),
+                portico.getLongitud(),
+                portico.getLatitud(),
+                cruce.tarifa(),
+                cruce.valor(),
+                cruce.horaFechaCruce()
+            ));
     }
 }

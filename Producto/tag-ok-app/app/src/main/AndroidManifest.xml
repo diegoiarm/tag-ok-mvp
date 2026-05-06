@@ -38,6 +38,9 @@
                 <data android:scheme="tagok" android:host="auth-callback" />
             </intent-filter>
         </activity>
+        <receiver
+            android:name=".data.local.GeofenceBroadcastReceiver"
+            android:exported="false" />
     </application>
 
 </manifest>

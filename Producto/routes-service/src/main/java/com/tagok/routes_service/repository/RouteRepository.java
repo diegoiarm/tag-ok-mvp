@@ -18,8 +18,8 @@ public class RouteRepository
 {
     private final JdbcTemplate jdbcTemplate;
 
-    public List<RouteSegment> getRouteSegments(long startVertexId, long endVertexId) {
-        // Ya no necesitamos las coordenadas aquí
+    public List<RouteSegment> getRouteSegments(long startVertexId, long endVertexId) 
+    {
         String routeSql = """
             SELECT
                 r.seq,
@@ -80,7 +80,7 @@ public class RouteRepository
                 startVertexId, endVertexId);
 
         return results.stream()
-                .filter(java.util.Objects::nonNull)   // ← evita el null
+                .filter(java.util.Objects::nonNull)
                 .findFirst();
     }
 

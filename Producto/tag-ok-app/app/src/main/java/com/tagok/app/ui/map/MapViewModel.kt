@@ -2,256 +2,136 @@ package com.tagok.app.ui.map
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.mapbox.geojson.Point
-import com.tagok.app.data.Cruce
-import com.tagok.app.data.PorticoCruzadoRequest
-import com.tagok.app.data.PorticoResumen
-import com.tagok.app.data.PorticoRuta
-import com.tagok.app.data.RouteApiService
-import com.tagok.app.data.TarifaCalculada
-import com.tagok.app.data.TarifaRequest
+import com.tagok.app.data.dto.PorticoResumen
+import com.tagok.app.data.remote.HttpClientProvider
+import com.tagok.app.data.remote.RouteApi
+import com.tagok.app.data.repository.RouteRepository
+import com.tagok.app.domain.model.Route
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.double
-import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
-import java.time.LocalDateTime
-import kotlin.math.cos
-import kotlin.math.sqrt
 
 data class MapUiState(
-    val routePoints: List<Point> = emptyList(),
+    val route: Route? = null,
     val porticos: List<PorticoResumen> = emptyList(),
-    val porticosCruzados: List<PorticoResumen> = emptyList(),
     val vehiculo: String = "AUTO",
-    val tarifaCalculada: TarifaCalculada? = null,
-    val totalCost: Double = 0.0,
     val isLoadingRoute: Boolean = false,
-    val isLoadingTarifa: Boolean = false,
-    val error: String? = null,
+    val error: String? = null
 )
 
-class MapViewModel : ViewModel() {
-
+class MapViewModel(
+    private val routeRepository: RouteRepository) : ViewModel()
+{
     private val _uiState = MutableStateFlow(MapUiState())
     val uiState: StateFlow<MapUiState> = _uiState.asStateFlow()
 
-    init { loadPorticos() }
-
-    fun setVehiculo(vehiculo: String) = _uiState.update { it.copy(vehiculo = vehiculo) }
-
-    fun calculateRoute(lon1: Double, lat1: Double, lon2: Double, lat2: Double) {
-        viewModelScope.launch {
-            Log.d(TAG, "calculateRoute: ($lat1,$lon1) → ($lat2,$lon2)")
-            _uiState.update {
-                it.copy(
-                    isLoadingRoute = true,
-                    error = null,
-                    routePoints = emptyList(),
-                    tarifaCalculada = null,
-                    porticosCruzados = emptyList(),
-                )
-            }
-            runCatching {
-                RouteApiService.getRoute(lon1, lat1, lon2, lat2)
-            }.onSuccess { response ->
-                // ─── NUEVA LÓGICA ─────────────────────────────
-                val points = response.mergedRouteGeometry?.let { geoJson ->
-                    // Si el backend entregó la geometría fusionada, la usamos
-                    parseMergedRouteGeometry(geoJson)
-                } ?: run {
-                    // Fallback: construir desde los segmentos
-                    response.segments.flatMap { parseLineString(it.geometry) }
-                }
-
-                val porticosRuta = response.porticos
-                val allPorticos = _uiState.value.porticos
-
-                // Match backend-detected pórticos (sin cambios)
-                val cruzados = porticosRuta.mapNotNull { pr ->
-                    allPorticos.minByOrNull { p ->
-                        distanceMeters(p.latitud, p.longitud, pr.latitud, pr.longitud)
-                    }?.takeIf { p ->
-                        distanceMeters(p.latitud, p.longitud, pr.latitud, pr.longitud) < 100.0
-                    }
-                }.distinctBy { it.id }
-
-                // Build tariff summary from backend data — no extra POST needed
-                val tarifaCalculada = if (porticosRuta.isNotEmpty()) {
-                    TarifaCalculada(
-                        total = response.totalCost,
-                        portico = porticosRuta.map { pr ->
-                            Cruce(
-                                porticoId = allPorticos.minByOrNull { p ->
-                                    distanceMeters(p.latitud, p.longitud, pr.latitud, pr.longitud)
-                                }?.takeIf { p ->
-                                    distanceMeters(p.latitud, p.longitud, pr.latitud, pr.longitud) < 100.0
-                                }?.id ?: 0L,
-                                codigo = pr.codigo,
-                                nombre = pr.nombre,
-                                autopista = pr.autopista,
-                                tarifa = pr.tarifa,
-                                valor = pr.valor,
-                            )
-                        },
-                        vehiculo = _uiState.value.vehiculo,
-                    )
-                } else null
-
-                _uiState.update {
-                    it.copy(
-                        routePoints = points,
-                        totalCost = response.totalCost,
-                        porticosCruzados = cruzados,
-                        tarifaCalculada = tarifaCalculada,
-                        isLoadingRoute = false,
-                    )
-                }
-            }.onFailure { e ->
-                Log.e(TAG, "getRoute FAIL: ${e::class.simpleName} — ${e.message}", e)
-                _uiState.update {
-                    it.copy(isLoadingRoute = false, error = "Error al calcular ruta: ${e.message}")
-                }
-            }
-        }
-    }
-
-    // Maipú → Quilicura forzando el corredor de Vespucio Norte
-    fun calculateTestRoute() = calculateRoute(-70.7614, -33.5123, -70.7275, -33.3596)
-
-    // Prueba directa de la API de tarifas usando el primer pórtico cargado
-    fun calculateTestTarifa() {
-        val primer = _uiState.value.porticos.firstOrNull() ?: run {
-            _uiState.update { it.copy(error = "No hay pórticos cargados aún") }
-            return
-        }
-        viewModelScope.launch { calculateTarifa(listOf(primer.id)) }
-    }
-
-    private suspend fun calculateTarifa(porticoIds: List<Long>) {
-        Log.d(TAG, "calculateTarifa: ids=$porticoIds vehiculo=${_uiState.value.vehiculo}")
-        _uiState.update { it.copy(isLoadingTarifa = true) }
-        val now = LocalDateTime.now().withNano(0).toString()
-        val request = TarifaRequest(
-            porticosCruzados = porticoIds.map { PorticoCruzadoRequest(it, now) },
-            vehiculo = _uiState.value.vehiculo,
-        )
-        runCatching { RouteApiService.calculateTarifa(request) }
-            .onSuccess { tarifa ->
-                Log.d(TAG, "calculateTarifa OK — total=${tarifa.total} CLP, cruces=${tarifa.portico.size}")
-                _uiState.update { it.copy(tarifaCalculada = tarifa, isLoadingTarifa = false) }
-            }
-            .onFailure { e ->
-                Log.e(TAG, "calculateTarifa FAIL: ${e::class.simpleName} — ${e.message}", e)
-                _uiState.update {
-                    it.copy(isLoadingTarifa = false, error = "Error al calcular tarifa: ${e.message}")
-                }
-            }
-    }
-
-    private fun loadPorticos() {
-        viewModelScope.launch {
-            Log.d(TAG, "loadPorticos: iniciando...")
-            runCatching { RouteApiService.getPorticos() }
-                .onSuccess { p ->
-                    Log.d(TAG, "loadPorticos OK — ${p.size} pórticos")
-                    _uiState.update { it.copy(porticos = p) }
-                }
-                .onFailure { e ->
-                    Log.e(TAG, "loadPorticos FAIL: ${e::class.simpleName} — ${e.message}", e)
-                }
-        }
-    }
-
-    private fun findCrossedPorticos(
-        routePoints: List<Point>,
-        porticos: List<PorticoResumen>,
-    ): List<PorticoResumen> {
-        if (routePoints.isEmpty()) return emptyList()
-        return porticos.filter { portico ->
-            routePoints.any { point ->
-                distanceMeters(
-                    point.latitude(), point.longitude(),
-                    portico.latitud, portico.longitud,
-                ) < THRESHOLD_METERS
-            }
-        }
-    }
-
-    private fun distanceMeters(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
-        val dLat = (lat2 - lat1) * 111_000.0
-        val dLon = (lon2 - lon1) * 111_000.0 * cos(Math.toRadians(lat1))
-        return sqrt(dLat * dLat + dLon * dLon)
-    }
-
-    private fun parseLineString(geometryJson: String): List<Point> = runCatching {
-        Json.parseToJsonElement(geometryJson)
-            .jsonObject["coordinates"]!!
-            .jsonArray
-            .map { coord ->
-                val arr = coord.jsonArray
-                Point.fromLngLat(arr[0].jsonPrimitive.double, arr[1].jsonPrimitive.double)
-            }
-    }.getOrDefault(emptyList())
-
-    fun clearError() = _uiState.update { it.copy(error = null) }
-
-    fun resetMap() = _uiState.update {
-        it.copy(
-            routePoints = emptyList(),
-            porticosCruzados = emptyList(),
-            tarifaCalculada = null,
-            totalCost = 0.0,
-        )
-    }
-
-    fun parseMergedRouteGeometry(geoJsonString: String): List<Point>
+    init
     {
-        return try {
-            val json = Json.parseToJsonElement(geoJsonString).jsonObject
-            extractPoints(json)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            emptyList()
+        loadPorticos()
+    }
+
+    fun setVehiculo(vehiculo: String)
+    {
+        _uiState.update { it.copy(vehiculo = vehiculo) }
+    }
+
+    fun calculateRoute(
+        lon1: Double,
+        lat1: Double,
+        lon2: Double,
+        lat2: Double)
+    {
+        viewModelScope.launch {
+
+            setLoadingRoute(true)
+            setError(null)
+
+            runCatching {
+                routeRepository.getRoute(lon1, lat1, lon2, lat2)
+            }.onSuccess { route ->
+
+                setRoute(route)
+
+            }.onFailure { e ->
+
+                setLoadingRoute(false)
+                setError(e.message)
+            }
         }
     }
 
-    private fun extractPoints(json: JsonObject): List<Point> {
-        val type = json["type"]?.jsonPrimitive?.content ?: return emptyList()
-        return when (type) {
-            "LineString" -> extractCoords(json["coordinates"]?.jsonArray)
-            "MultiLineString" -> {
-                val array = json["coordinates"]?.jsonArray ?: return emptyList()
-                array.flatMap { element -> extractCoords(element.jsonArray) }
-            }
-            "GeometryCollection" -> {
-                val geoms = json["geometries"]?.jsonArray ?: return emptyList()
-                geoms.flatMap { element -> extractPoints(element.jsonObject) }
-            }
-            else -> emptyList()
+    fun resetMap()
+    {
+        _uiState.update {
+            it.copy(
+                route = null,
+                isLoadingRoute = false,
+                error = null
+            )
         }
     }
 
-    private fun extractCoords(coords: JsonArray?): List<Point> {
-        if (coords == null) return emptyList()
-        return coords.map { elem ->
-            val pointArray = elem.jsonArray
-            val lon = pointArray[0].jsonPrimitive.double
-            val lat = pointArray[1].jsonPrimitive.double
-            Point.fromLngLat(lon, lat)
+    fun clearError()
+    {
+        _uiState.update { it.copy(error = null) }
+    }
+
+    private fun loadPorticos()
+    {
+        viewModelScope.launch {
+
+            Log.d(TAG, "loadPorticos: iniciando...")
+
+            runCatching {
+                routeRepository.getPorticos()
+            }.onSuccess { list ->
+
+                Log.d(TAG, "loadPorticos OK — ${list.size} pórticos")
+
+                _uiState.update {
+                    it.copy(porticos = list)
+                }
+
+            }.onFailure { e ->
+                Log.e(TAG, "loadPorticos FAIL: ${e.message}", e)
+            }
+        }
+    }
+
+    private fun setLoadingRoute(value: Boolean)
+    {
+        _uiState.update { it.copy(isLoadingRoute = value) }
+    }
+
+    private fun setError(message: String?)
+    {
+        _uiState.update { it.copy(error = message) }
+    }
+
+    private fun setRoute(route: Route)
+    {
+        _uiState.update {
+            it.copy(
+                route = route,
+                isLoadingRoute = false
+            )
         }
     }
 
     companion object {
         private const val TAG = "MapViewModel"
-        private const val THRESHOLD_METERS = 200.0
+        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                val routeApi = RouteApi(HttpClientProvider.client)
+                val repository = RouteRepository(routeApi)
+
+                return MapViewModel(repository) as T
+            }
+        }
     }
 }

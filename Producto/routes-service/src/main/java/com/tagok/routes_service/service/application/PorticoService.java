@@ -21,9 +21,8 @@ public class PorticoService
 
     public List<PorticoResumenResponse> findAll()
     {
-        var porticos = porticoRepository.findAll();
-
-        return porticos.stream()
+        return porticoRepository.findAll().stream()
+            .filter(p -> p.getCalendario() != null && !p.getReglas().isEmpty())
             .map(porticoMapper::toResumenResponse)
             .toList();
     }
