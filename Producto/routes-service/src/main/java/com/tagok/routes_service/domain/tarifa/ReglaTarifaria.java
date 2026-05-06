@@ -73,11 +73,14 @@ public class ReglaTarifaria
             .filter(v -> v.getTipoTarifa() == tipoTarifa)
             .findFirst()
             .orElseGet(() -> {
-                log.warn("Falta tarifa {}", tipoTarifa);
-                return ValorTarifa.builder()
-                    .tipoTarifa(tipoTarifa)
-                    .valor(BigDecimal.ZERO)
-                    .build();
+                log.warn("Falta tarifa {}, usando TBFP", tipoTarifa);
+
+                return valores.stream()
+                    .filter(v -> v.getTipoTarifa() == TipoTarifa.TBFP)
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException(
+                        "No hay TBFP definida"
+                    ));
             });
     }
 }

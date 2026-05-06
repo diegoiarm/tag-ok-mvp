@@ -14,16 +14,18 @@ public class CalculadorTarifa
         LocalDateTime fechaHora)
     {
         return portico.calcularTarifa(vehiculo, fechaHora)
-            .map(tarifa -> new Cruce(
-                portico.getId(), 
-                portico.getCodigo(), 
-                portico.getNombre(),
-                portico.getAutopista() != null 
-                    ? portico.getAutopista().getNombre() 
-                    : null,
-                tarifa.tipoTarifa(),
-                tarifa.monto(),
-                fechaHora
-            ));
+            .map(tarifa -> 
+                new Cruce(
+                    portico.getId(), 
+                    portico.getCodigo(), 
+                    portico.getNombre(),
+                    portico.getAutopista() != null 
+                        ? portico.getAutopista().getNombre() 
+                        : null,
+                    tarifa.tipoTarifa(),
+                    tarifa.monto(),
+                    fechaHora
+                )
+            );
     }
 }
