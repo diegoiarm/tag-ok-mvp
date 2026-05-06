@@ -27,7 +27,13 @@
       "Bash(curl -s \"http://localhost:8000/api/routes?lon1=-70.6506&lat1=-33.4373&lon2=-70.7437&lat2=-33.4457\")",
       "Bash(curl -v http://localhost:8000/autopistas)",
       "Bash(curl -s \"http://localhost:8000/autopistas\" -H \"Accept: application/json\")",
-      "Bash(curl -s \"http://localhost:8000/actuator/health\")"
+      "Bash(curl -s \"http://localhost:8000/actuator/health\")",
+      "Bash(./gradlew assembleDebug)",
+      "Bash(./gradlew clean *)",
+      "Bash(./gradlew installDebug)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\diego\\\\Documents\\\\tag-ok-mvp\\\\Producto\\\\tag-ok-app\" -Recurse -Force)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(Sort-Object)"
     ]
   }
 }
