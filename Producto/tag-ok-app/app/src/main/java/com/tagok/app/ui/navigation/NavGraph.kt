@@ -167,7 +167,7 @@ fun NavGraph() {
                     onPlanificarViaje = { v -> navController.navigate("planificar/$v") },
                     onHistorialViajes = { /* TODO: HistorialScreen */ },
                     onIrARuta = { v -> navController.navigate("map/$v") },
-                    onBoletaMensual = { /* TODO: BoletaScreen */ },
+                    onBoletaMensual = { navController.navigate(Screen.Presupuesto.route) },
                     onAgregarVehiculo = { navController.navigate("vehiculos") },
                     onLogout = {
                         scope.launch {
@@ -178,7 +178,10 @@ fun NavGraph() {
             }
             composable(Screen.Presupuesto.route) { PresupuestoScreen() }
             composable(Screen.Perfil.route) {
-                PerfilScreen(onVehiculos = { navController.navigate("vehiculos") })
+                PerfilScreen(
+                    onVehiculos = { navController.navigate("vehiculos") },
+                    onMisRutas  = { /* TODO: historial */ },
+                )
             }
             composable("vehiculos") {
                 VehiculosScreen(onBack = { navController.popBackStack() })
