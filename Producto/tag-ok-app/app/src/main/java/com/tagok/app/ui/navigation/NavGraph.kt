@@ -2,6 +2,7 @@ package com.tagok.app.ui.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MonetizationOn
 import androidx.compose.material.icons.filled.Person
@@ -34,6 +35,7 @@ import com.tagok.app.ui.map.MapScreen
 import com.tagok.app.ui.perfil.PerfilScreen
 import com.tagok.app.ui.vehiculos.VehiculosScreen
 import com.tagok.app.ui.planificar.PlanificarViajeScreen
+import com.tagok.app.ui.boleta.BoletaScreen
 import com.tagok.app.ui.presupuesto.PresupuestoScreen
 import com.tagok.app.ui.theme.Blue40
 import com.tagok.app.ui.theme.TextSecondary
@@ -47,12 +49,13 @@ import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonPrimitive
 
 private sealed class Screen(val route: String, val label: String, val icon: ImageVector) {
-    data object Home : Screen("home", "Home", Icons.Filled.Home)
+    data object Home        : Screen("home",        "Home",        Icons.Filled.Home)
     data object Presupuesto : Screen("presupuesto", "Presupuesto", Icons.Filled.MonetizationOn)
-    data object Perfil : Screen("perfil", "Perfil", Icons.Filled.Person)
+    data object Boleta      : Screen("boleta",      "Boleta",      Icons.Filled.Description)
+    data object Perfil      : Screen("perfil",      "Perfil",      Icons.Filled.Person)
 }
 
-private val bottomNavScreens = listOf(Screen.Home, Screen.Presupuesto, Screen.Perfil)
+private val bottomNavScreens = listOf(Screen.Home, Screen.Presupuesto, Screen.Boleta, Screen.Perfil)
 
 @Composable
 fun NavGraph() {
@@ -177,6 +180,7 @@ fun NavGraph() {
                 )
             }
             composable(Screen.Presupuesto.route) { PresupuestoScreen() }
+            composable(Screen.Boleta.route)      { BoletaScreen() }
             composable(Screen.Perfil.route) {
                 PerfilScreen(
                     onVehiculos = { navController.navigate("vehiculos") },
