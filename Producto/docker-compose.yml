@@ -43,7 +43,7 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: admin
       ME_CONFIG_MONGODB_SERVER: mongo
     ports:
-      - "8001:8081"
+      - "8002:8081"
     depends_on:
       - mongo
 
