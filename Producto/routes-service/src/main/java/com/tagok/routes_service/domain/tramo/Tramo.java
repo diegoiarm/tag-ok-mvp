@@ -42,6 +42,8 @@ public class Tramo
 
     private double distanciaKm;
 
+    private String area;
+
     @Builder.Default
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "tramo_id")
