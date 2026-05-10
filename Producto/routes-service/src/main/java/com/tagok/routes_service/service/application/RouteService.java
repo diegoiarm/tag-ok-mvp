@@ -47,7 +47,7 @@ public class RouteService
         List<RouteSegment> segments = routeRepository.getRouteSegments(startId, endId);
 
         String mergedGeometry = routeRepository.findMergedRouteGeometry(startId, endId)
-            .orElse(null);
+            .orElseThrow(() -> new IllegalStateException("No se pudo encontrar una ruta para los dos puntos asociados"));
 
         LocalDateTime tiempoInicio = LocalDateTime.now();
         LocalDateTime tiempoActual = tiempoInicio;
