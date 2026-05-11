@@ -51,7 +51,7 @@ public class OsmJsonParser
                 boolean found = false;
                 while (jp.nextToken() != JsonToken.END_OBJECT) 
                 {
-                    if (jp.currentToken() == JsonToken.FIELD_NAME && "elements".equals(jp.getCurrentName())) 
+                    if (jp.currentToken() == JsonToken.FIELD_NAME && "elements".equals(jp.currentName())) 
                     {
                         jp.nextToken();
                         found = true;
