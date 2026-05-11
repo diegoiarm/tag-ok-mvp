@@ -15,6 +15,8 @@ import com.tagok.routes_service.domain.tarifa.CalculadorTarifa;
 import com.tagok.routes_service.domain.tarifa.Cruce;
 import com.tagok.routes_service.domain.tarifa.Tarifa;
 import com.tagok.routes_service.domain.tarifa.TarifaCalculada;
+import com.tagok.routes_service.domain.tarifa.calculo.CalculadorTarifaFactory;
+import com.tagok.routes_service.domain.tarifa.calculo.CalculoContexto;
 import com.tagok.routes_service.dto.request.tarifa.TarifaRequest;
 import com.tagok.routes_service.repository.PorticoRepository;
 
@@ -25,8 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class TarifaService
 {
     private final PorticoRepository porticoRepository;
-    // El dominio(Negocio) sabe como hacer las transacciones, spring no se encarga de eso
-    private final CalculadorTarifa calculadorTarifa = new CalculadorTarifa();
+    private final CalculadorTarifaFactory calculadorFactory;
 
     public TarifaCalculada calcularTarifa(TarifaRequest request)
     {
@@ -55,7 +56,16 @@ public class TarifaService
             Portico portico = entry.getKey();
             LocalDateTime fechaHora = entry.getValue();
 
-            Optional<Tarifa> tarifaOpt = calculadorTarifa.calcular(portico.getCalendario(), portico.getReglas(), request.vehiculo(), fechaHora);
+            var strategy = calculadorFactory.getStrategy(portico.getAutopista());
+
+            var contexto = CalculoContexto.builder()
+                .autopista(portico.getAutopista())
+                .portico(portico)
+                .vehiculo(request.vehiculo())
+                .fecha(fechaHora)
+                .build();
+
+            Optional<Tarifa> tarifaOpt = strategy.calcular(contexto);
             
             if (tarifaOpt.isPresent()) 
             {

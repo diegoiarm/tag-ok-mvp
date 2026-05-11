@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MapContainer, TileLayer, GeoJSON, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -37,6 +37,14 @@ export function Mapa({ start, end }: { start: Coord; end: Coord })
   const [geoJsonData, setGeoJsonData] = useState<any>(null);
 
   const routePorticos = route?.porticos;
+
+  const routePorticoCodes = useMemo(() => {
+    return new Set(routePorticos?.map(p => p.codigo) ?? []);
+  }, [routePorticos]);
+
+  const visiblePorticos = useMemo(() => {
+    return porticos?.filter(p => !routePorticoCodes.has(p.codigo)) ?? [];
+  }, [porticos, routePorticoCodes]);
 
   useEffect(() => {
     if (!route) {
@@ -115,10 +123,6 @@ export function Mapa({ start, end }: { start: Coord; end: Coord })
           <GeoJSON data={geoJsonData} style={{ color: "#007bff", weight: 5 }} />
         )}
 
-        {routePorticos?.map((p) => (
-          <RoutePorticoMark key={p.codigo} portico={p} />
-        ))}
-
         <Marker position={[start.lat, start.lon]} icon={StartIcon}>
           <Popup>
             <strong>Inicio</strong>
@@ -146,7 +150,11 @@ export function Mapa({ start, end }: { start: Coord; end: Coord })
           </Popup>
         </Marker>
 
-        {porticos?.map((p) => (
+        {routePorticos?.map((p) => (
+          <RoutePorticoMark key={p.codigo} portico={p} />
+        ))}
+
+        {visiblePorticos.map((p) => (
           <PorticoMark key={p.id} portico={p} />
         ))}
       </MapContainer>
