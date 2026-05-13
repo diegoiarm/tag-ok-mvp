@@ -28,14 +28,19 @@ public class CobroRutaMapper
             );
         }
 
-        if (cruce instanceof CruceTramo ct) 
-        {
+        if (cruce instanceof CruceTramo ct) {
             return new CobroTramoResponse(
-                ct.entradaId(), ct.salidaId(), 
-                ct.nombreEntrada(), ct.nombreSalida(),
-                ct.autopista(), 
-                ct.tipoTarifa(), 
-                ct.valor(), 
+                ct.entradaId(),
+                ct.salidaId(),
+                ct.nombreEntrada(),
+                ct.nombreSalida(),
+                ct.autopista(),
+                ct.latitudEntrada(),
+                ct.longitudEntrada(),
+                ct.latitudSalida(),
+                ct.longitudSalida(),
+                ct.tipoTarifa(),
+                ct.valor(),
                 ct.horaFechaCruce()
             );
         }

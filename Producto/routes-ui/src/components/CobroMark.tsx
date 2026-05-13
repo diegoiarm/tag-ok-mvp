@@ -21,9 +21,20 @@ const porticoIcon = L.icon({
     iconAnchor: [12, 41],
 });
 
-export function CobroMark({ cobro }: { cobro: Cobro }) {
-    // Discriminamos por campo "porticoId" (CobroPortico) o "entradaId" (CobroTramo)
-    if ("porticoId" in cobro) {
+export function CobroMark({ cobro }: { cobro: Cobro }) 
+{
+    const fecha = new Date(cobro.fechaHora);
+
+    const texto = fecha.toLocaleString("es-CL", 
+    {
+        //day: "2-digit",
+        //month: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+    });
+
+    if ("porticoId" in cobro) 
+    {
         return (
             <Marker
                 position={[cobro.latitud, cobro.longitud]}
@@ -34,14 +45,14 @@ export function CobroMark({ cobro }: { cobro: Cobro }) {
                     <br />
                     {cobro.codigo} ({cobro.autopista})
                     <br />
-                    Tarifa: {cobro.tarifa} — $
-                    {cobro.valor.toLocaleString("es-CL")}
+                    Tarifa: {cobro.tarifa} — ${cobro.valor.toLocaleString("es-CL")}
+                    <br />
+                    Hora estmada: {texto}
                 </Popup>
             </Marker>
         );
     }
 
-    // CobroTramo
     const entradaPos: [number, number] = [
         cobro.latitudEntrada,
         cobro.longitudEntrada,

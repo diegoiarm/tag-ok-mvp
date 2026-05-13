@@ -11,8 +11,13 @@ public record CobroTramoResponse(
     String nombreEntrada,
     String nombreSalida,
     String autopista,
+    double latitudEntrada,
+    double longitudEntrada,
+    double latitudSalida,
+    double longitudSalida,
     TipoTarifa tarifa,
     BigDecimal valor,
-    LocalDateTime fechaHora) implements CobroRutaResponse
+    LocalDateTime fechaHora) implements CobroRutaResponse 
 {
+
 }

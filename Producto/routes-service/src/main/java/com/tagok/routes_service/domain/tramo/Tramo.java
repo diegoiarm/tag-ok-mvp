@@ -44,6 +44,8 @@ public class Tramo
 
     private String area;
 
+    private String sentido;
+
     @Builder.Default
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "tramo_id")

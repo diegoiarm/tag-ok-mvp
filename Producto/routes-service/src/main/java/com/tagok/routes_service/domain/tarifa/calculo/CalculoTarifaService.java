@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.tagok.routes_service.domain.autopista.Autopista;
+import com.tagok.routes_service.domain.autopista.TipoCobro;
 import com.tagok.routes_service.domain.portico.Portico;
 import com.tagok.routes_service.domain.tarifa.Cruce;
 import com.tagok.routes_service.domain.tarifa.CrucePortico;
@@ -34,9 +35,8 @@ public class CalculoTarifaService
 
                 return new PorticoCruce(p, c.horaFechaCruce());
             })
-            .filter(pc -> pc.portico.getCalendario() != null
-                       && pc.portico.getReglas() != null
-                       && !pc.portico.getReglas().isEmpty())
+            .filter(pc -> pc.portico.getAutopista().getTipoCobro() == TipoCobro.TRAMO
+                || (pc.portico.getCalendario() != null && !pc.portico.getReglas().isEmpty()))
             .collect(Collectors.toList());
 
         List<List<PorticoCruce>> gruposContiguos = new ArrayList<>();
@@ -132,7 +132,11 @@ public class CalculoTarifaService
                             entrada.portico.getId(),
                             salida.portico.getId(),
                             entrada.portico.getNombre(),
-                            salida.portico.getNombre()
+                            salida.portico.getNombre(),
+                            entrada.portico.getLatitud(),
+                            entrada.portico.getLongitud(),
+                            salida.portico.getLatitud(),
+                            salida.portico.getLongitud()
                         ))
                     );
                 }

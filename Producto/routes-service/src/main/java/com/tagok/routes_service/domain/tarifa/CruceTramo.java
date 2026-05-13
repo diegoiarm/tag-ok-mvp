@@ -13,4 +13,8 @@ public record CruceTramo(
     Long entradaId,
     Long salidaId,
     String nombreEntrada,
-    String nombreSalida) implements Cruce {}
+    String nombreSalida,
+    double latitudEntrada,
+    double longitudEntrada,
+    double latitudSalida,
+    double longitudSalida) implements Cruce {}

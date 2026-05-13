@@ -171,6 +171,8 @@ export function Mapa({ start, end }: { start: Coord; end: Coord }) {
                         {route
                             ? `$${route.totalCost.toLocaleString("es-CL")}`
                             : "..."}
+                        <br />
+                        Porticos cruzados: {cobros?.length}
                     </Popup>
                 </Marker>
 
