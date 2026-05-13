@@ -4,20 +4,15 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class RouteResponse 
+public record RouteResponse(
+    LocalDateTime fechaHoraInicio,
+    LocalDateTime fechaHoraFin,
+    BigDecimal totalCost,
+    List<CobroRutaResponse> cobros,
+    String mergedRouteGeometry) 
 {
-    private List<PorticoRouteResponse> porticos;
-    private BigDecimal totalCost;
-    private LocalDateTime fechaHoraInicio;
-    private LocalDateTime fechaHoraFin;
-    private String mergedRouteGeometry;
+
 }
