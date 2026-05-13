@@ -39,7 +39,7 @@ public class RouteRepository
             ) r
             JOIN edge e ON r.edge = e.id
             LEFT JOIN portico p ON ST_DWithin(
-                e.geometry::geography,
+                e.geometry,
                 ST_SetSRID(ST_MakePoint(p.longitud, p.latitud), 4326)::geography,
                 5
             )
@@ -106,10 +106,7 @@ public class RouteRepository
         );
     }
 
-    private RouteSegment mapRowToRouteSegment(ResultSet rs) throws SQLException
-    {
-        Long porticoId = rs.getObject("portico_id", Long.class);
-
+    private RouteSegment mapRowToRouteSegment(ResultSet rs) throws SQLException {
         return RouteSegment.builder()
             .seq(rs.getInt("seq"))
             .edgeId(rs.getLong("edge"))
@@ -120,7 +117,8 @@ public class RouteRepository
             .geometry(rs.getString("geometry"))
             .distance(rs.getDouble("distance"))
             .maxSpeed(rs.getDouble("maxspeed"))
-            .portico(porticoId != null ? new PorticoRuta(porticoId) : null)
+            .portico(
+                new PorticoRuta(rs.getLong("portico_id")))
             .build();
     }
 }

@@ -28,10 +28,4 @@ public class RouteController
     {
         return routeService.getRoute(lon1, lat1, lon2, lat2);
     }
-
-    @GetMapping("/calles")
-    public RouteResponse findAllRoads()
-    {
-        return routeService.finAllRoads();
-    }
 }

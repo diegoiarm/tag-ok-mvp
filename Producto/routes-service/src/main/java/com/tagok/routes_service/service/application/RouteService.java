@@ -10,17 +10,14 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 
 import com.tagok.routes_service.domain.tarifa.Cruce;
-import com.tagok.routes_service.domain.tarifa.CrucePortico;
-import com.tagok.routes_service.domain.tarifa.CruceTramo;
 import com.tagok.routes_service.domain.tarifa.calculo.CalculoTarifaService;
 import com.tagok.routes_service.domain.tarifa.calculo.CruceRequest;
 import com.tagok.routes_service.domain.vehiculo.TipoVehiculo;
 import com.tagok.routes_service.dto.RouteSegment;
-import com.tagok.routes_service.dto.response.CobroPorticoResponse;
 import com.tagok.routes_service.dto.response.CobroRutaResponse;
-import com.tagok.routes_service.dto.response.CobroTramoResponse;
 import com.tagok.routes_service.dto.response.RouteResponse;
 import com.tagok.routes_service.repository.RouteRepository;
+import com.tagok.routes_service.service.mapper.CobroRutaMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,13 +27,7 @@ public class RouteService
 {
     private final RouteRepository routeRepository;
     private final CalculoTarifaService calculoTarifaService;
-
-    public RouteResponse finAllRoads()
-    {
-        return RouteResponse.builder()
-            .totalCost(BigDecimal.ZERO)
-            .build();
-    }
+    private final CobroRutaMapper cobroRutaMapper;
 
     public RouteResponse getRoute(double lon1, double lat1, double lon2, double lat2) 
     {
@@ -80,7 +71,7 @@ public class RouteService
         List<Cruce> cruces = calculoTarifaService.calcularCruces(crucesReq, TipoVehiculo.AUTO);
 
         List<CobroRutaResponse> cobros = cruces.stream()
-                .map(this::toResponse)
+                .map(cobroRutaMapper::toResponse)
                 .toList();
 
         BigDecimal totalCost = cruces.stream()
@@ -94,39 +85,5 @@ public class RouteService
             .cobros(cobros)
             .mergedRouteGeometry(mergedGeometry)
             .build();
-    }
-
-    private CobroRutaResponse toResponse(Cruce cruce) 
-    {
-        if (cruce instanceof CrucePortico cp) 
-        {
-            return new CobroPorticoResponse(
-                    cp.porticoId(),
-                    cp.nombre(),
-                    cp.codigo(),
-                    cp.autopista(),
-                    cp.latitud(),
-                    cp.longitud(),
-                    cp.tipoTarifa(),
-                    cp.valor(),
-                    cp.horaFechaCruce()
-            );
-        }
-
-        if (cruce instanceof CruceTramo ct) 
-        {
-            return new CobroTramoResponse(
-                    ct.entradaId(),
-                    ct.salidaId(),
-                    ct.nombreEntrada(),
-                    ct.nombreSalida(),
-                    ct.autopista(),
-                    ct.tipoTarifa(),
-                    ct.valor(),
-                    ct.horaFechaCruce()
-            );
-        }
-
-        throw new IllegalStateException("Tipo de cruce desconocido: " + cruce.getClass());
     }
 }
