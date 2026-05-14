@@ -7,8 +7,8 @@ import { Login } from "./app/pages/Login";
 import { UsuariosPage } from "./features/admin/pages/UsuariosPage";
 
 function MapaPage() {
-  const start = parseLatLng("-33.43114865032462, -70.57418684455811");
-  const end   = parseLatLng("-33.38197693966301, -70.53205570291598");
+  const start = parseLatLng("-33.59669493677533, -70.70101359441239");
+  const end   = parseLatLng("-33.4308582555084, -70.5652230425932");
 
   return <Mapa start={start} end={end} />;
 }
