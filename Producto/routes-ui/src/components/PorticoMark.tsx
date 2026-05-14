@@ -3,7 +3,7 @@ import { Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import type { TollResponse } from "../types/types";
+import type { PorticoResumen } from "../types/types";
 import { getPorticoById } from "../api/porticos";
 import { TarifasList } from "./TarifasList";
 import { CalendarioTarifario } from "./CalendarioTarifario";
@@ -19,7 +19,7 @@ const porticoIcon = L.icon({
 });
 
 type Props = {
-    portico: TollResponse;
+    portico: PorticoResumen;
 };
 
 export function PorticoMark({ portico }: Props) {
@@ -53,18 +53,13 @@ export function PorticoMark({ portico }: Props) {
                     <strong>
                         Pórtico: {portico.nombre || "No especificado"}
                     </strong>
+                    <br />
+                    Sentido: {portico.sentido}
 
                     {(portico.autopista || detalle?.autopista) && (
                         <>
                             <br />
                             Autopista: {portico.autopista || detalle?.autopista}
-                        </>
-                    )}
-
-                    {portico.type === "PORTICO" && (
-                        <>
-                            <br />
-                            Sentido: {portico.sentido || "No especificado"}
                         </>
                     )}
 
