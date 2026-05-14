@@ -1,4 +1,4 @@
-import type { PorticoResponse, PorticoResumen } from "../types/types";
+import type { PorticoResumen, TollResponse } from "../types/types";
 import { api } from "./axios";
 
 export const getPorticos = async (): Promise<PorticoResumen[]> => {
@@ -6,7 +6,7 @@ export const getPorticos = async (): Promise<PorticoResumen[]> => {
   return data;
 };
 
-export const getPorticoById = async (id: number): Promise<PorticoResponse> => {
+export const getPorticoById = async (id: number): Promise<TollResponse> => {
   const { data } = await api.get(`/porticos/${id}`);
   return data;
 };

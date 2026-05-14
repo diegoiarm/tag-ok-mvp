@@ -1,133 +1,158 @@
 export interface Coord {
-  lat: number;
-  lon: number;
+    lat: number;
+    lon: number;
 }
 
-export interface RouteSegment 
-{
-  seq: number;
-  edgeId: number;
-  node: number;
-  cost: number;
-  aggCost: number;
-  name: string;
-  geometry: string;
+export interface RouteSegment {
+    seq: number;
+    edgeId: number;
+    node: number;
+    cost: number;
+    aggCost: number;
+    name: string;
+    geometry: string;
 }
 
-export interface PorticoRouteResponse 
-{
-  nombre: string;
-  codigo: string;
-  autopista: string;
-  codigoAutopista: string;
-  longitud: number;
-  latitud: number;
-  tarifa: string;
-  valor: number;
-  fechaHora: string;
+export interface PorticoRouteResponse {
+    nombre: string;
+    codigo: string;
+    autopista: string;
+    codigoAutopista: string;
+    longitud: number;
+    latitud: number;
+    tarifa: string;
+    valor: number;
+    fechaHora: string;
 }
 export interface PorticoResumen {
-  id: number;
-  codigo: string;
-  nombre: string;
-  sentido: string;
-  latitud: number;
-  longitud: number;
-  autopista?: string;
+    id: number;
+    codigo: string;
+    nombre: string;
+    sentido: string;
+    latitud: number;
+    longitud: number;
+    autopista?: string;
 }
 
-
 export enum TipoVehiculo {
-  MOTO = "MOTO",
-  AUTO = "AUTO",
-  CAMIONETA = "CAMIONETA",
-  BUS = "BUS",
-  CAMION = "CAMION",
-  CAMION_REMOLQUE = "CAMION_REMOLQUE",
+    MOTO = "MOTO",
+    AUTO = "AUTO",
+    CAMIONETA = "CAMIONETA",
+    BUS = "BUS",
+    CAMION = "CAMION",
+    CAMION_REMOLQUE = "CAMION_REMOLQUE",
 }
 
 export enum TipoTarifa {
-  TBFP = "TBFP",
-  TBP = "TBP",
-  TS = "TS",
+    TBFP = "TBFP",
+    TBP = "TBP",
+    TS = "TS",
 }
 
 export enum TipoDia {
-  LABORAL = "LABORAL",
-  SABADO_FESTIVO = "SABADO_FESTIVO",
-  DOMINGO = "DOMINGO",
+    LABORAL = "LABORAL",
+    SABADO_FESTIVO = "SABADO_FESTIVO",
+    DOMINGO = "DOMINGO",
 }
 
 export type RangoHorarioResponse = {
-  horaInicio: string; // "HH:mm:ss"
-  horaFin: string;
+    horaInicio: string; // "HH:mm:ss"
+    horaFin: string;
 };
 
 export type ReglaTemporalResponse = {
-  tipoTarifa: TipoTarifa;
-  tipoDia: TipoDia;
-  tramos: RangoHorarioResponse[];
+    tipoTarifa: TipoTarifa;
+    tipoDia: TipoDia;
+    tramos: RangoHorarioResponse[];
 };
 
 export type CalendarioTarifarioResponse = {
-  reglas: ReglaTemporalResponse[];
+    reglas: ReglaTemporalResponse[];
 };
 
 export type ValorTarifaResponse = {
-  tipoTarifa: TipoTarifa;
-  valor: number;
+    tipoTarifa: TipoTarifa;
+    valor: number;
 };
 
 export type ReglaTarifariaResponse = {
-  aplicaA: TipoVehiculo[];
-  valores: ValorTarifaResponse[];
+    aplicaA: TipoVehiculo[];
+    valores: ValorTarifaResponse[];
 };
 
 export type PorticoResponse = {
-  id: number;
-  codigo: string;
-  nombre: string;
-  sentido: string;
-  latitud: number;
-  longitud: number;
-  reglas: ReglaTarifariaResponse[];
-  calendario: CalendarioTarifarioResponse;
-  autopista?: string;
+    type: "PORTICO";
+
+    id: number;
+    codigo: string;
+    nombre: string;
+    sentido: string;
+    latitud: number;
+    longitud: number;
+
+    reglas: ReglaTarifariaResponse[];
+    calendario: CalendarioTarifarioResponse;
+
+    autopista?: string;
 };
 
+export type TramoResponse = {
+  entrada: string;
+  salida: string;
+  reglas: ReglaTarifariaResponse[];
+  calendario: CalendarioTarifarioResponse;
+};
+
+export type PorticoTramoResponse = {
+    type: "TRAMO";
+
+    id: number;
+    codigo: string;
+    nombre: string;
+
+    latitud: number;
+    longitud: number;
+
+    autopista?: string;
+
+    tramos: TramoResponse[];
+};
+
+export type TollResponse = PorticoResponse | PorticoTramoResponse;
+
 export type CobroPortico = {
-  porticoId: number;
-  nombre: string;
-  codigo: string;
-  autopista: string;
-  latitud: number;
-  longitud: number;
-  tarifa: string;
-  valor: number;
-  fechaHora: string;
+    porticoId: number;
+    nombre: string;
+    codigo: string;
+    autopista: string;
+    latitud: number;
+    longitud: number;
+    tarifa: string;
+    valor: number;
+    fechaHora: string;
 };
 
 export type CobroTramo = {
-  entradaId: number;
-  salidaId: number;
-  nombreEntrada: string;
-  nombreSalida: string;
-  autopista: string;
-  latitudEntrada: number;
-  longitudEntrada: number;
-  latitudSalida: number;
-  longitudSalida: number;
-  tarifa: string;
-  valor: number;
-  fechaHora: string;
+    entradaId: number;
+    salidaId: number;
+    nombreEntrada: string;
+    nombreSalida: string;
+    autopista: string;
+    latitudEntrada: number;
+    longitudEntrada: number;
+    latitudSalida: number;
+    longitudSalida: number;
+    tarifa: string;
+    valor: number;
+    fechaHora: string;
 };
 
 export type Cobro = CobroPortico | CobroTramo;
 
 export type RouteResponse = {
-  fechaHoraInicio: string;
-  fechaHoraFin: string;
-  totalCost: number;
-  mergedRouteGeometry: string;
-  cobros: Cobro[];
+    fechaHoraInicio: string;
+    fechaHoraFin: string;
+    totalCost: number;
+    mergedRouteGeometry: string;
+    cobros: Cobro[];
 };

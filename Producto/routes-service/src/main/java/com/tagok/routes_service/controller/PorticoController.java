@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tagok.routes_service.dto.response.portico.PorticoResponse;
+import com.tagok.routes_service.dto.response.portico.PorticoResumenResponse;
 import com.tagok.routes_service.dto.response.portico.TollResponse;
 import com.tagok.routes_service.service.application.PorticoService;
 
@@ -24,13 +24,13 @@ public class PorticoController
     private final PorticoService porticoService;
 
     @GetMapping
-    public ResponseEntity<List<TollResponse>> getAll()
+    public ResponseEntity<List<PorticoResumenResponse>> getAll()
     {
         return ResponseEntity.ok(porticoService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PorticoResponse> getById(@PathVariable Long id) 
+    public ResponseEntity<TollResponse> getById(@PathVariable long id) 
     {
         return ResponseEntity.ok(porticoService.findById(id));
     }
