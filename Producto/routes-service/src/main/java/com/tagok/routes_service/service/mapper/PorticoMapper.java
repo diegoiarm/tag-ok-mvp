@@ -6,12 +6,16 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
+import com.tagok.routes_service.domain.autopista.Autopista;
 import com.tagok.routes_service.domain.portico.Portico;
+import com.tagok.routes_service.domain.tarifa.ReglaTarifaria;
 import com.tagok.routes_service.dto.request.portico.PorticoRequest;
 import com.tagok.routes_service.dto.response.portico.CalendarioTarifarioResponse;
 import com.tagok.routes_service.dto.response.portico.PorticoResponse;
 import com.tagok.routes_service.dto.response.portico.PorticoResumenResponse;
+import com.tagok.routes_service.dto.response.portico.PorticoTramoResponse;
 import com.tagok.routes_service.dto.response.portico.ReglaTarifariaResponse;
+import com.tagok.routes_service.dto.response.portico.TramoResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -70,6 +74,32 @@ public class PorticoMapper
                 .reglas(mapReglasToResponse(portico))
                 .calendario(mapCalendarioToResponse(portico))
                 .build();
+    }
+
+    public PorticoTramoResponse toTramoResponse(Portico portico)
+    {
+        return PorticoTramoResponse.builder()
+            .id(portico.getId())
+            .codigo(portico.getCodigo())
+            .nombre(portico.getNombre())
+            .autopista(portico.getAutopista().getNombre())
+            .tramos(getTramos(portico, portico.getAutopista()))
+            .build();
+    }
+
+    private List<TramoResponse> getTramos(Portico portico, Autopista autopista)
+    {
+        return autopista.getTramos().stream()
+            .filter(t -> t.getEntrada().equals(portico))
+            .map(t -> new TramoResponse(t.getEntrada().getCodigo(), t.getSalida().getCodigo(), getReglas(t.getReglas()), calendarioTarifarioMapper.toResponse(t.getCalendario())))
+            .toList();
+    }
+
+    private List<ReglaTarifariaResponse> getReglas(List<ReglaTarifaria> reglas)
+    {
+        return reglas.stream()
+            .map(reglaTarifariaMapper::toResponse)
+            .toList();
     }
 
     public PorticoResumenResponse toResumenResponse(Portico portico)

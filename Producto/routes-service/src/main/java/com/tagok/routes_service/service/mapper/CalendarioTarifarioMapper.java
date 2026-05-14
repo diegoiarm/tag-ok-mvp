@@ -13,20 +13,19 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class CalendarioTarifarioMapper implements IEntityMapper<CalendarioTarifarioResponse, CalendarioTarifarioRequest, CalendarioTarifario> 
-{
+public class CalendarioTarifarioMapper
+        implements IEntityMapper<CalendarioTarifarioResponse, CalendarioTarifarioRequest, CalendarioTarifario> {
     private final ReglaTemporalMapper reglaTemporalMapper;
 
     @Override
-    public CalendarioTarifario fromRequest(CalendarioTarifarioRequest request) 
-    {
+    public CalendarioTarifario fromRequest(CalendarioTarifarioRequest request) {
         CalendarioTarifario calendario = new CalendarioTarifario();
-        
+
         Optional.ofNullable(request.reglas())
                 .ifPresent(reglas -> reglas.stream()
                         .map(reglaTemporalMapper::fromRequest)
                         .forEach(calendario::addRegla));
-        
+
         return calendario;
     }
 
@@ -34,12 +33,11 @@ public class CalendarioTarifarioMapper implements IEntityMapper<CalendarioTarifa
     public CalendarioTarifarioResponse toResponse(CalendarioTarifario entity) 
     {
         return CalendarioTarifarioResponse.builder()
-                .reglas(
-                        Optional.ofNullable(entity.getReglas())
-                                .map(reglas -> reglas.stream()
-                                        .map(reglaTemporalMapper::toResponse)
-                                        .toList())
-                                .orElseGet(Collections::emptyList))
-                .build();
+            .reglas(Optional.ofNullable(entity.getReglas())
+                .map(reglas -> reglas.stream()
+                .map(reglaTemporalMapper::toResponse)
+                .toList())
+            .orElseGet(Collections::emptyList))
+            .build();
     }
 }

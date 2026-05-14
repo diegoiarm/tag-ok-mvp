@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tagok.routes_service.dto.response.portico.PorticoResponse;
-import com.tagok.routes_service.dto.response.portico.PorticoResumenResponse;
+import com.tagok.routes_service.dto.response.portico.TollResponse;
 import com.tagok.routes_service.service.application.PorticoService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class PorticoController
     private final PorticoService porticoService;
 
     @GetMapping
-    public ResponseEntity<List<PorticoResumenResponse>> getAll()
+    public ResponseEntity<List<TollResponse>> getAll()
     {
         return ResponseEntity.ok(porticoService.findAll());
     }
