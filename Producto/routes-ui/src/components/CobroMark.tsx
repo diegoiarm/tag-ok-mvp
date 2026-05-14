@@ -66,20 +66,28 @@ export function CobroMark({ cobro }: { cobro: Cobro })
         <>
             <Marker position={entradaPos} icon={entryIcon}>
                 <Popup>
-                    <strong>{cobro.nombreEntrada}</strong> (Entrada)
+                    <strong>{cobro.nombreEntrada}</strong> <b>(Entrada)</b>
                     <br />
-                    Tramo {cobro.autopista}
+                    {cobro.autopista}
                     <br />
-                    Valor del tramo: ${cobro.valor.toLocaleString("es-CL")}
+                    Tramo <b>{cobro.nombreEntrada}</b> - {cobro.nombreSalida}
+                    <br />
+                    Valor del tramo: <b>{cobro.valor.toLocaleString("es-CL")}</b>$ - Tarifa: <b>{cobro.tarifa}</b>
+                    <br />
+                    <b>{texto}</b>
                 </Popup>
             </Marker>
             <Marker position={salidaPos} icon={exitIcon}>
                 <Popup>
-                    <strong>{cobro.nombreSalida}</strong> (Salida)
+                    <strong>{cobro.nombreSalida}</strong> <b>(Salida)</b>
                     <br />
-                    Tramo {cobro.autopista}
+                    {cobro.autopista} 
                     <br />
-                    Valor del tramo: ${cobro.valor.toLocaleString("es-CL")}
+                    Tramo {cobro.nombreEntrada} - <b>{cobro.nombreSalida}</b>
+                    <br />
+                    Valor del tramo: <b>{cobro.valor.toLocaleString("es-CL")}</b>$ - Tarifa: <b>{cobro.tarifa}</b>
+                    <br />
+                    <b>{texto}</b>
                 </Popup>
             </Marker>
             <Polyline
