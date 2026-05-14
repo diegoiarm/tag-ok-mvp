@@ -22,6 +22,8 @@ public class CalculadorPorTramo implements CalculadorTarifaStrategy
         if (ctx.getEntrada() == null || ctx.getSalida() == null)
             return Optional.empty();
 
+        System.out.println("Buscando tramos para | Entrada: " + ctx.getEntrada().getCodigo() + " Salida: " + ctx.getSalida().getCodigo());
+
         Optional<Tramo> tramoOpt = tramoRepository.findByEntradaAndSalida(ctx.getEntrada(), ctx.getSalida());
 
         if (tramoOpt.isEmpty()) 
@@ -30,7 +32,8 @@ public class CalculadorPorTramo implements CalculadorTarifaStrategy
         }
 
         Tramo tramo = tramoOpt
-            .orElseThrow(() -> new IllegalStateException("No existe el tramo asociado a los porticos"));
+            //.orElseThrow(() -> new IllegalStateException("No existe el tramo asociado a los porticos"));
+            .orElse(null);
 
         if (tramo == null || tramo.getCalendario() == null || tramo.getReglas().isEmpty())
             return Optional.empty();
