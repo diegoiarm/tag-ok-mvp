@@ -33,6 +33,18 @@ public class PorticoService
         Portico portico = porticoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Portico no encontrado"));
 
+        if (esTramoEspecialComoPortico(portico))
+            return porticoMapper.toResponse(portico);
+
         return portico.getAutopista().getTipoCobro() == TipoCobro.PORTICO ? porticoMapper.toResponse(portico) : porticoMapper.toTramoResponse(portico);
+    }
+
+    // Sirve para identificar si una autopista contramos existe un portico solo
+    // para que el sistema identificara eso mano, si aca se da altiro literal hay 1
+    // que sentido tiene
+    private boolean esTramoEspecialComoPortico(Portico portico)
+    {
+        return portico.getAutopista().getCodigo().equals("AVO1")
+            && portico.getCodigo().equals("P110");
     }
 }
