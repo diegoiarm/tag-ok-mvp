@@ -84,15 +84,24 @@ export function PorticoMark({ portico }: Props) {
                             <hr />
 
                             {detalle.type === "PORTICO" && (
-                                <>
-                                    <strong>Tarifas:</strong>
+                                <details style={{ marginTop: "6px" }}>
+                                    <summary
+                                        style={{
+                                            cursor: "pointer",
+                                            fontWeight: "bold",
+                                        }}
+                                    >
+                                        Tarifas
+                                    </summary>
 
-                                    <TarifasList reglas={detalle.reglas} />
+                                    <div style={{ marginTop: "6px" }}>
+                                        <TarifasList reglas={detalle.reglas} />
 
-                                    <CalendarioTarifario
-                                        calendario={detalle.calendario}
-                                    />
-                                </>
+                                        <CalendarioTarifario
+                                            calendario={detalle.calendario}
+                                        />
+                                    </div>
+                                </details>
                             )}
 
                             {detalle.type === "TRAMO" && (
@@ -100,7 +109,7 @@ export function PorticoMark({ portico }: Props) {
                                     <strong>Tramos:</strong>
 
                                     {detalle.tramos.map((tramo, index) => (
-                                        <div
+                                        <details
                                             key={index}
                                             style={{
                                                 borderBottom: "1px solid #ccc",
@@ -108,20 +117,27 @@ export function PorticoMark({ portico }: Props) {
                                                 paddingBottom: "6px",
                                             }}
                                         >
-                                            <strong>
-                                                {tramo.entrada}
-                                                {" → "}
-                                                {tramo.salida}
-                                            </strong>
+                                            <summary
+                                                style={{
+                                                    cursor: "pointer",
+                                                    fontWeight: "bold",
+                                                }}
+                                            >
+                                                {tramo.entrada} → {tramo.salida}
+                                            </summary>
 
-                                            <TarifasList
-                                                reglas={tramo.reglas}
-                                            />
+                                            <div style={{ marginTop: "6px" }}>
+                                                <TarifasList
+                                                    reglas={tramo.reglas}
+                                                />
 
-                                            <CalendarioTarifario
-                                                calendario={tramo.calendario}
-                                            />
-                                        </div>
+                                                <CalendarioTarifario
+                                                    calendario={
+                                                        tramo.calendario
+                                                    }
+                                                />
+                                            </div>
+                                        </details>
                                     ))}
                                 </>
                             )}
