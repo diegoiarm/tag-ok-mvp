@@ -90,8 +90,13 @@ public class PorticoMapper
     private List<TramoResponse> getTramos(Portico portico, Autopista autopista)
     {
         return autopista.getTramos().stream()
-            .filter(t -> t.getEntrada().equals(portico))
-            .map(t -> new TramoResponse(t.getEntrada().getCodigo(), t.getSalida().getCodigo(), getReglas(t.getReglas()), calendarioTarifarioMapper.toResponse(t.getCalendario())))
+            .filter(t -> t.getEntrada().equals(portico) || t.getSalida().equals(portico))
+            .map(t -> new TramoResponse(
+                t.getEntrada().getCodigo(),
+                t.getSalida().getCodigo(),
+                getReglas(t.getReglas()),
+                calendarioTarifarioMapper.toResponse(t.getCalendario())
+            ))
             .toList();
     }
 
