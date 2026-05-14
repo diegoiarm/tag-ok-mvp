@@ -1,11 +1,66 @@
 import "../../components/home.css";
 import { Navbar } from "../../components/Navbar";
+import { useRef, useState } from "react";
 
-export function Home() {
+export function Home()
+{
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const [mostrarHover, setMostrarHover] = useState(false);
+
+    const reproducirVideo = () =>
+    {
+        videoRef.current?.play();
+        setMostrarHover(true)
+    };
+
     return (
         <div className="home-container">
 
             <Navbar />
+
+            {/* Botón invisible */}
+            <button
+                onClick={reproducirVideo}
+                style={{
+                    position: "fixed",
+                    top: 0,
+                    left: 0,
+                    width: "40px",
+                    height: "40px",
+                    opacity: 0,
+                    border: "none",
+                    background: "transparent",
+                    cursor: "default",
+                    zIndex: 9999,
+                }}
+            />
+
+            {/* no lo borren pls */}
+            {mostrarHover && (
+                <div
+                    style={{
+                        position: "fixed",
+                        inset: 0,
+                        background: "rgba(0,0,0,0.85)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        zIndex: 10000,
+                    }}
+                >
+                    <video
+                        ref={videoRef}
+                        src="/ssstik.io_@minionfan532_1777578739485.mp4"
+                        autoPlay
+                        onEnded={() => setMostrarHover(false)}
+                        style={{
+                            maxWidth: "90%",
+                            maxHeight: "90%",
+                            borderRadius: "12px",
+                        }}
+                    />
+                </div>
+            )}
 
             {/* Header */}
             <header className="header">
