@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TramoResponse
+public class TramoRouteResponse
 {
     private Long id;
 

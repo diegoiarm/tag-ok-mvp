@@ -11,7 +11,7 @@ import com.tagok.routes_service.domain.tramo.Tramo;
 import com.tagok.routes_service.dto.request.tramo.TramoRequest;
 import com.tagok.routes_service.dto.response.portico.CalendarioTarifarioResponse;
 import com.tagok.routes_service.dto.response.portico.ReglaTarifariaResponse;
-import com.tagok.routes_service.dto.response.portico.TramoResponse;
+import com.tagok.routes_service.dto.response.portico.TramoRouteResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -58,14 +58,14 @@ public class TramoMapper
             .ifPresent(tramo::setCalendario);
     }
 
-    public TramoResponse toResponse(Tramo tramo)
+    public TramoRouteResponse toResponse(Tramo tramo)
     {
         String nombreAutopista = null;
 
         if (tramo.getAutopista() != null)
             nombreAutopista = tramo.getAutopista().getNombre();
 
-        return TramoResponse.builder()
+        return TramoRouteResponse.builder()
             .id(tramo.getId())
             .entrada(porticoMapper.toResumenResponse(tramo.getEntrada()))
             .salida(porticoMapper.toResumenResponse(tramo.getSalida()))
