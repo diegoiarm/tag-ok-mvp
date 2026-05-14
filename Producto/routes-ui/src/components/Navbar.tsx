@@ -27,7 +27,9 @@ export function Navbar() {
                 <Link to="/porticos">
                     Pórticos
                 </Link>
-
+                <Link to="/files">
+                    Subir json autopistas
+                </Link>
             </div>
 
         </nav>

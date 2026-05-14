@@ -25,6 +25,7 @@ export function MainLayout() {
             ) : (
               <Link to="/login">Login</Link>
             )}
+            <Link to="/files">Subir archivos json autopistas</Link>
           </span>
         </nav>
       </header>
