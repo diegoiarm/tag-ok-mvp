@@ -30,13 +30,27 @@ public class CalculoTarifaService
         List<PorticoCruce> porticosCruce = cruces.stream()
             .map(c -> 
             {
-                Portico p = porticoRepository.findById(c.porticoId())
+                Portico p = porticoRepository.findById(c.porticoId().longValue())
                     .orElseThrow(() -> new IllegalArgumentException("Pórtico no encontrado: " + c.porticoId()));
 
                 return new PorticoCruce(p, c.horaFechaCruce());
             })
-            .filter(pc -> pc.portico.getAutopista().getTipoCobro() == TipoCobro.TRAMO
-                || (pc.portico.getCalendario() != null && !pc.portico.getReglas().isEmpty()))
+            .filter(pc ->
+            {
+                Portico portico = pc.portico;
+
+                if (esTramoEspecialComoPortico(portico))
+                {
+                    return portico.getCalendario() != null && 
+                    !portico.getReglas().isEmpty();
+                }
+
+                return portico.getAutopista().getTipoCobro() == TipoCobro.TRAMO || 
+                (
+                    portico.getCalendario() != null && 
+                    !portico.getReglas().isEmpty()
+                );
+            })
             .collect(Collectors.toList());
 
         List<List<PorticoCruce>> gruposContiguos = new ArrayList<>();
@@ -147,4 +161,13 @@ public class CalculoTarifaService
     }
 
     private record PorticoCruce(Portico portico, LocalDateTime tiempo) {}
+
+    // Sirve para identificar si una autopista contramos existe un portico solo
+    // para que el sistema identificara eso mano, si aca se da altiro literal hay 1
+    // que sentido tiene
+    private boolean esTramoEspecialComoPortico(Portico portico)
+    {
+        return portico.getAutopista().getCodigo().equals("AVO1")
+            && portico.getCodigo().equals("P110");
+    }
 }
