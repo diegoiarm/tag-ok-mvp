@@ -19,4 +19,6 @@ public class PorticoTramoResponse implements TollResponse
     private String autopista;
 
     private List<TramoResponse> tramos;
+
+    private final String type = "TRAMO";
 }

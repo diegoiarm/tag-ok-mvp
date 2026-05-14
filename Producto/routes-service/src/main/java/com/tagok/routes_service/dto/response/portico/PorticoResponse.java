@@ -25,4 +25,6 @@ public class PorticoResponse implements TollResponse
 
     private List<ReglaTarifariaResponse> reglas;
     private CalendarioTarifarioResponse calendario;
+
+    private final String type = "PORTICO";
 }
