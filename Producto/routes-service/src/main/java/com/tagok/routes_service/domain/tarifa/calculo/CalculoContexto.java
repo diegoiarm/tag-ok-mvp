@@ -7,9 +7,9 @@ import com.tagok.routes_service.domain.portico.Portico;
 import com.tagok.routes_service.domain.vehiculo.TipoVehiculo;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 @Builder
 public class CalculoContexto 
 {

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.tagok.routes_service.domain.autopista.TipoCobro;
 import com.tagok.routes_service.domain.portico.Portico;
 import com.tagok.routes_service.dto.response.PorticoResponse;
 import com.tagok.routes_service.dto.response.PorticoResumenResponse;
@@ -22,7 +23,7 @@ public class PorticoService
     public List<PorticoResumenResponse> findAll()
     {
         return porticoRepository.findAll().stream()
-            .filter(p -> p.getCalendario() != null && !p.getReglas().isEmpty())
+            .filter(p -> p.getAutopista().getTipoCobro() == TipoCobro.TRAMO || (p.getCalendario() != null && !p.getReglas().isEmpty()))
             .map(porticoMapper::toResumenResponse)
             .toList();
     }

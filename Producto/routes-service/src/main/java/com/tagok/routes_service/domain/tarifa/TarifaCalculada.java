@@ -7,6 +7,6 @@ import com.tagok.routes_service.domain.vehiculo.TipoVehiculo;
 
 public record TarifaCalculada(
     BigDecimal total,
-    List<Cruce> portico,
+    List<Cruce> cruces,
     TipoVehiculo vehiculo) 
 {}

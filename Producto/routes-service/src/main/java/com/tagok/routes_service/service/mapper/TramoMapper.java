@@ -12,7 +12,6 @@ import com.tagok.routes_service.dto.request.tramo.TramoRequest;
 import com.tagok.routes_service.dto.response.CalendarioTarifarioResponse;
 import com.tagok.routes_service.dto.response.ReglaTarifariaResponse;
 import com.tagok.routes_service.dto.response.TramoResponse;
-import com.tagok.routes_service.repository.PorticoRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,26 +19,18 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TramoMapper
 {
-    private final PorticoRepository porticoRepository;
-
     private final PorticoMapper porticoMapper;
     private final ReglaTarifariaMapper reglaTarifariaMapper;
     private final CalendarioTarifarioMapper calendarioTarifarioMapper;
 
-    public Tramo fromRequest(TramoRequest request)
+    public Tramo fromRequest(TramoRequest request, Portico entrada, Portico salida)
     {
-        Portico entrada = porticoRepository.findByCodigo(request.codigoEntrada())
-            .orElseThrow(() -> new IllegalArgumentException(
-                "Pórtico entrada no encontrado"));
-
-        Portico salida = porticoRepository.findByCodigo(request.codigoSalida())
-            .orElseThrow(() -> new IllegalArgumentException(
-                "Pórtico salida no encontrado"));
-
         Tramo tramo = Tramo.builder()
             .entrada(entrada)
             .salida(salida)
-            .distanciaKm(request.distanciaKm())
+            .distanciaKm(request.distancia())
+            .area(request.area())
+            .sentido(request.sentido())
             .build();
 
         mapReglasFromRequest(request, tramo);

@@ -1,6 +1,5 @@
-package com.tagok.history_service.domain.historial;
+package com.tagok.history_service.domain;
 
-import com.tagok.history_service.domain.Dia;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

@@ -5,20 +5,19 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
-import com.tagok.routes_service.domain.portico.Portico;
-import com.tagok.routes_service.domain.tarifa.calculo.CalculadorTarifaFactory;
-import com.tagok.routes_service.domain.tarifa.calculo.CalculoContexto;
+import com.tagok.routes_service.domain.tarifa.Cruce;
+import com.tagok.routes_service.domain.tarifa.calculo.CalculoTarifaService;
+import com.tagok.routes_service.domain.tarifa.calculo.CruceRequest;
 import com.tagok.routes_service.domain.vehiculo.TipoVehiculo;
 import com.tagok.routes_service.dto.RouteSegment;
-import com.tagok.routes_service.dto.response.PorticoRouteResponse;
+import com.tagok.routes_service.dto.response.CobroRutaResponse;
 import com.tagok.routes_service.dto.response.RouteResponse;
-import com.tagok.routes_service.repository.PorticoRepository;
 import com.tagok.routes_service.repository.RouteRepository;
+import com.tagok.routes_service.service.mapper.CobroRutaMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,15 +26,8 @@ import lombok.RequiredArgsConstructor;
 public class RouteService 
 {
     private final RouteRepository routeRepository;
-    private final PorticoRepository porticoRepository;
-    private final CalculadorTarifaFactory calculadorFactory;
-
-    public RouteResponse finAllRoads()
-    {
-        return RouteResponse.builder()
-            .totalCost(BigDecimal.ZERO)
-            .build();
-    }
+    private final CalculoTarifaService calculoTarifaService;
+    private final CobroRutaMapper cobroRutaMapper;
 
     public RouteResponse getRoute(double lon1, double lat1, double lon2, double lat2) 
     {
@@ -51,83 +43,47 @@ public class RouteService
 
         LocalDateTime tiempoInicio = LocalDateTime.now();
         LocalDateTime tiempoActual = tiempoInicio;
-        List<PorticoRouteResponse> porticos = new ArrayList<>();
 
+        List<CruceRequest> crucesReq = new ArrayList<>();
         Set<Long> porticosProcesados = new HashSet<>();
 
-        for (RouteSegment s : segments) 
+        for (RouteSegment s : segments)
         {
-            if (s.getDistance() != null && s.getMaxSpeed() != null && s.getMaxSpeed() > 0) 
+            if (s.getDistance() != null && s.getMaxSpeed() != null && s.getMaxSpeed() > 0)
             {
                 double velocidadMs = s.getMaxSpeed() / 3.6;
                 long segundos = Math.round(s.getDistance() / velocidadMs);
+
                 tiempoActual = tiempoActual.plusSeconds(segundos);
             }
 
-            if (s.getPortico() != null && s.getPortico().id() != null) 
+            if (s.getPortico() != null && s.getPortico().id() != null)
             {
                 Long porticoId = s.getPortico().id();
 
-                if (porticosProcesados.contains(porticoId)) 
-                    continue;
-
-                var optional = porticoRepository.findById(porticoId);
-
-                if (optional.isPresent()) 
+                if (porticosProcesados.add(porticoId))
                 {
-                    toResponse(optional.get(), tiempoActual)
-                        .ifPresent(p -> 
-                        {
-                            porticos.add(p);
-                            porticosProcesados.add(porticoId);
-                        });
+                    crucesReq.add(new CruceRequest(porticoId, tiempoActual));
                 }
             }
         }
 
-        LocalDateTime tiempoFinal = tiempoActual;
-        BigDecimal totalCost = porticos.stream()
-                .map(PorticoRouteResponse::valor)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        List<Cruce> cruces = calculoTarifaService.calcularCruces(crucesReq, TipoVehiculo.AUTO);
+
+        List<CobroRutaResponse> cobros = cruces.stream()
+                .map(cobroRutaMapper::toResponse)
+                .toList();
+
+        BigDecimal totalCost = cruces.stream()
+            .map(Cruce::valor)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         return RouteResponse.builder()
-                .fechaHoraInicio(tiempoInicio)
-                .fechaHoraFin(tiempoFinal)
-            //    .segments(segments)
-                .totalCost(totalCost)
-                .porticos(porticos)
-                .mergedRouteGeometry(mergedGeometry)
-                .build();
-    }
-
-    private Optional<PorticoRouteResponse> toResponse(
-        Portico portico,
-        LocalDateTime horaFecha)
-    {
-        var tipoVehiculo = TipoVehiculo.AUTO;
-
-        var contexto = CalculoContexto.builder()
-            .autopista(portico.getAutopista())
-            .portico(portico)
-            .vehiculo(tipoVehiculo)
-            .fecha(horaFecha)
+            .fechaHoraInicio(tiempoInicio)
+            .fechaHoraFin(tiempoActual)
+            .totalCost(totalCost)
+            .cobros(cobros)
+            .mergedRouteGeometry(mergedGeometry)
             .build();
-
-        var strategy = calculadorFactory
-            .getStrategy(portico.getAutopista());
-
-        return strategy.calcular(contexto)
-            .map(tarifa -> new PorticoRouteResponse(
-                portico.getNombre(),
-                portico.getCodigo(),
-                portico.getAutopista().getNombre(),
-                portico.getAutopista().getCodigo(),
-                portico.getSentido(),
-                portico.getLongitud(),
-                portico.getLatitud(),
-                tarifa.tipoTarifa(),
-                tarifa.monto(),
-                horaFecha
-            ));
     }
 }

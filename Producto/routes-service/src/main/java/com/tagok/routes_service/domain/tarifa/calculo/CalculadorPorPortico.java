@@ -15,6 +15,8 @@ public class CalculadorPorPortico implements CalculadorTarifaStrategy
     {
         Portico portico = ctx.getPortico();
 
+        System.out.println("Buscando tarifa para Portico: " + portico.getCodigo());
+
         if (portico == null || portico.getCalendario() == null || portico.getReglas().isEmpty())
             return Optional.empty();
 

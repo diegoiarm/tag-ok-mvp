@@ -26,17 +26,6 @@ export interface PorticoRouteResponse
   valor: number;
   fechaHora: string;
 }
-
-export interface RouteResponse 
-{
-  segments: RouteSegment[];
-  porticos: PorticoRouteResponse[];
-  totalCost: number;
-  fechaHoraInicio: string;
-  fechaHoraFin: string;
-  mergedRouteGeometry?: string
-}
-
 export interface PorticoResumen {
   id: number;
   codigo: string;
@@ -104,4 +93,41 @@ export type PorticoResponse = {
   reglas: ReglaTarifariaResponse[];
   calendario: CalendarioTarifarioResponse;
   autopista?: string;
+};
+
+export type CobroPortico = {
+  porticoId: number;
+  nombre: string;
+  codigo: string;
+  autopista: string;
+  latitud: number;
+  longitud: number;
+  tarifa: string;
+  valor: number;
+  fechaHora: string;
+};
+
+export type CobroTramo = {
+  entradaId: number;
+  salidaId: number;
+  nombreEntrada: string;
+  nombreSalida: string;
+  autopista: string;
+  latitudEntrada: number;
+  longitudEntrada: number;
+  latitudSalida: number;
+  longitudSalida: number;
+  tarifa: string;
+  valor: number;
+  fechaHora: string;
+};
+
+export type Cobro = CobroPortico | CobroTramo;
+
+export type RouteResponse = {
+  fechaHoraInicio: string;
+  fechaHoraFin: string;
+  totalCost: number;
+  mergedRouteGeometry: string;
+  cobros: Cobro[];
 };

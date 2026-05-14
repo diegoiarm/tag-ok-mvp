@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.JsonNode;
+//import com.fasterxml.jackson.databind.JsonNode;
 import com.roony.domain.model.Bounds;
 import com.roony.domain.model.Element;
 import com.roony.domain.model.Geometry;
@@ -29,7 +29,7 @@ public class ElementMapper
 
         while (jp.nextToken() != JsonToken.END_OBJECT)
         {
-            String field = jp.getCurrentName();
+            String field = jp.currentName();
             jp.nextToken();
 
             switch (field)
@@ -78,7 +78,7 @@ public class ElementMapper
 
         while (jp.nextToken() != JsonToken.END_OBJECT)
         {
-            String field = jp.getCurrentName();
+            String field = jp.currentName();
             jp.nextToken();
 
             switch (field)
@@ -128,7 +128,7 @@ public class ElementMapper
 
             while (jp.nextToken() != JsonToken.END_OBJECT)
             {
-                String field = jp.getCurrentName();
+                String field = jp.currentName();
                 jp.nextToken();
 
                 if ("lat".equals(field))
@@ -166,7 +166,7 @@ public class ElementMapper
 
         while (jp.nextToken() != JsonToken.END_OBJECT)
         {
-            String field = jp.getCurrentName();
+            String field = jp.currentName();
             jp.nextToken();
 
             String value = jp.getValueAsString();
