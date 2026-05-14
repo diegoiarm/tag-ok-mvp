@@ -5,7 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.tagok.routes_service.dto.PorticoRuta;
-import com.tagok.routes_service.dto.RouteSegment;
+import com.tagok.routes_service.dto.response.route.RouteSegment;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

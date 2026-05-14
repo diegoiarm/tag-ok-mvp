@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.tagok.routes_service.domain.calendario.ReglaTemporal;
 import com.tagok.routes_service.dto.request.portico.ReglaTemporalRequest;
-import com.tagok.routes_service.dto.response.ReglaTemporalResponse;
+import com.tagok.routes_service.dto.response.portico.ReglaTemporalResponse;
 
 import lombok.RequiredArgsConstructor;
 

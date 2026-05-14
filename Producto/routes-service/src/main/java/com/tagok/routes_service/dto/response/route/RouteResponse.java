@@ -1,4 +1,4 @@
-package com.tagok.routes_service.dto.response;
+package com.tagok.routes_service.dto.response.route;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

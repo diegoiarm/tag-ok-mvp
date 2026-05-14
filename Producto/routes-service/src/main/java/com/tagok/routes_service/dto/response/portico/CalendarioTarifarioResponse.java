@@ -1,7 +1,6 @@
-package com.tagok.routes_service.dto.response;
+package com.tagok.routes_service.dto.response.portico;
 
 import java.util.List;
-
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

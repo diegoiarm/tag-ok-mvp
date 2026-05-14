@@ -13,9 +13,9 @@ import com.tagok.routes_service.domain.tarifa.Cruce;
 import com.tagok.routes_service.domain.tarifa.calculo.CalculoTarifaService;
 import com.tagok.routes_service.domain.tarifa.calculo.CruceRequest;
 import com.tagok.routes_service.domain.vehiculo.TipoVehiculo;
-import com.tagok.routes_service.dto.RouteSegment;
-import com.tagok.routes_service.dto.response.CobroRutaResponse;
-import com.tagok.routes_service.dto.response.RouteResponse;
+import com.tagok.routes_service.dto.response.route.CobroRutaResponse;
+import com.tagok.routes_service.dto.response.route.RouteResponse;
+import com.tagok.routes_service.dto.response.route.RouteSegment;
 import com.tagok.routes_service.repository.RouteRepository;
 import com.tagok.routes_service.service.mapper.CobroRutaMapper;
 

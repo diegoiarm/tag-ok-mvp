@@ -1,4 +1,4 @@
-package com.tagok.routes_service.dto.response;
+package com.tagok.routes_service.dto.response.portico;
 
 import java.time.LocalTime;
 

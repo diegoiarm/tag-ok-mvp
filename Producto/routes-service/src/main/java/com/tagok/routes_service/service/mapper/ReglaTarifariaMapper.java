@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.tagok.routes_service.domain.tarifa.ReglaTarifaria;
 import com.tagok.routes_service.dto.request.portico.ReglaTarifariaRequest;
-import com.tagok.routes_service.dto.response.ReglaTarifariaResponse;
+import com.tagok.routes_service.dto.response.portico.ReglaTarifariaResponse;
 
 import lombok.RequiredArgsConstructor;
 

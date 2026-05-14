@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 import com.tagok.routes_service.domain.tarifa.ValorTarifa;
 import com.tagok.routes_service.dto.request.ValorTarifaRequest;
-import com.tagok.routes_service.dto.response.ValorTarifaResponse;
+import com.tagok.routes_service.dto.response.portico.ValorTarifaResponse;
 
 @Component
 public class ValorTarifaMapper implements IEntityMapper<ValorTarifaResponse, ValorTarifaRequest, ValorTarifa>

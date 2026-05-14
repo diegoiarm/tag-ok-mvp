@@ -1,4 +1,4 @@
-package com.tagok.routes_service.dto.response;
+package com.tagok.routes_service.dto.response.portico;
 
 import java.util.List;
 
@@ -11,14 +11,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TramoResponse
+public class PorticoResponse 
 {
     private Long id;
-
-    private PorticoResumenResponse entrada;
-    private PorticoResumenResponse salida;
-
-    private double distanciaKm;
+    private String codigo;
+    private String nombre;
+    private String sentido;
+    private double latitud;
+    
+    private double longitud;
 
     private String autopista;
 

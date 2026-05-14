@@ -11,7 +11,7 @@ import com.tagok.routes_service.domain.autopista.Autopista;
 import com.tagok.routes_service.domain.portico.Portico;
 import com.tagok.routes_service.domain.tramo.Tramo;
 import com.tagok.routes_service.dto.request.autopista.AutopistaRequest;
-import com.tagok.routes_service.dto.response.AutopistaResponse;
+import com.tagok.routes_service.dto.response.autopista.AutopistaResponse;
 
 import lombok.RequiredArgsConstructor;
 

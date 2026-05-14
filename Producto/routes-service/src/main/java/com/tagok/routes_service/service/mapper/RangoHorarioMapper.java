@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 import com.tagok.routes_service.domain.calendario.RangoHorario;
 import com.tagok.routes_service.dto.request.portico.RangoHorarioRequest;
-import com.tagok.routes_service.dto.response.RangoHorarioResponse;
+import com.tagok.routes_service.dto.response.portico.RangoHorarioResponse;
 
 @Component
 public class RangoHorarioMapper implements IEntityMapper<RangoHorarioResponse, RangoHorarioRequest, RangoHorario>

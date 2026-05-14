@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component;
 import com.tagok.routes_service.domain.tarifa.Cruce;
 import com.tagok.routes_service.domain.tarifa.CrucePortico;
 import com.tagok.routes_service.domain.tarifa.CruceTramo;
-import com.tagok.routes_service.dto.response.CobroPorticoResponse;
-import com.tagok.routes_service.dto.response.CobroRutaResponse;
-import com.tagok.routes_service.dto.response.CobroTramoResponse;
+import com.tagok.routes_service.dto.response.route.CobroPorticoResponse;
+import com.tagok.routes_service.dto.response.route.CobroRutaResponse;
+import com.tagok.routes_service.dto.response.route.CobroTramoResponse;
 
 @Component
 public class CobroRutaMapper 

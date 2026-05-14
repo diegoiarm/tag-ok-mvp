@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 
 import com.tagok.routes_service.domain.portico.Portico;
 import com.tagok.routes_service.dto.request.portico.PorticoRequest;
-import com.tagok.routes_service.dto.response.CalendarioTarifarioResponse;
-import com.tagok.routes_service.dto.response.PorticoResponse;
-import com.tagok.routes_service.dto.response.PorticoResumenResponse;
-import com.tagok.routes_service.dto.response.ReglaTarifariaResponse;
+import com.tagok.routes_service.dto.response.portico.CalendarioTarifarioResponse;
+import com.tagok.routes_service.dto.response.portico.PorticoResponse;
+import com.tagok.routes_service.dto.response.portico.PorticoResumenResponse;
+import com.tagok.routes_service.dto.response.portico.ReglaTarifariaResponse;
 
 import lombok.RequiredArgsConstructor;
 

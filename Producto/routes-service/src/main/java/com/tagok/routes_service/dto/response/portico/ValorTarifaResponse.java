@@ -1,8 +1,7 @@
-package com.tagok.routes_service.dto.response;
+package com.tagok.routes_service.dto.response.portico;
 
-import java.util.List;
+import java.math.BigDecimal;
 
-import com.tagok.routes_service.domain.calendario.TipoDia;
 import com.tagok.routes_service.domain.tarifa.TipoTarifa;
 
 import lombok.AllArgsConstructor;
@@ -14,9 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReglaTemporalResponse 
+public class ValorTarifaResponse 
 {
     private TipoTarifa tipoTarifa;
-    private TipoDia tipoDia;
-    private List<RangoHorarioResponse> tramos;
+    private BigDecimal valor;
 }

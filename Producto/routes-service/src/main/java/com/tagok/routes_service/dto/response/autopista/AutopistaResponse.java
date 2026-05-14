@@ -1,8 +1,10 @@
-package com.tagok.routes_service.dto.response;
+package com.tagok.routes_service.dto.response.autopista;
 
 import java.util.List;
 
 import com.tagok.routes_service.domain.autopista.TipoCobro;
+import com.tagok.routes_service.dto.response.portico.PorticoResponse;
+import com.tagok.routes_service.dto.response.portico.TramoResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
