@@ -1,4 +1,4 @@
-package com.tagok.app.ui.map
+package com.tagok.app.ui.map.portico
 
 import android.graphics.Bitmap
 import androidx.compose.runtime.Composable
@@ -13,17 +13,23 @@ fun MapboxMapScope.PorticosLayer(
     porticos: List<PorticoResumen>,
     crossedIds: Set<Long>,
     bitmapNormal: Bitmap?,
-    bitmapActivo: Bitmap?)
+    bitmapActivo: Bitmap?,
+    onPorticoClick: (PorticoResumen) -> Unit = {})
 {
     porticos.forEach { portico ->
         val activo = portico.id in crossedIds
+
         val bitmap = if (activo) bitmapActivo else bitmapNormal
+
         if (bitmap != null)
         {
-            PointAnnotation(point = Point.fromLngLat(portico.longitud, portico.latitud))
-            {
+            PointAnnotation(point = Point.fromLngLat(portico.longitud, portico.latitud)) {
                 iconImage = IconImage(bitmap)
                 iconSize = if (activo) 1.5 else 0.5
+                interactionsState.onClicked {
+                    onPorticoClick(portico)
+                    true
+                }
             }
         }
     }

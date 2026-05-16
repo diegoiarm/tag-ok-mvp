@@ -1,14 +1,18 @@
-package com.tagok.app.ui.map
+package com.tagok.app.ui.map.portico
 
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.mapbox.maps.extension.compose.MapboxMapScope
 import com.tagok.app.R
 import com.tagok.app.domain.model.portico.PorticoResumen
 import com.tagok.app.domain.model.routes.Portico
 import com.tagok.app.domain.model.routes.Route
 import com.tagok.app.domain.model.routes.Tramo
+import com.tagok.app.ui.map.vectorToBitmap
 
 @Composable
 fun MapboxMapScope.PorticosContainer(
@@ -29,10 +33,20 @@ fun MapboxMapScope.PorticosContainer(
         }?.toSet() ?: emptySet()
     }
 
+    var porticoSeleccionado by remember { mutableStateOf<PorticoResumen?>(null) }
+
     PorticosLayer(
         porticos = porticos,
         crossedIds = crossedIds,
         bitmapNormal = bitmapNormal,
         bitmapActivo = bitmapActivo,
+        onPorticoClick = { porticoSeleccionado = it },
     )
+
+    porticoSeleccionado?.let { portico ->
+        PorticoDetail(
+            porticoId = portico.id,
+            onDismiss = { porticoSeleccionado = null },
+        )
+    }
 }
