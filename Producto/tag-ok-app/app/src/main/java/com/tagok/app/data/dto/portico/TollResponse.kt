@@ -20,7 +20,7 @@ object TollResponseSerializer : JsonContentPolymorphicSerializer<TollResponse>(T
         return when (type)
         {
             "PORTICO" -> PorticoResponse.serializer()
-            "TRAMO" -> TramoResponse.serializer()
+            "TRAMO" -> PorticoTramoResponse.serializer()
             else -> throw IllegalArgumentException("Tipo de TollResponse desconocido: $type")
         }
     }

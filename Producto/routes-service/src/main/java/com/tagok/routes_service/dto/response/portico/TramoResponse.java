@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TramoResponse implements TollResponse
+public class TramoResponse
 {
     private String entrada;
     private String salida;
@@ -17,6 +17,4 @@ public class TramoResponse implements TollResponse
     private List<ReglaTarifariaResponse> reglas;
 
     private CalendarioTarifarioResponse calendario;
-
-    private final String type = "TRAMO";
 }

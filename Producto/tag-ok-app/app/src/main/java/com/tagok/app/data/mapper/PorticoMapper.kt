@@ -3,6 +3,7 @@ package com.tagok.app.data.mapper
 import com.tagok.app.data.dto.portico.CalendarioTarifarioResponse
 import com.tagok.app.data.dto.portico.PorticoResponse
 import com.tagok.app.data.dto.portico.PorticoResumenResponse
+import com.tagok.app.data.dto.portico.PorticoTramoResponse
 import com.tagok.app.data.dto.portico.RangoHorarioResponse
 import com.tagok.app.data.dto.portico.ReglaTarifariaResponse
 import com.tagok.app.data.dto.portico.ReglaTemporalResponse
@@ -14,12 +15,13 @@ import com.tagok.app.data.dto.route.CobroRutaResponse
 import com.tagok.app.data.dto.route.CobroTramoResponse
 import com.tagok.app.domain.model.portico.CalendarioTarifario
 import com.tagok.app.domain.model.portico.PorticoResumen
+import com.tagok.app.domain.model.portico.PorticoTramoType
 import com.tagok.app.domain.model.portico.PorticoType
 import com.tagok.app.domain.model.portico.RangoHorario
 import com.tagok.app.domain.model.portico.ReglaTarifaria
 import com.tagok.app.domain.model.portico.ReglaTemporal
 import com.tagok.app.domain.model.portico.TollType
-import com.tagok.app.domain.model.portico.TramoType
+import com.tagok.app.domain.model.portico.TramoPortico
 import com.tagok.app.domain.model.portico.ValorTarifa
 import com.tagok.app.domain.model.routes.Portico
 import com.tagok.app.domain.model.routes.Toll
@@ -94,34 +96,36 @@ fun TollResponse.toDomain(): TollType
             )
         }
 
-        is TramoResponse -> {
-            TramoType(
-                entrada,
-                salida,
-                reglas.map { it.toDomain() },
-                calendario.toDomain()
+        is PorticoTramoResponse -> {
+            PorticoTramoType(
+                id,
+                codigo,
+                nombre,
+                latitud,
+                longitud,
+                autopista,
+                tramos.map { it.toDomain() }
             )
         }
     }
 }
 
-fun ReglaTarifariaResponse.toDomain(): ReglaTarifaria
+fun TramoResponse.toDomain(): TramoPortico
 {
-    return ReglaTarifaria(
-        aplicaA.map { it.toVehiculoDisplay() },
-        valores.map { it.toDomain() }
+    return TramoPortico(
+        entrada,
+        salida,
+        reglas.map { it.toDomain() },
+        calendario.toDomain()
     )
 }
 
-private fun String.toVehiculoDisplay() = when (this)
+fun ReglaTarifariaResponse.toDomain(): ReglaTarifaria
 {
-    "CAMION_REMOLQUE" -> "Camión con remolque"
-    "CAMION" -> "Camión"
-    "CAMIONETA" -> "Camioneta"
-    "AUTO" -> "Auto"
-    "MOTO" -> "Moto"
-    "BUS" -> "Bus"
-    else -> this.lowercase().replaceFirstChar { it.uppercase() }
+    return ReglaTarifaria(
+        aplicaA,
+        valores.map { it.toDomain() }
+    )
 }
 
 fun ValorTarifaResponse.toDomain(): ValorTarifa

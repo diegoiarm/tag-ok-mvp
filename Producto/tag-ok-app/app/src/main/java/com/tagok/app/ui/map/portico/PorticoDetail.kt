@@ -9,14 +9,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -27,18 +28,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.tagok.app.data.repository.PorticoRepository
+import com.tagok.app.domain.model.portico.PorticoTramoType
 import com.tagok.app.domain.model.portico.PorticoType
-import com.tagok.app.domain.model.portico.ReglaTarifaria
 import com.tagok.app.domain.model.portico.TollType
-import com.tagok.app.domain.model.portico.TramoType
+import com.tagok.app.domain.model.portico.TramoPortico
 import com.tagok.app.ui.theme.Blue40
 import com.tagok.app.ui.theme.InputBackground
 import com.tagok.app.ui.theme.TextSecondary
@@ -95,7 +93,10 @@ fun PorticoDetail(
                     style = MaterialTheme.typography.bodySmall,
                     color = TextSecondary,)
 
-                uiState.detalle != null -> PorticoDetalleContent(detalle = uiState.detalle!!)
+                uiState.detalle != null -> PorticoDetalleContent(
+                    detalle = uiState.detalle!!,
+                    tipoTarifa = uiState.tipoTarifaActual!!,
+                    tipoAuto = uiState.tipoVehiculo!!)
             }
 
             Spacer(Modifier.height(24.dp))
@@ -104,19 +105,19 @@ fun PorticoDetail(
 }
 
 @Composable
-fun PorticoDetalleContent(detalle: TollType)
+fun PorticoDetalleContent(detalle: TollType, tipoTarifa: String, tipoAuto: String)
 {
     when (detalle)
     {
-        is PorticoType -> PorticoTypeContent(detalle)
-        is TramoType   -> TramoTypeContent(detalle)
+        is PorticoType -> PorticoTypeContent(detalle, tipoTarifa, tipoAuto)
+        is PorticoTramoType   -> PorticoTramoContent(detalle, tipoTarifa, tipoAuto)
     }
 }
 
 // ── PorticoType ──────────────────────────────────────────────────────────────
 
 @Composable
-private fun PorticoTypeContent(detalle: PorticoType)
+private fun PorticoTypeContent(detalle: PorticoType, tipoTarifa: String, tipoAuto: String)
 {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp))
     {
@@ -126,22 +127,58 @@ private fun PorticoTypeContent(detalle: PorticoType)
         DetalleRow("Código",    detalle.codigo)
 
         Spacer(Modifier.height(4.dp))
-        ReglasTarifariasCard(reglas = detalle.reglas, calendario = detalle.calendario)
+        ReglasTarifariasCard(
+            reglas = detalle.reglas,
+            calendario = detalle.calendario,
+            tipoTarifa,
+            tipoAuto)
     }
 }
 
 // ── TramoType ────────────────────────────────────────────────────────────────
 
 @Composable
-private fun TramoTypeContent(detalle: TramoType)
+private fun PorticoTramoContent(
+    detalle: PorticoTramoType,
+    tipoTarifa: String,
+    tipoAuto: String)
 {
-    Column(verticalArrangement = Arrangement.spacedBy(10.dp))
+    Column(
+        modifier = Modifier.verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(10.dp))
     {
-        DetalleRow("Entrada", detalle.entrada)
-        DetalleRow("Salida",  detalle.salida)
+        DetalleRow("Nombre",    detalle.nombre)
+        DetalleRow("Autopista", detalle.autopista)
+        DetalleRow("Código",    detalle.codigo)
 
         Spacer(Modifier.height(4.dp))
-        ReglasTarifariasCard(reglas = detalle.reglas, calendario = detalle.calendario)
+
+        Text(
+            text = "Tramos",
+            style = MaterialTheme.typography.labelMedium,
+            color = TextSecondary)
+
+        detalle.tramos.forEach { tramo ->
+            Card(
+                shape = RoundedCornerShape(12.dp),
+                colors = CardDefaults.cardColors(containerColor = InputBackground))
+            {
+                Column(modifier = Modifier.padding(12.dp))
+                {
+                    DetalleRow("Entrada", tramo.entrada)
+                    DetalleRow("Salida",  tramo.salida)
+
+                    Spacer(Modifier.height(6.dp))
+
+                    ReglasTarifariasCard(
+                        reglas = tramo.reglas,
+                        calendario = tramo.calendario,
+                        tipoTarifaActual = tipoTarifa,
+                        tipoAuto = tipoAuto)
+                }
+            }
+            Spacer(Modifier.height(8.dp))
+        }
     }
 }
 
