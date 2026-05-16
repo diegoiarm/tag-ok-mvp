@@ -93,7 +93,9 @@ public class PorticoMapper
             .filter(t -> t.getEntrada().equals(portico) || t.getSalida().equals(portico))
             .map(t -> new TramoResponse(
                 t.getEntrada().getCodigo(),
+                t.getEntrada().getNombre(),
                 t.getSalida().getCodigo(),
+                t.getSalida().getNombre(),
                 getReglas(t.getReglas()),
                 calendarioTarifarioMapper.toResponse(t.getCalendario())
             ))

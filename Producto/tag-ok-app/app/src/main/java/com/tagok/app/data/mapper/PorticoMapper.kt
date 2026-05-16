@@ -116,7 +116,9 @@ fun TramoResponse.toDomain(): TramoPortico
 {
     return TramoPortico(
         entrada,
+        nombreEntrada,
         salida,
+        nombreSalida,
         reglas.map { it.toDomain() },
         calendario.toDomain()
     )

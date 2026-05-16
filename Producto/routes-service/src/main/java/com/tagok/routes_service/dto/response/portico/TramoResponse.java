@@ -12,7 +12,9 @@ import lombok.NoArgsConstructor;
 public class TramoResponse
 {
     private String entrada;
+    private String nombreEntrada;
     private String salida;
+    private String nombreSalida;
 
     private List<ReglaTarifariaResponse> reglas;
 

@@ -128,8 +128,8 @@ private fun PorticoTramoContent(
             {
                 Column(modifier = Modifier.padding(12.dp))
                 {
-                    DetalleRow("Entrada", tramo.entrada)
-                    DetalleRow("Salida", tramo.salida)
+                    DetalleRow("Entrada", "${tramo.nombreEntrada} (${tramo.entrada})")
+                    DetalleRow("Salida", "${tramo.nombreSalida} (${tramo.salida})")
 
                     Spacer(Modifier.height(6.dp))
 
