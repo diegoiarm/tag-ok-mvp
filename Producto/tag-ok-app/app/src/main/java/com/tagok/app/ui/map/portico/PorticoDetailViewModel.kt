@@ -25,6 +25,7 @@ import kotlinx.datetime.toLocalDateTime
 data class PorticoDetailUiState(
     val detalle: TollType? = null,
     val tipoTarifaActual: String? = null,
+    val diaActual: String? = null,
     val tipoVehiculo: String? = null,
     val isLoading: Boolean = false,
     val error: String? = null)
@@ -40,11 +41,12 @@ class PorticoDetailViewModel(private val porticoRepository: PorticoRepository) :
             _uiState.update { it.copy(isLoading = true, error = null) }
             runCatching { porticoRepository.getPorticoById(id) }
                 .onSuccess { detalle ->
+                    val (tarifa, dia) = resolverTipoTarifaYDia(detalle)
                     _uiState.update {
                         it.copy(
                             detalle = detalle,
-                            tipoTarifaActual = resolverTipoTarifaActual(detalle),
-                            tipoVehiculo = "AUTO",
+                            tipoTarifaActual = tarifa,
+                            diaActual = dia,
                             isLoading = false,
                         )
                     }
@@ -56,10 +58,11 @@ class PorticoDetailViewModel(private val porticoRepository: PorticoRepository) :
         }
     }
 
-    private fun resolverTipoTarifaActual(detalle: TollType): String
+    private fun resolverTipoTarifaYDia(detalle: TollType): Pair<String, String>
     {
         val ahora = Clock.System.now()
             .toLocalDateTime(TimeZone.of("America/Santiago"))
+
         val horaActual = ahora.time
         val diaSemana  = ahora.dayOfWeek
 
@@ -78,18 +81,14 @@ class PorticoDetailViewModel(private val porticoRepository: PorticoRepository) :
                 ?.tipoTarifa
         }
 
-        return when (detalle)
+        val tarifa = when (detalle)
         {
-            is PorticoType -> {
-                buscarEnCalendario(detalle.calendario) ?: "TBFP"
-            }
-
-            is PorticoTramoType -> {
-                detalle.tramos.firstNotNullOfOrNull { tramo ->
-                    buscarEnCalendario(tramo.calendario)
-                } ?: "TBFP"
-            }
+            is PorticoType -> buscarEnCalendario(detalle.calendario) ?: "TBFP"
+            is PorticoTramoType -> detalle.tramos.firstNotNullOfOrNull { tramo ->
+                buscarEnCalendario(tramo.calendario)
+            } ?: "TBFP"
         }
+        return tarifa to tipoDia
     }
 
     companion object {

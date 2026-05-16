@@ -117,12 +117,6 @@ fun MapScreen(
     var currentZoom by remember { mutableStateOf(12.5) }
     var userLocation by remember { mutableStateOf<Point?>(null) }
 
-    LaunchedEffect(Unit) { viewModel.setVehiculo(vehiculo) }
-
-    DisposableEffect(Unit) {
-        onDispose { viewModel.resetMap() }
-    }
-
     val mapViewportState = rememberMapViewportState {
         setCameraOptions {
             center(SANTIAGO)

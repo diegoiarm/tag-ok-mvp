@@ -4,6 +4,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -16,6 +17,10 @@ import com.tagok.app.ui.map.portico.DetalleRow
 import com.tagok.app.ui.theme.Blue40
 import com.tagok.app.ui.theme.InputBackground
 import com.tagok.app.ui.theme.TextSecondary
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.toJavaLocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @Composable
 fun PorticoRouteDetail(
@@ -24,8 +29,8 @@ fun PorticoRouteDetail(
 {
     val title = when (toll)
     {
-        is Portico -> "Pórtico: ${toll.nombre} (${toll.codigo})"
-        is Tramo   -> "Tramo: ${toll.nombreEntrada} (${toll.codigoEntrada}) → ${toll.nombreSalida} (${toll.codigoSalida})"
+        is Portico -> "${toll.nombre} (${toll.codigo})"
+        is Tramo   -> "${toll.nombreEntrada} (${toll.codigoEntrada}) → ${toll.nombreSalida} (${toll.codigoSalida})"
     }
 
     BasePorticoBottomSheet(title = title, onDismiss = onDismiss)
@@ -55,7 +60,8 @@ fun PorticoDetailContent(portico: Portico)
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(containerColor = InputBackground))
         {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.padding(16.dp))
+            {
                 DetalleRow("Autopista", portico.autopista)
                 HorizontalDivider(
                     modifier = Modifier.padding(vertical = 8.dp),
@@ -90,8 +96,8 @@ fun PorticoDetailContent(portico: Portico)
         }
 
         // Fecha (si el campo está disponible, descomentá la siguiente línea)
-        // Spacer(Modifier.height(4.dp))
-        // DetalleRow("Fecha", portico.fechaHora)
+        Spacer(Modifier.height(4.dp))
+        fechaHoraEstimadaLayer(portico.fechaHora)
     }
 }
 
@@ -108,7 +114,8 @@ fun TramoDetailContent(tramo: Tramo)
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(containerColor = InputBackground))
         {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.padding(16.dp))
+            {
                 DetalleRow("Autopista", tramo.autopista)
                 HorizontalDivider(
                     modifier = Modifier.padding(vertical = 8.dp),
@@ -141,5 +148,40 @@ fun TramoDetailContent(tramo: Tramo)
                     color = Blue40)
             }
         }
+        Spacer(Modifier.height(4.dp))
+        fechaHoraEstimadaLayer(tramo.fechaHora)
     }
+}
+
+@Composable
+private fun fechaHoraEstimadaLayer(fechaHora: LocalDateTime)
+{
+    val textoFormateado = remember(fechaHora) { fechaHora.formatoBonito() }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant))
+    {
+        Column(modifier = Modifier.padding(12.dp))
+        {
+            Text(
+                text = "Fecha de cruce estimada",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.outline)
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = textoFormateado,
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+    }
+}
+
+private fun LocalDateTime.formatoBonito(): String
+{
+    val javaDateTime = this.toJavaLocalDateTime()
+    val formatter = DateTimeFormatter.ofPattern("EEEE d 'de' MMMM 'de' yyyy, HH:mm", Locale("es"))
+    return javaDateTime.format(formatter)
 }

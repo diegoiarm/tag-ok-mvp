@@ -59,20 +59,6 @@ fun BasePorticoBottomSheet(
                     fontWeight = FontWeight.Bold,
                     color = Blue40,
                     modifier = Modifier.weight(1f))
-
-                IconButton(
-                    onClick = onDismiss,
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clip(CircleShape)
-                        .background(TextSecondary.copy(alpha = 0.1f)))
-                {
-                    Icon(
-                        imageVector = Icons.Filled.Close,
-                        contentDescription = "Cerrar",
-                        tint = TextSecondary,
-                        modifier = Modifier.size(18.dp))
-                }
             }
 
             HorizontalDivider(

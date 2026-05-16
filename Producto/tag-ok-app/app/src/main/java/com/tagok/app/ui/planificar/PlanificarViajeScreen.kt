@@ -71,9 +71,11 @@ private fun flyToCurrentLocation(context: Context, mapViewportState: com.mapbox.
 fun PlanificarViajeScreen(
     vehiculo: String = "AUTO",
     onBack: () -> Unit = {},
-    viewModel: MapViewModel = viewModel(factory = MapViewModel.Factory))
+    mapViewModel: MapViewModel = viewModel(factory = MapViewModel.Factory),
+    planificarViajeViewModel: PlanificarViajeViewModel = viewModel(factory = PlanificarViajeViewModel.Factory))
 {
-    val uiState by viewModel.uiState.collectAsState()
+    val mapUiState by mapViewModel.uiState.collectAsState()
+    val planificarUiState by planificarViajeViewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     var currentZoom by remember { mutableStateOf(11.5) }
@@ -87,7 +89,7 @@ fun PlanificarViajeScreen(
         }
     }
 
-    val route = uiState.route
+    val route = planificarUiState.singleRoute
     val routePoints = remember(route) {
         route?.points?.map { Point.fromLngLat(it.lon, it.lat) } ?: emptyList()
     }
@@ -145,12 +147,12 @@ fun PlanificarViajeScreen(
     }
 
     // ── Side effects ─────────────────────────────────────────────────────────
-    LaunchedEffect(Unit) { viewModel.setVehiculo(vehiculo) }
-    DisposableEffect(Unit) { onDispose { viewModel.resetMap() } }
-    LaunchedEffect(uiState.error) {
-        uiState.error?.let {
+    LaunchedEffect(Unit) { planificarViajeViewModel.setVehiculo(vehiculo) }
+    DisposableEffect(Unit) { onDispose { planificarViajeViewModel.resetMap() } }
+    LaunchedEffect(planificarUiState.error) {
+        planificarUiState.error?.let {
             snackbarHostState.showSnackbar(it)
-            viewModel.clearError()
+            planificarViajeViewModel.clearError()
         }
     }
 
@@ -211,19 +213,9 @@ fun PlanificarViajeScreen(
                     lineOpacity = 0.9
                 }
 
-            val crossedIds: Set<Long> = remember(route?.tolls) {
-                route?.tolls?.flatMap { toll ->
-                    when (toll)
-                    {
-                        is Portico -> listOf(toll.porticoId)
-                        is Tramo  -> listOf(toll.entradaId, toll.salidaId)
-                    }
-                }?.toSet() ?: emptySet()
-            }
-
             PorticosContainer(
                 context = context,
-                porticos = uiState.porticos,
+                porticos = mapUiState.porticos,
                 route = route)
         }
 
@@ -270,11 +262,11 @@ fun PlanificarViajeScreen(
             buscandoDestino = buscandoDestino,
             route = route,
             hasRoutePoints = routePoints.isNotEmpty(),
-            isLoadingRoute = uiState.isLoadingRoute,
+            isLoadingRoute = planificarUiState.isLoadingRoute,
             onCalcular = {
                 val o = origenSeleccionado ?: return@RouteBottomCard
                 val d = destinoSeleccionado ?: return@RouteBottomCard
-                viewModel.calculateRoute(lon1 = o.lon, lat1 = o.lat, lon2 = d.lon, lat2 = d.lat)
+                planificarViajeViewModel.calculateRoute(lon1 = o.lon, lat1 = o.lat, lon2 = d.lon, lat2 = d.lat)
             },
             onUsarEjemplo = {
                 origenText = EJEMPLO_ORIGEN.placeName

@@ -46,6 +46,7 @@ fun ReglasTarifariasCard(
     reglas: List<ReglaTarifaria>,
     calendario: CalendarioTarifario,
     tipoTarifaActual: String,
+    diaActual: String?,
     tipoAuto: String)
 {
     val calendarioPorTipo: Map<String, List<ReglaTemporal>> = remember(calendario) {
@@ -79,7 +80,8 @@ fun ReglasTarifariasCard(
                             tipoTarifa = valor.tipoTarifa,
                             monto = valor.valor,
                             reglasCalendario = calendarioPorTipo[valor.tipoTarifa] ?: emptyList(),
-                            esActual = valor.tipoTarifa == tipoTarifaActual && regla.aplicaA.contains(tipoAuto))
+                            esActual = valor.tipoTarifa == tipoTarifaActual && regla.aplicaA.contains(tipoAuto),
+                            diaActual = diaActual)
                     }
                 }
                 if (index < reglas.lastIndex)
@@ -105,7 +107,8 @@ private fun TarifaRow(
     tipoTarifa: String,
     monto: Double,
     reglasCalendario: List<ReglaTemporal>,
-    esActual: Boolean)
+    esActual: Boolean,
+    diaActual: String?)
 {
     var expandido by remember { mutableStateOf(esActual) }
     val tieneCalendario = reglasCalendario.isNotEmpty()
@@ -151,10 +154,11 @@ private fun TarifaRow(
                 color = Blue40)
         }
 
-        AnimatedVisibility(visible = expandido) {
+        AnimatedVisibility(visible = expandido)
+        {
             CalendarioTarifaContent(
                 reglas = reglasCalendario,
-                tipoTarifaActual = if (esActual) tipoTarifa else null)
+                diaActual = diaActual)
         }
     }
 }
@@ -162,7 +166,7 @@ private fun TarifaRow(
 @Composable
 private fun CalendarioTarifaContent(
     reglas: List<ReglaTemporal>,
-    tipoTarifaActual: String?)
+    diaActual: String?)
 {
     Column(
         modifier = Modifier
@@ -171,14 +175,26 @@ private fun CalendarioTarifaContent(
         verticalArrangement = Arrangement.spacedBy(6.dp))
     {
         reglas.forEach { regla ->
-            Column(verticalArrangement = Arrangement.spacedBy(2.dp))
+            val esDiaActual = regla.tipoDia == diaActual
+
+            val fondoFila = if (esDiaActual)
+                Modifier
+                    .background(
+                        Blue40.copy(alpha = 0.1f),
+                        RoundedCornerShape(6.dp)
+                    )
+                    .padding(4.dp)
+            else Modifier
+
+            Column(
+                modifier = fondoFila,
+                verticalArrangement = Arrangement.spacedBy(2.dp))
             {
                 Text(
                     text = regla.tipoDia,
                     style = MaterialTheme.typography.labelSmall,
-                    fontWeight = if (tipoTarifaActual != null) FontWeight.Bold else FontWeight.Medium,
-                    color = Blue40
-                )
+                    fontWeight = if (esDiaActual) FontWeight.Bold else FontWeight.Medium,
+                    color = if (esDiaActual) Blue40 else TextSecondary)
 
                 regla.tramos.forEach { tramo ->
                     Text(

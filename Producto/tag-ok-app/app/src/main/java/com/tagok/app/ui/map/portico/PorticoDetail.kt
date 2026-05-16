@@ -33,15 +33,13 @@ import com.tagok.app.ui.theme.Blue40
 import com.tagok.app.ui.theme.InputBackground
 import com.tagok.app.ui.theme.TextSecondary
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PorticoDetail(
     porticoId: Long,
     onDismiss: () -> Unit,
-    viewModel: PorticoDetailViewModel = viewModel(factory = PorticoDetailViewModel.Factory)
-) {
+    viewModel: PorticoDetailViewModel = viewModel(factory = PorticoDetailViewModel.Factory))
+{
     val uiState by viewModel.uiState.collectAsState()
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     LaunchedEffect(porticoId) { viewModel.load(porticoId) }
 
@@ -64,24 +62,31 @@ fun PorticoDetail(
 
             uiState.detalle != null -> PorticoDetalleContent(
                 detalle = uiState.detalle!!,
-                tipoTarifa = uiState.tipoTarifaActual!!,
-                tipoAuto = uiState.tipoVehiculo!!)
+                tipoTarifa = uiState.tipoTarifaActual ?: "TBFP",
+                diaActual = uiState.diaActual,
+                tipoAuto = uiState.tipoVehiculo ?: "AUTO")
         }
     }
 }
 
 @Composable
-fun PorticoDetalleContent(detalle: TollType, tipoTarifa: String, tipoAuto: String) {
-    when (detalle) {
-        is PorticoType -> PorticoTypeContent(detalle, tipoTarifa, tipoAuto)
-        is PorticoTramoType -> PorticoTramoContent(detalle, tipoTarifa, tipoAuto)
+fun PorticoDetalleContent(
+    detalle: TollType,
+    tipoTarifa: String,
+    diaActual: String?,
+    tipoAuto: String)
+{
+    when (detalle)
+    {
+        is PorticoType -> PorticoTypeContent(detalle, tipoTarifa, diaActual, tipoAuto)
+        is PorticoTramoType -> PorticoTramoContent(detalle, tipoTarifa, diaActual, tipoAuto)
     }
 }
 
 // ── PorticoType ──────────────────────────────────────────────────────────────
 
 @Composable
-private fun PorticoTypeContent(detalle: PorticoType, tipoTarifa: String, tipoAuto: String) {
+private fun PorticoTypeContent(detalle: PorticoType, tipoTarifa: String, diaActual: String?, tipoAuto: String) {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp))
     {
         DetalleRow("Nombre", detalle.nombre)
@@ -94,6 +99,7 @@ private fun PorticoTypeContent(detalle: PorticoType, tipoTarifa: String, tipoAut
             reglas = detalle.reglas,
             calendario = detalle.calendario,
             tipoTarifa,
+            diaActual,
             tipoAuto)
     }
 }
@@ -104,8 +110,9 @@ private fun PorticoTypeContent(detalle: PorticoType, tipoTarifa: String, tipoAut
 private fun PorticoTramoContent(
     detalle: PorticoTramoType,
     tipoTarifa: String,
-    tipoAuto: String
-) {
+    diaActual: String?,
+    tipoAuto: String)
+{
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(10.dp))
@@ -137,7 +144,8 @@ private fun PorticoTramoContent(
                         reglas = tramo.reglas,
                         calendario = tramo.calendario,
                         tipoTarifaActual = tipoTarifa,
-                        tipoAuto = tipoAuto
+                        tipoAuto = tipoAuto,
+                        diaActual = diaActual
                     )
                 }
             }
