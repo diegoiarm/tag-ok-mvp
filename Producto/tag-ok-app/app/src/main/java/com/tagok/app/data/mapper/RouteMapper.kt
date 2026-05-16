@@ -1,10 +1,8 @@
 package com.tagok.app.data.mapper
 
-import com.tagok.app.data.dto.PorticoRuta
-import com.tagok.app.data.dto.RouteResponse
-import com.tagok.app.domain.model.Point
-import com.tagok.app.domain.model.Portico
-import com.tagok.app.domain.model.Route
+import com.tagok.app.data.dto.route.RouteResponse
+import com.tagok.app.domain.model.routes.Point
+import com.tagok.app.domain.model.routes.Route
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
@@ -17,21 +15,8 @@ fun RouteResponse.toDomain(): Route
 {
     return Route(
         points = parseGeometry(mergedRouteGeometry),
-        totalCost = totalCost,
-        porticos = porticos.map { it.toDomain() }
-    )
-}
-
-fun PorticoRuta.toDomain(): Portico {
-    return Portico(
-        codigo = codigo,
-        nombre = nombre,
-        sentido = sentido,
-        autopista = autopista,
-        latitud = latitud,
-        longitud = longitud,
-        tarifa = tarifa,
-        valor = valor
+        tolls = cobros.map { it.toDomain() },
+        totalCost = totalCost
     )
 }
 

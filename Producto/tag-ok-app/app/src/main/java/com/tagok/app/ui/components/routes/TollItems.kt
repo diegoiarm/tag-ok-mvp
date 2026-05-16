@@ -1,4 +1,4 @@
-package com.tagok.app.ui.planificar
+package com.tagok.app.ui.components.routes
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column

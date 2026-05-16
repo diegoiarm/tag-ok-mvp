@@ -1,4 +1,4 @@
-package com.tagok.app.domain.model
+package com.tagok.app.domain.model.routes
 
 import kotlinx.datetime.LocalDateTime
 

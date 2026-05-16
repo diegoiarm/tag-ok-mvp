@@ -1,3 +1,3 @@
-package com.tagok.app.domain.model
+package com.tagok.app.domain.model.routes
 
 sealed class Toll

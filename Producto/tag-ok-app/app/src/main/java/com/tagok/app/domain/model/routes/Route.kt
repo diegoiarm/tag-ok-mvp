@@ -1,4 +1,4 @@
-package com.tagok.app.domain.model
+package com.tagok.app.domain.model.routes
 
 data class Route(
     val points: List<Point>,

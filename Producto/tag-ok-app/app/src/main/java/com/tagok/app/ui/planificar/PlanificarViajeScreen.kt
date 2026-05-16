@@ -8,10 +8,7 @@ import android.location.LocationManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -50,8 +47,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -87,33 +82,29 @@ import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportS
 import com.mapbox.maps.extension.compose.annotation.IconImage
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 import com.mapbox.maps.extension.compose.annotation.generated.PolylineAnnotation
+import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotation
 import com.tagok.app.R
 import com.tagok.app.data.GeocodeSuggestion
 import com.tagok.app.data.GeocodingRepository
+import com.tagok.app.domain.model.routes.Portico
+import com.tagok.app.domain.model.routes.Tramo
+import com.tagok.app.ui.components.map.MapControls
+import com.tagok.app.ui.components.routes.TollItem
 import com.tagok.app.ui.map.MapViewModel
 import com.tagok.app.ui.map.vectorToBitmap
 import com.tagok.app.ui.theme.Blue40
 import com.tagok.app.ui.theme.InputBackground
 import com.tagok.app.ui.theme.TextSecondary
 import kotlinx.coroutines.delay
-import java.text.NumberFormat
-import java.util.Locale
 
 private val SANTIAGO = Point.fromLngLat(-70.6483, -33.4569)
 
-private val EJEMPLO_ORIGEN = GeocodeSuggestion(
-    placeName = "Quilicura, Santiago",
-    lon = -70.736149,
-    lat = -33.360303,
-)
-private val EJEMPLO_DESTINO = GeocodeSuggestion(
-    placeName = "Las Condes, Santiago",
-    lon = -70.526799,
-    lat = -33.389758,
-)
+private val EJEMPLO_ORIGEN = GeocodeSuggestion(placeName = "Inicio", lon = -70.701013, lat = -33.596694)
+private val EJEMPLO_DESTINO = GeocodeSuggestion(placeName = "Fin", lon = -70.565223, lat = -33.430858)
 
 @SuppressLint("MissingPermission")
-private fun flyToCurrentLocation(context: Context, mapViewportState: MapViewportState) {
+private fun flyToCurrentLocation(context: Context, mapViewportState: com.mapbox.maps.extension.compose.animation.viewport.MapViewportState)
+{
     val lm = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
     val location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         ?: lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
@@ -124,29 +115,6 @@ private fun flyToCurrentLocation(context: Context, mapViewportState: MapViewport
                 .center(Point.fromLngLat(it.longitude, it.latitude))
                 .zoom(15.0)
                 .build()
-        )
-    }
-}
-
-@Composable
-private fun MapControlButton(
-    icon: ImageVector,
-    contentDescription: String,
-    onClick: () -> Unit,
-) {
-    Surface(
-        onClick = onClick,
-        modifier = Modifier
-            .size(44.dp)
-            .shadow(4.dp, CircleShape),
-        shape = CircleShape,
-        color = Color.White,
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = contentDescription,
-            modifier = Modifier.padding(10.dp),
-            tint = Color(0xFF374151),
         )
     }
 }
@@ -176,39 +144,41 @@ fun PlanificarViajeScreen(
         route?.points?.map { Point.fromLngLat(it.lon, it.lat) } ?: emptyList()
     }
 
+    // ── Geocoding state ──────────────────────────────────────────────────────
+    var origenText by rememberSaveable { mutableStateOf("") }
+    var origenSeleccionado by remember { mutableStateOf<GeocodeSuggestion?>(null) }
+    var origenSugerencias by remember { mutableStateOf<List<GeocodeSuggestion>>(emptyList()) }
+    var buscandoOrigen by remember { mutableStateOf(false) }
+
+    var destinoText by rememberSaveable { mutableStateOf("") }
+    var destinoSeleccionado by remember { mutableStateOf<GeocodeSuggestion?>(null) }
+    var destinoSugerencias by remember { mutableStateOf<List<GeocodeSuggestion>>(emptyList()) }
+    var buscandoDestino by remember { mutableStateOf(false) }
+
+    // ── Permissions ──────────────────────────────────────────────────────────
     val permissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { granted ->
-        if (granted) flyToCurrentLocation(context, mapViewportState)
-    }
+        ActivityResultContracts.RequestPermission())
+    { granted -> if (granted) flyToCurrentLocation(context, mapViewportState) }
 
-    fun requestLocation() {
+    fun requestLocation()
+    {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
-            == PackageManager.PERMISSION_GRANTED
-        ) {
+            == PackageManager.PERMISSION_GRANTED)
             flyToCurrentLocation(context, mapViewportState)
-        } else {
+        else
             permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-        }
     }
 
+    // ── Camera helpers ───────────────────────────────────────────────────────
     fun flyToPortico(lat: Double, lon: Double)
     {
         mapViewportState.easeTo(
-            CameraOptions.Builder()
-                .center(Point.fromLngLat(lon, lat))
-                .zoom(16.0)
-                .build()
-        )
+            CameraOptions.Builder().center(Point.fromLngLat(lon, lat)).zoom(16.0).build())
     }
 
     fun fitRoute()
     {
-        val points = route?.points ?: return
-
-        if (points.isEmpty())
-            return
-
+        val points = route?.points?.takeIf { it.isNotEmpty() } ?: return
         val lons = points.map { it.lon }
         val lats = points.map { it.lat }
         val span = maxOf(lons.max() - lons.min(), lats.max() - lats.min())
@@ -223,22 +193,10 @@ fun PlanificarViajeScreen(
                     span < 0.3  -> 10.0
                     else        -> 9.0
                 })
-                .build()
-        )
+                .build())
     }
 
-    // Origen
-    var origenText by rememberSaveable { mutableStateOf("") }
-    var origenSeleccionado by remember { mutableStateOf<GeocodeSuggestion?>(null) }
-    var origenSugerencias by remember { mutableStateOf<List<GeocodeSuggestion>>(emptyList()) }
-    var buscandoOrigen by remember { mutableStateOf(false) }
-
-    // Destino
-    var destinoText by rememberSaveable { mutableStateOf("") }
-    var destinoSeleccionado by remember { mutableStateOf<GeocodeSuggestion?>(null) }
-    var destinoSugerencias by remember { mutableStateOf<List<GeocodeSuggestion>>(emptyList()) }
-    var buscandoDestino by remember { mutableStateOf(false) }
-
+    // ── Side effects ─────────────────────────────────────────────────────────
     LaunchedEffect(Unit) { viewModel.setVehiculo(vehiculo) }
     DisposableEffect(Unit) { onDispose { viewModel.resetMap() } }
     LaunchedEffect(uiState.error) {
@@ -248,496 +206,135 @@ fun PlanificarViajeScreen(
         }
     }
 
-    // Debounce geocoding — origen
     LaunchedEffect(origenText) {
         if (origenSeleccionado != null) return@LaunchedEffect
         origenSugerencias = emptyList()
-        if (origenText.length >= 3) {
+        if (origenText.length >= 3)
+        {
             delay(600)
             buscandoOrigen = true
-            runCatching { GeocodingRepository.buscar(origenText) }
-                .onSuccess { origenSugerencias = it }
+            runCatching { GeocodingRepository.buscar(origenText) }.onSuccess { origenSugerencias = it }
             buscandoOrigen = false
         }
     }
 
-    // Debounce geocoding — destino
     LaunchedEffect(destinoText) {
         if (destinoSeleccionado != null) return@LaunchedEffect
         destinoSugerencias = emptyList()
-        if (destinoText.length >= 3) {
+        if (destinoText.length >= 3)
+        {
             delay(600)
             buscandoDestino = true
-            runCatching { GeocodingRepository.buscar(destinoText) }
-                .onSuccess { destinoSugerencias = it }
+            runCatching { GeocodingRepository.buscar(destinoText) }.onSuccess { destinoSugerencias = it }
             buscandoDestino = false
         }
     }
 
+    // ── Bitmaps ───────────────────────────────────────────────────────────────
     val bitmapNormal = remember { vectorToBitmap(context, R.drawable.ic_portico) }
     val bitmapActivo = remember { vectorToBitmap(context, R.drawable.ic_portico_activo) }
 
+    // ── UI ────────────────────────────────────────────────────────────────────
     Box(modifier = Modifier.fillMaxSize())
     {
+
         MapboxMap(
             modifier = Modifier.fillMaxSize(),
-            mapViewportState = mapViewportState)
+            mapViewportState = mapViewportState,)
         {
             MapEffect(Unit) { mapView ->
                 mapView.mapboxMap.subscribeCameraChanged {
                     currentZoom = mapView.mapboxMap.cameraState.zoom
                 }
             }
+
             if (routePoints.size >= 2)
-            {
                 PolylineAnnotation(points = routePoints) {
                     lineColor = Blue40
                     lineWidth = 5.0
                     lineOpacity = 0.9
                 }
-            }
-            val cruzadosKeys = remember(route?.porticos) {
-                route?.porticos
-                    ?.map { it.codigo to it.sentido }
-                    ?.toSet()
-                    ?: emptySet()
+
+            val crossedIds: Set<Long> = remember(route?.tolls) {
+                route?.tolls?.flatMap { toll ->
+                    when (toll)
+                    {
+                        is Portico -> listOf(toll.porticoId)
+                        is Tramo  -> listOf(toll.entradaId, toll.salidaId)
+                    }
+                }?.toSet() ?: emptySet()
             }
 
             uiState.porticos.forEach { portico ->
-                val activo = (portico.codigo to portico.sentido) in cruzadosKeys
-
+                val activo = portico.id in crossedIds
                 val bitmap = if (activo) bitmapActivo else bitmapNormal
-
                 if (bitmap != null)
-                {
                     PointAnnotation(point = Point.fromLngLat(portico.longitud, portico.latitud)) {
                         iconImage = IconImage(bitmap)
                         iconSize = if (activo) 1.5 else 1.0
                     }
-                }
             }
         }
 
-        Column(
+        MapControls(
+            mapViewportState = mapViewportState,
+            currentZoom = currentZoom,
+            hasRoute = routePoints.isNotEmpty(),
+            onMyLocation = { requestLocation() },
+            onFitRoute = { fitRoute() },
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(top = 24.dp, end = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            MapControlButton(
-                icon = Icons.Filled.MyLocation,
-                contentDescription = "Mi ubicación",
-                onClick = { requestLocation() },
-            )
-            MapControlButton(
-                icon = Icons.Filled.Add,
-                contentDescription = "Acercar",
-                onClick = {
-                    mapViewportState.easeTo(
-                        CameraOptions.Builder().zoom((currentZoom + 1.0).coerceAtMost(20.0)).build()
-                    )
-                },
-            )
-            MapControlButton(
-                icon = Icons.Filled.Remove,
-                contentDescription = "Alejar",
-                onClick = {
-                    mapViewportState.easeTo(
-                        CameraOptions.Builder().zoom((currentZoom - 1.0).coerceAtLeast(1.0)).build()
-                    )
-                },
-            )
-            if (routePoints.isNotEmpty()) {
-                MapControlButton(
-                    icon = Icons.Filled.ZoomOutMap,
-                    contentDescription = "Ver ruta completa",
-                    onClick = { fitRoute() },
-                )
-            }
-        }
+                .padding(top = 24.dp, end = 12.dp))
 
-        Card(
+        RouteBottomCard(
+            vehiculo = vehiculo,
+            isMinimized = isMinimized,
+            onToggleMinimized = { isMinimized = !isMinimized },
+            onBack = onBack,
+            origenText = origenText,
+            onOrigenChange = { nuevo ->
+                origenText = nuevo
+                if (origenSeleccionado?.placeName != nuevo) origenSeleccionado = null
+            },
+            origenSugerencias = origenSugerencias,
+            onOrigenSugerenciaClick = { s ->
+                origenText = s.placeName
+                origenSeleccionado = s
+                origenSugerencias = emptyList()
+            },
+            origenSeleccionado = origenSeleccionado,
+            buscandoOrigen = buscandoOrigen,
+            destinoText = destinoText,
+            onDestinoChange = { nuevo ->
+                destinoText = nuevo
+                if (destinoSeleccionado?.placeName != nuevo) destinoSeleccionado = null
+            },
+            destinoSugerencias = destinoSugerencias,
+            onDestinoSugerenciaClick = { s ->
+                destinoText = s.placeName
+                destinoSeleccionado = s
+                destinoSugerencias = emptyList()
+            },
+            destinoSeleccionado = destinoSeleccionado,
+            buscandoDestino = buscandoDestino,
+            route = route,
+            hasRoutePoints = routePoints.isNotEmpty(),
+            isLoadingRoute = uiState.isLoadingRoute,
+            onCalcular = {
+                val o = origenSeleccionado ?: return@RouteBottomCard
+                val d = destinoSeleccionado ?: return@RouteBottomCard
+                viewModel.calculateRoute(lon1 = o.lon, lat1 = o.lat, lon2 = d.lon, lat2 = d.lat)
+            },
+            onUsarEjemplo = {
+                origenText = EJEMPLO_ORIGEN.placeName
+                origenSeleccionado = EJEMPLO_ORIGEN
+                destinoText = EJEMPLO_DESTINO.placeName
+                destinoSeleccionado = EJEMPLO_DESTINO
+            },
+            onFlyToPortico = { lat, lon -> flyToPortico(lat, lon) },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 16.dp),
-            shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-        ) {
-            Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)) {
-
-                // ------- HEADER siempre visible (barra de título y botón minimizar) -------
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    IconButton(onClick = onBack, modifier = Modifier.size(32.dp)) {
-                        Icon(Icons.Filled.ArrowBack, "Volver", tint = TextSecondary)
-                    }
-                    Spacer(Modifier.width(4.dp))
-                    Text(
-                        text = "Planificar viaje",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.weight(1f)
-                    )
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(InputBackground)
-                            .padding(horizontal = 10.dp, vertical = 4.dp)
-                    ) {
-                        Text(
-                            text = vehiculo,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = Blue40,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                    // Botón para minimizar/expandir
-                    IconButton(onClick = { isMinimized = !isMinimized }) {
-                        Icon(
-                            imageVector = if (isMinimized) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-                            contentDescription = if (isMinimized) "Expandir" else "Minimizar",
-                            tint = TextSecondary
-                        )
-                    }
-                }
-
-                // ------- CONTENIDO EXPANDIBLE -------
-                AnimatedVisibility(visible = !isMinimized) {
-                    Column {
-                        Spacer(Modifier.height(10.dp))
-
-                        DireccionField(
-                            value = origenText,
-                            onValueChange = { nuevo ->
-                                origenText = nuevo
-                                if (origenSeleccionado?.placeName != nuevo) origenSeleccionado = null
-                            },
-                            sugerencias = origenSugerencias,
-                            onSugerenciaClick = { s ->
-                                origenText = s.placeName
-                                origenSeleccionado = s
-                                origenSugerencias = emptyList()
-                            },
-                            label = "Origen",
-                            leadingIcon = Icons.Filled.MyLocation,
-                            cargando = buscandoOrigen,
-                        )
-
-                        Spacer(Modifier.height(8.dp))
-
-                        DireccionField(
-                            value = destinoText,
-                            onValueChange = { nuevo ->
-                                destinoText = nuevo
-                                if (destinoSeleccionado?.placeName != nuevo) destinoSeleccionado = null
-                            },
-                            sugerencias = destinoSugerencias,
-                            onSugerenciaClick = { s ->
-                                destinoText = s.placeName
-                                destinoSeleccionado = s
-                                destinoSugerencias = emptyList()
-                            },
-                            label = "Destino",
-                            leadingIcon = Icons.Filled.Place,
-                            cargando = buscandoDestino,
-                        )
-
-                        Spacer(Modifier.height(10.dp))
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            TextButton(
-                                onClick = {
-                                    origenText = EJEMPLO_ORIGEN.placeName
-                                    origenSeleccionado = EJEMPLO_ORIGEN
-                                    destinoText = EJEMPLO_DESTINO.placeName
-                                    destinoSeleccionado = EJEMPLO_DESTINO
-                                },
-                                modifier = Modifier.weight(1f),
-                                colors = ButtonDefaults.textButtonColors(contentColor = TextSecondary),
-                            ) {
-                                Text("Usar ejemplo", style = MaterialTheme.typography.labelMedium)
-                            }
-
-                            Button(
-                                onClick = {
-                                    val o = origenSeleccionado ?: return@Button
-                                    val d = destinoSeleccionado ?: return@Button
-                                    viewModel.calculateRoute(lon1 = o.lon, lat1 = o.lat, lon2 = d.lon, lat2 = d.lat)
-                                },
-                                enabled = origenSeleccionado != null && destinoSeleccionado != null && !uiState.isLoadingRoute,
-                                modifier = Modifier.weight(2f).height(44.dp),
-                                shape = RoundedCornerShape(13.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = Blue40),
-                            ) {
-                                if (uiState.isLoadingRoute) {
-                                    CircularProgressIndicator(
-                                        modifier = Modifier.size(18.dp),
-                                        color = Color.White,
-                                        strokeWidth = 2.dp,
-                                    )
-                                } else {
-                                    Text(text = "Calcular ruta", fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
-                                }
-                            }
-                        }
-
-                        if (routePoints.isNotEmpty()) {
-                            Spacer(Modifier.height(8.dp))
-                            HorizontalDivider(color = InputBackground)
-                            Spacer(Modifier.height(8.dp))
-
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                            ) {
-                                if (route?.porticos?.isNotEmpty() == true) {
-                                    Spacer(Modifier.width(6.dp))
-                                    Text(
-                                        text = "· ${route.porticos.size} pórtico(s) en ruta",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = Blue40,
-                                        fontWeight = FontWeight.Medium
-                                    )
-                                } else {
-                                    Spacer(Modifier.width(6.dp))
-                                    Text(
-                                        text = "· sin pórticos en ruta",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = TextSecondary
-                                    )
-                                }
-                            }
-                        }
-
-                        Spacer(Modifier.height(6.dp))
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column {
-                                Text("Tarifa estimada", style = MaterialTheme.typography.labelMedium, color = TextSecondary)
-                                Text("Vehículo: $vehiculo", style = MaterialTheme.typography.labelSmall, color = TextSecondary)
-                            }
-                            Text(
-                                text = "${"%.0f".format(route?.totalCost)} CLP",
-                                style = MaterialTheme.typography.headlineSmall,
-                                fontWeight = FontWeight.Bold,
-                                color = Blue40
-                            )
-                        }
-
-                        if (route?.porticos?.isNotEmpty() == true) {
-                            Spacer(Modifier.height(6.dp))
-                            Column(
-                                modifier = Modifier
-                                    .heightIn(max = 100.dp)
-                                    .verticalScroll(rememberScrollState())
-                            ) {
-                                route.porticos.forEach { cruce ->
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(vertical = 8.dp)
-                                            .clickable { flyToPortico(cruce.latitud, cruce.longitud) },
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Column(modifier = Modifier.weight(1f)) {
-                                            Text(
-                                                text = cruce.nombre ?: cruce.codigo,
-                                                style = MaterialTheme.typography.bodyMedium,
-                                                fontWeight = FontWeight.Medium,
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis
-                                            )
-                                            if (cruce.autopista.isNotBlank()) {
-                                                Text(cruce.autopista, style = MaterialTheme.typography.labelSmall, color = TextSecondary)
-                                            }
-                                        }
-                                        Column(horizontalAlignment = Alignment.End) {
-                                            Text(cruce.valor.toCLP(), style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Medium)
-                                            Text("Tarifa: ${cruce.tarifa}", style = MaterialTheme.typography.labelSmall, color = TextSecondary)
-                                        }
-                                    }
-                                    HorizontalDivider(color = InputBackground)
-                                }
-                            }
-                        }
-                    } // fin Column expandible
-                } // fin AnimatedVisibility
-
-                // ------- VERSIÓN MINIMIZADA (cuando isMinimized = true) -------
-                AnimatedVisibility(visible = isMinimized) {
-                    // Solo se muestra si hay una ruta calculada (o al menos origen y destino seleccionados)
-                    if (origenSeleccionado != null && destinoSeleccionado != null) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 8.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            // Columna con puntos y total
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = "${origenSeleccionado!!.placeName} → ${destinoSeleccionado!!.placeName}",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    color = TextSecondary
-                                )
-                                Text(
-                                    text = "${"%.0f".format(route?.totalCost)} CLP",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Blue40
-                                )
-                            }
-
-                            // Botón para recalcular (opcional)
-                            Button(
-                                onClick = {
-                                    // Recalcular ruta (mismo código que el botón original)
-                                    val o = origenSeleccionado ?: return@Button
-                                    val d = destinoSeleccionado ?: return@Button
-                                    viewModel.calculateRoute(lon1 = o.lon, lat1 = o.lat, lon2 = d.lon, lat2 = d.lat)
-                                },
-                                enabled = !uiState.isLoadingRoute,
-                                modifier = Modifier.height(36.dp),
-                                shape = RoundedCornerShape(10.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = Blue40),
-                                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp)
-                            ) {
-                                if (uiState.isLoadingRoute) {
-                                    CircularProgressIndicator(
-                                        modifier = Modifier.size(16.dp),
-                                        color = Color.White,
-                                        strokeWidth = 2.dp
-                                    )
-                                } else {
-                                    Icon(
-                                        Icons.Filled.Refresh,
-                                        contentDescription = "Recalcular",
-                                        modifier = Modifier.size(16.dp)
-                                    )
-                                }
-                            }
-                        }
-                    } else {
-                        // Si no hay ruta, ocultamos la barra minimizada o mostramos un placeholder
-                        Text("Completa origen y destino para calcular", style = MaterialTheme.typography.labelSmall)
-                    }
-                }
-            }
-        }
+                .padding(horizontal = 16.dp, vertical = 16.dp))
     }
-}
-
-@Composable
-private fun DireccionField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    sugerencias: List<GeocodeSuggestion>,
-    onSugerenciaClick: (GeocodeSuggestion) -> Unit,
-    label: String,
-    leadingIcon: ImageVector,
-    cargando: Boolean,
-) {
-    Column {
-        OutlinedTextField(
-            value = value,
-            onValueChange = onValueChange,
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text(label, style = MaterialTheme.typography.bodySmall) },
-            placeholder = { Text("Dirección, negocio o lugar", style = MaterialTheme.typography.bodySmall) },
-            leadingIcon = {
-                Icon(
-                    imageVector = leadingIcon,
-                    contentDescription = null,
-                    tint = Blue40,
-                    modifier = Modifier.size(18.dp),
-                )
-            },
-            trailingIcon = {
-                if (cargando) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(16.dp),
-                        strokeWidth = 2.dp,
-                        color = Blue40,
-                    )
-                }
-            },
-            singleLine = true,
-            shape = RoundedCornerShape(12.dp),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Blue40,
-                unfocusedBorderColor = InputBackground,
-                focusedLabelColor = Blue40,
-            ),
-        )
-
-        if (sugerencias.isNotEmpty()) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 2.dp),
-                shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-            ) {
-                Column {
-                    sugerencias.take(5).forEachIndexed { index, sugerencia ->
-                        TextButton(
-                            onClick = { onSugerenciaClick(sugerencia) },
-                            modifier = Modifier.fillMaxWidth(),
-                            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp),
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Place,
-                                contentDescription = null,
-                                tint = TextSecondary,
-                                modifier = Modifier.size(14.dp),
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text(
-                                text = sugerencia.placeName,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.weight(1f),
-                            )
-                        }
-                        if (index < sugerencias.size - 1) {
-                            HorizontalDivider(
-                                modifier = Modifier.padding(horizontal = 14.dp),
-                                color = InputBackground,
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-private fun Any?.toCLP(): String
-{
-    val number = when (this) {
-        is Double -> this
-        is Float -> this.toDouble()
-        is Int -> this.toDouble()
-        is Long -> this.toDouble()
-        is String -> this.toDoubleOrNull() ?: 0.0
-        else -> 0.0
-    }
-    val format = NumberFormat.getNumberInstance(Locale("es", "CL"))
-    format.minimumFractionDigits = 0
-    format.maximumFractionDigits = 0
-    return "$${format.format(number)}"
 }
