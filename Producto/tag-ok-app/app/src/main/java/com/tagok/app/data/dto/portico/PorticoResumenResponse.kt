@@ -1,11 +1,9 @@
-package com.tagok.app.data.dto.route
+package com.tagok.app.data.dto.portico
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PorticoResumen(
+data class PorticoResumenResponse(
     val id: Long,
-    val codigo: String,
-    val sentido: String? = null,
     val latitud: Double,
     val longitud: Double)

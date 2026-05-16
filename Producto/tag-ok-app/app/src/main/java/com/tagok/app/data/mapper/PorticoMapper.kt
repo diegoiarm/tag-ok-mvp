@@ -1,8 +1,10 @@
 package com.tagok.app.data.mapper
 
+import com.tagok.app.data.dto.portico.PorticoResumenResponse
 import com.tagok.app.data.dto.route.CobroPorticoResponse
 import com.tagok.app.data.dto.route.CobroRutaResponse
 import com.tagok.app.data.dto.route.CobroTramoResponse
+import com.tagok.app.domain.model.portico.PorticoResumen
 import com.tagok.app.domain.model.routes.Portico
 import com.tagok.app.domain.model.routes.Toll
 import com.tagok.app.domain.model.routes.Tramo
@@ -47,4 +49,13 @@ fun CobroRutaResponse.toDomain(): Toll
             )
         }
     }
+}
+
+fun PorticoResumenResponse.toDomain(): PorticoResumen
+{
+    return PorticoResumen(
+        id,
+        latitud,
+        longitud
+    )
 }

@@ -1,6 +1,5 @@
 package com.tagok.app.data.remote
 
-import com.tagok.app.data.dto.route.PorticoResumen
 import com.tagok.app.data.dto.route.RouteResponse
 import com.tagok.app.data.dto.TarifaCalculada
 import com.tagok.app.data.dto.TarifaRequest

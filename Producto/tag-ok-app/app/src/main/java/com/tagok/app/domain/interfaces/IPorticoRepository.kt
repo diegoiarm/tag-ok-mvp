@@ -1,6 +1,6 @@
 package com.tagok.app.domain.interfaces
 
-import com.tagok.app.data.dto.route.PorticoResumen
+import com.tagok.app.domain.model.portico.PorticoResumen
 
 interface IPorticoRepository
 {

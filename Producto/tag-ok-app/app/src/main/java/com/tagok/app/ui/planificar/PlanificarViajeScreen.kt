@@ -91,6 +91,7 @@ import com.tagok.app.domain.model.routes.Tramo
 import com.tagok.app.ui.components.map.MapControls
 import com.tagok.app.ui.components.routes.TollItem
 import com.tagok.app.ui.map.MapViewModel
+import com.tagok.app.ui.map.PorticosContainer
 import com.tagok.app.ui.map.vectorToBitmap
 import com.tagok.app.ui.theme.Blue40
 import com.tagok.app.ui.theme.InputBackground
@@ -206,9 +207,13 @@ fun PlanificarViajeScreen(
         }
     }
 
-    LaunchedEffect(origenText) {
-        if (origenSeleccionado != null) return@LaunchedEffect
+    LaunchedEffect(origenText)
+    {
+        if (origenSeleccionado != null)
+            return@LaunchedEffect
+
         origenSugerencias = emptyList()
+
         if (origenText.length >= 3)
         {
             delay(600)
@@ -218,9 +223,13 @@ fun PlanificarViajeScreen(
         }
     }
 
-    LaunchedEffect(destinoText) {
-        if (destinoSeleccionado != null) return@LaunchedEffect
+    LaunchedEffect(destinoText)
+    {
+        if (destinoSeleccionado != null)
+            return@LaunchedEffect
+
         destinoSugerencias = emptyList()
+
         if (destinoText.length >= 3)
         {
             delay(600)
@@ -265,15 +274,10 @@ fun PlanificarViajeScreen(
                 }?.toSet() ?: emptySet()
             }
 
-            uiState.porticos.forEach { portico ->
-                val activo = portico.id in crossedIds
-                val bitmap = if (activo) bitmapActivo else bitmapNormal
-                if (bitmap != null)
-                    PointAnnotation(point = Point.fromLngLat(portico.longitud, portico.latitud)) {
-                        iconImage = IconImage(bitmap)
-                        iconSize = if (activo) 1.5 else 1.0
-                    }
-            }
+            PorticosContainer(
+                context = context,
+                porticos = uiState.porticos,
+                route = route)
         }
 
         MapControls(

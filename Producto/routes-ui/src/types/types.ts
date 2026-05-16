@@ -26,12 +26,8 @@ export interface PorticoRouteResponse {
 }
 export interface PorticoResumen {
     id: number;
-    codigo: string;
-    nombre: string;
-    sentido: string;
     latitud: number;
     longitud: number;
-    autopista?: string;
 }
 
 export enum TipoVehiculo {

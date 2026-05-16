@@ -111,9 +111,6 @@ public class PorticoMapper
     {
         return PorticoResumenResponse.builder()
                 .id(portico.getId())
-                .codigo(portico.getCodigo())
-                .nombre(portico.getNombre())
-                .sentido(portico.getSentido())
                 .latitud(portico.getLatitud())
                 .longitud(portico.getLongitud())
                 .build();

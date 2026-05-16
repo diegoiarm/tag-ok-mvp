@@ -4,14 +4,14 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.tagok.app.data.dto.route.PorticoResumen
+import com.tagok.app.data.dto.portico.PorticoResumenResponse
 import com.tagok.app.data.remote.HttpClientProvider
 import com.tagok.app.data.remote.PorticoApi
 import com.tagok.app.data.remote.RouteApi
 import com.tagok.app.data.repository.PorticoRepository
 import com.tagok.app.data.repository.RouteRepository
+import com.tagok.app.domain.model.portico.PorticoResumen
 import com.tagok.app.domain.model.routes.Route
-import io.ktor.client.HttpClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
