@@ -54,6 +54,8 @@ fun CobroRutaResponse.toDomain(): Toll
             Tramo(
                 entradaId,
                 salidaId,
+                codigoEntrada,
+                codigoSalida,
                 nombreEntrada,
                 nombreSalida,
                 autopista,

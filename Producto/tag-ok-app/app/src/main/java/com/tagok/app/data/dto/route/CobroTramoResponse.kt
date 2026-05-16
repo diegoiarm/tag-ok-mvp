@@ -7,6 +7,8 @@ import kotlinx.serialization.Serializable
 data class CobroTramoResponse(
     val entradaId: Long,
     val salidaId: Long,
+    val codigoEntrada: String,
+    val codigoSalida: String,
     val nombreEntrada: String,
     val nombreSalida: String,
     val autopista: String,

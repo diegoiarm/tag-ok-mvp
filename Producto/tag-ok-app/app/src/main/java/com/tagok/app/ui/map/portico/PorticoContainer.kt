@@ -44,9 +44,33 @@ fun MapboxMapScope.PorticosContainer(
     )
 
     porticoSeleccionado?.let { portico ->
-        PorticoDetail(
-            porticoId = portico.id,
-            onDismiss = { porticoSeleccionado = null },
-        )
+        if (portico.id in crossedIds)
+        {
+            val toll = route?.tolls?.find { toll ->
+                when (toll)
+                {
+                    is Portico -> toll.porticoId == portico.id
+                    is Tramo   -> toll.entradaId == portico.id || toll.salidaId == portico.id
+                }
+            }
+            if (toll != null)
+            {
+                PorticoRouteDetail(
+                    toll = toll,
+                    onDismiss = { porticoSeleccionado = null })
+            }
+            else
+            {
+                PorticoDetail(
+                    porticoId = portico.id,
+                    onDismiss = { porticoSeleccionado = null })
+            }
+        }
+        else
+        {
+            PorticoDetail(
+                porticoId = portico.id,
+                onDismiss = { porticoSeleccionado = null })
+        }
     }
 }

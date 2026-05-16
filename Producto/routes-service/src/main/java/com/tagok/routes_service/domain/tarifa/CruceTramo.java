@@ -10,6 +10,8 @@ public record CruceTramo(
     TipoTarifa tipoTarifa,
     BigDecimal valor,
     LocalDateTime horaFechaCruce,
+    String codigoEntrada,
+    String codigoSalida,
     Long entradaId,
     Long salidaId,
     String nombreEntrada,

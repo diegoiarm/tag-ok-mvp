@@ -143,6 +143,8 @@ public class CalculoTarifaService
                             tarifa.tipoTarifa(),
                             tarifa.monto(),
                             salida.tiempo,
+                            entrada.portico.getCodigo(),
+                            salida.portico.getCodigo(),
                             entrada.portico.getId(),
                             salida.portico.getId(),
                             entrada.portico.getNombre(),

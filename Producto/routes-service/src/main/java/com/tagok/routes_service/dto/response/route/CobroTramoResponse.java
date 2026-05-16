@@ -8,6 +8,8 @@ import com.tagok.routes_service.domain.tarifa.TipoTarifa;
 public record CobroTramoResponse(
     Long entradaId,
     Long salidaId,
+    String codigoEntrada,
+    String codigoSalida,
     String nombreEntrada,
     String nombreSalida,
     String autopista,

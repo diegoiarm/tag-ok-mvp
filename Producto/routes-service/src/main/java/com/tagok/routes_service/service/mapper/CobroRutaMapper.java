@@ -32,6 +32,8 @@ public class CobroRutaMapper
             return new CobroTramoResponse(
                 ct.entradaId(),
                 ct.salidaId(),
+                ct.codigoEntrada(),
+                ct.codigoSalida(),
                 ct.nombreEntrada(),
                 ct.nombreSalida(),
                 ct.autopista(),

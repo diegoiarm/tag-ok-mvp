@@ -3,7 +3,6 @@ package com.tagok.app.ui.map.portico
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,16 +11,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -30,13 +24,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tagok.app.domain.model.portico.PorticoTramoType
 import com.tagok.app.domain.model.portico.PorticoType
 import com.tagok.app.domain.model.portico.TollType
-import com.tagok.app.domain.model.portico.TramoPortico
 import com.tagok.app.ui.theme.Blue40
 import com.tagok.app.ui.theme.InputBackground
 import com.tagok.app.ui.theme.TextSecondary
@@ -46,85 +38,56 @@ import com.tagok.app.ui.theme.TextSecondary
 fun PorticoDetail(
     porticoId: Long,
     onDismiss: () -> Unit,
-    viewModel: PorticoDetailViewModel = viewModel(factory = PorticoDetailViewModel.Factory))
-{
+    viewModel: PorticoDetailViewModel = viewModel(factory = PorticoDetailViewModel.Factory)
+) {
     val uiState by viewModel.uiState.collectAsState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     LaunchedEffect(porticoId) { viewModel.load(porticoId) }
 
-    ModalBottomSheet(
-        onDismissRequest = onDismiss,
-        sheetState = sheetState,
-        shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+    BasePorticoBottomSheet(title = "Detalle del pórtico", onDismiss = onDismiss)
     {
-        Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp))
+        when
         {
-
-            Row(
+            uiState.isLoading -> Box(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically)
+                contentAlignment = Alignment.Center)
             {
-                Text(
-                    text = "Detalle del pórtico",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold)
-
-                IconButton(onClick = onDismiss, modifier = Modifier.size(28.dp))
-                {
-                    Icon(Icons.Filled.Close, contentDescription = "Cerrar", tint = TextSecondary)
-                }
+                CircularProgressIndicator(color = Blue40, modifier = Modifier.size(32.dp))
             }
 
-            Spacer(Modifier.height(16.dp))
+            uiState.error != null -> Text(
+                text = "No se pudo cargar la información.",
+                style = MaterialTheme.typography.bodySmall,
+                color = TextSecondary
+            )
 
-            when
-            {
-                uiState.isLoading -> Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center)
-                {
-                    CircularProgressIndicator(color = Blue40, modifier = Modifier.size(32.dp))
-                }
-
-                uiState.error != null -> Text(
-                    text = "No se pudo cargar la información.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondary,)
-
-                uiState.detalle != null -> PorticoDetalleContent(
-                    detalle = uiState.detalle!!,
-                    tipoTarifa = uiState.tipoTarifaActual!!,
-                    tipoAuto = uiState.tipoVehiculo!!)
-            }
-
-            Spacer(Modifier.height(24.dp))
+            uiState.detalle != null -> PorticoDetalleContent(
+                detalle = uiState.detalle!!,
+                tipoTarifa = uiState.tipoTarifaActual!!,
+                tipoAuto = uiState.tipoVehiculo!!)
         }
     }
 }
 
 @Composable
-fun PorticoDetalleContent(detalle: TollType, tipoTarifa: String, tipoAuto: String)
-{
-    when (detalle)
-    {
+fun PorticoDetalleContent(detalle: TollType, tipoTarifa: String, tipoAuto: String) {
+    when (detalle) {
         is PorticoType -> PorticoTypeContent(detalle, tipoTarifa, tipoAuto)
-        is PorticoTramoType   -> PorticoTramoContent(detalle, tipoTarifa, tipoAuto)
+        is PorticoTramoType -> PorticoTramoContent(detalle, tipoTarifa, tipoAuto)
     }
 }
 
 // ── PorticoType ──────────────────────────────────────────────────────────────
 
 @Composable
-private fun PorticoTypeContent(detalle: PorticoType, tipoTarifa: String, tipoAuto: String)
-{
+private fun PorticoTypeContent(detalle: PorticoType, tipoTarifa: String, tipoAuto: String) {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp))
     {
-        DetalleRow("Nombre",    detalle.nombre)
+        DetalleRow("Nombre", detalle.nombre)
         DetalleRow("Autopista", detalle.autopista)
-        DetalleRow("Sentido",   detalle.sentido)
-        DetalleRow("Código",    detalle.codigo)
+        DetalleRow("Sentido", detalle.sentido)
+        DetalleRow("Código", detalle.codigo)
 
         Spacer(Modifier.height(4.dp))
         ReglasTarifariasCard(
@@ -141,15 +104,15 @@ private fun PorticoTypeContent(detalle: PorticoType, tipoTarifa: String, tipoAut
 private fun PorticoTramoContent(
     detalle: PorticoTramoType,
     tipoTarifa: String,
-    tipoAuto: String)
-{
+    tipoAuto: String
+) {
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(10.dp))
     {
-        DetalleRow("Nombre",    detalle.nombre)
+        DetalleRow("Nombre", detalle.nombre)
         DetalleRow("Autopista", detalle.autopista)
-        DetalleRow("Código",    detalle.codigo)
+        DetalleRow("Código", detalle.codigo)
 
         Spacer(Modifier.height(4.dp))
 
@@ -166,7 +129,7 @@ private fun PorticoTramoContent(
                 Column(modifier = Modifier.padding(12.dp))
                 {
                     DetalleRow("Entrada", tramo.entrada)
-                    DetalleRow("Salida",  tramo.salida)
+                    DetalleRow("Salida", tramo.salida)
 
                     Spacer(Modifier.height(6.dp))
 
@@ -174,23 +137,11 @@ private fun PorticoTramoContent(
                         reglas = tramo.reglas,
                         calendario = tramo.calendario,
                         tipoTarifaActual = tipoTarifa,
-                        tipoAuto = tipoAuto)
+                        tipoAuto = tipoAuto
+                    )
                 }
             }
             Spacer(Modifier.height(8.dp))
         }
-    }
-}
-
-
-@Composable
-private fun DetalleRow(label: String, value: String)
-{
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween)
-    {
-        Text(label, style = MaterialTheme.typography.bodySmall, color = TextSecondary)
-        Text(value, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Medium)
     }
 }
