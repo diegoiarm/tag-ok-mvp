@@ -1,5 +1,6 @@
 package com.tagok.app.ui.map.portico
 
+import PorticoRouteDetail
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
