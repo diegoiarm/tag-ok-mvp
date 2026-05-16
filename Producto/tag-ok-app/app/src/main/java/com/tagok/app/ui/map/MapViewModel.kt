@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.tagok.app.data.dto.PorticoResumen
+import com.tagok.app.data.dto.route.PorticoResumen
 import com.tagok.app.data.remote.HttpClientProvider
 import com.tagok.app.data.remote.PorticoApi
 import com.tagok.app.data.remote.RouteApi

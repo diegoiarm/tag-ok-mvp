@@ -1,6 +1,6 @@
 package com.tagok.app.domain.interfaces
 
-import com.tagok.app.data.dto.PorticoResumen
+import com.tagok.app.data.dto.route.PorticoResumen
 import com.tagok.app.data.dto.TarifaCalculada
 import com.tagok.app.data.dto.TarifaRequest
 import com.tagok.app.domain.model.routes.Route

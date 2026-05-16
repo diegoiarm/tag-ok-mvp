@@ -1,6 +1,6 @@
 package com.tagok.app.data.repository
 
-import com.tagok.app.data.dto.PorticoResumen
+import com.tagok.app.data.dto.route.PorticoResumen
 import com.tagok.app.data.remote.PorticoApi
 import com.tagok.app.domain.interfaces.IPorticoRepository
 

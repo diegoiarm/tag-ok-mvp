@@ -1,6 +1,6 @@
 package com.tagok.app.data.remote
 
-import com.tagok.app.data.dto.PorticoResumen
+import com.tagok.app.data.dto.route.PorticoResumen
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get

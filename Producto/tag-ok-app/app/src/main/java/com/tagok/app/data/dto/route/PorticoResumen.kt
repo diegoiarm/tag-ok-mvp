@@ -1,4 +1,4 @@
-package com.tagok.app.data.dto
+package com.tagok.app.data.dto.route
 
 import kotlinx.serialization.Serializable
 
