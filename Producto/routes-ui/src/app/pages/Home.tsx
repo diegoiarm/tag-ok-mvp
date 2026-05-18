@@ -1,5 +1,4 @@
 import "../../components/home.css";
-import { Navbar } from "../../components/Navbar";
 import { useRef, useState } from "react";
 
 export function Home()
@@ -15,8 +14,6 @@ export function Home()
 
     return (
         <div className="home-container">
-
-            <Navbar />
 
             {/* Botón invisible */}
             <button

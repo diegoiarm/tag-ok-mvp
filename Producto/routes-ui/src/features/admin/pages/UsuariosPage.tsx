@@ -71,7 +71,7 @@ export function UsuariosPage() {
   }, [usuarios]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div>
       <div className="mx-auto max-w-7xl px-6 py-8 space-y-6">
         <header className="flex items-start justify-between gap-4">
           <div>
