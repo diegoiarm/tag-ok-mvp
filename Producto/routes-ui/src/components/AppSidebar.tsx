@@ -3,6 +3,7 @@ import {
   Home as HomeIcon,
   Map as MapIcon,
   Users as UsersIcon,
+  BarChart3,
   Upload,
   LogOut,
   LogIn,
@@ -49,6 +50,7 @@ const NAV_GENERAL: NavItem[] = [
 
 const NAV_ADMIN: NavItem[] = [
   { to: "/usuarios", label: "Usuarios", icon: UsersIcon },
+  { to: "/reportes", label: "Reportes", icon: BarChart3 },
   { to: "/files", label: "Subir JSONs", icon: Upload },
 ];
 

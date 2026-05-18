@@ -10,6 +10,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/": "Inicio",
   "/mapa": "Mapa",
   "/usuarios": "Usuarios",
+  "/reportes": "Reportes",
   "/files": "Subir JSONs",
   "/login": "Iniciar sesión",
 };
