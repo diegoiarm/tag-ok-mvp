@@ -14,7 +14,7 @@ export function RouteLayer({ coords }: Props) {
         properties: {},
         geometry: {
           type: "LineString",
-          coordinates: coords.map(([lat, lng]) => [lng, lat]), // conversión a [lng, lat] para Leaflet
+          coordinates: coords.map(([lat, lng]) => [lng, lat]),
         },
       },
     ],
@@ -23,7 +23,7 @@ export function RouteLayer({ coords }: Props) {
   return (
     <GeoJSON
       data={data}
-      style={{ color: "#007bff", weight: 5 }} // 👈 objeto directo, igual que en Mapa
+      style={{ color: "#007bff", weight: 5 }}
     />
   );
 }

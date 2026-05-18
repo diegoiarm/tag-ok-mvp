@@ -417,3 +417,9 @@ entrypoint = "./functions/list-users/index.ts"
 # Specifies static files to be bundled with the function. Supports glob patterns.
 # For example, if you want to serve static HTML pages in your function:
 # static_files = [ "./functions/list-users/*.html" ]
+
+[functions.update-user-status]
+enabled = true
+verify_jwt = true
+import_map = "./functions/update-user-status/deno.json"
+entrypoint = "./functions/update-user-status/index.ts"

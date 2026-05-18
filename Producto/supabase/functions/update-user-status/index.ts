@@ -9,12 +9,17 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, content-type",
 }
 
+interface UpdateBody {
+  userId: string
+  activo: boolean
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { status: 204, headers: corsHeaders })
   }
 
-  if (req.method !== "GET") {
+  if (req.method !== "POST") {
     return new Response("Method not allowed", { status: 405, headers: corsHeaders })
   }
 
@@ -36,52 +41,47 @@ Deno.serve(async (req) => {
     return new Response("Forbidden", { status: 403, headers: corsHeaders })
   }
 
+  let body: UpdateBody
+  try {
+    body = await req.json()
+  } catch {
+    return new Response(JSON.stringify({ error: "Invalid JSON body" }), {
+      status: 400,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    })
+  }
+
+  if (!body.userId || typeof body.activo !== "boolean") {
+    return new Response(
+      JSON.stringify({ error: "Missing fields: userId (string), activo (boolean)" }),
+      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    )
+  }
+
+  if (body.userId === user.id) {
+    return new Response(
+      JSON.stringify({ error: "No puedes desactivarte a ti mismo" }),
+      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    )
+  }
+
   const adminClient = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
     auth: { autoRefreshToken: false, persistSession: false },
   })
 
-  const { data: usersData, error: usersError } = await adminClient.auth.admin.listUsers()
-  if (usersError) {
-    return new Response(JSON.stringify({ error: usersError.message }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    })
-  }
-
-  const userIds = usersData.users.map((u) => u.id)
-  const { data: vehiculos, error: vehErr } = await adminClient
-    .from("vehiculos")
-    .select("*")
-    .in("user_id", userIds)
-
-  if (vehErr) {
-    return new Response(JSON.stringify({ error: vehErr.message }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    })
-  }
-
-  const vehiculosByUser = new Map<string, typeof vehiculos>()
-  for (const v of vehiculos ?? []) {
-    const list = vehiculosByUser.get(v.user_id) ?? []
-    list.push(v)
-    vehiculosByUser.set(v.user_id, list)
-  }
-
-  const now = Date.now()
-  const enriched = usersData.users.map((u) => {
-    const bannedUntilStr = (u as { banned_until?: string | null }).banned_until ?? null
-    const bannedUntil = bannedUntilStr ? new Date(bannedUntilStr).getTime() : null
-    const activo = !bannedUntil || bannedUntil <= now
-    return {
-      ...u,
-      activo,
-      banned_until: bannedUntilStr,
-      vehiculos: vehiculosByUser.get(u.id) ?? [],
-    }
+  const ban_duration = body.activo ? "none" : "876000h"
+  const { data, error } = await adminClient.auth.admin.updateUserById(body.userId, {
+    ban_duration,
   })
 
-  return new Response(JSON.stringify(enriched), {
+  if (error) {
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    })
+  }
+
+  return new Response(JSON.stringify({ ok: true, user: data.user }), {
     status: 200,
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   })
