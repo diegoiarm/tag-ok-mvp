@@ -46,7 +46,6 @@ services:
       - "8002:8081"
     depends_on:
       - mongo
-
 volumes:
   postgres_data:
   pgadmin_data:
