@@ -4,7 +4,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class Dia {
+public class Dia 
+{
     private String fechaDia;
     private List<PorticoCruce> porticos;
 }
