@@ -1,4 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import logoTagOk from "@/assets/logo_tagok.svg";
 import {
   Home as HomeIcon,
   Map as MapIcon,
@@ -67,19 +68,14 @@ export function AppSidebar() {
       <SidebarHeader>
         <Link
           to="/"
-          className="flex items-center px-2 py-2 group-data-[collapsible=icon]:justify-center"
+          className="flex justify-center items-center px-2 py-3"
         >
-          <div className="flex flex-col leading-tight group-data-[collapsible=icon]:hidden">
-            <span className="text-sm font-bold tracking-tight text-brand">
-              TAG OK
-            </span>
-            <span className="text-[11px] text-muted-foreground">
+          <div className="flex flex-col items-center leading-tight overflow-hidden transition-all duration-300 ease-in-out max-w-[170px] opacity-100 group-data-[collapsible=icon]:max-w-0 group-data-[collapsible=icon]:opacity-0">
+            <img src={logoTagOk} alt="TAG OK" className="h-14 w-auto object-contain max-w-[170px]" />
+            <span className="text-[11px] text-muted-foreground mt-1 whitespace-nowrap">
               Panel administrador
             </span>
           </div>
-          <span className="hidden text-[11px] font-bold tracking-tight text-brand group-data-[collapsible=icon]:inline">
-            TG
-          </span>
         </Link>
       </SidebarHeader>
 

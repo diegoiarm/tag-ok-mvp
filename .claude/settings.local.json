@@ -34,7 +34,8 @@
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\diego\\\\Documents\\\\tag-ok-mvp\\\\Producto\\\\tag-ok-app\" -Recurse -Force)",
       "Bash(Select-Object -ExpandProperty FullName)",
       "Bash(Sort-Object)",
-      "Bash(supabase *)"
+      "Bash(supabase *)",
+      "Bash(Get-ChildItem *)"
     ]
   }
 }

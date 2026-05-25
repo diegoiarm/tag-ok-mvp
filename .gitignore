@@ -38,6 +38,9 @@ Thumbs.db
 *.sln
 *.sw?
 
+# ─── Claude Code (configuración local del usuario) ──────────────────
+.claude/settings.local.json
+
 # ─── Variables de entorno (nunca subir credenciales) ────────────────
 .env
 .env.local

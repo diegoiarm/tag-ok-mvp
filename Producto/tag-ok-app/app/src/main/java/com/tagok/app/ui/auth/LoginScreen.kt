@@ -33,6 +33,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.foundation.Image
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,6 +46,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -92,12 +95,13 @@ fun LoginScreen(
         ) {
 
             // Logo
-            Text(
-                text = "TAG OK",
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold,
-                color = Blue40,
-                letterSpacing = 3.sp,
+            Image(
+                painter = painterResource(id = com.tagok.app.R.drawable.logo_tagok),
+                contentDescription = "TAG OK",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .height(100.dp)
+                    .padding(bottom = 4.dp),
             )
 
             Spacer(modifier = Modifier.height(6.dp))
