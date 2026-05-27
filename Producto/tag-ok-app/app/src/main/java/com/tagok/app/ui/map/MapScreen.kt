@@ -18,13 +18,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -52,6 +58,7 @@ import com.mapbox.maps.extension.compose.annotation.IconImage
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 import com.tagok.app.R
 import androidx.core.graphics.createBitmap
+import com.tagok.app.ui.map.portico.PorticosContainer
 
 private val SANTIAGO = Point.fromLngLat(-70.6483, -33.4569)
 
@@ -186,15 +193,9 @@ fun MapScreen(
                 }
             }
 
-            uiState.porticos.forEach { portico ->
-                val bitmap = bitmapNormal
-                if (bitmap != null) {
-                    PointAnnotation(point = Point.fromLngLat(portico.longitud, portico.latitud)) {
-                        iconImage = IconImage(bitmap)
-                        iconSize = 1.0
-                    }
-                }
-            }
+            PorticosContainer(
+                context = context,
+                porticos = uiState.porticos)
 
             if (userLocation != null)
             {
@@ -209,29 +210,29 @@ fun MapScreen(
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(top = 24.dp, end = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+            verticalArrangement = Arrangement.spacedBy(8.dp))
+        {
             MapControlButton(
                 icon = Icons.Filled.MyLocation,
                 contentDescription = "Mi ubicación",
-                onClick = { requestLocation() }
-            )
+                onClick = { requestLocation() })
             MapControlButton(
                 icon = Icons.Filled.Add,
                 contentDescription = "Acercar",
                 onClick = {
                     val newZoom = (currentZoom + 1.0).coerceAtMost(20.0)
                     mapViewportState.easeTo(CameraOptions.Builder().zoom(newZoom).build())
-                }
-            )
+                })
             MapControlButton(
                 icon = Icons.Filled.Remove,
                 contentDescription = "Alejar",
                 onClick = {
                     val newZoom = (currentZoom - 1.0).coerceAtLeast(1.0)
                     mapViewportState.easeTo(CameraOptions.Builder().zoom(newZoom).build())
-                }
-            )
+                })
+
         }
+        // Debug
+        TestRealTime()
     }
 }

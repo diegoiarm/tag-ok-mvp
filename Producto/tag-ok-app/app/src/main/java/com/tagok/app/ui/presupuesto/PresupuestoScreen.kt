@@ -89,8 +89,7 @@ fun PresupuestoScreen(viewModel: PresupuestoViewModel = viewModel()) {
                 fontWeight = FontWeight.Bold,
                 fontSize = 22.sp,
                 color = TextDark,
-                modifier = Modifier.padding(horizontal = 20.dp),
-            )
+                modifier = Modifier.padding(horizontal = 20.dp))
 
             Spacer(Modifier.height(16.dp))
 

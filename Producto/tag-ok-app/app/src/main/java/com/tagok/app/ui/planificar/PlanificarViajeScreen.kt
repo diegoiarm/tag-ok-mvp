@@ -8,10 +8,12 @@ import android.location.LocationManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -41,6 +43,7 @@ import com.tagok.app.domain.model.routes.Tramo
 import com.tagok.app.ui.components.map.MapControls
 import com.tagok.app.ui.map.MapViewModel
 import com.tagok.app.ui.map.portico.PorticosContainer
+import com.tagok.app.ui.map.route.RouteLayer
 import com.tagok.app.ui.map.vectorToBitmap
 import com.tagok.app.ui.theme.Blue40
 import kotlinx.coroutines.delay
@@ -90,9 +93,8 @@ fun PlanificarViajeScreen(
     }
 
     val route = planificarUiState.singleRoute
-    val routePoints = remember(route) {
-        route?.points?.map { Point.fromLngLat(it.lon, it.lat) } ?: emptyList()
-    }
+
+    val hasValidRoute = route != null && route.points.size >= 2
 
     // ── Geocoding state ──────────────────────────────────────────────────────
     var origenText by rememberSaveable { mutableStateOf("") }
@@ -188,17 +190,13 @@ fun PlanificarViajeScreen(
         }
     }
 
-    // ── Bitmaps ───────────────────────────────────────────────────────────────
-    val bitmapNormal = remember { vectorToBitmap(context, R.drawable.ic_portico) }
-    val bitmapActivo = remember { vectorToBitmap(context, R.drawable.ic_portico_activo) }
-
     // ── UI ────────────────────────────────────────────────────────────────────
     Box(modifier = Modifier.fillMaxSize())
     {
 
         MapboxMap(
             modifier = Modifier.fillMaxSize(),
-            mapViewportState = mapViewportState,)
+            mapViewportState = mapViewportState)
         {
             MapEffect(Unit) { mapView ->
                 mapView.mapboxMap.subscribeCameraChanged {
@@ -206,12 +204,7 @@ fun PlanificarViajeScreen(
                 }
             }
 
-            if (routePoints.size >= 2)
-                PolylineAnnotation(points = routePoints) {
-                    lineColor = Blue40
-                    lineWidth = 5.0
-                    lineOpacity = 0.9
-                }
+            RouteLayer(route)
 
             PorticosContainer(
                 context = context,
@@ -222,7 +215,7 @@ fun PlanificarViajeScreen(
         MapControls(
             mapViewportState = mapViewportState,
             currentZoom = currentZoom,
-            hasRoute = routePoints.isNotEmpty(),
+            hasRoute = hasValidRoute,
             onMyLocation = { requestLocation() },
             onFitRoute = { fitRoute() },
             modifier = Modifier
@@ -261,7 +254,7 @@ fun PlanificarViajeScreen(
             destinoSeleccionado = destinoSeleccionado,
             buscandoDestino = buscandoDestino,
             route = route,
-            hasRoutePoints = routePoints.isNotEmpty(),
+            hasRoutePoints = hasValidRoute,
             isLoadingRoute = planificarUiState.isLoadingRoute,
             onCalcular = {
                 val o = origenSeleccionado ?: return@RouteBottomCard

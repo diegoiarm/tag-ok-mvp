@@ -194,8 +194,7 @@ fun RouteBottomCard(
                         RouteResult(
                             vehiculo = vehiculo,
                             route = route,
-                            onFlyToPortico = onFlyToPortico,
-                        )
+                            onFlyToPortico = onFlyToPortico)
                     }
                 }
             }

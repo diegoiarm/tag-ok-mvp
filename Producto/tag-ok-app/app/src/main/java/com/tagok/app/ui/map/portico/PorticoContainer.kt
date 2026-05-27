@@ -19,7 +19,7 @@ import com.tagok.app.ui.map.vectorToBitmap
 fun MapboxMapScope.PorticosContainer(
     context: Context,
     porticos: List<PorticoResumen>,
-    route: Route?)
+    route: Route? = null)
 {
     val bitmapNormal = remember { vectorToBitmap(context, R.drawable.ic_portico) }
     val bitmapActivo = remember { vectorToBitmap(context, R.drawable.ic_portico_activo) }
