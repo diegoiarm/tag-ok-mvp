@@ -105,10 +105,15 @@ public class TarifaService
 
         TarifaCalculada calculo = calcularTarifa(tarifa);
 
-        //HistorialCruceEvent evento = historialCruceMapper.toEvent(calculo);
-
-        // Publica el evento
-        //historialCrucePublisher.publicar(evento);
+        try
+        {
+            HistorialCruceEvent evento = historialCruceMapper.toEvent(calculo);
+            historialCrucePublisher.publicar(evento);
+        }
+        catch (Exception e)
+        {
+            System.out.println("No fue posible publicar el historial de cruces: " + e);
+        }
 
         return calculo;
     }
