@@ -1,6 +1,7 @@
 package com.tagok.routes_service.service.application;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -27,8 +28,22 @@ public class TarifaService
 
     public TarifaCalculada calcularTarifa(TarifaRequest request)
     {
-        List<CruceRequest> cruceRequests = request.porticosCruzados().stream()
-            .map(c -> new CruceRequest(c.porticoId(), c.horaFechaCruce()))
+        List<CruceRequest> cruceRequests = request.references().stream()
+            .flatMap(c -> 
+            {
+                List<CruceRequest> cruces = new ArrayList<>();
+
+                System.out.println("Añadiendo portico: " + c.porticoId());
+                cruces.add(new CruceRequest(c.porticoId(), c.porticoHoraFechaCruce()));
+
+                if (c.salidaId() != null && c.salidaHoraFechaCruce() != null)
+                {
+                    System.out.println("Añadiendo salida: " + c.salidaId());
+                     cruces.add(new CruceRequest(c.salidaId(), c.salidaHoraFechaCruce()));
+                }
+
+                return cruces.stream();
+            })
             .toList();
 
         List<Cruce> cruces = calculoTarifaService.calcularCruces(cruceRequests, request.vehiculo());
@@ -49,7 +64,7 @@ public class TarifaService
      */
     public TarifaCalculada calcularCruceTarifa(TarifaPorticoCruzado request)
     {
-        TarifaRequest tarifa = new TarifaRequest(request.cruces(), request.vehiculo());
+        TarifaRequest tarifa = new TarifaRequest(request.references(), request.vehiculo());
 
         TarifaCalculada calculo = calcularTarifa(tarifa);
 

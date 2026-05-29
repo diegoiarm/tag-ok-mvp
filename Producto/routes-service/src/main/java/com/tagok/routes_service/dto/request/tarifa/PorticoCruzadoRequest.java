@@ -3,7 +3,7 @@ package com.tagok.routes_service.dto.request.tarifa;
 import java.time.LocalDateTime;
 
 public record PorticoCruzadoRequest(
-    Long porticoId,
+    PorticoCruzadoReferences references,
     LocalDateTime horaFechaCruce) 
 {
 
