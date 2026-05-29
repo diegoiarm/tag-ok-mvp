@@ -53,10 +53,10 @@ public class TarifaService
 
         TarifaCalculada calculo = calcularTarifa(tarifa);
 
-        HistorialCruceEvent evento = historialCruceMapper.toEvent(calculo);
+        //HistorialCruceEvent evento = historialCruceMapper.toEvent(calculo);
 
         // Publica el evento
-        historialCrucePublisher.publicar(evento);
+        //historialCrucePublisher.publicar(evento);
 
         return calculo;
     }
