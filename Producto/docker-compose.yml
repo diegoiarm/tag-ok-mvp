@@ -73,18 +73,7 @@ services:
     volumes:
       - ./kafka/init-topics.sh:/init-topics.sh
     command: bash /init-topics.sh
-  kafka-ui:
-    image: provectuslabs/kafka-ui:latest
-    container_name: kafka-ui
-    depends_on:
-      - kafka
-      - kafka-setup
-    ports:
-      - "8090:8080"
-    environment:
-      KAFKA_CLUSTERS_0_NAME: tag-ok
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
-      
+
 volumes:
   postgres_data:
   pgadmin_data:
