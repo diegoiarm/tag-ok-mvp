@@ -18,14 +18,29 @@ public class KafkaHistorialCrucePublisher implements HistorialCrucePublisher
     @Override
     public void publicar(HistorialCruceEvent evento)
     {
+        evento.setUsuarioId(TOPIC);
+        
         if (evento.getUsuarioId() == null)
             throw new IllegalStateException("No hay id de usuario");
 
         kafkaTemplate.send(TOPIC, evento.getUsuarioId(), evento)
-        .whenComplete((result, ex) -> 
-        {
-            if (ex != null) 
-                System.out.println("Kafka no disponible: " + ex);
-        });
+            .whenComplete((result, ex) ->
+            {
+                if (ex != null)
+                {
+                    System.err.println("Kafka no disponible: " + ex.getMessage());
+                    return;
+                }
+
+                var metadata = result.getRecordMetadata();
+
+                System.out.printf(
+                    "Evento publicado. Topic=%s Particion=%d Offset=%d Timestamp=%d%n",
+                    metadata.topic(),
+                    metadata.partition(),
+                    metadata.offset(),
+                    metadata.timestamp()
+                );
+            });
     }
 }

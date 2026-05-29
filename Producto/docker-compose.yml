@@ -46,6 +46,45 @@ services:
       - "8002:8081"
     depends_on:
       - mongo
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    volumes:
+      - ./kafka/server.properties:/etc/kafka/server.properties
+    command: >
+      bash -c "
+        kafka-server-start /etc/kafka/server.properties
+      "
+  kafka-setup:
+    image: confluentinc/cp-kafka:7.4.0
+    depends_on:
+      - kafka
+    volumes:
+      - ./kafka/init-topics.sh:/init-topics.sh
+    command: bash /init-topics.sh
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    depends_on:
+      - kafka
+      - kafka-setup
+    ports:
+      - "8090:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: tag-ok
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      
 volumes:
   postgres_data:
   pgadmin_data:
