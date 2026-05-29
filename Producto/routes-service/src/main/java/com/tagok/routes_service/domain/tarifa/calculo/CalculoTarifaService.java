@@ -39,7 +39,7 @@ public class CalculoTarifaService
             {
                 Portico portico = pc.portico;
 
-                if (esTramoEspecialComoPortico(portico))
+                if (PorticoTramoPortico.esTramoEspecialComoPortico(portico))
                 {
                     return portico.getCalendario() != null && 
                     !portico.getReglas().isEmpty();
@@ -163,13 +163,4 @@ public class CalculoTarifaService
     }
 
     private record PorticoCruce(Portico portico, LocalDateTime tiempo) {}
-
-    // Sirve para identificar si una autopista contramos existe un portico solo
-    // para que el sistema identificara eso mano, si aca se da altiro literal hay 1
-    // que sentido tiene
-    private boolean esTramoEspecialComoPortico(Portico portico)
-    {
-        return portico.getAutopista().getCodigo().equals("AVO1")
-            && portico.getCodigo().equals("P110");
-    }
 }
