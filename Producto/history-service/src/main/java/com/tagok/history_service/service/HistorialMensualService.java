@@ -54,7 +54,7 @@ public class HistorialMensualService
 
         return HistorialMensualDocument.builder()
             .id(event.getUsuarioId() + "-" + fecha.getYear() + "-" + fecha.getMonthValue())
-            .userId(event.getUsuarioId())
+            .usuarioId(event.getUsuarioId())
             .año(fecha.getYear())
             .mes(fecha.getMonthValue())
             .totalMes(BigDecimal.ZERO)

@@ -19,7 +19,7 @@ public class HistorialMensualDocument
     @Id
     private String id;
 
-    private String userId;
+    private String usuarioId;
 
     private int año;
     private int mes;
