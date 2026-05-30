@@ -6,7 +6,6 @@
 
 package com.tagok.history_service.service;
 
-import com.tagok.history_service.document.CruceSnapshotDocument;
 import com.tagok.history_service.document.HistorialCruceDocument;
 import com.tagok.history_service.domain.Historial;
 import com.tagok.history_service.event.dtos.HistorialCruceEvent;

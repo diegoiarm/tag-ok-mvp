@@ -27,7 +27,7 @@ public class HistorialCruceDocument
 
     private BigDecimal total;
 
-    private List<CruceSnapshotDocument> cruces;
+    private List<CruceSnapshot> cruces;
 
     private LocalDate fecha;
 }

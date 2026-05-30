@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CruceSnapshotDocument
+public class CruceSnapshot
 {
     private String eventoId;
     
