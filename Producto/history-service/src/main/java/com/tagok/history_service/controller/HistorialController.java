@@ -5,6 +5,7 @@
 //}
 package com.tagok.history_service.controller;
 
+import com.tagok.history_service.document.HistorialCruceDocument;
 import com.tagok.history_service.domain.Historial;
 import com.tagok.history_service.service.HistorialService;
 import lombok.RequiredArgsConstructor;
@@ -26,5 +27,11 @@ public class HistorialController {
     @PostMapping
     public ResponseEntity<Historial> save(@RequestBody Historial historial) {
         return ResponseEntity.status(201).body(service.save(historial));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<HistorialCruceDocument>> getAll()
+    {
+        return ResponseEntity.ok(service.getAll());
     }
 }

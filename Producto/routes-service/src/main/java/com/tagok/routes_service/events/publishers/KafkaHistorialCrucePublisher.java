@@ -1,6 +1,5 @@
 package com.tagok.routes_service.events.publishers;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
