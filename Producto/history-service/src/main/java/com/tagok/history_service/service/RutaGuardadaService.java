@@ -9,6 +9,8 @@ package com.tagok.history_service.service;
 import com.tagok.history_service.domain.RutaGuardada;
 import com.tagok.history_service.repository.RutaGuardadaRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -21,7 +23,7 @@ public class RutaGuardadaService {
         return repository.findByIdToken(idToken);
     }
 
-    public RutaGuardada save(RutaGuardada ruta) {
+    public RutaGuardada save(@NonNull RutaGuardada ruta) {
         return repository.save(ruta);
     }
 }
