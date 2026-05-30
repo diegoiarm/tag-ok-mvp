@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CruceSnapshotDocument
 {
+    private String eventoId;
+    
     private String codigo;
     private String nombre;
     private String autopista;
@@ -23,4 +25,7 @@ public class CruceSnapshotDocument
     private BigDecimal valor;
 
     private LocalDateTime horaFechaCruce;
+
+    private String tipoVehiculo;
+
 }

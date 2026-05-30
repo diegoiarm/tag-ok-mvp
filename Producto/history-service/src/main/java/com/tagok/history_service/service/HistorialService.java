@@ -14,6 +14,9 @@ import com.tagok.history_service.repository.HistorialCruceRepository;
 import com.tagok.history_service.repository.HistorialRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -34,31 +37,28 @@ public class HistorialService
 
     public void guardar(HistorialCruceEvent evento)
     {
-        HistorialCruceDocument documento =
-            HistorialCruceDocument.builder()
-                .eventoId(evento.getEventoId())
-                .usuarioId(evento.getUsuarioId())
-                .total(evento.getTotal())
-                .tipoVehiculo(evento.getTipoVehiculo())
-                .fechaGeneracion(evento.getFechaGeneracion())
-                .cruces(
-                    evento.getCruces()
-                        .stream()
-                        .map(c ->
-                            CruceSnapshotDocument.builder()
-                                .codigo(c.getCodigo())
-                                .nombre(c.getNombre())
-                                .autopista(c.getAutopista())
-                                .tipoTarifa(c.getTipoTarifa())
-                                .valor(c.getValor())
-                                .horaFechaCruce(c.getHoraFechaCruce())
-                                .build()
-                        )
-                        .toList()
-                )
-                .build();
+        LocalDate fecha = LocalDate.now();
+
+        HistorialCruceDocument documento = historialCruceRepository
+            .findByUsuarioIdAndFecha(evento.getUsuarioId(), fecha)
+            .map(d ->
+            {
+                d.setTotal(d.getTotal().add(evento.getTotal()));
+
+                return d;
+            })
+            .orElse(toDocument(evento));
 
         historialCruceRepository.save(documento);
+    }
+
+    private HistorialCruceDocument toDocument(HistorialCruceEvent evento)
+    {
+        return HistorialCruceDocument.builder()
+            .usuarioId(evento.getUsuarioId())
+            .total(evento.getTotal())
+            .fecha(LocalDate.now())
+            .build();
     }
 
     public Historial save(Historial historial)

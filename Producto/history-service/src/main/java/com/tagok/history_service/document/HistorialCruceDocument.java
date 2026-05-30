@@ -1,6 +1,7 @@
 package com.tagok.history_service.document;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,14 +23,11 @@ public class HistorialCruceDocument
     @Id
     private String id;
 
-    private String eventoId;
     private String usuarioId;
 
     private BigDecimal total;
 
-    private String tipoVehiculo;
-
     private List<CruceSnapshotDocument> cruces;
 
-    private LocalDateTime fechaGeneracion;
+    private LocalDate fecha;
 }
