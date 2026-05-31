@@ -5,6 +5,7 @@ import {
   Map as MapIcon,
   Users as UsersIcon,
   BarChart3,
+  Building2,
   Upload,
   LogOut,
   LogIn,
@@ -51,6 +52,7 @@ const NAV_GENERAL: NavItem[] = [
 
 const NAV_ADMIN: NavItem[] = [
   { to: "/usuarios", label: "Usuarios", icon: UsersIcon },
+  { to: "/autopistas", label: "Concesionarios", icon: Building2 },
   { to: "/reportes", label: "Reportes", icon: BarChart3 },
   { to: "/files", label: "Subir JSONs", icon: Upload },
 ];

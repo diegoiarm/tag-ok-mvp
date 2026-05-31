@@ -7,6 +7,7 @@ import { Login } from "./app/pages/Login";
 import { UsuariosPage } from "./features/admin/pages/UsuariosPage";
 import { LoadFiles } from "./features/admin/pages/LoadFiles";
 import { ReportesPage } from "./features/admin/pages/ReportesPage";
+import { AutopistasPage } from "./features/admin/pages/AutopistasPage";
 
 function MapaPage() {
   const start = parseLatLng("-33.59669493677533, -70.70101359441239");
@@ -26,6 +27,7 @@ function App()
             <Route path="/mapa" element={<MapaPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/usuarios" element={<UsuariosPage />} />
+            <Route path="/autopistas" element={<AutopistasPage />} />
             <Route path="/reportes" element={<ReportesPage />} />
             <Route path="/files" element={<LoadFiles />} />
           </Route>

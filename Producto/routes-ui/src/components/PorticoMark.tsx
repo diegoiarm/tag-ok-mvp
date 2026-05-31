@@ -38,6 +38,11 @@ export function PorticoMark({ portico }: Props) {
 
     const handlePopupOpen = () => setShouldFetch(true);
 
+    const codigo = detalle?.codigo;
+    const nombre = detalle?.nombre;
+    const sentido = detalle?.type === "PORTICO" ? detalle.sentido : undefined;
+    const autopista = detalle?.autopista;
+
     return (
         <Marker
             position={[portico.latitud, portico.longitud]}
@@ -46,20 +51,24 @@ export function PorticoMark({ portico }: Props) {
         >
             <Popup>
                 <div style={{ minWidth: "220px" }}>
-                    <strong>Código: {portico.codigo}</strong>
+                    <strong>Código: {codigo ?? "—"}</strong>
 
                     <br />
 
                     <strong>
-                        Pórtico: {portico.nombre || "No especificado"}
+                        Pórtico: {nombre || "No especificado"}
                     </strong>
-                    <br />
-                    Sentido: {portico.sentido}
-
-                    {(portico.autopista || detalle?.autopista) && (
+                    {sentido && (
                         <>
                             <br />
-                            Autopista: {portico.autopista || detalle?.autopista}
+                            Sentido: {sentido}
+                        </>
+                    )}
+
+                    {autopista && (
+                        <>
+                            <br />
+                            Autopista: {autopista}
                         </>
                     )}
 

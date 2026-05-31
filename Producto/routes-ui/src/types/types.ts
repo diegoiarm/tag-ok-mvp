@@ -145,6 +145,47 @@ export type CobroTramo = {
 
 export type Cobro = CobroPortico | CobroTramo;
 
+export type TipoCobro = "PORTICO" | "TRAMO";
+
+export type AutopistaPortico = {
+    id: number;
+    codigo: string;
+    nombre: string;
+    sentido?: string | null;
+    latitud: number;
+    longitud: number;
+    reglas?: ReglaTarifariaResponse[];
+    calendario?: CalendarioTarifarioResponse;
+};
+
+export type AutopistaTramoExtremo = {
+    id: number;
+    latitud: number;
+    longitud: number;
+};
+
+export type AutopistaTramo = {
+    id: number;
+    entrada: AutopistaTramoExtremo;
+    salida: AutopistaTramoExtremo;
+    distanciaKm?: number;
+    reglas?: ReglaTarifariaResponse[];
+    calendario?: CalendarioTarifarioResponse;
+};
+
+export type AutopistaResumen = {
+    id: number;
+    nombre: string;
+    codigo: string;
+    tipoCobro: TipoCobro;
+    totalPorticos: number;
+    totalTramos: number;
+    porticos: AutopistaPortico[];
+    tramos: AutopistaTramo[];
+    /** Objeto crudo devuelto por el backend, usado para exportar la configuración. */
+    raw: unknown;
+};
+
 export type RouteResponse = {
     fechaHoraInicio: string;
     fechaHoraFin: string;
