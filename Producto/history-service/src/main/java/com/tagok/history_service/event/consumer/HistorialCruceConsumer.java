@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tagok.history_service.event.dtos.HistorialCruceEvent;
-import com.tagok.history_service.service.HistorialMensualService;
+import com.tagok.history_service.service.HistorialAnualService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class HistorialCruceConsumer
 {
     private final ObjectMapper objectMapper;
-    private final HistorialMensualService historialMensualService;
+    private final HistorialAnualService historialAnualService;
 
     @KafkaListener(topics = "portico-cruzado", groupId = "history-service")
     public void consumir(String evento)
@@ -23,7 +23,7 @@ public class HistorialCruceConsumer
         {
             HistorialCruceEvent eventoMapped = objectMapper.readValue(evento, HistorialCruceEvent.class);
 
-            historialMensualService.saveEvent(eventoMapped);
+            historialAnualService.saveEvent(eventoMapped);
 
             System.out.println("Historial guardado: " + eventoMapped.getEventoId());
 

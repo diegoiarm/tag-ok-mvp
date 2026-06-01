@@ -5,28 +5,20 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import lombok.Builder;
 import lombok.Data;
 
-@Document("historial_mensual")
 @Builder
 @Data
-public class HistorialMensualDocument 
+public class HistorialMensualSnapshot 
 {
-    @Id
-    private String id;
-
-    private String usuarioId;
-
-    private int año;
     private int mes;
 
-    private BigDecimal totalMes;
+    @Builder.Default
+    private BigDecimal totalMes = BigDecimal.ZERO;
     
-    private int cantidadCruces;
+    @Builder.Default
+    private int cantidadCruces = 0;
 
     @Builder.Default
     private List<HistorialDiarioSnapshot> dias = new ArrayList<>();

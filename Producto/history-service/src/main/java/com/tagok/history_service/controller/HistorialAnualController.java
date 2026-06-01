@@ -7,21 +7,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tagok.history_service.document.HistorialMensualDocument;
-import com.tagok.history_service.service.HistorialMensualService;
+import com.tagok.history_service.document.HistorialAnualDocument;
+import com.tagok.history_service.service.HistorialAnualService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/historial")
-public class HistorialMensualController 
+public class HistorialAnualController 
 {
-    private final HistorialMensualService historialMensualService;
+    private final HistorialAnualService historialAnualService;
 
     @GetMapping
-    public ResponseEntity<List<HistorialMensualDocument>> getAll()
+    public ResponseEntity<List<HistorialAnualDocument>> getAll()
     {
-        return ResponseEntity.ok(historialMensualService.getAll());
+        return ResponseEntity.ok(historialAnualService.getAll());
     }
 }

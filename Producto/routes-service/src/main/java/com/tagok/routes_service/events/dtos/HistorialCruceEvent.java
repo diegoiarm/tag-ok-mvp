@@ -20,7 +20,6 @@ public class HistorialCruceEvent
     private String usuarioId;
     private BigDecimal total;
 
-    private String tipoVehiculo;
     @Builder.Default
     List<CruceSnapshot> cruces = new ArrayList<>();
     LocalDateTime fechaGeneracion;

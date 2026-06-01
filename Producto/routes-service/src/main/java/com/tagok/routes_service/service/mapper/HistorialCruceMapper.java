@@ -17,15 +17,14 @@ public class HistorialCruceMapper
         return HistorialCruceEvent.builder()
             .usuarioId(null)
             .total(calculo.total())
-            .tipoVehiculo(calculo.vehiculo().name())
             .cruces(calculo.cruces().stream()
-                .map(this::toSnapshot)
+                .map(cruce -> this.toSnapshot(cruce, calculo.vehiculo().name()))
                 .toList())
             .fechaGeneracion(LocalDateTime.now())
             .build();
     }
 
-    private CruceSnapshot toSnapshot(Cruce cruce)
+    private CruceSnapshot toSnapshot(Cruce cruce, String tipoVehiculo)
     {
         return CruceSnapshot.builder()
             .codigo(cruce.codigo())
@@ -33,6 +32,7 @@ public class HistorialCruceMapper
             .autopista(cruce.autopista())
             .tipoTarifa(cruce.tipoTarifa().name())
             .valor(cruce.valor())
+            .tipoVehiculo(tipoVehiculo)
             .horaFechaCruce(cruce.horaFechaCruce())
             .build();
     }

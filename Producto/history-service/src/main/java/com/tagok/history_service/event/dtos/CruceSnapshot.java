@@ -22,5 +22,7 @@ public class CruceSnapshot
 
     private BigDecimal valor;
 
-    LocalDateTime horaFechaCruce;
+    private String tipoVehiculo;
+
+    private LocalDateTime horaFechaCruce;
 }

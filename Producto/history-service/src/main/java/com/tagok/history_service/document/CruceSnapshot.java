@@ -18,6 +18,8 @@ public class CruceSnapshot
 
     private BigDecimal valor;
 
+    private String tipoVehiculo;
+
     private LocalDateTime horaFechaCruce;
 
     public static CruceSnapshot fromEvent(com.tagok.history_service.event.dtos.CruceSnapshot evento)
@@ -28,6 +30,7 @@ public class CruceSnapshot
             .autopista(evento.getAutopista())
             .tipoTarifa(evento.getTipoTarifa())
             .valor(evento.getValor())
+            .tipoVehiculo(evento.getTipoVehiculo())
             .horaFechaCruce(evento.getHoraFechaCruce())
             .build();
     }  
