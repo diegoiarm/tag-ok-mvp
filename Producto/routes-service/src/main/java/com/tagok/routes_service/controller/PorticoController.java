@@ -3,7 +3,6 @@ package com.tagok.routes_service.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,8 +15,7 @@ import com.tagok.routes_service.service.application.PorticoService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/porticos")
-@CrossOrigin(origins = "http://localhost:5173")
+@RequestMapping("/v1/porticos")
 @RequiredArgsConstructor
 public class PorticoController 
 {

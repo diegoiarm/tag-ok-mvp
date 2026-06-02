@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/historial")
+@RequestMapping("/v1/annual")
 public class HistorialAnualController 
 {
     private final HistorialAnualService historialAnualService;

@@ -8,25 +8,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tagok.routes_service.domain.tarifa.TarifaCalculada;
 import com.tagok.routes_service.dto.request.tarifa.TarifaPorticoCruzado;
-import com.tagok.routes_service.dto.request.tarifa.TarifaRequest;
 import com.tagok.routes_service.service.application.TarifaService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/tarifas")
+@RequestMapping("/v1/tarifas")
 @RequiredArgsConstructor
 public class TarifaController
 {
     private final TarifaService tarifaService;
 
-    @PostMapping("/calcular")
-    public TarifaCalculada calcular(@RequestBody TarifaRequest request)
-    {
-        return tarifaService.calcularTarifa(request);
-    }
-
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<TarifaCalculada> calcularTarifaCruce(@RequestBody TarifaPorticoCruzado request)
     {
         var tarifa = tarifaService.calcularCruceTarifa(request);
