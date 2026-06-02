@@ -19,7 +19,7 @@ class RouteApi(private val client: HttpClient)
         lat1: Double,
         lon2: Double,
         lat2: Double): RouteResponse =
-        client.get("$BASE_URL/api/routes")
+        client.get("$BASE_URL/v1/rutas")
         {
             parameter("lon1", lon1)
             parameter("lat1", lat1)
@@ -28,7 +28,7 @@ class RouteApi(private val client: HttpClient)
         }.body()
 
     suspend fun calculateTarifa(request: TarifaRequest): TarifaCalculada =
-        client.post("$BASE_URL/tarifas/calcular")
+        client.post("$BASE_URL/v1/tarifas")
         {
             contentType(ContentType.Application.Json)
             setBody(request)
@@ -36,6 +36,6 @@ class RouteApi(private val client: HttpClient)
 
     companion object
     {
-        private const val BASE_URL = "http://192.168.1.4:8000"
+        private var BASE_URL = ApiConfig.ROUTES_API
     }
 }

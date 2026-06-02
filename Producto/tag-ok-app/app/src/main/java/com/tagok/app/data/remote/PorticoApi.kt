@@ -9,13 +9,13 @@ import io.ktor.client.request.get
 class PorticoApi(private val client: HttpClient)
 {
     suspend fun getPorticos(): List<PorticoResumenResponse> =
-        client.get("${BASE_URL}/porticos").body()
+        client.get("${BASE_URL}/v1/porticos").body()
 
     suspend fun getPorticoDetails(id: Long): TollResponse =
-        client.get("${BASE_URL}/porticos/${id}").body()
+        client.get("${BASE_URL}/v1/porticos/${id}").body()
 
     companion object
     {
-        private const val BASE_URL = "http://192.168.1.4:8000"
+        private var BASE_URL = ApiConfig.ROUTES_API
     }
 }
