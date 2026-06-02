@@ -3,6 +3,7 @@ package com.tagok.app.data.remote
 import com.tagok.app.data.dto.route.RouteResponse
 import com.tagok.app.data.dto.TarifaCalculada
 import com.tagok.app.data.dto.TarifaRequest
+import com.tagok.app.data.dto.route.RouteRequest
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -14,17 +15,11 @@ import io.ktor.http.contentType
 
 class RouteApi(private val client: HttpClient)
 {
-    suspend fun getRoute(
-        lon1: Double,
-        lat1: Double,
-        lon2: Double,
-        lat2: Double): RouteResponse =
-        client.get("$BASE_URL/v1/rutas")
+    suspend fun getRoute(request: RouteRequest): RouteResponse =
+        client.post("$BASE_URL/v1/rutas")
         {
-            parameter("lon1", lon1)
-            parameter("lat1", lat1)
-            parameter("lon2", lon2)
-            parameter("lat2", lat2)
+            contentType(ContentType.Application.Json)
+            setBody(request)
         }.body()
 
     suspend fun calculateTarifa(request: TarifaRequest): TarifaCalculada =

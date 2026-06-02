@@ -88,7 +88,7 @@ services:
     command: bash /init-topics.sh
 
   # =========================
-  # Importador
+  # Importador (No ejecutar!)
   # =========================
 
   osm-importer:

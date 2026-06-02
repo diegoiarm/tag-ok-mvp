@@ -29,7 +29,7 @@ public class RouteService
     private final CalculoTarifaService calculoTarifaService;
     private final CobroRutaMapper cobroRutaMapper;
 
-    public RouteResponse getRoute(double lon1, double lat1, double lon2, double lat2) 
+    public RouteResponse getRoute(double lon1, double lat1, double lon2, double lat2, TipoVehiculo vehiculo) 
     {
         Long startId = routeRepository.findNearestVertex(lon1, lat1)
                 .orElseThrow(() -> new RuntimeException("No se encontró vértice cercano a inicio"));
@@ -68,7 +68,7 @@ public class RouteService
             }
         }
 
-        List<Cruce> cruces = calculoTarifaService.calcularCruces(crucesReq, TipoVehiculo.AUTO);
+        List<Cruce> cruces = calculoTarifaService.calcularCruces(crucesReq, vehiculo);
 
         List<CobroRutaResponse> cobros = cruces.stream()
                 .map(cobroRutaMapper::toResponse)

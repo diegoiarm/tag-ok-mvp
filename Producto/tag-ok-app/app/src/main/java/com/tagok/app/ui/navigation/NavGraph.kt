@@ -45,6 +45,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.rememberCoroutineScope
+import com.tagok.app.domain.vehiculo.TipoVehiculo
 import com.tagok.app.ui.historial.HistorialScreen
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonPrimitive
@@ -193,19 +194,27 @@ fun NavGraph() {
                 VehiculosScreen(onBack = { navController.popBackStack() })
             }
 
-            // Planificación de viaje: input de origen/destino + estimación de tarifa
             composable(
                 route = "planificar/{vehiculo}",
                 arguments = listOf(navArgument("vehiculo") {
                     type = NavType.StringType
                     defaultValue = "AUTO"
-                }),
-            ) { backStack ->
-                val vehiculo = backStack.arguments?.getString("vehiculo") ?: "AUTO"
+                }))
+            { backStack ->
+                val vehiculoString = backStack.arguments?.getString("vehiculo") ?: "AUTO"
+
+                val vehiculo = try
+                {
+                    TipoVehiculo.valueOf(vehiculoString)
+                }
+                catch (e: IllegalArgumentException)
+                {
+                    TipoVehiculo.AUTO
+                }
+
                 PlanificarViajeScreen(
                     vehiculo = vehiculo,
-                    onBack = { navController.popBackStack() },
-                )
+                    onBack = { navController.popBackStack() })
             }
 
             composable("historial") { HistorialScreen() }

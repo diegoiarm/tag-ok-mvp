@@ -40,6 +40,7 @@ import com.tagok.app.data.GeocodeSuggestion
 import com.tagok.app.data.GeocodingRepository
 import com.tagok.app.domain.model.routes.Portico
 import com.tagok.app.domain.model.routes.Tramo
+import com.tagok.app.domain.vehiculo.TipoVehiculo
 import com.tagok.app.ui.components.map.MapControls
 import com.tagok.app.ui.map.MapViewModel
 import com.tagok.app.ui.map.portico.PorticosContainer
@@ -72,7 +73,7 @@ private fun flyToCurrentLocation(context: Context, mapViewportState: com.mapbox.
 
 @Composable
 fun PlanificarViajeScreen(
-    vehiculo: String = "AUTO",
+    vehiculo: TipoVehiculo = TipoVehiculo.AUTO,
     onBack: () -> Unit = {},
     mapViewModel: MapViewModel = viewModel(factory = MapViewModel.Factory),
     planificarViajeViewModel: PlanificarViajeViewModel = viewModel(factory = PlanificarViajeViewModel.Factory))
@@ -148,8 +149,14 @@ fun PlanificarViajeScreen(
                 .build())
     }
 
+    var selectedVehicle: TipoVehiculo by remember {
+        mutableStateOf(vehiculo)
+    }
+
     // ── Side effects ─────────────────────────────────────────────────────────
-    LaunchedEffect(Unit) { planificarViajeViewModel.setVehiculo(vehiculo) }
+    LaunchedEffect(selectedVehicle) {
+        planificarViajeViewModel.setVehiculo(selectedVehicle)
+    }
     DisposableEffect(Unit) { onDispose { planificarViajeViewModel.resetMap() } }
     LaunchedEffect(planificarUiState.error) {
         planificarUiState.error?.let {
@@ -223,7 +230,9 @@ fun PlanificarViajeScreen(
                 .padding(top = 24.dp, end = 12.dp))
 
         RouteBottomCard(
-            vehiculo = vehiculo,
+            vehiculo = selectedVehicle.displayName,
+            selectedVehicle = selectedVehicle,
+            onVehicleSelected = { selectedVehicle = it },
             isMinimized = isMinimized,
             onToggleMinimized = { isMinimized = !isMinimized },
             onBack = onBack,
@@ -259,7 +268,12 @@ fun PlanificarViajeScreen(
             onCalcular = {
                 val o = origenSeleccionado ?: return@RouteBottomCard
                 val d = destinoSeleccionado ?: return@RouteBottomCard
-                planificarViajeViewModel.calculateRoute(lon1 = o.lon, lat1 = o.lat, lon2 = d.lon, lat2 = d.lat)
+                planificarViajeViewModel.calculateRoute(
+                    lon1 = o.lon,
+                    lat1 = o.lat,
+                    lon2 = d.lon,
+                    lat2 = d.lat,
+                    vehiculo = selectedVehicle)
             },
             onUsarEjemplo = {
                 origenText = EJEMPLO_ORIGEN.placeName
