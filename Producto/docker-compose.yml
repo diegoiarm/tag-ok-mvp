@@ -119,6 +119,8 @@ services:
     depends_on:
       - db-historial
       - kafka-setup
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
 
   gateway-service:
     build: 
