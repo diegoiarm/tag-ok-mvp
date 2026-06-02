@@ -90,6 +90,19 @@ services:
     command: bash /init-topics.sh
 
   # =========================
+  # Importador
+  # =========================
+
+  osm-importer:
+    build: ./osm-importer
+    depends_on:
+      - db-rutas
+    environment:
+      JDBC_URL: jdbc:postgresql://db-rutas:5432/db_rutas
+      JDBC_USERNAME: admin
+      JDBC_PASSWORD: admin
+
+  # =========================
   # Servicios
   # =========================
 
