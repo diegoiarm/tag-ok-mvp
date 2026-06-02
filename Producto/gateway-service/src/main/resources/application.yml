@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: gateway-service
+
+  cloud:
+    gateway:
+      routes:
+        - id: routes-service
+          uri: http://routes-service:8080
+          predicates:
+            - Path=/api/routes/**
+
+        - id: history-service
+          uri: http://history-service:8080
+          predicates:
+            - Path=/api/history/**
+
+server:
+  port: 8080

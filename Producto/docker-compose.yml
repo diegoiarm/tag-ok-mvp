@@ -11,8 +11,6 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: db_rutas
-    ports:
-      - "5431:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -39,8 +37,6 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin
-    ports:
-      - "5678:27017"
     volumes:
       - mongo_data:/data/db
 
