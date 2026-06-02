@@ -27,7 +27,7 @@ interface FileItem {
   message?: string;
 }
 
-const API_ENDPOINT = "http://localhost:8000/autopistas";
+const API_ENDPOINT = "http://localhost:8080/api/routes/v1/autopistas";
 
 export function LoadFiles() {
   const [files, setFiles] = useState<FileItem[]>([]);
