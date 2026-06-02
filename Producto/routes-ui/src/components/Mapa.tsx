@@ -32,7 +32,7 @@ const EndIcon = L.icon({
 });
 
 export function Mapa({ start, end }: { start: Coord; end: Coord }) {
-    const { data: route } = useRoute(start, end);
+    const { data: route } = useRoute(start, end, "AUTO");
     const { data: porticos } = usePorticos();
 
     const [geoJsonData, setGeoJsonData] = useState<any>(null);
