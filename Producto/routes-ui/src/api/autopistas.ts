@@ -15,8 +15,10 @@ interface AutopistaApiResponse {
   tramos?: AutopistaTramo[] | null;
 }
 
+const urlBase = "/routes/v1/autopistas";
+
 export const getAutopistas = async (): Promise<AutopistaResumen[]> => {
-  const { data } = await api.get<AutopistaApiResponse[]>("/autopistas");
+  const { data } = await api.get<AutopistaApiResponse[]>(urlBase);
   return data.map((a) => ({
     id: a.id,
     nombre: a.nombre,
@@ -31,5 +33,5 @@ export const getAutopistas = async (): Promise<AutopistaResumen[]> => {
 };
 
 export const deleteAutopista = async (id: number): Promise<void> => {
-  await api.delete(`/autopistas/${id}`);
+  await api.delete(`${urlBase}/${id}`);
 };
