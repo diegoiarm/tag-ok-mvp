@@ -1,5 +1,6 @@
 package com.tagok.history_service.document;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.Builder;
 import lombok.Data;
 
-@Document("historial_")
+@Document("historial_anual")
 @Data
 @Builder
 public class HistorialAnualDocument 
@@ -24,6 +25,9 @@ public class HistorialAnualDocument
 
     @Builder.Default
     private int cantidadCruces = 0;
+
+    @Builder.Default
+    private BigDecimal totalAño = BigDecimal.ZERO;
 
     @Builder.Default
     private List<HistorialMensualSnapshot> meses = new ArrayList<>();
@@ -62,5 +66,6 @@ public class HistorialAnualDocument
 
         mensual.registrarDia(fecha, cruces);
         cantidadCruces += cruces.size();
+        totalAño = totalAño.add(cruces.stream().map(CruceSnapshot::getValor).reduce(BigDecimal.ZERO, BigDecimal::add));
     }
 }
