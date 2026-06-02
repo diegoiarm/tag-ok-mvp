@@ -11,7 +11,6 @@ import com.tagok.routes_service.domain.tramo.Tramo;
 import com.tagok.routes_service.dto.request.tramo.TramoRequest;
 import com.tagok.routes_service.dto.response.portico.CalendarioTarifarioResponse;
 import com.tagok.routes_service.dto.response.portico.ReglaTarifariaResponse;
-import com.tagok.routes_service.dto.response.portico.TramoResponse;
 import com.tagok.routes_service.dto.response.portico.TramoRouteResponse;
 
 import lombok.RequiredArgsConstructor;
