@@ -2,7 +2,7 @@ import type { RouteResponse } from "../types/types";
 import { api } from "./axios";
 
 export const getRoute = async (start: any, end: any) => {
-  const { data } = await api.get("/v1/rutas", {
+  const { data } = await api.get("/routes/v1/rutas", {
     params: {
       lon1: start.lon,
       lat1: start.lat,

@@ -11,11 +11,15 @@ spring:
               uri: http://routes-service:8080
               predicates:
                 - Path=/api/routes/**
+              filters:
+              - StripPrefix=2
 
             - id: history-service
               uri: http://history-service:8080
               predicates:
                 - Path=/api/history/**
+              filters:
+              - StripPrefix=2
 
 server:
   port: 8080
