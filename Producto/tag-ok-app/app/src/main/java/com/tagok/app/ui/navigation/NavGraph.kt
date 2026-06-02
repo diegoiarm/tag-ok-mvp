@@ -45,6 +45,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.rememberCoroutineScope
+import com.tagok.app.ui.historial.HistorialScreen
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonPrimitive
 
@@ -168,7 +169,7 @@ fun NavGraph() {
                 HomeScreen(
                     nombre = nombre,
                     onPlanificarViaje = { v -> navController.navigate("planificar/$v") },
-                    onHistorialViajes = { /* TODO: HistorialScreen */ },
+                    onHistorialViajes = { navController.navigate("historial") },
                     onIrARuta = { v -> navController.navigate("map/$v") },
                     onBoletaMensual = { navController.navigate(Screen.Presupuesto.route) },
                     onAgregarVehiculo = { navController.navigate("vehiculos") },
@@ -179,6 +180,7 @@ fun NavGraph() {
                     },
                 )
             }
+
             composable(Screen.Presupuesto.route) { PresupuestoScreen() }
             composable(Screen.Boleta.route)      { BoletaScreen() }
             composable(Screen.Perfil.route) {
@@ -205,6 +207,8 @@ fun NavGraph() {
                     onBack = { navController.popBackStack() },
                 )
             }
+
+            composable("historial") { HistorialScreen() }
 
             // Reservado para flujo en tiempo real
             composable(
