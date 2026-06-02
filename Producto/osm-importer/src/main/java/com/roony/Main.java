@@ -31,7 +31,7 @@ public class Main
         if (files.size() == 1)
             processSingleFile(files.get(0), ds);
         else
-            processMultipleFiles(files, ds);
+            System.out.println("Solo un archivo!");
 
         RoutingInitializer.initialize(ds);
 
@@ -65,42 +65,6 @@ public class Main
         OsmJsonParser parser = new OsmJsonParser(BoundingBoxFilter.santiagoFiltering(), ds);
 
         printResult(parser.parse(file));
-    }
-
-    private static void processMultipleFiles(List<Path> files, DataSource ds) throws Exception
-    {
-        int threads = Runtime.getRuntime()
-            .availableProcessors();
-
-        ExecutorService executor = Executors.newFixedThreadPool(threads);
-
-        try
-        {
-            List<Future<ParseResult>> futures =
-                new ArrayList<>();
-
-            for(Path file : files)
-            {
-                futures.add(
-                    executor.submit(() ->
-                        new OsmJsonParser(
-                            BoundingBoxFilter.santiagoFiltering(),
-                            ds
-                        ).parse(file)));
-            }
-
-            for(Future<ParseResult> future : futures)
-            {
-                printResult(future.get());
-            }
-        }
-        finally
-        {
-            executor.shutdown();
-            executor.awaitTermination(
-                1,
-                TimeUnit.MINUTES);
-        }
     }
 
     private static void printResult(ParseResult result)
