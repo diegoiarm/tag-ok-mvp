@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [0.2.0]
+
+### Added 
+- Se añadio oporte para carga lazy del historial
+
 ## [0.1.0]
 
 ### Base
