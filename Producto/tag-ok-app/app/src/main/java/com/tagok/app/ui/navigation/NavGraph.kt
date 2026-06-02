@@ -219,15 +219,25 @@ fun NavGraph() {
 
             composable("historial") { HistorialScreen() }
 
-            // Reservado para flujo en tiempo real
             composable(
                 route = "map/{vehiculo}",
-                arguments = listOf(navArgument("vehiculo") {
+                arguments = listOf(navArgument("vehiculo")
+                {
                     type = NavType.StringType
                     defaultValue = "AUTO"
-                }),
-            ) { backStack ->
-                val vehiculo = backStack.arguments?.getString("vehiculo") ?: "AUTO"
+                }))
+            { backStack ->
+                val vehiculoString = backStack.arguments?.getString("vehiculo") ?: "AUTO"
+
+                val vehiculo = try
+                {
+                    TipoVehiculo.valueOf(vehiculoString)
+                }
+                catch (e: IllegalArgumentException)
+                {
+                    TipoVehiculo.AUTO
+                }
+
                 MapScreen(vehiculo = vehiculo)
             }
         }

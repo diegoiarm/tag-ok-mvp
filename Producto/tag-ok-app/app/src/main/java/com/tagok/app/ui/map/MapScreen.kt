@@ -58,6 +58,7 @@ import com.mapbox.maps.extension.compose.annotation.IconImage
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 import com.tagok.app.R
 import androidx.core.graphics.createBitmap
+import com.tagok.app.domain.vehiculo.TipoVehiculo
 import com.tagok.app.ui.map.portico.PorticosContainer
 
 private val SANTIAGO = Point.fromLngLat(-70.6483, -33.4569)
@@ -115,7 +116,7 @@ private fun MapControlButton(
 @SuppressLint("RememberReturnType")
 @Composable
 fun MapScreen(
-    vehiculo: String = "AUTO",
+    vehiculo: TipoVehiculo = TipoVehiculo.AUTO,
     viewModel: MapViewModel = viewModel(factory = MapViewModel.Factory))
 {
     val uiState by viewModel.uiState.collectAsState()
@@ -195,7 +196,8 @@ fun MapScreen(
 
             PorticosContainer(
                 context = context,
-                porticos = uiState.porticos)
+                porticos = uiState.porticos,
+                vehiculo = vehiculo)
 
             if (userLocation != null)
             {

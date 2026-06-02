@@ -216,7 +216,8 @@ fun PlanificarViajeScreen(
             PorticosContainer(
                 context = context,
                 porticos = mapUiState.porticos,
-                route = route)
+                route = route,
+                selectedVehicle)
         }
 
         MapControls(

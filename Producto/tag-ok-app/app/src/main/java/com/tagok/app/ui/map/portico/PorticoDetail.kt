@@ -29,6 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tagok.app.domain.model.portico.PorticoTramoType
 import com.tagok.app.domain.model.portico.PorticoType
 import com.tagok.app.domain.model.portico.TollType
+import com.tagok.app.domain.vehiculo.TipoVehiculo
 import com.tagok.app.ui.theme.Blue40
 import com.tagok.app.ui.theme.InputBackground
 import com.tagok.app.ui.theme.TextSecondary
@@ -37,11 +38,16 @@ import com.tagok.app.ui.theme.TextSecondary
 fun PorticoDetail(
     porticoId: Long,
     onDismiss: () -> Unit,
+    vehiculo: TipoVehiculo,
     viewModel: PorticoDetailViewModel = viewModel(factory = PorticoDetailViewModel.Factory))
 {
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(porticoId) { viewModel.load(porticoId) }
+
+    LaunchedEffect(vehiculo) {
+        viewModel.setVehiculo(vehiculo)
+    }
 
     BasePorticoBottomSheet(title = "Detalle del pórtico", onDismiss = onDismiss)
     {
