@@ -12,7 +12,7 @@ import com.tagok.routes_service.domain.vehiculo.TipoVehiculo;
  * La mayoria de veces sera cruces.size() = 1
  */
 public record TarifaPorticoCruzado(
-    List<PorticoCruzadoRequest> cruces,
+    List<PorticoCruzadoReferences> references,
     TipoVehiculo vehiculo) 
 {
     

@@ -1,4 +1,4 @@
-package com.tagok.routes_service.events.dtos;
+package com.tagok.history_service.event.dtos;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -24,5 +24,5 @@ public class CruceSnapshot
 
     private String tipoVehiculo;
 
-    LocalDateTime horaFechaCruce;
+    private LocalDateTime horaFechaCruce;
 }
