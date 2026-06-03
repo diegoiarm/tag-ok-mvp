@@ -33,24 +33,40 @@ public class HistorialService
 
     public void saveEvent(HistorialCruceEvent event)
     {
-        String id = HistorialAnualDocument.generateId(event.getUsuarioId(), event.getFechaGeneracion().getYear());
+        Map<Integer, Map<LocalDate, List<CruceSnapshot>>> crucesPorAño =
+            event.getCruces()
+                .stream()
+                .map(CruceSnapshot::fromEvent)
+                .collect(Collectors.groupingBy(
+                    c -> c.getHoraFechaCruce().getYear(),
+                    Collectors.groupingBy(
+                        c -> c.getHoraFechaCruce().toLocalDate()
+                    )
+                ));
 
-        HistorialAnualDocument historial = historialAnualRepository.findById(id)
-            .orElseGet(() -> HistorialAnualDocument.createNewEmpty(event.getUsuarioId(), event.getFechaGeneracion().getYear()));
+        for (var entry : crucesPorAño.entrySet())
+        {
+            int año = entry.getKey();
 
-        var cruces = getCrucesPorDia(event);
+            String id =
+                HistorialAnualDocument.generateId(
+                    event.getUsuarioId(),
+                    año
+                );
 
-        cruces.forEach(historial::registrarCruces);
+            HistorialAnualDocument historial =
+                historialAnualRepository.findById(id)
+                    .orElseGet(() ->
+                        HistorialAnualDocument.createNewEmpty(
+                            event.getUsuarioId(),
+                            año
+                        )
+                    );
 
-        historialAnualRepository.save(historial);
-    }
+            entry.getValue().forEach(historial::registrarCruces);
 
-    private Map<LocalDate, List<CruceSnapshot>> getCrucesPorDia(HistorialCruceEvent event)
-    {
-        return event.getCruces()
-            .stream()
-            .map(CruceSnapshot::fromEvent)
-            .collect(Collectors.groupingBy(c -> c.getHoraFechaCruce().toLocalDate()));
+            historialAnualRepository.save(historial);
+        }
     }
 
     public List<ProyeccionAnual> getResumenAnual(String usuarioId) 
