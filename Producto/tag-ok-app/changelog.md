@@ -1,5 +1,32 @@
 # CHANGELOG
 
+## [0.4.0] - 2026-06-03
+
+### Added
+- Sistema de simulación de cruce aleatorio de pórticos desde el mapa
+- Componente `TestRealTime` con UI para simular cruces y mostrar resultados
+- Notificaciones locales acumulativas estilo WhatsApp para cruces realizados
+- Sistema de condensación de notificaciones: muestra últimos 3 cruces y resume el resto
+- Badge numérico en notificación con cantidad total de cruces acumulados
+- Total acumulado en tiempo real en la notificación persistente
+- DTOs polimórficos para respuestas de cruce: `CrucePorticoResponse` y `CruceTramoResponse`
+- Serializador polimórfico `CruceResponseSerializer` para manejar tipos de cruce
+- Modelos de dominio para tarifas: `Cruce` (sealed class), `CrucePortico`, `CruceTramo`, `TarifaCalculada`
+- Mapper `TarifaMapper` para convertir DTOs a modelos de dominio
+- Request DTO actualizado: `TarifaRequest` con `references`, `patente` y `vehiculo`
+- `NotificationUtils` con acumulador de cruces, formateo de moneda y canales de notificación
+- Soporte para `RouteRepository` en `MapViewModel` para llamadas a API de tarifas
+- Permiso `POST_NOTIFICATIONS` para Android 13+
+
+### Changed
+- `MapViewModel` ahora recibe `RouteRepository` además de `PorticoRepository`
+- `MapUiState` incluye `tarifaCalculada`, `isCalculating` y método `clearTarifa()`
+- Actualizada `MapScreen` para integrar `TestRealTime` con ViewModel
+- `MapViewModel.Factory` actualizado para instanciar ambos repositorios
+- Notificaciones usan el mismo `notificationId` para actualizarse en lugar de crear nuevas
+- La notificación se expande mostrando detalle de cruces al deslizar hacia abajo
+- `DisposableEffect` en `MapScreen` para limpiar acumulador de notificaciones al salir
+
 ## [0.3.0] - 2026-06-03
 
 ### Added

@@ -1,6 +1,7 @@
 // ui/map/MapViewModel.kt
 package com.tagok.app.ui.map
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -21,8 +22,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 data class MapUiState(
     val porticos: List<PorticoResumen> = emptyList(),
@@ -51,7 +54,7 @@ class MapViewModel(
         _uiState.update { it.copy(tarifaCalculada = null) }
     }
 
-    fun simularCruceAleatorio(vehiculo: TipoVehiculo)
+    fun simularCruceAleatorio(vehiculo: TipoVehiculo, context: Context)
     {
         val porticos = _uiState.value.porticos
         if (porticos.isEmpty())
@@ -79,21 +82,20 @@ class MapViewModel(
                     vehiculo = vehiculo.name,
                     patente = "ABCD-33")
 
-                Log.d(TAG, "simularCruceAleatorio: enviando request $request")
-
                 val response = routeRepository.calculateTarifa(request)
-
-                Log.d(TAG, "simularCruceAleatorio: respuesta -> total=${response.total}, cruces=${response.cruces.size}")
 
                 _uiState.update {
                     it.copy(
                         tarifaCalculada = response,
                         isCalculating = false)
                 }
+
+                // Agregar cruces al acumulador de notificaciones
+                NotificationUtils.agregarMultiplesCruces(context, response)
+
             }
             catch (e: Exception)
             {
-                Log.e(TAG, "simularCruceAleatorio: error", e)
                 _uiState.update {
                     it.copy(
                         error = "Error al calcular tarifa: ${e.message}",
@@ -101,6 +103,16 @@ class MapViewModel(
                 }
             }
         }
+    }
+
+    fun limpiarNotificaciones()
+    {
+        NotificationUtils.limpiarAcumulador()
+    }
+
+    private fun formatCurrencyStatic(amount: Double): String
+    {
+        return NumberFormat.getCurrencyInstance(Locale("es", "CL")).format(amount)
     }
 
     private fun loadPorticos()
