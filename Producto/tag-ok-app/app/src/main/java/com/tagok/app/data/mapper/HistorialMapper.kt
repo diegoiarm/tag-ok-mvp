@@ -47,18 +47,17 @@ fun DetalleDiaDTO.toDomain(): DetalleDia
         dia = dia,
         totalDia = totalDia,
         cantidadCruces = cantidadCruces,
-        cruces = cruces.map { it.toDomain() })
+        cruces = cruces.map { it.toDomain() }
+    )
 }
 
-fun CruceDetalleDTO.toDomain(): CruceDetalle
-{
+fun CruceDetalleDTO.toDomain(): CruceDetalle {
     val tipoVehiculoDisplay = try
     {
-        TipoVehiculo.valueOf(codigo).displayName
-    }
-    catch (e: IllegalArgumentException)
+        TipoVehiculo.valueOf(tipoVehiculo).displayName
+    } catch (e: IllegalArgumentException)
     {
-        codigo
+        tipoVehiculo
     }
 
     return CruceDetalle(
@@ -68,5 +67,6 @@ fun CruceDetalleDTO.toDomain(): CruceDetalle
         tipoTarifa = tipoTarifa,
         valor = valor,
         tipoVehiculo = tipoVehiculoDisplay,
-        horaFechaCruce = horaFechaCruce)
+        horaFechaCruce = horaFechaCruce
+    )
 }
