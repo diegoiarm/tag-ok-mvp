@@ -92,11 +92,11 @@ object NotificationUtils
         {
             cantidadTotal == 1 -> {
                 val c = crucesAcumulados.first()
-                "${c.nombre}\nTarifa: ${c.tipoTarifa} • ${formatPeso(c.valor)}"
+                "${c.nombre}\nTarifa: ${c.tipoTarifa} • ${formatPeso(c.valor)} - ${c.tipoTarifa}"
             }
             cantidadTotal <= MAX_CRUCES_VISIBLES -> {
                 crucesAcumulados.joinToString("\n") { cruce ->
-                    "• ${cruce.nombre} - ${formatPeso(cruce.valor)}"
+                    "• ${cruce.nombre} - ${formatPeso(cruce.valor)} - ${cruce.tipoTarifa}"
                 }
             }
             else -> {
