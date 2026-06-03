@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tagok.history_service.document.HistorialAnualDocument;
+import com.tagok.history_service.document.HistorialDiarioSnapshot;
 import com.tagok.history_service.document.HistorialMensualSnapshot;
+import com.tagok.history_service.dto.CruceDetalleDTO;
+import com.tagok.history_service.dto.DetalleDiaDTO;
 import com.tagok.history_service.dto.DetalleMensualDTO;
 import com.tagok.history_service.dto.DiaResumenDTO;
 import com.tagok.history_service.dto.ResumenAnualDTO;
@@ -57,6 +60,15 @@ public class HistorialController
     {
         return historialService.getMesEspecifico(usuarioId, año, mes)
             .map(mensual -> toDetalleMensualDTO(mensual, año))
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{usuarioId}/year/{año}/month/{mes}/day/{dia}")
+    public ResponseEntity<DetalleDiaDTO> getDetalleDia(@PathVariable String usuarioId,@PathVariable int año,@PathVariable int mes, @PathVariable int dia) 
+    {
+        return historialService.getDiaEspecifico(usuarioId, año, mes, dia)
+            .map(diario -> toDetalleDiaDTO(diario, año, mes))
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
     }
@@ -110,6 +122,30 @@ public class HistorialController
             .mes(mensual.getMes())
             .dias(dias)
             .totalMes(totalMes)
+            .build();
+    }
+
+    private DetalleDiaDTO toDetalleDiaDTO(HistorialDiarioSnapshot diario, int año, int mes) 
+    {
+        List<CruceDetalleDTO> cruces = diario.getCruces().stream()
+            .map(cruce -> CruceDetalleDTO.builder()
+                .codigo(cruce.getCodigo())
+                .nombre(cruce.getNombre())
+                .autopista(cruce.getAutopista())
+                .tipoTarifa(cruce.getTipoTarifa())
+                .valor(cruce.getValor())
+                .tipoVehiculo(cruce.getTipoVehiculo())
+                .horaFechaCruce(cruce.getHoraFechaCruce())
+                .build())
+            .collect(Collectors.toList());
+
+        return DetalleDiaDTO.builder()
+            .año(año)
+            .mes(mes)
+            .dia(diario.getFecha().getDayOfMonth())
+            .totalDia(diario.getTotalDia())
+            .cantidadCruces(diario.getCantidadCruces())
+            .cruces(cruces)
             .build();
     }
 }

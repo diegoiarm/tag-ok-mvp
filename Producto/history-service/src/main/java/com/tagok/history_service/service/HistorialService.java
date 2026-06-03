@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.tagok.history_service.document.CruceSnapshot;
 import com.tagok.history_service.document.HistorialAnualDocument;
+import com.tagok.history_service.document.HistorialDiarioSnapshot;
 import com.tagok.history_service.document.HistorialMensualSnapshot;
 import com.tagok.history_service.event.dtos.HistorialCruceEvent;
 import com.tagok.history_service.repository.HistorialAnualRepository;
@@ -78,5 +79,15 @@ public class HistorialService
             .flatMap(historial -> historial.getMeses().stream()
                 .filter(m -> m.getMes() == mes)
                 .findFirst());
+    }
+
+    public Optional<HistorialDiarioSnapshot> getDiaEspecifico(String usuarioId, int año, int mes, int dia) 
+    {
+        return getMesEspecifico(usuarioId, año, mes)
+            .flatMap(mensual -> mensual.getDias()
+                .stream()
+                .filter(d -> d.getFecha().getDayOfMonth() == dia)
+                .findFirst()
+            );
     }
 }
