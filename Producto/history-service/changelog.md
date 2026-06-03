@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.3.1]
+### Added
+- Manejo de patente
+
 ## [0.3.0]
 
 ### Added

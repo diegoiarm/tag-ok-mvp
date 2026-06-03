@@ -24,5 +24,7 @@ public class CruceSnapshot
 
     private String tipoVehiculo;
 
+    private String patente;
+
     LocalDateTime horaFechaCruce;
 }

@@ -105,9 +105,11 @@ public class TarifaService
 
         TarifaCalculada calculo = calcularTarifa(tarifa);
 
+        var patente = /*request.patente()*/"ABCD-11";
+
         try
         {
-            HistorialCruceEvent evento = historialCruceMapper.toEvent(calculo);
+            HistorialCruceEvent evento = historialCruceMapper.toEvent(calculo, patente);
             historialCrucePublisher.publicar(evento);
         }
         catch (Exception e)

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.2.0]
+### Added
+- Ahora acepta patente el request de tarifa
+
 ## [0.1.1]
 ### Change
 - Ahora el recurso /rutas es post
