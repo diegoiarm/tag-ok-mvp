@@ -1,5 +1,30 @@
 # CHANGELOG
 
+## [0.3.0] - 2026-06-03
+
+### Added
+- Sistema de filtros y ordenamiento en vista de historial de años
+- Opciones de ordenamiento: por defecto, más/menos cruces, mayor/menor gasto, más reciente/antiguo
+- Componente `FilterChips` con dropdown de selección de criterio de orden
+- Iconos contextuales para cada opción de ordenamiento (TrendingUp, TrendingDown, ArrowUpward, ArrowDownward, Schedule, History, Sort)
+- Estado `currentSort` en `HistorialUiState` para tracking del filtro activo
+- Campo `resumenAnualOriginal` en UI state para preservar orden original de la API
+- Método `setSortOption()` en ViewModel con lógica de ordenamiento sin mutar datos originales
+- Modelos de dominio para UI: `SortOption.kt` (enum con displayName), `HistorialFilter.kt` (enum FilterLevel)
+- Utilidades extraídas: `CurrencyUtils.kt` (formatCurrency, formatCompactCurrency), `DateUtils.kt` (getMonthName, getShortMonthName)
+
+### Changed
+- **Refactorización completa de la arquitectura de UI del historial**
+  - Extraídos componentes a archivos independientes por responsabilidad única
+  - Creada estructura de paquetes: `components/shared/`, `components/year/`, `components/month/`, `components/calendar/`, `components/day/`
+  - Separados componentes reutilizables: `InfoItem`, `TotalItem`, `FilterChips`
+  - Estados de UI como componentes independientes: `LoadingContent`, `ErrorContent`, `EmptyState`
+- Movida la lógica de TopBar a componente dedicado `HistorialTopBar`
+- Simplificada `HistorialScreen` de ~800 líneas a ~90 líneas
+- Actualizado `HistorialViewModel` con soporte para ordenamiento manteniendo integridad de datos
+- Mejorada la mantenibilidad, testabilidad y escalabilidad de la arquitectura
+- Componentes ahora aceptan modificadores para mayor flexibilidad de composición
+
 ## [0.2.0] - 2026-06-02
 
 ### Added

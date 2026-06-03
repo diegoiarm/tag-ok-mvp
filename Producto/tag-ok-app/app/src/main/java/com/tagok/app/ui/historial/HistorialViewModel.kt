@@ -10,6 +10,7 @@ import com.tagok.app.data.repository.HistoryRepository
 import com.tagok.app.domain.model.history.DetalleDia
 import com.tagok.app.domain.model.history.DetalleMensual
 import com.tagok.app.domain.model.history.ResumenAnual
+import com.tagok.app.ui.historial.model.SortOption
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,17 +20,20 @@ import kotlinx.coroutines.launch
 data class HistorialUiState(
     val years: List<Int> = emptyList(),
     val resumenAnual: List<ResumenAnual> = emptyList(),
+    val resumenAnualOriginal: List<ResumenAnual> = emptyList(),
     val detalleAnual: ResumenAnual? = null,
     val detalleMensual: DetalleMensual? = null,
     val detalleDia: DetalleDia? = null,
     val selectedYear: Int? = null,
     val isLoading: Boolean = false,
     val isLoadingDetail: Boolean = false,
-    val error: String? = null)
+    val error: String? = null,
+    val currentSort: SortOption = SortOption.DEFAULT)
 
 class HistorialViewModel(
     private val historyRepository: HistoryRepository) : ViewModel()
 {
+
     private val _uiState = MutableStateFlow(HistorialUiState())
     val uiState: StateFlow<HistorialUiState> = _uiState.asStateFlow()
 
@@ -49,6 +53,7 @@ class HistorialViewModel(
                     it.copy(
                         years = years,
                         resumenAnual = resumen,
+                        resumenAnualOriginal = resumen,
                         isLoading = false
                     )
                 }
@@ -60,6 +65,23 @@ class HistorialViewModel(
                     it.copy(error = e.message, isLoading = false)
                 }
             }
+        }
+    }
+
+    fun setSortOption(option: SortOption)
+    {
+        _uiState.update { state ->
+            val sorted = when (option)
+            {
+                SortOption.DEFAULT -> state.resumenAnualOriginal
+                SortOption.MOST_CRUCES -> state.resumenAnualOriginal.sortedByDescending { it.cantidadCruces }
+                SortOption.LEAST_CRUCES -> state.resumenAnualOriginal.sortedBy { it.cantidadCruces }
+                SortOption.HIGHEST_AMOUNT -> state.resumenAnualOriginal.sortedByDescending { it.totalAño }
+                SortOption.LOWEST_AMOUNT -> state.resumenAnualOriginal.sortedBy { it.totalAño }
+                SortOption.NEWEST -> state.resumenAnualOriginal.sortedByDescending { it.año }
+                SortOption.OLDEST -> state.resumenAnualOriginal.sortedBy { it.año }
+            }
+            state.copy(resumenAnual = sorted, currentSort = option)
         }
     }
 
@@ -99,27 +121,13 @@ class HistorialViewModel(
                     it.copy(detalleMensual = detalle, isLoadingDetail = false)
                 }
             }
-            catch (e: Exception) {
+            catch (e: Exception)
+            {
                 Log.e(TAG, "Error cargando detalle mensual", e)
                 _uiState.update {
                     it.copy(error = e.message, isLoadingDetail = false)
                 }
             }
-        }
-    }
-
-    fun clearError()
-    {
-        _uiState.update { it.copy(error = null) }
-    }
-
-    fun clearYearDetail() {
-        _uiState.update {
-            it.copy(
-                selectedYear = null,
-                detalleAnual = null,
-                detalleMensual = null
-            )
         }
     }
 
@@ -147,9 +155,20 @@ class HistorialViewModel(
         }
     }
 
-    fun clearDayDetail()
+    fun clearError()
     {
-        _uiState.update { it.copy(detalleDia = null) }
+        _uiState.update { it.copy(error = null) }
+    }
+
+    fun clearYearDetail()
+    {
+        _uiState.update {
+            it.copy(
+                selectedYear = null,
+                detalleAnual = null,
+                detalleMensual = null,
+                detalleDia = null)
+        }
     }
 
     fun clearMonthDetail()
@@ -159,12 +178,19 @@ class HistorialViewModel(
         }
     }
 
+    fun clearDayDetail()
+    {
+        _uiState.update { it.copy(detalleDia = null) }
+    }
+
     companion object {
         private const val TAG = "HistorialViewModel"
 
-        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory
+        {
             @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T
+            {
                 val api = HistoryApi(HttpClientProvider.client)
                 val repository = HistoryRepository(api)
                 return HistorialViewModel(repository) as T
