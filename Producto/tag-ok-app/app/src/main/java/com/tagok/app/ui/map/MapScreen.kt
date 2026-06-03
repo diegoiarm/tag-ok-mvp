@@ -235,6 +235,12 @@ fun MapScreen(
 
         }
         // Debug
-        TestRealTime()
+        TestRealTime(
+            tarifaCalculada = uiState.tarifaCalculada,
+            isCalculating = uiState.isCalculating,
+            vehiculo = vehiculo,
+            onSimularCruce = { viewModel.simularCruceAleatorio(vehiculo) },
+            onCerrar = { viewModel.clearTarifa() },
+            modifier = Modifier.align(Alignment.BottomCenter))
     }
 }

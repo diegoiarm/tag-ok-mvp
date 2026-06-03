@@ -1,13 +1,13 @@
 package com.tagok.app.data.repository
 
 import android.util.Log
-import com.tagok.app.data.dto.TarifaCalculada
 import com.tagok.app.data.dto.TarifaRequest
 import com.tagok.app.data.dto.route.RouteRequest
 import com.tagok.app.data.mapper.toDomain
 import com.tagok.app.data.remote.RouteApi
 import com.tagok.app.domain.interfaces.IRouteRepository
 import com.tagok.app.domain.model.routes.Route
+import com.tagok.app.domain.model.tarifa.TarifaCalculada
 import com.tagok.app.domain.vehiculo.TipoVehiculo
 
 class RouteRepository(private val api: RouteApi) : IRouteRepository
@@ -33,7 +33,7 @@ class RouteRepository(private val api: RouteApi) : IRouteRepository
 
     override suspend fun calculateTarifa(request: TarifaRequest): TarifaCalculada
     {
-        return api.calculateTarifa(request)
+        return api.calculateTarifa(request).toDomain()
     }
 
     companion object {

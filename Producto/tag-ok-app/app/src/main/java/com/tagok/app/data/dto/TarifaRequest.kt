@@ -4,5 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TarifaRequest(
-    val porticosCruzados: List<PorticoCruzadoRequest>,
-    val vehiculo: String)
+    val references: List<PorticoCruzadoRequest>,
+    val vehiculo: String,
+    val patente: String
+)

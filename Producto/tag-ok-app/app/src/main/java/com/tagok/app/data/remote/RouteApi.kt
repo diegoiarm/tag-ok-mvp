@@ -4,6 +4,7 @@ import com.tagok.app.data.dto.route.RouteResponse
 import com.tagok.app.data.dto.TarifaCalculada
 import com.tagok.app.data.dto.TarifaRequest
 import com.tagok.app.data.dto.route.RouteRequest
+import com.tagok.app.data.dto.tarifa.TarifaCalculadaResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -22,7 +23,7 @@ class RouteApi(private val client: HttpClient)
             setBody(request)
         }.body()
 
-    suspend fun calculateTarifa(request: TarifaRequest): TarifaCalculada =
+    suspend fun calculateTarifa(request: TarifaRequest): TarifaCalculadaResponse =
         client.post("$BASE_URL/v1/tarifas")
         {
             contentType(ContentType.Application.Json)
