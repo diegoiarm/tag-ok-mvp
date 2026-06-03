@@ -105,7 +105,7 @@ public class TarifaService
 
         TarifaCalculada calculo = calcularTarifa(tarifa);
 
-        var patente = /*request.patente()*/"ABCD-11";
+        var patente = request.patente();
 
         try
         {

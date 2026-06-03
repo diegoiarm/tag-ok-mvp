@@ -135,6 +135,7 @@ public class HistorialController
                 .tipoTarifa(cruce.getTipoTarifa())
                 .valor(cruce.getValor())
                 .tipoVehiculo(cruce.getTipoVehiculo())
+                .patente(cruce.getPatente())
                 .horaFechaCruce(cruce.getHoraFechaCruce())
                 .build())
             .collect(Collectors.toList());

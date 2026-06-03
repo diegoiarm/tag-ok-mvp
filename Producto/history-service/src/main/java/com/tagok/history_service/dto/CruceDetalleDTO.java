@@ -16,5 +16,6 @@ public class CruceDetalleDTO
     private String tipoTarifa;
     private BigDecimal valor;
     private String tipoVehiculo;
+    private String patente;
     private LocalDateTime horaFechaCruce;
 }
