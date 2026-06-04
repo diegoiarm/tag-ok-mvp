@@ -32,4 +32,9 @@ class HistoryRepository(private val historyApi: HistoryApi)
     {
         return historyApi.getDetalleDia(usuarioId, año, mes, dia).toDomain()
     }
+
+    suspend fun getPatentes(usuarioId: String): List<String>
+    {
+        return historyApi.getPatentes(usuarioId)
+    }
 }

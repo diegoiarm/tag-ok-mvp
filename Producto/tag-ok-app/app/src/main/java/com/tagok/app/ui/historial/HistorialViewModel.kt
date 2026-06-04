@@ -10,6 +10,7 @@ import com.tagok.app.data.repository.HistoryRepository
 import com.tagok.app.domain.model.history.DetalleDia
 import com.tagok.app.domain.model.history.DetalleMensual
 import com.tagok.app.domain.model.history.ResumenAnual
+import com.tagok.app.ui.historial.model.PatenteFilter
 import com.tagok.app.ui.historial.model.SortOption
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,6 +26,8 @@ data class HistorialUiState(
     val detalleMensual: DetalleMensual? = null,
     val detalleDia: DetalleDia? = null,
     val selectedYear: Int? = null,
+    val patentes: List<PatenteFilter> = emptyList(),
+    val patentesSeleccionadas: List<String> = emptyList(),
     val isLoading: Boolean = false,
     val isLoadingDetail: Boolean = false,
     val error: String? = null,
@@ -48,14 +51,17 @@ class HistorialViewModel(
             {
                 val years = historyRepository.getAvailableYears(usuarioId)
                 val resumen = historyRepository.getResumenAnual(usuarioId)
+                val patentes = historyRepository.getPatentes(usuarioId)
+
+                val patenteFilters = patentes.map { PatenteFilter(patente = it) }
 
                 _uiState.update {
                     it.copy(
                         years = years,
                         resumenAnual = resumen,
                         resumenAnualOriginal = resumen,
-                        isLoading = false
-                    )
+                        patentes = patenteFilters,
+                        isLoading = false)
                 }
             }
             catch (e: Exception)
@@ -65,6 +71,39 @@ class HistorialViewModel(
                     it.copy(error = e.message, isLoading = false)
                 }
             }
+        }
+    }
+
+    fun togglePatente(patente: String)
+    {
+        _uiState.update { state ->
+            val updatedPatentes = state.patentes.map { filter ->
+                if (filter.patente == patente)
+                {
+                    filter.copy(isSelected = !filter.isSelected)
+                }
+                else
+                {
+                    filter
+                }
+            }
+
+            val seleccionadas = updatedPatentes
+                .filter { it.isSelected }
+                .map { it.patente }
+
+            state.copy(
+                patentes = updatedPatentes,
+                patentesSeleccionadas = seleccionadas)
+        }
+    }
+
+    fun clearPatenteFilter()
+    {
+        _uiState.update { state ->
+            state.copy(
+                patentes = state.patentes.map { it.copy(isSelected = false) },
+                patentesSeleccionadas = emptyList())
         }
     }
 

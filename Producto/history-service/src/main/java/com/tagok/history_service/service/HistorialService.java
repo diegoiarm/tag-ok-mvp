@@ -3,6 +3,7 @@ package com.tagok.history_service.service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -17,6 +18,7 @@ import com.tagok.history_service.document.HistorialMensualSnapshot;
 import com.tagok.history_service.event.dtos.HistorialCruceEvent;
 import com.tagok.history_service.repository.HistorialAnualRepository;
 import com.tagok.history_service.repository.ProyeccionAnual;
+import com.tagok.history_service.repository.ProyeccionPatente;
 
 import lombok.RequiredArgsConstructor;
 
@@ -105,5 +107,16 @@ public class HistorialService
                 .filter(d -> d.getFecha().getDayOfMonth() == dia)
                 .findFirst()
             );
+    }
+
+    public List<String> getPatentesUnicas(String usuarioId) 
+    {
+        return historialAnualRepository.findPatentesUnicas(usuarioId)
+            .stream()
+            .map(ProyeccionPatente::getPatente)
+            .filter(Objects::nonNull)
+            .distinct()
+            .sorted()
+            .toList();
     }
 }

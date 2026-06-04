@@ -73,7 +73,10 @@ fun HistorialScreen(
                 else -> Column {
                     FilterChips(
                         currentSort = uiState.currentSort,
-                        onSortSelected = { viewModel.setSortOption(it) })
+                        patentes = uiState.patentes,
+                        onSortSelected = { viewModel.setSortOption(it) },
+                        onPatenteToggle = { viewModel.togglePatente(it) },
+                        onClearPatentes = { viewModel.clearPatenteFilter() })
 
                     VistaAnual(
                         resumen = uiState.resumenAnual,

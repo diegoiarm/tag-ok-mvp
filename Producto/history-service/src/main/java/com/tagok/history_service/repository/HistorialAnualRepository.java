@@ -31,4 +31,15 @@ public interface HistorialAnualRepository extends MongoRepository<HistorialAnual
         "{ $sort: { 'año': -1 } }"
     })
     List<ProyeccionAnual> findResumenAnual(String usuarioId);
+
+    @Aggregation(pipeline = {
+        "{ $match: { 'usuarioId': ?0 } }",
+        "{ $unwind: '$meses' }",
+        "{ $unwind: '$meses.dias' }",
+        "{ $unwind: '$meses.dias.cruces' }",
+        "{ $group: { '_id': '$meses.dias.cruces.patente' } }",
+        "{ $project: { 'patente': '$_id', '_id': 0 } }",
+        "{ $sort: { 'patente': 1 } }"
+    })
+    List<ProyeccionPatente> findPatentesUnicas(String usuarioId);
 }

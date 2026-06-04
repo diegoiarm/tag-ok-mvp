@@ -6,6 +6,7 @@ import com.tagok.app.data.dto.history.ResumenAnualDTO
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 
 class HistoryApi(private val client: HttpClient)
 {
@@ -23,6 +24,12 @@ class HistoryApi(private val client: HttpClient)
 
     suspend fun getDetalleDia(usuarioId: String, año: Int, mes: Int, dia: Int): DetalleDiaDTO =
         client.get("${BASE_URL}/v1/historial/${usuarioId}/year/${año}/month/${mes}/day/${dia}").body()
+
+    suspend fun getPatentes(usuarioId: String): List<String> =
+        client.get("$BASE_URL/v1/historial/patentes")
+        {
+            parameter("usuarioId", usuarioId)
+        }.body()
 
     companion object
     {
