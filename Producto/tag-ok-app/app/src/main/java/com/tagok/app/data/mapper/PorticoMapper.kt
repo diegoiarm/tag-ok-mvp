@@ -75,6 +75,7 @@ fun PorticoResumenResponse.toDomain(): PorticoResumen
 {
     return PorticoResumen(
         id,
+        nombre,
         latitud,
         longitud
     )

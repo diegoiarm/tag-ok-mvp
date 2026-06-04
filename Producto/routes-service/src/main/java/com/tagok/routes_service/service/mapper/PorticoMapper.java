@@ -113,6 +113,7 @@ public class PorticoMapper
     {
         return PorticoResumenResponse.builder()
                 .id(portico.getId())
+                .nombre(portico.getNombre())
                 .latitud(portico.getLatitud())
                 .longitud(portico.getLongitud())
                 .build();

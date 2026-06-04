@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class PorticoResumenResponse 
 {
     private Long id;
+    private String nombre;
     private double latitud;
     private double longitud;
 }
