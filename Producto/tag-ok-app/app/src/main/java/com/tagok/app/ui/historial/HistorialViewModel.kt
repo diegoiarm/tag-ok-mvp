@@ -74,39 +74,6 @@ class HistorialViewModel(
         }
     }
 
-    fun togglePatente(patente: String)
-    {
-        _uiState.update { state ->
-            val updatedPatentes = state.patentes.map { filter ->
-                if (filter.patente == patente)
-                {
-                    filter.copy(isSelected = !filter.isSelected)
-                }
-                else
-                {
-                    filter
-                }
-            }
-
-            val seleccionadas = updatedPatentes
-                .filter { it.isSelected }
-                .map { it.patente }
-
-            state.copy(
-                patentes = updatedPatentes,
-                patentesSeleccionadas = seleccionadas)
-        }
-    }
-
-    fun clearPatenteFilter()
-    {
-        _uiState.update { state ->
-            state.copy(
-                patentes = state.patentes.map { it.copy(isSelected = false) },
-                patentesSeleccionadas = emptyList())
-        }
-    }
-
     fun setSortOption(option: SortOption)
     {
         _uiState.update { state ->
@@ -220,6 +187,78 @@ class HistorialViewModel(
     fun clearDayDetail()
     {
         _uiState.update { it.copy(detalleDia = null) }
+    }
+
+    fun togglePatente(patente: String)
+    {
+        _uiState.update { state ->
+            val updatedPatentes = state.patentes.map { filter ->
+                if (filter.patente == patente)
+                {
+                    filter.copy(isSelected = !filter.isSelected)
+                }
+                else
+                {
+                    filter
+                }
+            }
+
+            val seleccionadas = updatedPatentes
+                .filter { it.isSelected }
+                .map { it.patente }
+
+            state.copy(
+                patentes = updatedPatentes,
+                patentesSeleccionadas = seleccionadas)
+        }
+
+        filtrarPorPatentes()
+    }
+
+    fun clearPatenteFilter()
+    {
+        _uiState.update { state ->
+            state.copy(
+                patentes = state.patentes.map { it.copy(isSelected = false) },
+                patentesSeleccionadas = emptyList())
+        }
+
+        loadInitialData()
+    }
+
+    private fun filtrarPorPatentes()
+    {
+        val patentes = _uiState.value.patentesSeleccionadas
+
+        if (patentes.isEmpty())
+        {
+            loadInitialData()
+            return
+        }
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, error = null) }
+
+            try
+            {
+                val resumen = historyRepository.getResumenAnualFiltrado(usuarioId, patentes)
+
+                _uiState.update {
+                    it.copy(
+                        resumenAnual = resumen,
+                        resumenAnualOriginal = resumen,
+                        isLoading = false,
+                        currentSort = SortOption.DEFAULT)
+                }
+            }
+            catch (e: Exception)
+            {
+                Log.e(TAG, "Error filtrando por patentes", e)
+                _uiState.update {
+                    it.copy(error = e.message, isLoading = false)
+                }
+            }
+        }
     }
 
     companion object {

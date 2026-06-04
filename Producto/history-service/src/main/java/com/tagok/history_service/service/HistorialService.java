@@ -119,4 +119,9 @@ public class HistorialService
             .sorted()
             .toList();
     }
+
+    public List<ProyeccionAnual> getResumenAnualFiltrado(String usuarioId, List<String> patentes) 
+    {
+        return historialAnualRepository.findResumenAnualFiltrado(usuarioId, patentes);
+    }
 }

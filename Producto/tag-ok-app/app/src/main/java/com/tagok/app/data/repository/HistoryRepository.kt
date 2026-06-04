@@ -37,4 +37,9 @@ class HistoryRepository(private val historyApi: HistoryApi)
     {
         return historyApi.getPatentes(usuarioId)
     }
+
+    suspend fun getResumenAnualFiltrado(usuarioId: String, patentes: List<String>): List<ResumenAnual>
+    {
+        return historyApi.getResumenAnualFiltrado(usuarioId, patentes).map { it.toDomain() }
+    }
 }

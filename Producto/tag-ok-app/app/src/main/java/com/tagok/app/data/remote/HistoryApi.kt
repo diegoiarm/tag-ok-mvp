@@ -31,6 +31,17 @@ class HistoryApi(private val client: HttpClient)
             parameter("usuarioId", usuarioId)
         }.body()
 
+    suspend fun getResumenAnualFiltrado(
+        usuarioId: String,
+        patentes: List<String>): List<ResumenAnualDTO>
+    {
+        return client.get("${BASE_URL}/v1/historial/${usuarioId}/resumen-filtrado") {
+            patentes.forEach { patente ->
+                parameter("patentes", patente)
+            }
+        }.body()
+    }
+
     companion object
     {
         private var BASE_URL = ApiConfig.HISTORY_API

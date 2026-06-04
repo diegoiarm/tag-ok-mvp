@@ -80,6 +80,16 @@ public class HistorialController
         return ResponseEntity.ok(historialService.getPatentesUnicas(usuarioId));
     }
 
+    @GetMapping("/{usuarioId}/resumen-filtrado")
+    public ResponseEntity<List<ResumenAnualDTO>> getResumenAnualFiltrado(@PathVariable String usuarioId, @RequestParam List<String> patentes) 
+    {
+        return ResponseEntity.ok(
+            historialService.getResumenAnualFiltrado(usuarioId, patentes).stream()
+                .map(this::toResumenDTO)
+                .toList()
+        );
+    }
+
     // ── Mapeadores ──────────────────────────────────────────────────────────
     
     private ResumenAnualDTO toResumenDTO(ProyeccionAnual projection) 
