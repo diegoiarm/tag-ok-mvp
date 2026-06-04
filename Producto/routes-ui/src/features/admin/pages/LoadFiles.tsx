@@ -27,7 +27,9 @@ interface FileItem {
   message?: string;
 }
 
-const API_ENDPOINT = "http://localhost:8000/autopistas";
+// Endpoint de importación (upsert por nombre). El alta estricta vive en
+// POST /autopistas y se usa desde el formulario de "Nueva concesionaria".
+const API_ENDPOINT = "http://localhost:8000/autopistas/import";
 
 export function LoadFiles() {
   const [files, setFiles] = useState<FileItem[]>([]);

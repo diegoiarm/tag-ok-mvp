@@ -10,6 +10,7 @@ import {
   Search,
   Trash2,
   TriangleAlert,
+  Upload,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -49,6 +50,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useAutopistas, useDeleteAutopista } from "@/hooks/useAutopistas";
 import { AutopistaDetalleSheet } from "@/features/admin/components/AutopistaDetalleSheet";
+import { NuevaAutopistaSheet } from "@/features/admin/components/NuevaAutopistaSheet";
 import type { AutopistaResumen, TipoCobro } from "@/types/types";
 
 function descargarAutopistaJson(autopista: AutopistaResumen) {
@@ -75,6 +77,7 @@ export function AutopistasPage() {
   const [aEliminar, setAEliminar] = useState<AutopistaResumen | null>(null);
   const [errorEliminar, setErrorEliminar] = useState<string | null>(null);
   const [detalle, setDetalle] = useState<AutopistaResumen | null>(null);
+  const [crearAbierto, setCrearAbierto] = useState(false);
 
   const filtradas = useMemo(() => {
     if (!autopistas) return [];
@@ -135,11 +138,15 @@ export function AutopistasPage() {
               <RefreshCw className={`h-4 w-4 ${isFetching ? "animate-spin" : ""}`} />
               Actualizar
             </Button>
-            <Button asChild size="sm">
+            <Button asChild variant="outline" size="sm">
               <Link to="/files">
-                <Plus className="h-4 w-4" />
-                Nueva autopista
+                <Upload className="h-4 w-4" />
+                Importar JSON
               </Link>
+            </Button>
+            <Button size="sm" onClick={() => setCrearAbierto(true)}>
+              <Plus className="h-4 w-4" />
+              Nueva concesionaria
             </Button>
           </div>
         </header>
@@ -221,6 +228,12 @@ export function AutopistasPage() {
           </CardContent>
         </Card>
       </div>
+
+      <NuevaAutopistaSheet
+        open={crearAbierto}
+        onOpenChange={setCrearAbierto}
+        existentes={autopistas ?? []}
+      />
 
       <AutopistaDetalleSheet
         autopista={detalle}

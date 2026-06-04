@@ -11,4 +11,12 @@ import com.tagok.routes_service.domain.autopista.Autopista;
 public interface AutopistaRepository extends JpaRepository<Autopista, Long>
 {
     Optional<Autopista> findByNombre(String nombre);
+
+    boolean existsByNombre(String nombre);
+
+    boolean existsByCodigo(String codigo);
+
+    boolean existsByNombreAndIdNot(String nombre, Long id);
+
+    boolean existsByCodigoAndIdNot(String codigo, Long id);
 }

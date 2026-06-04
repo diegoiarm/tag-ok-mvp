@@ -7,6 +7,7 @@ import com.tagok.routes_service.domain.portico.Portico;
 import com.tagok.routes_service.domain.tramo.Tramo;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,7 +34,10 @@ public class Autopista
 
     private TipoCobro tipoCobro;
 
+    @Column(nullable = false, unique = true)
     private String nombre;
+
+    @Column(nullable = false, unique = true)
     private String codigo;
 
     @Builder.Default
