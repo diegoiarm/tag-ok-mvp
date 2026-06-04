@@ -51,6 +51,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -60,8 +61,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tagok.app.data.Vehiculo
 import com.tagok.app.ui.theme.Blue40
+import com.tagok.app.ui.theme.BackgroundLight
+import com.tagok.app.ui.theme.BackgroundDark
 import com.tagok.app.ui.theme.InputBackground
 import com.tagok.app.ui.theme.TextSecondary
+
 
 private fun iconForTipo(tipo: String): ImageVector = when (tipo.uppercase()) {
     "MOTO" -> Icons.Filled.TwoWheeler
