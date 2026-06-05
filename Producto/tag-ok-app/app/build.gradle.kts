@@ -11,7 +11,11 @@ val localProps = Properties().apply {
     val f = rootProject.file("local.properties")
     if (f.exists()) load(f.inputStream())
 }
-val mapboxToken: String = localProps.getProperty("MAPBOX_ACCESS_TOKEN") ?: ""
+// Lee el token público de Mapbox. Orden: local.properties (por proyecto) ->
+// gradle.properties global (~/.gradle/gradle.properties, una sola vez por máquina).
+val mapboxToken: String = localProps.getProperty("MAPBOX_ACCESS_TOKEN")
+    ?: providers.gradleProperty("MAPBOX_ACCESS_TOKEN").orNull
+    ?: ""
 
 // Genera res/values/mapbox_access_token.xml desde local.properties (el archivo está en .gitignore)
 file("src/main/res/values/mapbox_access_token.xml").apply {
