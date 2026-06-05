@@ -4,6 +4,7 @@ package com.tagok.app.ui.historial
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -57,7 +58,11 @@ fun HistorialScreen(
                     onNavigate = { destination -> viewModel.navigateTo(destination) },
                     onSortSelected = { viewModel.setSortOption(it) },
                     onPatenteToggle = { viewModel.togglePatente(it) },
-                    onClearPatentes = { viewModel.clearPatenteFilter() })
+                    onAutopistaToggle = { viewModel.toggleAutopista(it) },
+                    onClearPatentes = { viewModel.clearPatenteFilter() },
+                    onClearAutopistas = { viewModel.clearAutopistaFilter() },
+                    onSelectMonth = { viewModel.selectMonth(it) },
+                    onApplyFilters = { viewModel.applyFilters() },)
             }
         }
     }
@@ -69,30 +74,35 @@ private fun HistorialContent(
     onNavigate: (HistorialDestination) -> Unit,
     onSortSelected: (SortOption) -> Unit,
     onPatenteToggle: (String) -> Unit,
-    onClearPatentes: () -> Unit)
+    onAutopistaToggle: (String) -> Unit,
+    onClearPatentes: () -> Unit,
+    onClearAutopistas: () -> Unit,
+    onSelectMonth: (Int) -> Unit,
+    onApplyFilters: () -> Unit)
 {
     val currentDestination = uiState.navigationStack.lastOrNull()
 
-    when (currentDestination)
-    {
+    when (currentDestination) {
         is HistorialDestination.YearList -> YearListContent(
             listState = uiState.listState,
             filterState = uiState.filterState,
             onSortSelected = onSortSelected,
             onPatenteToggle = onPatenteToggle,
+            onAutopistaToggle = onAutopistaToggle,
             onClearPatentes = onClearPatentes,
+            onClearAutopistas = onClearAutopistas,
+            onApplyFilters = onApplyFilters,
             onYearClick = { year -> onNavigate(HistorialDestination.MonthView(year)) })
 
         is HistorialDestination.MonthView -> MonthViewContent(
             detailState = uiState.detailState,
             onMonthClick = { month ->
-                currentDestination.let {
-                    onNavigate(HistorialDestination.DayDetail(it.year, month, 1))
-                }
+                onSelectMonth(month)
             },
             onDayClick = { month, day ->
                 onNavigate(HistorialDestination.DayDetail(currentDestination.year, month, day))
-            })
+            }
+        )
 
         is HistorialDestination.DayDetail -> DayDetailContent(
             detailState = uiState.detailState)
@@ -107,17 +117,24 @@ private fun YearListContent(
     filterState: FilterState,
     onSortSelected: (SortOption) -> Unit,
     onPatenteToggle: (String) -> Unit,
+    onAutopistaToggle: (String) -> Unit,
     onClearPatentes: () -> Unit,
-    onYearClick: (Int) -> Unit)
+    onClearAutopistas: () -> Unit,
+    onYearClick: (Int) -> Unit,
+    onApplyFilters: () -> Unit,)
 {
     Column(modifier = Modifier.fillMaxSize())
     {
         FilterChips(
             currentSort = listState.currentSort,
             patentes = filterState.patentes,
+            autopistas = filterState.autopistas,
             onSortSelected = onSortSelected,
             onPatenteToggle = onPatenteToggle,
-            onClearPatentes = onClearPatentes)
+            onAutopistaToggle = onAutopistaToggle,
+            onClearPatentes = onClearPatentes,
+            onClearAutopistas = onClearAutopistas,
+            onApplyFilters = onApplyFilters)
 
         if (listState.resumenAnual.isEmpty())
         {
@@ -148,18 +165,37 @@ private fun MonthViewContent(
                 detalle = state.detalleMensual,
                 onDayClick = { day -> onDayClick(state.detalleMensual.mes, day) })
 
-            state.detalleAnual != null -> VistaMeses(
-                detalle = state.detalleAnual,
-                onMonthClick = onMonthClick)
+            state.detalleAnual != null -> {
+                if (state.detalleAnual.mesesDisponibles.isEmpty())
+                {
+                    EmptyStateContent()
+                }
+                else
+                {
+                    VistaMeses(
+                        detalle = state.detalleAnual,
+                        onMonthClick = onMonthClick)
+                }
+            }
+
+            else -> LoadingContent()
         }
-    }
+    } ?: LoadingContent()
 }
 
 @Composable
 private fun DayDetailContent(detailState: DetailState?)
 {
-    detailState?.detalleDia?.let { detalle ->
-        DetalleDiaContent(detalle = detalle)
+    detailState?.let { state ->
+        when
+        {
+            state.detalleDia != null -> DetalleDiaContent(detalle = state.detalleDia)
+            state.detalleMensual != null -> CalendarioMensual(
+                detalle = state.detalleMensual,
+                onDayClick = { day ->
+                })
+            else -> LoadingContent()
+        }
     }
 }
 
@@ -168,7 +204,7 @@ private fun EmptyStateContent()
 {
     Box(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = androidx.compose.ui.Alignment.Center)
+        contentAlignment = Alignment.Center)
     {
         Text("No hay datos disponibles")
     }

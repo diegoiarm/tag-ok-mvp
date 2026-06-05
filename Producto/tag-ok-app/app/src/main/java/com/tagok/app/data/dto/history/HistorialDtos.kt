@@ -4,11 +4,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ResumenAnualDTO(
-    val año: Int,
-    val cantidadCruces: Int,
-    val totalAño: Double,
+    val año: Int? = null,
+    val cantidadCruces: Int? = null,
+    val totalAño: Double? = null,
     val mesesDisponibles: List<Int>? = null,
-    val cargadoCompleto: Boolean = false)
+    val cargadoCompleto: Boolean? = null)
 
 @Serializable
 data class DetalleMensualDTO(
@@ -41,3 +41,8 @@ data class CruceDetalleDTO(
     val valor: Double,
     val tipoVehiculo: String,
     val horaFechaCruce: String)
+
+@Serializable
+data class FiltroHistorialRequest(
+    val patentes: List<String> = emptyList(),
+    val autopistas: List<String> = emptyList())

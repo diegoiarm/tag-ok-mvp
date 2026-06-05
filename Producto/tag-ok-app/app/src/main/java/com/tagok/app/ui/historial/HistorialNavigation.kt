@@ -3,6 +3,7 @@ package com.tagok.app.ui.historial
 import com.tagok.app.domain.model.history.DetalleDia
 import com.tagok.app.domain.model.history.DetalleMensual
 import com.tagok.app.domain.model.history.ResumenAnual
+import com.tagok.app.ui.historial.model.AutopistaFilter
 import com.tagok.app.ui.historial.model.PatenteFilter
 import com.tagok.app.ui.historial.model.SortOption
 
@@ -21,7 +22,9 @@ data class ListState(
 
 data class FilterState(
     val patentes: List<PatenteFilter> = emptyList(),
-    val patentesSeleccionadas: List<String> = emptyList()
+    val patentesSeleccionadas: List<String> = emptyList(),
+    val autopistas: List<AutopistaFilter> = emptyList(),
+    val autopistasSeleccionadas: List<String> = emptyList()
 )
 
 data class DetailState(

@@ -4,3 +4,4 @@ public interface ProyeccionPatente
 {
     String getPatente();
 }
+

@@ -4,12 +4,14 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.tagok.app.data.dto.history.FiltroHistorialRequest
 import com.tagok.app.data.remote.HistoryApi
 import com.tagok.app.data.remote.HttpClientProvider
 import com.tagok.app.data.repository.HistoryRepository
 import com.tagok.app.domain.model.history.DetalleDia
 import com.tagok.app.domain.model.history.DetalleMensual
 import com.tagok.app.domain.model.history.ResumenAnual
+import com.tagok.app.ui.historial.model.AutopistaFilter
 import com.tagok.app.ui.historial.model.PatenteFilter
 import com.tagok.app.ui.historial.model.SortOption
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,6 +43,7 @@ class HistorialViewModel(
                 val years = historyRepository.getAvailableYears(usuarioId)
                 val resumen = historyRepository.getResumenAnual(usuarioId)
                 val patentes = historyRepository.getPatentes(usuarioId)
+                val autopistas = historyRepository.getAutopistas(usuarioId)
 
                 state.copy(
                     listState = ListState(
@@ -48,7 +51,8 @@ class HistorialViewModel(
                         resumenAnual = resumen,
                         resumenAnualOriginal = resumen),
                     filterState = FilterState(
-                        patentes = patentes.map { PatenteFilter(patente = it) }),
+                        patentes = patentes.map { PatenteFilter(patente = it) },
+                        autopistas = autopistas.map { AutopistaFilter(autopista = it) }),
                     error = null)
             }
             catch (e: Exception)
@@ -99,8 +103,7 @@ class HistorialViewModel(
         }
 
         _uiState.update { state ->
-            state.copy(
-                navigationStack = state.navigationStack + destination)
+            state.copy(navigationStack = state.navigationStack + destination)
         }
     }
 
@@ -159,33 +162,77 @@ class HistorialViewModel(
                 if (filter.patente == patente) filter.copy(isSelected = !filter.isSelected)
                 else filter
             }
-
             val seleccionadas = updatedPatentes.filter { it.isSelected }.map { it.patente }
 
             state.copy(
-                filterState = FilterState(
+                filterState = state.filterState.copy(
                     patentes = updatedPatentes,
                     patentesSeleccionadas = seleccionadas))
         }
+    }
 
-        applyFilterIfNeeded()
+    fun toggleAutopista(autopista: String)
+    {
+        _uiState.update { state ->
+            val updatedAutopistas = state.filterState.autopistas.map { filter ->
+                if (filter.autopista == autopista) filter.copy(isSelected = !filter.isSelected)
+                else filter
+            }
+            val seleccionadas = updatedAutopistas.filter { it.isSelected }.map { it.autopista }
+
+            state.copy(
+                filterState = state.filterState.copy(
+                    autopistas = updatedAutopistas,
+                    autopistasSeleccionadas = seleccionadas))
+        }
     }
 
     fun clearPatenteFilter()
     {
         _uiState.update { state ->
             state.copy(
-                filterState = FilterState(
-                    patentes = state.filterState.patentes.map { it.copy(isSelected = false) }))
+                filterState = state.filterState.copy(
+                    patentes = state.filterState.patentes.map { it.copy(isSelected = false) },
+                    patentesSeleccionadas = emptyList()))
+        }
+        applyFilterIfNeeded()
+    }
+
+    fun clearAutopistaFilter()
+    {
+        _uiState.update { state ->
+            state.copy(
+                filterState = state.filterState.copy(
+                    autopistas = state.filterState.autopistas.map { it.copy(isSelected = false) },
+                    autopistasSeleccionadas = emptyList()))
+        }
+        applyFilterIfNeeded()
+    }
+
+    fun clearAllFilters()
+    {
+        _uiState.update { state ->
+            state.copy(
+                filterState = state.filterState.copy(
+                    patentes = state.filterState.patentes.map { it.copy(isSelected = false) },
+                    patentesSeleccionadas = emptyList(),
+                    autopistas = state.filterState.autopistas.map { it.copy(isSelected = false) },
+                    autopistasSeleccionadas = emptyList()))
         }
         loadInitialData()
+    }
+
+    fun applyFilters()
+    {
+        applyFilterIfNeeded()
     }
 
     private fun applyFilterIfNeeded()
     {
         val patentesSeleccionadas = _uiState.value.filterState.patentesSeleccionadas
+        val autopistasSeleccionadas = _uiState.value.filterState.autopistasSeleccionadas
 
-        if (patentesSeleccionadas.isEmpty())
+        if (patentesSeleccionadas.isEmpty() && autopistasSeleccionadas.isEmpty())
         {
             loadInitialData()
             return
@@ -194,16 +241,20 @@ class HistorialViewModel(
         executeWithLoading { state ->
             try
             {
-                val resumen = historyRepository.getResumenAnualFiltrado(usuarioId, patentesSeleccionadas)
+                val filtro = FiltroHistorialRequest(
+                    patentes = patentesSeleccionadas,
+                    autopistas = autopistasSeleccionadas)
+                val resumen = historyRepository.getResumenAnualFiltrado(usuarioId, filtro)
                 state.copy(
                     listState = ListState(
                         resumenAnual = resumen,
                         resumenAnualOriginal = resumen),
+                    filterState = state.filterState,
                     error = null)
             }
             catch (e: Exception)
             {
-                Log.e(TAG, "Error filtrando por patentes", e)
+                Log.e(TAG, "Error filtrando", e)
                 state.copy(error = e.message)
             }
         }
@@ -260,7 +311,7 @@ class HistorialViewModel(
             })
     }
 
-    private fun selectMonth(mes: Int)
+    fun selectMonth(mes: Int)
     {
         val año = _uiState.value.detailState?.selectedYear ?: return
 

@@ -12,14 +12,13 @@ import com.tagok.app.domain.model.history.DiaResumen
 import com.tagok.app.domain.model.history.ResumenAnual
 import com.tagok.app.domain.vehiculo.TipoVehiculo
 
-fun ResumenAnualDTO.toDomain(): ResumenAnual
-{
+fun ResumenAnualDTO.toDomain(): ResumenAnual {
     return ResumenAnual(
-        año = año,
-        cantidadCruces = cantidadCruces,
-        totalAño = totalAño,
-        mesesDisponibles = mesesDisponibles ?: emptyList(),
-        cargadoCompleto = cargadoCompleto)
+        año = this.año ?: 0,
+        cantidadCruces = this.cantidadCruces ?: 0,
+        totalAño = this.totalAño ?: 0.0,
+        mesesDisponibles = this.mesesDisponibles ?: emptyList(),
+        cargadoCompleto = this.cargadoCompleto ?: false)
 }
 
 fun DetalleMensualDTO.toDomain(): DetalleMensual

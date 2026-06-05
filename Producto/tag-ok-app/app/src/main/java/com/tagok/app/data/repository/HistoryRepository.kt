@@ -1,5 +1,6 @@
 package com.tagok.app.data.repository
 
+import com.tagok.app.data.dto.history.FiltroHistorialRequest
 import com.tagok.app.data.mapper.toDomain
 import com.tagok.app.data.remote.HistoryApi
 import com.tagok.app.domain.model.history.DetalleDia
@@ -38,8 +39,15 @@ class HistoryRepository(private val historyApi: HistoryApi)
         return historyApi.getPatentes(usuarioId)
     }
 
-    suspend fun getResumenAnualFiltrado(usuarioId: String, patentes: List<String>): List<ResumenAnual>
+    suspend fun getAutopistas(usuarioId: String): List<String>
     {
-        return historyApi.getResumenAnualFiltrado(usuarioId, patentes).map { it.toDomain() }
+        return historyApi.getAutopistas(usuarioId)
+    }
+
+    suspend fun getResumenAnualFiltrado(
+        usuarioId: String,
+        filtro: FiltroHistorialRequest): List<ResumenAnual>
+    {
+        return historyApi.getResumenAnualFiltrado(usuarioId, filtro).map { it.toDomain() }
     }
 }

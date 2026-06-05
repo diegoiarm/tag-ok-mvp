@@ -48,6 +48,17 @@ public interface HistorialAnualRepository extends MongoRepository<HistorialAnual
         "{ $unwind: '$meses' }",
         "{ $unwind: '$meses.dias' }",
         "{ $unwind: '$meses.dias.cruces' }",
+        "{ $group: { '_id': '$meses.dias.cruces.autopista' } }",
+        "{ $project: { 'autopista': '$_id', '_id': 0 } }",
+        "{ $sort: { 'autopista': 1 } }"
+    })
+    List<ProyeccionAutopista> findAutopistasUnicas(String usuarioId);
+
+    @Aggregation(pipeline = {
+        "{ $match: { 'usuarioId': ?0 } }",
+        "{ $unwind: '$meses' }",
+        "{ $unwind: '$meses.dias' }",
+        "{ $unwind: '$meses.dias.cruces' }",
         "{ $match: { " +
             "$expr: { " +
                 "$and: [ " +

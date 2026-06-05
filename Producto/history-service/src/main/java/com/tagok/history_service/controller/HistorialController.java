@@ -83,6 +83,12 @@ public class HistorialController
         return ResponseEntity.ok(historialService.getPatentesUnicas(usuarioId));
     }
 
+    @GetMapping("/autopistas")
+    public ResponseEntity<List<String>> getAutopistas(@RequestParam String usuarioId) 
+    {
+        return ResponseEntity.ok(historialService.getAutopistasUnicas(usuarioId));
+    }
+
     @PostMapping("/{usuarioId}/resumen-filtrado")
     public ResponseEntity<List<ResumenAnualDTO>> getResumenAnualFiltrado(
         @PathVariable String usuarioId, 

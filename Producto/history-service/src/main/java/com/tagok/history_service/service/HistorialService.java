@@ -19,6 +19,7 @@ import com.tagok.history_service.document.HistorialMensualSnapshot;
 import com.tagok.history_service.event.dtos.HistorialCruceEvent;
 import com.tagok.history_service.repository.HistorialAnualRepository;
 import com.tagok.history_service.repository.ProyeccionAnual;
+import com.tagok.history_service.repository.ProyeccionAutopista;
 import com.tagok.history_service.repository.ProyeccionPatente;
 
 import lombok.RequiredArgsConstructor;
@@ -115,6 +116,17 @@ public class HistorialService
         return historialAnualRepository.findPatentesUnicas(usuarioId)
             .stream()
             .map(ProyeccionPatente::getPatente)
+            .filter(Objects::nonNull)
+            .distinct()
+            .sorted()
+            .toList();
+    }
+
+    public List<String> getAutopistasUnicas(String usuarioId) 
+    {
+        return historialAnualRepository.findAutopistasUnicas(usuarioId)
+            .stream()
+            .map(ProyeccionAutopista::getAutopista)
             .filter(Objects::nonNull)
             .distinct()
             .sorted()
