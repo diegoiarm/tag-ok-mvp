@@ -18,252 +18,297 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-data class HistorialUiState(
-    val years: List<Int> = emptyList(),
-    val resumenAnual: List<ResumenAnual> = emptyList(),
-    val resumenAnualOriginal: List<ResumenAnual> = emptyList(),
-    val detalleAnual: ResumenAnual? = null,
-    val detalleMensual: DetalleMensual? = null,
-    val detalleDia: DetalleDia? = null,
-    val selectedYear: Int? = null,
-    val patentes: List<PatenteFilter> = emptyList(),
-    val patentesSeleccionadas: List<String> = emptyList(),
-    val isLoading: Boolean = false,
-    val isLoadingDetail: Boolean = false,
-    val error: String? = null,
-    val currentSort: SortOption = SortOption.DEFAULT)
-
 class HistorialViewModel(
-    private val historyRepository: HistoryRepository) : ViewModel()
-{
+    private val historyRepository: HistoryRepository) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HistorialUiState())
     val uiState: StateFlow<HistorialUiState> = _uiState.asStateFlow()
 
     private val usuarioId: String = "portico-cruzado"
 
+    init
+    {
+        loadInitialData()
+    }
+
+    // ============ Carga de datos ============
+
     fun loadInitialData()
     {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, error = null) }
-
+        executeWithLoading { state ->
             try
             {
                 val years = historyRepository.getAvailableYears(usuarioId)
                 val resumen = historyRepository.getResumenAnual(usuarioId)
                 val patentes = historyRepository.getPatentes(usuarioId)
 
-                val patenteFilters = patentes.map { PatenteFilter(patente = it) }
-
-                _uiState.update {
-                    it.copy(
+                state.copy(
+                    listState = ListState(
                         years = years,
                         resumenAnual = resumen,
-                        resumenAnualOriginal = resumen,
-                        patentes = patenteFilters,
-                        isLoading = false)
-                }
+                        resumenAnualOriginal = resumen),
+                    filterState = FilterState(
+                        patentes = patentes.map { PatenteFilter(patente = it) }),
+                    error = null)
             }
             catch (e: Exception)
             {
                 Log.e(TAG, "Error cargando datos iniciales", e)
+                state.copy(error = e.message)
+            }
+        }
+    }
+
+    private fun <T> loadDetail(
+        action: suspend () -> T,
+        onSuccess: (HistorialUiState, T) -> HistorialUiState)
+    {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(loadingState = it.loadingState.copy(isLoadingDetail = true))
+            }
+            try
+            {
+                val result: T = action()
+                _uiState.update { state ->
+                    onSuccess(state, result).copy(
+                        loadingState = state.loadingState.copy(isLoadingDetail = false))
+                }
+            }
+            catch (e: Exception)
+            {
+                Log.e(TAG, "Error cargando detalle", e)
                 _uiState.update {
-                    it.copy(error = e.message, isLoading = false)
+                    it.copy(
+                        error = e.message,
+                        loadingState = it.loadingState.copy(isLoadingDetail = false))
                 }
             }
         }
     }
+
+    // ============ Navegación ============
+
+    fun navigateTo(destination: HistorialDestination)
+    {
+        when (destination)
+        {
+            is HistorialDestination.YearList -> navigateBack()
+            is HistorialDestination.MonthView -> selectYear(destination.year)
+            is HistorialDestination.DayDetail -> selectDay(destination.year, destination.month, destination.day)
+        }
+
+        _uiState.update { state ->
+            state.copy(
+                navigationStack = state.navigationStack + destination)
+        }
+    }
+
+    fun navigateBack()
+    {
+        _uiState.update { state ->
+            val newStack = state.navigationStack.dropLast(1)
+            if (newStack.isEmpty())
+            {
+                state
+            }
+            else
+            {
+                val destination = newStack.last()
+                state.copy(
+                    navigationStack = newStack,
+                    detailState = when (destination)
+                    {
+                        is HistorialDestination.YearList -> null
+                        is HistorialDestination.MonthView -> state.detailState?.copy(detalleDia = null)
+                        else -> state.detailState
+                    })
+            }
+        }
+    }
+
+    // ============ Ordenamiento ============
 
     fun setSortOption(option: SortOption)
     {
         _uiState.update { state ->
+            val listState = state.listState
             val sorted = when (option)
             {
-                SortOption.DEFAULT -> state.resumenAnualOriginal
-                SortOption.MOST_CRUCES -> state.resumenAnualOriginal.sortedByDescending { it.cantidadCruces }
-                SortOption.LEAST_CRUCES -> state.resumenAnualOriginal.sortedBy { it.cantidadCruces }
-                SortOption.HIGHEST_AMOUNT -> state.resumenAnualOriginal.sortedByDescending { it.totalAño }
-                SortOption.LOWEST_AMOUNT -> state.resumenAnualOriginal.sortedBy { it.totalAño }
-                SortOption.NEWEST -> state.resumenAnualOriginal.sortedByDescending { it.año }
-                SortOption.OLDEST -> state.resumenAnualOriginal.sortedBy { it.año }
+                SortOption.DEFAULT -> listState.resumenAnualOriginal
+                SortOption.MOST_CRUCES -> listState.resumenAnualOriginal.sortedByDescending { it.cantidadCruces }
+                SortOption.LEAST_CRUCES -> listState.resumenAnualOriginal.sortedBy { it.cantidadCruces }
+                SortOption.HIGHEST_AMOUNT -> listState.resumenAnualOriginal.sortedByDescending { it.totalAño }
+                SortOption.LOWEST_AMOUNT -> listState.resumenAnualOriginal.sortedBy { it.totalAño }
+                SortOption.NEWEST -> listState.resumenAnualOriginal.sortedByDescending { it.año }
+                SortOption.OLDEST -> listState.resumenAnualOriginal.sortedBy { it.año }
             }
-            state.copy(resumenAnual = sorted, currentSort = option)
+            state.copy(
+                listState = listState.copy(
+                    resumenAnual = sorted,
+                    currentSort = option))
         }
     }
 
-    fun selectYear(año: Int)
-    {
-        viewModelScope.launch {
-            _uiState.update { it.copy(selectedYear = año, isLoadingDetail = true) }
-
-            try
-            {
-                val detalle = historyRepository.getDetalleAnual(usuarioId, año)
-                _uiState.update {
-                    it.copy(detalleAnual = detalle, isLoadingDetail = false)
-                }
-            }
-            catch (e: Exception)
-            {
-                Log.e(TAG, "Error cargando detalle anual", e)
-                _uiState.update {
-                    it.copy(error = e.message, isLoadingDetail = false)
-                }
-            }
-        }
-    }
-
-    fun selectMonth(mes: Int)
-    {
-        val año = _uiState.value.selectedYear ?: return
-
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoadingDetail = true) }
-
-            try
-            {
-                val detalle = historyRepository.getDetalleMensual(usuarioId, año, mes)
-                _uiState.update {
-                    it.copy(detalleMensual = detalle, isLoadingDetail = false)
-                }
-            }
-            catch (e: Exception)
-            {
-                Log.e(TAG, "Error cargando detalle mensual", e)
-                _uiState.update {
-                    it.copy(error = e.message, isLoadingDetail = false)
-                }
-            }
-        }
-    }
-
-    fun selectDay(mes: Int, dia: Int)
-    {
-        val año = _uiState.value.selectedYear ?: return
-
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoadingDetail = true) }
-
-            try
-            {
-                val detalle = historyRepository.getDetalleDia(usuarioId, año, mes, dia)
-                _uiState.update {
-                    it.copy(detalleDia = detalle, isLoadingDetail = false)
-                }
-            }
-            catch (e: Exception)
-            {
-                Log.e(TAG, "Error cargando detalle del día", e)
-                _uiState.update {
-                    it.copy(error = e.message, isLoadingDetail = false)
-                }
-            }
-        }
-    }
-
-    fun clearError()
-    {
-        _uiState.update { it.copy(error = null) }
-    }
-
-    fun clearYearDetail()
-    {
-        _uiState.update {
-            it.copy(
-                selectedYear = null,
-                detalleAnual = null,
-                detalleMensual = null,
-                detalleDia = null)
-        }
-    }
-
-    fun clearMonthDetail()
-    {
-        _uiState.update {
-            it.copy(detalleMensual = null, detalleDia = null)
-        }
-    }
-
-    fun clearDayDetail()
-    {
-        _uiState.update { it.copy(detalleDia = null) }
-    }
+    // ============ Filtros de patentes ============
 
     fun togglePatente(patente: String)
     {
         _uiState.update { state ->
-            val updatedPatentes = state.patentes.map { filter ->
-                if (filter.patente == patente)
-                {
-                    filter.copy(isSelected = !filter.isSelected)
-                }
-                else
-                {
-                    filter
-                }
+            val updatedPatentes = state.filterState.patentes.map { filter ->
+                if (filter.patente == patente) filter.copy(isSelected = !filter.isSelected)
+                else filter
             }
 
-            val seleccionadas = updatedPatentes
-                .filter { it.isSelected }
-                .map { it.patente }
+            val seleccionadas = updatedPatentes.filter { it.isSelected }.map { it.patente }
 
             state.copy(
-                patentes = updatedPatentes,
-                patentesSeleccionadas = seleccionadas)
+                filterState = FilterState(
+                    patentes = updatedPatentes,
+                    patentesSeleccionadas = seleccionadas))
         }
 
-        filtrarPorPatentes()
+        applyFilterIfNeeded()
     }
 
     fun clearPatenteFilter()
     {
         _uiState.update { state ->
             state.copy(
-                patentes = state.patentes.map { it.copy(isSelected = false) },
-                patentesSeleccionadas = emptyList())
+                filterState = FilterState(
+                    patentes = state.filterState.patentes.map { it.copy(isSelected = false) }))
         }
-
         loadInitialData()
     }
 
-    private fun filtrarPorPatentes()
+    private fun applyFilterIfNeeded()
     {
-        val patentes = _uiState.value.patentesSeleccionadas
+        val patentesSeleccionadas = _uiState.value.filterState.patentesSeleccionadas
 
-        if (patentes.isEmpty())
+        if (patentesSeleccionadas.isEmpty())
         {
             loadInitialData()
             return
         }
 
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, error = null) }
-
+        executeWithLoading { state ->
             try
             {
-                val resumen = historyRepository.getResumenAnualFiltrado(usuarioId, patentes)
-
-                _uiState.update {
-                    it.copy(
+                val resumen = historyRepository.getResumenAnualFiltrado(usuarioId, patentesSeleccionadas)
+                state.copy(
+                    listState = ListState(
                         resumenAnual = resumen,
-                        resumenAnualOriginal = resumen,
-                        isLoading = false,
-                        currentSort = SortOption.DEFAULT)
-                }
+                        resumenAnualOriginal = resumen),
+                    error = null)
             }
             catch (e: Exception)
             {
                 Log.e(TAG, "Error filtrando por patentes", e)
+                state.copy(error = e.message)
+            }
+        }
+    }
+
+    // ============ Selección de período ============
+
+    private fun selectYear(año: Int)
+    {
+        loadDetail(
+            action = { historyRepository.getDetalleAnual(usuarioId, año) },
+            onSuccess = { state, result ->
+                state.copy(
+                    detailState = DetailState(
+                        selectedYear = año,
+                        detalleAnual = result))
+            })
+    }
+
+    private fun selectDay(year: Int, month: Int, day: Int)
+    {
+        val currentDetail = _uiState.value.detailState
+
+        if (currentDetail?.detalleMensual == null ||
+            currentDetail.detalleMensual.mes != month)
+        {
+            loadDetail(
+                action = { historyRepository.getDetalleMensual(usuarioId, year, month) },
+                onSuccess = { state, result ->
+                    val mensualDetail = result as DetalleMensual
+                    loadDayDetail(year, month, day, mensualDetail)
+                    state.copy(
+                        detailState = state.detailState?.copy(
+                            detalleMensual = mensualDetail))
+                })
+        }
+        else
+        {
+            loadDayDetail(year, month, day, currentDetail.detalleMensual!!)
+        }
+    }
+
+    private fun loadDayDetail(year: Int, month: Int, day: Int, mensualDetail: DetalleMensual)
+    {
+        loadDetail(
+            action = { historyRepository.getDetalleDia(usuarioId, year, month, day) },
+            onSuccess = { state, result ->
+                state.copy(
+                    detailState = DetailState(
+                        selectedYear = year,
+                        detalleAnual = state.detailState?.detalleAnual,
+                        detalleMensual = mensualDetail,
+                        detalleDia = result as DetalleDia))
+            })
+    }
+
+    private fun selectMonth(mes: Int)
+    {
+        val año = _uiState.value.detailState?.selectedYear ?: return
+
+        loadDetail(
+            action = { historyRepository.getDetalleMensual(usuarioId, año, mes) },
+            onSuccess = { state, result ->
+                state.copy(
+                    detailState = state.detailState?.copy(
+                        detalleMensual = result,
+                        detalleDia = null))
+            })
+    }
+
+    // ============ Utilidades ============
+
+    fun clearError()
+    {
+        _uiState.update { it.copy(error = null) }
+    }
+
+    private fun executeWithLoading(block: suspend (HistorialUiState) -> HistorialUiState)
+    {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(loadingState = LoadingState(isLoading = true))
+            }
+            try
+            {
+                _uiState.update { state ->
+                    block(state).copy(
+                        loadingState = state.loadingState.copy(isLoading = false))
+                }
+            }
+            catch (e: Exception)
+            {
+                Log.e(TAG, "Error inesperado", e)
                 _uiState.update {
-                    it.copy(error = e.message, isLoading = false)
+                    it.copy(
+                        error = e.message,
+                        loadingState = it.loadingState.copy(isLoading = false))
                 }
             }
         }
     }
 
-    companion object {
+    companion object
+    {
         private const val TAG = "HistorialViewModel"
-
         val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory
         {
             @Suppress("UNCHECKED_CAST")

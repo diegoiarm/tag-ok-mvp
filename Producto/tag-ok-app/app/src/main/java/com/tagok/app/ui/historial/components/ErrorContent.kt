@@ -14,34 +14,39 @@ import com.tagok.app.ui.theme.TextSecondary
 @Composable
 fun ErrorContent(
     message: String,
-    onRetry: () -> Unit)
+    onRetry: () -> Unit,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier)
 {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center)
     {
-        Column(horizontalAlignment = Alignment.CenterHorizontally)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp))
         {
-            Icon(
-                Icons.Filled.ErrorOutline,
-                contentDescription = null,
-                modifier = Modifier.size(48.dp),
-                tint = MaterialTheme.colorScheme.error)
-            Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Error al cargar el historial",
-                style = MaterialTheme.typography.bodyLarge,
+                text = "Error",
+                style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.error)
-            Spacer(modifier = Modifier.height(8.dp))
+
             Text(
                 text = message,
-                style = MaterialTheme.typography.bodySmall,
-                color = TextSecondary)
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = onRetry) {
-                Icon(Icons.Filled.Refresh, contentDescription = null)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Reintentar")
+                style = MaterialTheme.typography.bodyMedium)
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp))
+            {
+                TextButton(onClick = onDismiss)
+                {
+                    Text("Descartar")
+                }
+
+                Button(onClick = onRetry)
+                {
+                    Text("Reintentar")
+                }
             }
         }
     }

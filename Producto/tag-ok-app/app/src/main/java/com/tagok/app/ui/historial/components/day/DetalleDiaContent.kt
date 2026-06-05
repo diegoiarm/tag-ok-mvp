@@ -16,8 +16,7 @@ import com.tagok.app.ui.theme.TextSecondary
 
 @Composable
 fun DetalleDiaContent(
-    detalle: DetalleDia,
-    onBack: () -> Unit)
+    detalle: DetalleDia)
 {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),

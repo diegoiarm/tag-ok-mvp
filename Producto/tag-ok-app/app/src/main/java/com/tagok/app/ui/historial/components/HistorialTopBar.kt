@@ -1,42 +1,40 @@
+// HistorialTopBar.kt
 package com.tagok.app.ui.historial.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.text.style.TextOverflow
-import com.tagok.app.domain.model.history.DetalleDia
-import com.tagok.app.domain.model.history.DetalleMensual
-import com.tagok.app.ui.historial.utils.getMonthName
+import com.tagok.app.ui.historial.HistorialDestination
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistorialTopBar(
-    detalleDia: DetalleDia?,
-    detalleMensual: DetalleMensual?,
-    selectedYear: Int?,
+    navigationStack: List<HistorialDestination>,
     onBack: () -> Unit)
 {
+    val currentDestination = navigationStack.lastOrNull()
+
     TopAppBar(
         title = {
-            Text(
-                text = when {
-                    detalleDia != null ->
-                        "${detalleDia.dia} de ${getMonthName(detalleDia.mes)} ${detalleDia.año}"
-                    detalleMensual != null ->
-                        "${getMonthName(detalleMensual.mes)} ${detalleMensual.año}"
-                    selectedYear != null ->
-                        "Año $selectedYear"
-                    else -> "Historial de Viajes"
-                },
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis)
+            Text(getTitle(currentDestination))
         },
         navigationIcon = {
-            IconButton(onClick = onBack) {
-                Icon(Icons.Filled.ArrowBack, "Volver")
+            if (navigationStack.size > 1) {
+                IconButton(onClick = onBack) {
+                    Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                }
             }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surface))
+        })
+}
+
+private fun getTitle(destination: HistorialDestination?): String
+{
+    return when (destination)
+    {
+        is HistorialDestination.YearList -> "Historial"
+        is HistorialDestination.MonthView -> "Año ${destination.year}"
+        is HistorialDestination.DayDetail -> "Detalle del día"
+        null -> "Historial"
+    }
 }
