@@ -52,12 +52,15 @@ public interface HistorialAnualRepository extends MongoRepository<HistorialAnual
         "{ $group: { " +
             "'_id': '$año', " +
             "'cantidadCruces': { $sum: 1 }, " +
-            "'totalAño': { $sum: '$meses.dias.cruces.valor' } " +
+            "'totalAño': { $sum: { $toDecimal: '$meses.dias.cruces.valor' } }, " +
+            "'mesesDisponibles': { $addToSet: '$meses.mes' } " +
         "} }",
         "{ $project: { " +
             "'año': '$_id', " +
             "'cantidadCruces': 1, " +
             "'totalAño': 1, " +
+            "'mesesDisponibles': 1, " +
+            "'cargadoCompleto': { $literal: false }, " +
             "'_id': 0 " +
         "} }",
         "{ $sort: { 'año': -1 } }"
