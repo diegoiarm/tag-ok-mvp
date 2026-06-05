@@ -48,7 +48,20 @@ public interface HistorialAnualRepository extends MongoRepository<HistorialAnual
         "{ $unwind: '$meses' }",
         "{ $unwind: '$meses.dias' }",
         "{ $unwind: '$meses.dias.cruces' }",
-        "{ $match: { 'meses.dias.cruces.patente': { $in: ?1 } } }",
+        "{ $match: { " +
+            "$expr: { " +
+                "$and: [ " +
+                    "{ $or: [ " +
+                        "{ $eq: [?1, []] }, " +  // Si patentes está vacía, no filtrar
+                        "{ $in: ['$meses.dias.cruces.patente', ?1] } " +
+                    "] }, " +
+                    "{ $or: [ " +
+                        "{ $eq: [?2, []] }, " +  // Si autopistas está vacía, no filtrar
+                        "{ $in: ['$meses.dias.cruces.autopista', ?2] } " +
+                    "] } " +
+                "] " +
+            "} " +
+        "} }",
         "{ $group: { " +
             "'_id': '$año', " +
             "'cantidadCruces': { $sum: 1 }, " +
@@ -65,5 +78,8 @@ public interface HistorialAnualRepository extends MongoRepository<HistorialAnual
         "} }",
         "{ $sort: { 'año': -1 } }"
     })
-    List<ProyeccionAnual> findResumenAnualFiltrado(String usuarioId, List<String> patentes);
+    List<ProyeccionAnual> findResumenAnualFiltrado(
+        String usuarioId, 
+        List<String> patentes, 
+        List<String> autopistas);
 }

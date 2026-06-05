@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.tagok.history_service.controller.dto.FiltroHistorialRequest;
 import com.tagok.history_service.document.CruceSnapshot;
 import com.tagok.history_service.document.HistorialAnualDocument;
 import com.tagok.history_service.document.HistorialDiarioSnapshot;
@@ -120,8 +121,11 @@ public class HistorialService
             .toList();
     }
 
-    public List<ProyeccionAnual> getResumenAnualFiltrado(String usuarioId, List<String> patentes) 
+    public List<ProyeccionAnual> getResumenAnualFiltrado(String usuarioId, FiltroHistorialRequest filtro) 
     {
-        return historialAnualRepository.findResumenAnualFiltrado(usuarioId, patentes);
+        List<String> patentesFiltro = filtro.getPatentes() != null ? filtro.getPatentes() : List.of();
+        List<String> autopistasFiltro = filtro.getAutopistas() != null ? filtro.getAutopistas() : List.of();
+        
+        return historialAnualRepository.findResumenAnualFiltrado(usuarioId, patentesFiltro, autopistasFiltro);
     }
 }

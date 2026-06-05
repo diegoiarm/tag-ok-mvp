@@ -7,10 +7,13 @@ import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tagok.history_service.controller.dto.FiltroHistorialRequest;
 import com.tagok.history_service.document.HistorialAnualDocument;
 import com.tagok.history_service.document.HistorialDiarioSnapshot;
 import com.tagok.history_service.document.HistorialMensualSnapshot;
@@ -80,13 +83,15 @@ public class HistorialController
         return ResponseEntity.ok(historialService.getPatentesUnicas(usuarioId));
     }
 
-    @GetMapping("/{usuarioId}/resumen-filtrado")
-    public ResponseEntity<List<ResumenAnualDTO>> getResumenAnualFiltrado(@PathVariable String usuarioId, @RequestParam List<String> patentes) 
+    @PostMapping("/{usuarioId}/resumen-filtrado")
+    public ResponseEntity<List<ResumenAnualDTO>> getResumenAnualFiltrado(
+        @PathVariable String usuarioId, 
+        @RequestBody FiltroHistorialRequest filtro) 
     {
-        return ResponseEntity.ok(
-            historialService.getResumenAnualFiltrado(usuarioId, patentes).stream()
-                .map(this::toResumenDTO)
-                .toList()
+        
+        return ResponseEntity.ok(historialService.getResumenAnualFiltrado(usuarioId, filtro).stream()
+            .map(this::toResumenDTO)
+            .toList()
         );
     }
 
@@ -98,7 +103,7 @@ public class HistorialController
             .año(projection.getAño())
             .cantidadCruces(projection.getCantidadCruces())
             .totalAño(projection.getTotalAño())
-            .cargadoCompleto(false)
+            .mesesDisponibles(projection.getMesesDisponibles())
             .build();
     }
 
