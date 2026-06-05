@@ -23,6 +23,7 @@ import com.tagok.history_service.dto.DetalleMensualDTO;
 import com.tagok.history_service.dto.DiaResumenDTO;
 import com.tagok.history_service.dto.ResumenAnualDTO;
 import com.tagok.history_service.repository.ProyeccionAnual;
+import com.tagok.history_service.security.CurrentUserService;
 import com.tagok.history_service.service.HistorialService;
 
 import lombok.RequiredArgsConstructor;
@@ -33,69 +34,69 @@ import lombok.RequiredArgsConstructor;
 public class HistorialController 
 {
     private final HistorialService historialService;
+    private final CurrentUserService currentUser;
 
-    @GetMapping("/{usuarioId}/years")
-    public ResponseEntity<List<Integer>> getAvailableYears(@PathVariable String usuarioId) 
+    @GetMapping("/years")
+    public ResponseEntity<List<Integer>> getAvailableYears() 
     {
-        return ResponseEntity.ok(historialService.getAvaliableYears(usuarioId));
+        return ResponseEntity.ok(historialService.getAvaliableYears(currentUser.getUserId()));
     }
 
     // Endpoint: resumen de todos los años (sin detalles diarios)
-    @GetMapping("/{usuarioId}/resumen")
-    public ResponseEntity<List<ResumenAnualDTO>> getResumenAnual(@PathVariable String usuarioId) 
+    @GetMapping("/resumen")
+    public ResponseEntity<List<ResumenAnualDTO>> getResumenAnual() 
     {
-        return ResponseEntity.ok(historialService.getResumenAnual(usuarioId).stream()
+        return ResponseEntity.ok(historialService.getResumenAnual(currentUser.getUserId()).stream()
             .map(this::toResumenDTO)
             .toList()
         );
     }
 
-    @GetMapping("/{usuarioId}/year/{año}")
-    public ResponseEntity<ResumenAnualDTO> getDetalleAnual(@PathVariable String usuarioId, @PathVariable int año) 
+    @GetMapping("/year/{año}")
+    public ResponseEntity<ResumenAnualDTO> getDetalleAnual(@PathVariable int año) 
     {
-        return historialService.getByUsuarioIdAndAño(usuarioId, año)
+        return historialService.getByUsuarioIdAndAño(currentUser.getUserId(), año)
             .map(historial -> toResumenDTOCompleto(historial))
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/{usuarioId}/year/{año}/month/{mes}")
-    public ResponseEntity<?> getDetalleMensual(@PathVariable String usuarioId, @PathVariable int año, @PathVariable int mes) 
+    @GetMapping("/year/{año}/month/{mes}")
+    public ResponseEntity<?> getDetalleMensual(@PathVariable int año, @PathVariable int mes) 
     {
-        return historialService.getMesEspecifico(usuarioId, año, mes)
+        return historialService.getMesEspecifico(currentUser.getUserId(), año, mes)
             .map(mensual -> toDetalleMensualDTO(mensual, año))
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/{usuarioId}/year/{año}/month/{mes}/day/{dia}")
-    public ResponseEntity<DetalleDiaDTO> getDetalleDia(@PathVariable String usuarioId,@PathVariable int año,@PathVariable int mes, @PathVariable int dia) 
+    @GetMapping("/year/{año}/month/{mes}/day/{dia}")
+    public ResponseEntity<DetalleDiaDTO> getDetalleDia(@PathVariable int año,@PathVariable int mes, @PathVariable int dia) 
     {
-        return historialService.getDiaEspecifico(usuarioId, año, mes, dia)
+        return historialService.getDiaEspecifico(currentUser.getUserId(), año, mes, dia)
             .map(diario -> toDetalleDiaDTO(diario, año, mes))
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/patentes")
-    public ResponseEntity<List<String>> getPatentes(@RequestParam String usuarioId) 
+    public ResponseEntity<List<String>> getPatentes() 
     {
-        return ResponseEntity.ok(historialService.getPatentesUnicas(usuarioId));
+        return ResponseEntity.ok(historialService.getPatentesUnicas(currentUser.getUserId()));
     }
 
     @GetMapping("/autopistas")
-    public ResponseEntity<List<String>> getAutopistas(@RequestParam String usuarioId) 
+    public ResponseEntity<List<String>> getAutopistas() 
     {
-        return ResponseEntity.ok(historialService.getAutopistasUnicas(usuarioId));
+        return ResponseEntity.ok(historialService.getAutopistasUnicas(currentUser.getUserId()));
     }
 
-    @PostMapping("/{usuarioId}/resumen-filtrado")
+    @PostMapping("/resumen-filtrado")
     public ResponseEntity<List<ResumenAnualDTO>> getResumenAnualFiltrado(
-        @PathVariable String usuarioId, 
         @RequestBody FiltroHistorialRequest filtro) 
     {
         
-        return ResponseEntity.ok(historialService.getResumenAnualFiltrado(usuarioId, filtro).stream()
+        return ResponseEntity.ok(historialService.getResumenAnualFiltrado(currentUser.getUserId(), filtro).stream()
             .map(this::toResumenDTO)
             .toList()
         );

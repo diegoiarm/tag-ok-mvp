@@ -9,45 +9,43 @@ import com.tagok.app.domain.model.history.ResumenAnual
 
 class HistoryRepository(private val historyApi: HistoryApi)
 {
-    suspend fun getAvailableYears(usuarioId: String): List<Int>
+    suspend fun getAvailableYears(): List<Int>
     {
-        return historyApi.getAvailableYears(usuarioId)
+        return historyApi.getAvailableYears()
     }
 
-    suspend fun getResumenAnual(usuarioId: String): List<ResumenAnual>
+    suspend fun getResumenAnual(): List<ResumenAnual>
     {
-        return historyApi.getResumenAnual(usuarioId).map { it.toDomain() }
+        return historyApi.getResumenAnual().map { it.toDomain() }
     }
 
-    suspend fun getDetalleAnual(usuarioId: String, año: Int): ResumenAnual
+    suspend fun getDetalleAnual(año: Int): ResumenAnual
     {
-        return historyApi.getDetalleAnual(usuarioId, año).toDomain()
+        return historyApi.getDetalleAnual(año).toDomain()
     }
 
-    suspend fun getDetalleMensual(usuarioId: String, año: Int, mes: Int): DetalleMensual
+    suspend fun getDetalleMensual(año: Int, mes: Int): DetalleMensual
     {
-        return historyApi.getDetalleMensual(usuarioId, año, mes).toDomain()
+        return historyApi.getDetalleMensual(año, mes).toDomain()
     }
 
-    suspend fun getDetalleDia(usuarioId: String, año: Int, mes: Int, dia: Int): DetalleDia
+    suspend fun getDetalleDia(año: Int, mes: Int, dia: Int): DetalleDia
     {
-        return historyApi.getDetalleDia(usuarioId, año, mes, dia).toDomain()
+        return historyApi.getDetalleDia(año, mes, dia).toDomain()
     }
 
-    suspend fun getPatentes(usuarioId: String): List<String>
+    suspend fun getPatentes(): List<String>
     {
-        return historyApi.getPatentes(usuarioId)
+        return historyApi.getPatentes()
     }
 
-    suspend fun getAutopistas(usuarioId: String): List<String>
+    suspend fun getAutopistas(): List<String>
     {
-        return historyApi.getAutopistas(usuarioId)
+        return historyApi.getAutopistas()
     }
 
-    suspend fun getResumenAnualFiltrado(
-        usuarioId: String,
-        filtro: FiltroHistorialRequest): List<ResumenAnual>
+    suspend fun getResumenAnualFiltrado(filtro: FiltroHistorialRequest): List<ResumenAnual>
     {
-        return historyApi.getResumenAnualFiltrado(usuarioId, filtro).map { it.toDomain() }
+        return historyApi.getResumenAnualFiltrado(filtro).map { it.toDomain() }
     }
 }

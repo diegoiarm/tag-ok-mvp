@@ -12,10 +12,10 @@ import com.tagok.routes_service.events.dtos.HistorialCruceEvent;
 @Component
 public class HistorialCruceMapper 
 {
-    public HistorialCruceEvent toEvent(TarifaCalculada calculo, String patente)
+    public HistorialCruceEvent toEvent(TarifaCalculada calculo, String patente, String userId)
     {
         return HistorialCruceEvent.builder()
-            .usuarioId(null)
+            .usuarioId(userId)
             .total(calculo.total())
             .cruces(calculo.cruces().stream()
                 .map(cruce -> this.toSnapshot(cruce, calculo.vehiculo().name(), patente))

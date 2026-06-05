@@ -26,8 +26,6 @@ class HistorialViewModel(
     private val _uiState = MutableStateFlow(HistorialUiState())
     val uiState: StateFlow<HistorialUiState> = _uiState.asStateFlow()
 
-    private val usuarioId: String = "portico-cruzado"
-
     init
     {
         loadInitialData()
@@ -40,10 +38,10 @@ class HistorialViewModel(
         executeWithLoading { state ->
             try
             {
-                val years = historyRepository.getAvailableYears(usuarioId)
-                val resumen = historyRepository.getResumenAnual(usuarioId)
-                val patentes = historyRepository.getPatentes(usuarioId)
-                val autopistas = historyRepository.getAutopistas(usuarioId)
+                val years = historyRepository.getAvailableYears()
+                val resumen = historyRepository.getResumenAnual()
+                val patentes = historyRepository.getPatentes()
+                val autopistas = historyRepository.getAutopistas()
 
                 state.copy(
                     listState = ListState(
@@ -244,7 +242,7 @@ class HistorialViewModel(
                 val filtro = FiltroHistorialRequest(
                     patentes = patentesSeleccionadas,
                     autopistas = autopistasSeleccionadas)
-                val resumen = historyRepository.getResumenAnualFiltrado(usuarioId, filtro)
+                val resumen = historyRepository.getResumenAnualFiltrado(filtro)
                 state.copy(
                     listState = ListState(
                         resumenAnual = resumen,
@@ -265,7 +263,7 @@ class HistorialViewModel(
     private fun selectYear(año: Int)
     {
         loadDetail(
-            action = { historyRepository.getDetalleAnual(usuarioId, año) },
+            action = { historyRepository.getDetalleAnual(año) },
             onSuccess = { state, result ->
                 state.copy(
                     detailState = DetailState(
@@ -282,7 +280,7 @@ class HistorialViewModel(
             currentDetail.detalleMensual.mes != month)
         {
             loadDetail(
-                action = { historyRepository.getDetalleMensual(usuarioId, year, month) },
+                action = { historyRepository.getDetalleMensual( year, month) },
                 onSuccess = { state, result ->
                     val mensualDetail = result as DetalleMensual
                     loadDayDetail(year, month, day, mensualDetail)
@@ -293,14 +291,14 @@ class HistorialViewModel(
         }
         else
         {
-            loadDayDetail(year, month, day, currentDetail.detalleMensual!!)
+            loadDayDetail(year, month, day, currentDetail.detalleMensual)
         }
     }
 
     private fun loadDayDetail(year: Int, month: Int, day: Int, mensualDetail: DetalleMensual)
     {
         loadDetail(
-            action = { historyRepository.getDetalleDia(usuarioId, year, month, day) },
+            action = { historyRepository.getDetalleDia(year, month, day) },
             onSuccess = { state, result ->
                 state.copy(
                     detailState = DetailState(
@@ -316,7 +314,7 @@ class HistorialViewModel(
         val año = _uiState.value.detailState?.selectedYear ?: return
 
         loadDetail(
-            action = { historyRepository.getDetalleMensual(usuarioId, año, mes) },
+            action = { historyRepository.getDetalleMensual(año, mes) },
             onSuccess = { state, result ->
                 state.copy(
                     detailState = state.detailState?.copy(

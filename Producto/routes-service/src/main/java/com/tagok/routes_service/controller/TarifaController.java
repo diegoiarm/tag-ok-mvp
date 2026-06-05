@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tagok.routes_service.domain.tarifa.TarifaCalculada;
 import com.tagok.routes_service.dto.request.tarifa.TarifaPorticoCruzado;
+import com.tagok.routes_service.security.CurrentUserService;
 import com.tagok.routes_service.service.application.TarifaService;
 
 import lombok.RequiredArgsConstructor;
@@ -18,11 +19,12 @@ import lombok.RequiredArgsConstructor;
 public class TarifaController
 {
     private final TarifaService tarifaService;
+    private final CurrentUserService currentUserService;
 
     @PostMapping
     public ResponseEntity<TarifaCalculada> calcularTarifaCruce(@RequestBody TarifaPorticoCruzado request)
     {
-        var tarifa = tarifaService.calcularCruceTarifa(request);
+        var tarifa = tarifaService.calcularCruceTarifa(request, currentUserService.getUserId());
 
         return ResponseEntity.ok(tarifa);
     }

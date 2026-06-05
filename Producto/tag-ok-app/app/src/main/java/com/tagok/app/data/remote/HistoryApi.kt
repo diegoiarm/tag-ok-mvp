@@ -1,5 +1,6 @@
 package com.tagok.app.data.remote
 
+import android.util.Log
 import com.tagok.app.data.dto.history.DetalleDiaDTO
 import com.tagok.app.data.dto.history.DetalleMensualDTO
 import com.tagok.app.data.dto.history.FiltroHistorialRequest
@@ -10,43 +11,49 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import io.ktor.http.isSuccess
 
 class HistoryApi(private val client: HttpClient) {
-    suspend fun getAvailableYears(usuarioId: String): List<Int> =
-        client.get("${BASE_URL}/v1/historial/${usuarioId}/years").body()
+    suspend fun getAvailableYears(): List<Int> =
+        client.get("${BASE_URL}/v1/historial/years").body()
 
-    suspend fun getResumenAnual(usuarioId: String): List<ResumenAnualDTO> =
-        client.get("${BASE_URL}/v1/historial/${usuarioId}/resumen").body()
+    suspend fun getResumenAnual(): List<ResumenAnualDTO> =
+        client.get("${BASE_URL}/v1/historial/resumen").body()
 
-    suspend fun getDetalleAnual(usuarioId: String, año: Int): ResumenAnualDTO =
-        client.get("${BASE_URL}/v1/historial/${usuarioId}/year/${año}").body()
+    suspend fun getDetalleAnual(año: Int): ResumenAnualDTO =
+        client.get("${BASE_URL}/v1/historial/year/${año}").body()
 
-    suspend fun getDetalleMensual(usuarioId: String, año: Int, mes: Int): DetalleMensualDTO =
-        client.get("${BASE_URL}/v1/historial/${usuarioId}/year/${año}/month/${mes}").body()
+    suspend fun getDetalleMensual(año: Int, mes: Int): DetalleMensualDTO =
+        client.get("${BASE_URL}/v1/historial/year/${año}/month/${mes}").body()
 
-    suspend fun getDetalleDia(usuarioId: String, año: Int, mes: Int, dia: Int): DetalleDiaDTO =
-        client.get("${BASE_URL}/v1/historial/${usuarioId}/year/${año}/month/${mes}/day/${dia}")
+    suspend fun getDetalleDia(año: Int, mes: Int, dia: Int): DetalleDiaDTO =
+        client.get("${BASE_URL}/v1/historial/year/${año}/month/${mes}/day/${dia}")
             .body()
 
-    suspend fun getPatentes(usuarioId: String): List<String> =
-        client.get("$BASE_URL/v1/historial/patentes")
+    suspend fun getPatentes(): List<String> {
+        val response = client.get("$BASE_URL/v1/historial/patentes")
+        if (response.status.isSuccess())
         {
-            parameter("usuarioId", usuarioId)
-        }.body()
+            return response.body()
+        }
+        else
+        {
+            Log.e(TAG, "Error ${response.status}: ${response.bodyAsText()}")
+            throw Exception("Error ${response.status}")
+        }
+    }
 
-    suspend fun getAutopistas(usuarioId: String): List<String> =
+    suspend fun getAutopistas(): List<String> =
         client.get("$BASE_URL/v1/historial/autopistas")
         {
-            parameter("usuarioId", usuarioId)
         }.body()
 
-    suspend fun getResumenAnualFiltrado(
-        usuarioId: String,
-        filtro: FiltroHistorialRequest): List<ResumenAnualDTO>
+    suspend fun getResumenAnualFiltrado(filtro: FiltroHistorialRequest): List<ResumenAnualDTO>
     {
-        return client.post("${BASE_URL}/v1/historial/${usuarioId}/resumen-filtrado") {
+        return client.post("${BASE_URL}/v1/historial/resumen-filtrado") {
             contentType(ContentType.Application.Json)
             setBody(filtro)
         }.body()
@@ -55,5 +62,6 @@ class HistoryApi(private val client: HttpClient) {
     companion object
     {
         private var BASE_URL = ApiConfig.HISTORY_API
+        private var TAG: String = "HistoryApi"
     }
 }
