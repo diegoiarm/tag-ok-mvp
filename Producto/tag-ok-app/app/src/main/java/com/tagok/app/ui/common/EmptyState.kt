@@ -1,4 +1,4 @@
-package com.tagok.app.ui.historial.components
+package com.tagok.app.ui.common
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons

@@ -1,5 +1,5 @@
 // HistorialTopBar.kt
-package com.tagok.app.ui.historial.components
+package com.tagok.app.ui.common
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack

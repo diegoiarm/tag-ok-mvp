@@ -11,7 +11,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.unit.dp
 import com.tagok.app.domain.model.history.ResumenAnual
-import com.tagok.app.ui.historial.components.EmptyState
+import com.tagok.app.ui.common.EmptyState
 
 @Composable
 fun VistaAnual(

@@ -11,6 +11,7 @@ import com.tagok.app.data.repository.HistoryRepository
 import com.tagok.app.domain.model.history.DetalleDia
 import com.tagok.app.domain.model.history.DetalleMensual
 import com.tagok.app.domain.model.history.ResumenAnual
+import com.tagok.app.ui.common.RefreshableViewModel
 import com.tagok.app.ui.historial.model.AutopistaFilter
 import com.tagok.app.ui.historial.model.PatenteFilter
 import com.tagok.app.ui.historial.model.SortOption
@@ -21,17 +22,37 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HistorialViewModel(
-    private val historyRepository: HistoryRepository) : ViewModel() {
+    private val historyRepository: HistoryRepository) : ViewModel(), RefreshableViewModel
+{
 
     private val _uiState = MutableStateFlow(HistorialUiState())
     val uiState: StateFlow<HistorialUiState> = _uiState.asStateFlow()
 
     init
     {
-        loadInitialData()
+        refreshData()
     }
 
     // ============ Carga de datos ============
+
+    override fun refreshData()
+    {
+        viewModelScope.launch {
+            _uiState.update { it.copy(loadingState = LoadingState(isLoading = true)) }
+
+            try
+            {
+                loadInitialData()
+            } catch (e: Exception)
+            {
+                _uiState.update {
+                    it.copy(
+                        loadingState = LoadingState(isLoading = false),
+                        error = "Error al actualizar: ${e.message}")
+                }
+            }
+        }
+    }
 
     fun loadInitialData()
     {

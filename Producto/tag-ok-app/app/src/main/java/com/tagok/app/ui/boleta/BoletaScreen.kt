@@ -1,5 +1,9 @@
+// BoletaScreen.kt (versión simplificada)
 package com.tagok.app.ui.boleta
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
@@ -25,6 +29,8 @@ import com.tagok.app.domain.model.boleta.BoletaItem
 import com.tagok.app.ui.boleta.components.AutopistaMultiSelect
 import com.tagok.app.ui.boleta.components.DateRangeSelector
 import com.tagok.app.ui.boleta.components.PatenteSelector
+import com.tagok.app.ui.common.ErrorContent
+import com.tagok.app.ui.common.LoadingState
 import com.tagok.app.ui.common.ScreenLifecycle
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,199 +53,272 @@ fun BoletaScreen(
                     }
                 }
             )
-        }
-    ) { padding ->
+        })
+    { padding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
-        ) {
-            if (uiState.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            } else {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .padding(horizontal = 20.dp, vertical = 24.dp),
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
-                    // Sección de selección de patente
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-                        )
-                    ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text(
-                                text = "Vehículo",
-                                style = MaterialTheme.typography.titleSmall,
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.padding(bottom = 12.dp)
-                            )
-                            PatenteSelector(
-                                patentes = uiState.patentes,
-                                selected = uiState.patenteSeleccionada,
-                                onPatenteSelected = { viewModel.setPatente(it) }
-                            )
-                        }
-                    }
-
-                    // Sección de fechas
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-                        )
-                    ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text(
-                                text = "Período",
-                                style = MaterialTheme.typography.titleSmall,
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.padding(bottom = 12.dp)
-                            )
-                            DateRangeSelector(
-                                fechaDesde = uiState.fechaDesde,
-                                fechaHasta = uiState.fechaHasta,
-                                onDesdeChanged = { viewModel.setFechaDesde(it) },
-                                onHastaChanged = { viewModel.setFechaHasta(it) }
-                            )
-                        }
-                    }
-
-                    // Sección de autopistas
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-                        )
-                    ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text(
-                                text = "Autopistas (opcional)",
-                                style = MaterialTheme.typography.titleSmall,
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.padding(bottom = 12.dp)
-                            )
-                            AutopistaMultiSelect(
-                                autopistas = uiState.autopistas,
-                                selected = uiState.autopistasSeleccionadas,
-                                onToggle = { viewModel.toggleAutopista(it) }
-                            )
-                        }
-                    }
-
-                    // Botón generar
-                    Button(
-                        onClick = { viewModel.generarBoleta() },
-                        enabled = !uiState.isLoading && uiState.patenteSeleccionada.isNotEmpty(),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp),
-                        shape = MaterialTheme.shapes.medium
-                    ) {
-                        Text(
-                            text = "Generar Boleta",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
-
-                    // Mostrar resultado
-                    uiState.boleta?.let { boleta ->
-                        HorizontalDivider(
-                            modifier = Modifier.padding(vertical = 8.dp),
-                            color = MaterialTheme.colorScheme.outlineVariant
-                        )
-
-                        // Tarjeta de total
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.primaryContainer
-                            )
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(20.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = "Total a pagar",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                                )
-                                Text(
-                                    text = "$${String.format("%.2f", boleta.total)}",
-                                    style = MaterialTheme.typography.headlineMedium,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                                )
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        // Lista de items
-                        Text(
-                            text = "Detalle de transacciones",
-                            style = MaterialTheme.typography.titleSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(vertical = 8.dp)
-                        )
-
-                        LazyColumn(
-                            modifier = Modifier.heightIn(max = 400.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            items(boleta.items) { item ->
-                                BoletaItemRow(item = item)
-                            }
-                        }
-                    }
-
-                    // Espacio extra al final para mejor scroll
-                    Spacer(modifier = Modifier.height(32.dp))
+                .padding(padding))
+        {
+            when
+            {
+                uiState.isLoading && uiState.patentes.isEmpty() -> {
+                    LoadingState(message = "Cargando datos...")
                 }
+
+                uiState.error != null && uiState.patentes.isEmpty() -> {
+                    ErrorContent(
+                        message = uiState.error ?: "Error desconocido",
+                        onRetry = { viewModel.refreshData() },
+                        onDismiss = { viewModel.clearError() })
+                }
+
+                else -> {
+                    BoletaContent(
+                        uiState = uiState,
+                        onPatenteSelected = viewModel::setPatente,
+                        onFechaDesdeChanged = viewModel::setFechaDesde,
+                        onFechaHastaChanged = viewModel::setFechaHasta,
+                        onToggleAutopista = viewModel::toggleAutopista,
+                        onGenerarBoleta = viewModel::generarBoleta)
+                }
+            }
+
+            if (uiState.isLoading && uiState.patentes.isNotEmpty())
+            {
+                LoadingOverlay()
             }
         }
     }
 
-    // Mostrar error como diálogo
-    uiState.error?.let { error ->
+    if (uiState.error != null && uiState.patentes.isNotEmpty())
+    {
         AlertDialog(
             onDismissRequest = { viewModel.clearError() },
             title = {
                 Text(
                     text = "Error",
-                    fontWeight = FontWeight.Bold
-                )
+                    fontWeight = FontWeight.Bold)
             },
             text = {
                 Text(
-                    text = error,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
+                    text = uiState.error ?: "",
+                    modifier = Modifier.padding(vertical = 8.dp))
             },
             confirmButton = {
                 TextButton(
                     onClick = { viewModel.clearError() },
-                    modifier = Modifier.padding(8.dp)
-                ) {
+                    modifier = Modifier.padding(8.dp))
+                {
                     Text("Entendido")
                 }
-            }
-        )
+            })
     }
 }
 
 @Composable
-fun BoletaItemRow(item: BoletaItem) {
+private fun LoadingOverlay()
+{
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center)
+    {
+        Card(
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp))
+        {
+            Column(
+                modifier = Modifier.padding(32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp))
+            {
+                CircularProgressIndicator()
+                Text(
+                    text = "Generando boleta...",
+                    style = MaterialTheme.typography.bodyMedium)
+            }
+        }
+    }
+}
+
+@Composable
+private fun BoletaContent(
+    uiState: BoletaUiState,
+    onPatenteSelected: (String) -> Unit,
+    onFechaDesdeChanged: (kotlinx.datetime.LocalDate) -> Unit,
+    onFechaHastaChanged: (kotlinx.datetime.LocalDate) -> Unit,
+    onToggleAutopista: (String) -> Unit,
+    onGenerarBoleta: () -> Unit)
+{
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 20.dp, vertical = 24.dp),
+        verticalArrangement = Arrangement.spacedBy(20.dp))
+    {
+        // 1️⃣ SECCIÓN VEHÍCULO
+        FormSection(title = "Vehículo")
+        {
+            PatenteSelector(
+                patentes = uiState.patentes,
+                selected = uiState.patenteSeleccionada,
+                onPatenteSelected = onPatenteSelected)
+        }
+
+        // 2️⃣ BOLETA GENERADA (aparece aquí ENTRE vehículo y período)
+        uiState.boleta?.let { boleta ->
+            BoletaResult(boleta = boleta)
+        }
+
+        // 3️⃣ SECCIÓN PERÍODO
+        FormSection(title = "Período")
+        {
+            DateRangeSelector(
+                fechaDesde = uiState.fechaDesde,
+                fechaHasta = uiState.fechaHasta,
+                onDesdeChanged = onFechaDesdeChanged,
+                onHastaChanged = onFechaHastaChanged)
+        }
+
+        // 4️⃣ SECCIÓN AUTOPISTAS
+        FormSection(title = "Autopistas (opcional)")
+        {
+            AutopistaMultiSelect(
+                autopistas = uiState.autopistas,
+                selected = uiState.autopistasSeleccionadas,
+                onToggle = onToggleAutopista)
+        }
+
+        // 5️⃣ BOTÓN GENERAR
+        Button(
+            onClick = onGenerarBoleta,
+            enabled = !uiState.isLoading && uiState.patenteSeleccionada.isNotEmpty(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            shape = MaterialTheme.shapes.medium)
+        {
+            Text(
+                text = if (uiState.boleta != null) "Regenerar Boleta" else "Generar Boleta",
+                style = MaterialTheme.typography.titleMedium)
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
+    }
+}
+
+@Composable
+private fun BoletaResult(boleta: com.tagok.app.domain.model.boleta.Boleta)
+{
+    var visible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(boleta) {
+        visible = true
+    }
+
+    AnimatedVisibility(
+        visible = visible,
+        enter = fadeIn() + slideInVertically(initialOffsetY = { -40 }))
+    {
+        Column(
+            modifier = Modifier.fillMaxWidth())
+        {
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 4.dp),
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+                thickness = 2.dp)
+
+            Text(
+                text = "📄 Boleta Generada",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(vertical = 8.dp))
+
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp))
+            {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically)
+                {
+                    Column {
+                        Text(
+                            text = "Total a pagar",
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f))
+                        Text(
+                            text = "${boleta.items.size} transacciones",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.5f))
+                    }
+                    Text(
+                        text = "$${String.format("%.2f", boleta.total)}",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = "Detalle de transacciones",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(bottom = 8.dp))
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 400.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp))
+            {
+                items(boleta.items) { item ->
+                    BoletaItemRow(item = item)
+                }
+            }
+
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 4.dp),
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+                thickness = 2.dp
+            )
+        }
+    }
+}
+
+@Composable
+private fun FormSection(
+    title: String,
+    content: @Composable () -> Unit)
+{
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)))
+    {
+        Column(modifier = Modifier.padding(16.dp))
+        {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(bottom = 12.dp))
+            content()
+        }
+    }
+}
+
+@Composable
+fun BoletaItemRow(item: BoletaItem)
+{
     val interactionSource = remember { MutableInteractionSource() }
     val isHovered by interactionSource.collectIsHoveredAsState()
 
@@ -248,95 +327,89 @@ fun BoletaItemRow(item: BoletaItem) {
             .fillMaxWidth()
             .hoverable(interactionSource),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = if (isHovered) 6.dp else 1.dp
-        ),
+            defaultElevation = if (isHovered) 6.dp else 1.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (isHovered) {
+            containerColor = if (isHovered)
+            {
                 MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.1f)
-            } else {
-                MaterialTheme.colorScheme.surface
             }
-        ),
-        shape = RoundedCornerShape(12.dp)
-    ) {
+            else
+            {
+                MaterialTheme.colorScheme.surface
+            }),
+        shape = RoundedCornerShape(12.dp))
+    {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+            verticalAlignment = Alignment.CenterVertically)
+        {
             Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                // Clave en negrita (nombre)
+                modifier = Modifier.weight(1f))
+            {
                 Text(
                     text = item.nombre,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                    overflow = TextOverflow.Ellipsis)
 
                 Spacer(modifier = Modifier.height(6.dp))
 
-                // Autopista
                 Text(
                     text = item.autopista,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                    overflow = TextOverflow.Ellipsis)
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // Información secundaria
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                    verticalAlignment = Alignment.CenterVertically)
+                {
                     Text(
                         text = item.horaCruce.toString(),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.outline
-                    )
+                        color = MaterialTheme.colorScheme.outline)
 
-                    // Separador visual
                     Box(
                         modifier = Modifier
                             .width(3.dp)
                             .height(3.dp)
                             .clip(RoundedCornerShape(50))
-                            .defaultMinSize(minWidth = 3.dp, minHeight = 3.dp)
-                    ) {
+                            .defaultMinSize(minWidth = 3.dp, minHeight = 3.dp))
+                    {
                         Surface(
                             modifier = Modifier.fillMaxSize(),
                             color = MaterialTheme.colorScheme.outline,
-                            shape = RoundedCornerShape(50)
-                        ) {}
+                            shape = RoundedCornerShape(50)) {}
                     }
 
                     Text(
                         text = item.tipoTarifa,
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                        color = MaterialTheme.colorScheme.primary)
                 }
             }
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            // Monto mejorado
             Surface(
-                color = if (isHovered) {
+                color = if (isHovered)
+                {
                     MaterialTheme.colorScheme.primary
-                } else {
+                }
+                else
+                {
                     MaterialTheme.colorScheme.secondaryContainer
                 },
-                shape = RoundedCornerShape(8.dp)
-            ) {
+                shape = RoundedCornerShape(8.dp))
+            {
                 Text(
                     text = "$${String.format("%.2f", item.valor)}",
                     style = MaterialTheme.typography.titleMedium,
@@ -346,8 +419,7 @@ fun BoletaItemRow(item: BoletaItem) {
                     } else {
                         MaterialTheme.colorScheme.onSecondaryContainer
                     },
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
-                )
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp))
             }
         }
     }

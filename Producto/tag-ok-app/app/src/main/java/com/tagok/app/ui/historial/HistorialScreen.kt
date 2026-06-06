@@ -8,9 +8,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.tagok.app.ui.historial.components.ErrorContent
-import com.tagok.app.ui.historial.components.HistorialTopBar
-import com.tagok.app.ui.historial.components.LoadingContent
+import com.tagok.app.ui.common.ScreenLifecycle
+import com.tagok.app.ui.common.ErrorContent
+import com.tagok.app.ui.common.HistorialTopBar
+import com.tagok.app.ui.common.LoadingState
 import com.tagok.app.ui.historial.components.calendar.CalendarioMensual
 import com.tagok.app.ui.historial.components.day.DetalleDiaContent
 import com.tagok.app.ui.historial.components.month.VistaMeses
@@ -25,6 +26,8 @@ fun HistorialScreen(
     viewModel: HistorialViewModel = viewModel(factory = HistorialViewModel.Factory))
 {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    ScreenLifecycle(viewModel = viewModel)
 
     Scaffold(
         topBar = {
@@ -46,7 +49,7 @@ fun HistorialScreen(
         {
             when
             {
-                uiState.loadingState.isLoading -> LoadingContent()
+                uiState.loadingState.isLoading -> LoadingState()
 
                 uiState.error != null -> ErrorContent(
                     message = uiState.error ?: "Error desconocido",
@@ -178,9 +181,9 @@ private fun MonthViewContent(
                 }
             }
 
-            else -> LoadingContent()
+            else -> LoadingState()
         }
-    } ?: LoadingContent()
+    } ?: LoadingState()
 }
 
 @Composable
@@ -194,7 +197,7 @@ private fun DayDetailContent(detailState: DetailState?)
                 detalle = state.detalleMensual,
                 onDayClick = { day ->
                 })
-            else -> LoadingContent()
+            else -> LoadingState()
         }
     }
 }
