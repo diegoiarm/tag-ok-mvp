@@ -8,5 +8,4 @@ import com.tagok.app.domain.vehiculo.TipoVehiculo
 interface IRouteRepository
 {
     suspend fun getRoute(lon1: Double, lat1: Double, lon2: Double, lat2: Double, vehiculo: TipoVehiculo): Route
-    suspend fun calculateTarifa(request: TarifaRequest): TarifaCalculada
 }

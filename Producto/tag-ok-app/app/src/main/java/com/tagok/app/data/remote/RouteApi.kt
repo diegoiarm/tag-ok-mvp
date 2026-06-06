@@ -14,24 +14,20 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 
-class RouteApi(private val client: HttpClient)
+class RouteApi(client: HttpClient) : ApiClient(client, TAG)
 {
-    suspend fun getRoute(request: RouteRequest): RouteResponse =
+    suspend fun getRoute(request: RouteRequest): RouteResponse = apiCall("Obtener ruta")
+    {
         client.post("$BASE_URL/v1/rutas")
         {
             contentType(ContentType.Application.Json)
             setBody(request)
         }.body()
-
-    suspend fun calculateTarifa(request: TarifaRequest): TarifaCalculadaResponse =
-        client.post("$BASE_URL/v1/tarifas")
-        {
-            contentType(ContentType.Application.Json)
-            setBody(request)
-        }.body()
+    }
 
     companion object
     {
         private var BASE_URL = ApiConfig.ROUTES_API
+        private const val TAG = "RouteApi"
     }
 }

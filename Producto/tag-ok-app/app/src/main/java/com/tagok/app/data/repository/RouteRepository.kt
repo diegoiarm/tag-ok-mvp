@@ -31,11 +31,6 @@ class RouteRepository(private val api: RouteApi) : IRouteRepository
         return domain
     }
 
-    override suspend fun calculateTarifa(request: TarifaRequest): TarifaCalculada
-    {
-        return api.calculateTarifa(request).toDomain()
-    }
-
     companion object {
         private const val TAG = "RouteRepository"
     }

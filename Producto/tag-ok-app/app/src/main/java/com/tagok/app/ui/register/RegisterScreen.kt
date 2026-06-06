@@ -88,7 +88,7 @@ private val categoriaOpciones = listOf(
 @Composable
 fun RegisterScreen(
     onSuccess: () -> Unit = {},
-    viewModel: RegisterViewModel = viewModel(),
+    viewModel: RegisterViewModel = viewModel(factory = RegisterViewModel.Factory),
 ) {
     val form by viewModel.form.collectAsState()
     val uiState by viewModel.uiState.collectAsState()

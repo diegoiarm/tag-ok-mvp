@@ -16,8 +16,6 @@ object AuthTokenProvider
         return try
         {
             val token = supabase.auth.currentAccessTokenOrNull()
-            Log.d("AuthTokenProvider", "Token completo: $token")
-            Log.d("AuthTokenProvider", "Largo del token: ${token?.length}")
             token
         }
         catch (e: Exception)
@@ -40,7 +38,8 @@ object AuthTokenProvider
         }
     }
 
-    fun hasSession(): Boolean {
+    fun hasSession(): Boolean
+    {
         return supabase.auth.currentSessionOrNull() != null
     }
 

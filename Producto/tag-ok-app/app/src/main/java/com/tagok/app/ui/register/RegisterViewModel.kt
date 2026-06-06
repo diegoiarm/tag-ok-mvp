@@ -1,10 +1,14 @@
 package com.tagok.app.ui.register
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.tagok.app.data.NuevoVehiculo
-import com.tagok.app.data.VehiculoRepository
+import com.tagok.app.data.remote.HttpClientProvider
+import com.tagok.app.data.remote.VehiculoApi
+import com.tagok.app.data.repository.VehiculoRepository
+import com.tagok.app.domain.model.vehiculo.NuevoVehiculo
 import com.tagok.app.supabase
+import com.tagok.app.ui.home.HomeViewModel
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,7 +42,7 @@ sealed interface RegisterUiState {
     data class Error(val message: String) : RegisterUiState
 }
 
-class RegisterViewModel : ViewModel() {
+class RegisterViewModel(private val vehiculoRepository: VehiculoRepository) : ViewModel() {
 
     private val _form = MutableStateFlow(RegisterFormState())
     val form: StateFlow<RegisterFormState> = _form.asStateFlow()
@@ -64,7 +68,8 @@ class RegisterViewModel : ViewModel() {
         it.copy(tipoVehiculo = "", categoria = "", patente = "", numeroTag = "")
     }
 
-    fun register() {
+    fun register()
+    {
         val f = _form.value
         if (f.password != f.repeatPassword) {
             _uiState.value = RegisterUiState.Error("Las contraseñas no coinciden")
@@ -89,14 +94,13 @@ class RegisterViewModel : ViewModel() {
                 val userId = supabase.auth.currentUserOrNull()?.id
                 if (userId != null && f.patente.isNotBlank()) {
                     runCatching {
-                        VehiculoRepository().insertVehiculo(
+                        vehiculoRepository.insertVehiculo(
                             NuevoVehiculo(
                                 userId = userId,
                                 patente = f.patente.trim().uppercase(),
                                 tipoVehiculo = f.tipoVehiculo.ifBlank { "AUTO" },
-                                categoria = f.categoria.toIntOrNull() ?: 2,
                                 numeroTag = f.numeroTag.trim().takeIf { it.isNotBlank() },
-                                esPrincipal = true,
+                                esPrincipal = true
                             )
                         )
                     }
@@ -111,4 +115,19 @@ class RegisterViewModel : ViewModel() {
     }
 
     fun clearError() { _uiState.value = RegisterUiState.Idle }
+
+    companion object
+    {
+        private const val TAG = "HomeViewModel"
+        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory
+        {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T
+            {
+                val api = VehiculoApi(HttpClientProvider.client)
+                val repository = VehiculoRepository(api)
+                return RegisterViewModel(repository) as T
+            }
+        }
+    }
 }

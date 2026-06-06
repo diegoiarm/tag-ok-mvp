@@ -11,8 +11,10 @@ import com.tagok.app.data.dto.TarifaRequest
 import com.tagok.app.data.remote.HttpClientProvider
 import com.tagok.app.data.remote.PorticoApi
 import com.tagok.app.data.remote.RouteApi
+import com.tagok.app.data.remote.TarifaApi
 import com.tagok.app.data.repository.PorticoRepository
 import com.tagok.app.data.repository.RouteRepository
+import com.tagok.app.data.repository.TarifaRepository
 import com.tagok.app.domain.model.portico.PorticoResumen
 import com.tagok.app.domain.model.portico.PorticoTipo
 import com.tagok.app.domain.model.tarifa.TarifaCalculada
@@ -33,7 +35,7 @@ data class MapUiState(
 
 class MapViewModel(
     private val porticoRepository: PorticoRepository,
-    private val routeRepository: RouteRepository) : ViewModel()
+    private val tarifaRepository: TarifaRepository) : ViewModel()
 {
     private val _uiState = MutableStateFlow(MapUiState())
     val uiState: StateFlow<MapUiState> = _uiState.asStateFlow()
@@ -225,7 +227,7 @@ class MapViewModel(
                 }
 
                 Log.d(TAG, "Enviando request a calculateTarifa...")
-                val response = routeRepository.calculateTarifa(request)
+                val response = tarifaRepository.calculateTarifa(request)
 
                 // 4. Analizar respuesta
                 Log.d(TAG, "══════════════════════════════════════════")
@@ -341,13 +343,13 @@ class MapViewModel(
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T
             {
-                val routeApi = RouteApi(HttpClientProvider.client)
-                val routeRepo = RouteRepository(routeApi)
+                val TarifaApi = TarifaApi(HttpClientProvider.client)
+                val tarifaRepo = TarifaRepository(TarifaApi)
 
                 val porticoApi = PorticoApi(HttpClientProvider.client)
                 val porticoRepo = PorticoRepository(porticoApi)
 
-                return MapViewModel(porticoRepo, routeRepo) as T
+                return MapViewModel(porticoRepo, tarifaRepo) as T
             }
         }
     }

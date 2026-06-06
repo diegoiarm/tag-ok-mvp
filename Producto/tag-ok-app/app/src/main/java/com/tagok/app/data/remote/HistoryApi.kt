@@ -1,6 +1,5 @@
 package com.tagok.app.data.remote
 
-import android.util.Log
 import com.tagok.app.data.dto.history.DetalleDiaDTO
 import com.tagok.app.data.dto.history.DetalleMensualDTO
 import com.tagok.app.data.dto.history.FiltroHistorialRequest
@@ -10,50 +9,49 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import io.ktor.http.isSuccess
 
-class HistoryApi(private val client: HttpClient)
+class HistoryApi(client: HttpClient) : ApiClient(client, TAG)
 {
-    suspend fun getAvailableYears(): List<Int> =
-        client.get("${BASE_URL}/v1/historial/years").body()
-
-    suspend fun getResumenAnual(): List<ResumenAnualDTO> =
-        client.get("${BASE_URL}/v1/historial/resumen").body()
-
-    suspend fun getDetalleAnual(año: Int): ResumenAnualDTO =
-        client.get("${BASE_URL}/v1/historial/year/${año}").body()
-
-    suspend fun getDetalleMensual(año: Int, mes: Int): DetalleMensualDTO =
-        client.get("${BASE_URL}/v1/historial/year/${año}/month/${mes}").body()
-
-    suspend fun getDetalleDia(año: Int, mes: Int, dia: Int): DetalleDiaDTO =
-        client.get("${BASE_URL}/v1/historial/year/${año}/month/${mes}/day/${dia}")
-            .body()
-
-    suspend fun getPatentes(): List<String> {
-        val response = client.get("$BASE_URL/v1/historial/patentes")
-        if (response.status.isSuccess())
-        {
-            return response.body()
-        }
-        else
-        {
-            Log.e(TAG, "Error ${response.status}: ${response.bodyAsText()}")
-            throw Exception("Error ${response.status}")
-        }
+    suspend fun getAvailableYears(): List<Int> = apiCall("Obtener años disponibles")
+    {
+        client.get("$BASE_URL/v1/historial/years").body()
     }
 
-    suspend fun getAutopistas(): List<String> =
-        client.get("$BASE_URL/v1/historial/autopistas")
-        {
-        }.body()
-
-    suspend fun getResumenAnualFiltrado(filtro: FiltroHistorialRequest): List<ResumenAnualDTO>
+    suspend fun getResumenAnual(): List<ResumenAnualDTO> = apiCall("Obtener resumen anual")
     {
-        return client.post("${BASE_URL}/v1/historial/resumen-filtrado") {
+        client.get("$BASE_URL/v1/historial/resumen").body()
+    }
+
+    suspend fun getDetalleAnual(año: Int): ResumenAnualDTO = apiCall("Obtener detalle anual $año")
+    {
+        client.get("$BASE_URL/v1/historial/year/$año").body()
+    }
+
+    suspend fun getDetalleMensual(año: Int, mes: Int): DetalleMensualDTO = apiCall("Obtener detalle mensual $mes/$año")
+    {
+        client.get("$BASE_URL/v1/historial/year/$año/month/$mes").body()
+    }
+
+    suspend fun getDetalleDia(año: Int, mes: Int, dia: Int): DetalleDiaDTO = apiCall("Obtener detalle día $dia/$mes/$año")
+    {
+        client.get("$BASE_URL/v1/historial/year/$año/month/$mes/day/$dia").body()
+    }
+
+    suspend fun getPatentes(): List<String> = apiCall("Obtener patentes")
+    {
+        client.get("$BASE_URL/v1/historial/patentes").body()
+    }
+
+    suspend fun getAutopistas(): List<String> = apiCall("Obtener autopistas")
+    {
+        client.get("$BASE_URL/v1/historial/autopistas").body()
+    }
+
+    suspend fun getResumenAnualFiltrado(filtro: FiltroHistorialRequest): List<ResumenAnualDTO> = apiCall("Filtrar resumen anual") {
+        client.post("$BASE_URL/v1/historial/resumen-filtrado")
+        {
             contentType(ContentType.Application.Json)
             setBody(filtro)
         }.body()
@@ -62,6 +60,6 @@ class HistoryApi(private val client: HttpClient)
     companion object
     {
         private var BASE_URL = ApiConfig.HISTORY_API
-        private var TAG: String = "HistoryApi"
+        private const val TAG = "HistoryApi"
     }
 }

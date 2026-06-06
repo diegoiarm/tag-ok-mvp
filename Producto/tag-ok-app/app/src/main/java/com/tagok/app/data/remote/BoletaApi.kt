@@ -9,19 +9,20 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 
-class BoletaApi(private val client: HttpClient)
+class BoletaApi(client: HttpClient) : ApiClient(client, TAG)
 {
-    suspend fun generarBoleta(request: BoletaRequest): BoletaDto
+    suspend fun generarBoleta(request: BoletaRequest): BoletaDto = apiCall("Generar boleta")
     {
-        return client.post("$BASE_URL/v1/boleta/obtener")
+        client.post("$BASE_URL/v1/boleta/obtener")
         {
             contentType(ContentType.Application.Json)
             setBody(request)
         }.body()
     }
+
     companion object
     {
         private var BASE_URL = ApiConfig.BOLETA_API
-        private var TAG: String = "BoletaApi"
+        private const val TAG = "BoletaApi"
     }
 }

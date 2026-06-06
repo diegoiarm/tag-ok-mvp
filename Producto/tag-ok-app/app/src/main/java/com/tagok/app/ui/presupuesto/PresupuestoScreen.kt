@@ -71,7 +71,7 @@ private val RedAlert    = Color(0xFFEF4444)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PresupuestoScreen(viewModel: PresupuestoViewModel = viewModel()) {
+fun PresupuestoScreen(viewModel: PresupuestoViewModel = viewModel(factory = PresupuestoViewModel.Factory)) {
     val state by viewModel.state.collectAsState()
     val sheetState = rememberModalBottomSheetState()
 
