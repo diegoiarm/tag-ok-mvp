@@ -22,7 +22,7 @@ import com.tagok.history_service.dto.DetalleDiaDTO;
 import com.tagok.history_service.dto.DetalleMensualDTO;
 import com.tagok.history_service.dto.DiaResumenDTO;
 import com.tagok.history_service.dto.ResumenAnualDTO;
-import com.tagok.history_service.repository.ProyeccionAnual;
+import com.tagok.history_service.repository.historialProyeccion.ProyeccionAnual;
 import com.tagok.history_service.security.CurrentUserService;
 import com.tagok.history_service.service.HistorialService;
 

@@ -1,0 +1,27 @@
+package com.tagok.app.data.remote
+
+import com.tagok.app.data.dto.boleta.BoletaDto
+import com.tagok.app.data.dto.boleta.BoletaRequest
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+
+class BoletaApi(private val client: HttpClient)
+{
+    suspend fun generarBoleta(request: BoletaRequest): BoletaDto
+    {
+        return client.post("$BASE_URL/v1/boleta/obtener")
+        {
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }.body()
+    }
+    companion object
+    {
+        private var BASE_URL = ApiConfig.BOLETA_API
+        private var TAG: String = "BoletaApi"
+    }
+}

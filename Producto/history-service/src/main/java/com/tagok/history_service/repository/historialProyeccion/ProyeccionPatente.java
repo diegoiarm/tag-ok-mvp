@@ -1,4 +1,4 @@
-package com.tagok.history_service.repository;
+package com.tagok.history_service.repository.historialProyeccion;
 
 public interface ProyeccionPatente 
 {

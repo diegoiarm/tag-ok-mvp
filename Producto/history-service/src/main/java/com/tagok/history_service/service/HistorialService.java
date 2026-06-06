@@ -18,9 +18,9 @@ import com.tagok.history_service.document.HistorialDiarioSnapshot;
 import com.tagok.history_service.document.HistorialMensualSnapshot;
 import com.tagok.history_service.event.dtos.HistorialCruceEvent;
 import com.tagok.history_service.repository.HistorialAnualRepository;
-import com.tagok.history_service.repository.ProyeccionAnual;
-import com.tagok.history_service.repository.ProyeccionAutopista;
-import com.tagok.history_service.repository.ProyeccionPatente;
+import com.tagok.history_service.repository.historialProyeccion.ProyeccionAnual;
+import com.tagok.history_service.repository.historialProyeccion.ProyeccionAutopista;
+import com.tagok.history_service.repository.historialProyeccion.ProyeccionPatente;
 
 import lombok.RequiredArgsConstructor;
 

@@ -113,7 +113,7 @@ fun NavGraph()
                                         saveState = true
                                     }
                                     launchSingleTop = true
-                                    restoreState = true
+                                    //restoreState = true
                                 }
                             },
                             icon = {

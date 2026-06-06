@@ -6,4 +6,5 @@ object ApiConfig
 
     val ROUTES_API: String = "${GATEWAY_URL}/routes"
     val HISTORY_API: String = "${GATEWAY_URL}/history"
+    val BOLETA_API: String = "${GATEWAY_URL}/history"
 }

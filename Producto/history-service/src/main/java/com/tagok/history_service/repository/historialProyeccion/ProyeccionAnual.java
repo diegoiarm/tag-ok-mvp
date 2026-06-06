@@ -1,4 +1,4 @@
-package com.tagok.history_service.repository;
+package com.tagok.history_service.repository.historialProyeccion;
 
 import java.math.BigDecimal;
 import java.util.List;

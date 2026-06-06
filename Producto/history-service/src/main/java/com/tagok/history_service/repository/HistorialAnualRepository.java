@@ -7,6 +7,9 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import com.tagok.history_service.document.HistorialAnualDocument;
+import com.tagok.history_service.repository.historialProyeccion.ProyeccionAnual;
+import com.tagok.history_service.repository.historialProyeccion.ProyeccionAutopista;
+import com.tagok.history_service.repository.historialProyeccion.ProyeccionPatente;
 
 @Repository
 public interface HistorialAnualRepository extends MongoRepository<HistorialAnualDocument, String>
