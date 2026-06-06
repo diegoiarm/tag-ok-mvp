@@ -16,6 +16,7 @@ import com.tagok.app.domain.model.tarifa.TarifaCalculada
 import com.tagok.app.domain.model.vehiculo.NuevoVehiculo
 import com.tagok.app.domain.model.vehiculo.Vehiculo
 import com.tagok.app.domain.vehiculo.TipoVehiculo
+import io.ktor.client.statement.HttpResponse
 
 interface IBoletaRepository
 {
@@ -55,7 +56,7 @@ interface ITarifaRepository
 interface IVehiculoRepository
 {
     suspend fun getVehiculos(): List<Vehiculo>
-    suspend fun insertVehiculo(nuevo: NuevoVehiculo)
-    suspend fun deleteVehiculo(id: String)
+    suspend fun insertVehiculo(nuevo: NuevoVehiculo): HttpResponse
+    suspend fun deleteVehiculo(id: String): HttpResponse
 }
 
