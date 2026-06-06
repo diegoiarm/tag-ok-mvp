@@ -10,6 +10,8 @@ import com.tagok.app.data.remote.HistoryApi
 import com.tagok.app.data.remote.HttpClientProvider
 import com.tagok.app.data.repository.BoletaRepository
 import com.tagok.app.data.repository.HistoryRepository
+import com.tagok.app.domain.interfaces.IBoletaRepository
+import com.tagok.app.domain.interfaces.IHistoryRepository
 import com.tagok.app.ui.common.RefreshableViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,8 +27,8 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
 
 class BoletaViewModel(
-    private val boletaRepository: BoletaRepository,
-    private val historyRepository: HistoryRepository): ViewModel(), RefreshableViewModel
+    private val boletaRepository: IBoletaRepository,
+    private val historyRepository: IHistoryRepository): ViewModel(), RefreshableViewModel
 {
     private val _uiState = MutableStateFlow(BoletaUiState())
     val uiState: StateFlow<BoletaUiState> = _uiState.asStateFlow()

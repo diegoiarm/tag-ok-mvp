@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.tagok.app.data.remote.HttpClientProvider
 import com.tagok.app.data.remote.VehiculoApi
 import com.tagok.app.data.repository.VehiculoRepository
+import com.tagok.app.domain.interfaces.IVehiculoRepository
 import com.tagok.app.domain.model.vehiculo.NuevoVehiculo
 import com.tagok.app.supabase
 import com.tagok.app.ui.home.HomeViewModel
@@ -42,7 +43,7 @@ sealed interface RegisterUiState {
     data class Error(val message: String) : RegisterUiState
 }
 
-class RegisterViewModel(private val vehiculoRepository: VehiculoRepository) : ViewModel() {
+class RegisterViewModel(private val vehiculoRepository: IVehiculoRepository) : ViewModel() {
 
     private val _form = MutableStateFlow(RegisterFormState())
     val form: StateFlow<RegisterFormState> = _form.asStateFlow()

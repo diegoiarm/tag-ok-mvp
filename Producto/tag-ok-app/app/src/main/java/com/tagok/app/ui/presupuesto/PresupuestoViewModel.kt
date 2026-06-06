@@ -9,6 +9,7 @@ import com.tagok.app.data.PresupuestoRepository
 import com.tagok.app.data.remote.HttpClientProvider
 import com.tagok.app.data.remote.VehiculoApi
 import com.tagok.app.data.repository.VehiculoRepository
+import com.tagok.app.domain.interfaces.IVehiculoRepository
 import com.tagok.app.domain.model.vehiculo.Vehiculo
 import com.tagok.app.supabase
 import com.tagok.app.ui.home.HomeViewModel
@@ -35,7 +36,7 @@ data class PresupuestoUiState(
         get() = presupuestos.find { it.vehiculoId == vehiculoIdFiltro }
 }
 
-class PresupuestoViewModel(private val vehiculoRepository: VehiculoRepository) : ViewModel()
+class PresupuestoViewModel(private val vehiculoRepository: IVehiculoRepository) : ViewModel()
 {
     private val repo = PresupuestoRepository()
 

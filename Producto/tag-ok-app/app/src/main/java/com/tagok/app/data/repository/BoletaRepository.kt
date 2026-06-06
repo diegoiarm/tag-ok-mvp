@@ -4,11 +4,12 @@ import com.tagok.app.data.dto.boleta.BoletaRequest
 import com.tagok.app.data.mapper.toDomain
 import com.tagok.app.data.remote.BoletaApi
 import com.tagok.app.data.remote.HistoryApi
+import com.tagok.app.domain.interfaces.IBoletaRepository
 import com.tagok.app.domain.model.boleta.Boleta
 
-class BoletaRepository(private val boletaApi: BoletaApi)
+class BoletaRepository(private val boletaApi: BoletaApi) : IBoletaRepository
 {
-    suspend fun generarBoleta(request: BoletaRequest): Boleta
+    override suspend fun generarBoleta(request: BoletaRequest): Boleta
     {
         return boletaApi.generarBoleta(request).toDomain()
     }

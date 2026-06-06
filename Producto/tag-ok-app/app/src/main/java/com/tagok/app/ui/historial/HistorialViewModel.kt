@@ -8,6 +8,7 @@ import com.tagok.app.data.dto.history.FiltroHistorialRequest
 import com.tagok.app.data.remote.HistoryApi
 import com.tagok.app.data.remote.HttpClientProvider
 import com.tagok.app.data.repository.HistoryRepository
+import com.tagok.app.domain.interfaces.IHistoryRepository
 import com.tagok.app.domain.model.history.DetalleDia
 import com.tagok.app.domain.model.history.DetalleMensual
 import com.tagok.app.domain.model.history.ResumenAnual
@@ -22,7 +23,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HistorialViewModel(
-    private val historyRepository: HistoryRepository) : ViewModel(), RefreshableViewModel
+    private val historyRepository: IHistoryRepository) : ViewModel(), RefreshableViewModel
 {
 
     private val _uiState = MutableStateFlow(HistorialUiState())

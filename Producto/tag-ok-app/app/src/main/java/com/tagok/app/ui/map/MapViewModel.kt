@@ -15,6 +15,8 @@ import com.tagok.app.data.remote.TarifaApi
 import com.tagok.app.data.repository.PorticoRepository
 import com.tagok.app.data.repository.RouteRepository
 import com.tagok.app.data.repository.TarifaRepository
+import com.tagok.app.domain.interfaces.IPorticoRepository
+import com.tagok.app.domain.interfaces.ITarifaRepository
 import com.tagok.app.domain.model.portico.PorticoResumen
 import com.tagok.app.domain.model.portico.PorticoTipo
 import com.tagok.app.domain.model.tarifa.TarifaCalculada
@@ -34,8 +36,8 @@ data class MapUiState(
     val error: String? = null)
 
 class MapViewModel(
-    private val porticoRepository: PorticoRepository,
-    private val tarifaRepository: TarifaRepository) : ViewModel()
+    private val porticoRepository: IPorticoRepository,
+    private val tarifaRepository: ITarifaRepository) : ViewModel()
 {
     private val _uiState = MutableStateFlow(MapUiState())
     val uiState: StateFlow<MapUiState> = _uiState.asStateFlow()

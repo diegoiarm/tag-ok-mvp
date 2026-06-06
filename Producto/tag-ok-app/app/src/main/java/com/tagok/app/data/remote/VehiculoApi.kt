@@ -1,8 +1,8 @@
-// com.tagok.app.data.remote.VehiculoApi.kt
 package com.tagok.app.data.remote
 
 import com.tagok.app.data.dto.vehiculo.NuevoVehiculoRequest
 import com.tagok.app.data.dto.vehiculo.VehiculoDto
+import com.tagok.app.data.remote.interfaces.IVehiculoApi
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
@@ -14,10 +14,10 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 
-class VehiculoApi(client: HttpClient) : ApiClient(client, TAG)
+class VehiculoApi(client: HttpClient) : IVehiculoApi, ApiClient(client, TAG)
 {
 
-    suspend fun getVehiculos(): List<VehiculoDto> = apiCall("Obtener vehiculos")
+    override suspend fun getVehiculos(): List<VehiculoDto> = apiCall("Obtener vehiculos")
     {
         client.get("$BASE_URL/rest/v1/vehiculos")
         {
@@ -28,7 +28,7 @@ class VehiculoApi(client: HttpClient) : ApiClient(client, TAG)
         }.body()
     }
 
-    suspend fun insertVehiculo(request: NuevoVehiculoRequest) = apiCall("Insertar Vehiculo")
+    override suspend fun insertVehiculo(request: NuevoVehiculoRequest) = apiCall("Insertar Vehiculo")
     {
         client.post("$BASE_URL/rest/v1/vehiculos")
         {
@@ -39,7 +39,7 @@ class VehiculoApi(client: HttpClient) : ApiClient(client, TAG)
         }
     }
 
-    suspend fun deleteVehiculo(id: String) = apiCall("Borrar vehiculo: ${id}")
+    override suspend fun deleteVehiculo(id: String) = apiCall("Borrar vehiculo: ${id}")
     {
         client.delete("$BASE_URL/rest/v1/vehiculos")
         {

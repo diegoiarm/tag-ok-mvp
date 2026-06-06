@@ -21,7 +21,7 @@ class PorticoRepository(private val api: PorticoApi) : IPorticoRepository
         return api.getPorticoDetails(id).toDomain()
     }
 
-    suspend fun getPorticoTipo(id: Long): PorticoTipo
+    override suspend fun getPorticoTipo(id: Long): PorticoTipo
     {
         val response = api.getPorticoDetails(id)
         return when (response)
@@ -31,7 +31,7 @@ class PorticoRepository(private val api: PorticoApi) : IPorticoRepository
         }
     }
 
-    suspend fun getSalidasTramo(id: Long): PorticoTramoResponse
+    override suspend fun getSalidasTramo(id: Long): PorticoTramoResponse
     {
         val response = api.getPorticoDetails(id)
         return response as PorticoTramoResponse

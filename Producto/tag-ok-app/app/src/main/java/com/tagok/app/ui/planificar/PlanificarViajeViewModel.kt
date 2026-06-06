@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.tagok.app.data.remote.HttpClientProvider
 import com.tagok.app.data.remote.RouteApi
 import com.tagok.app.data.repository.RouteRepository
+import com.tagok.app.domain.interfaces.IRouteRepository
 import com.tagok.app.domain.model.routes.Route
 import com.tagok.app.domain.vehiculo.TipoVehiculo
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +23,7 @@ data class PlanificarUiState(
     val isLoadingRoute: Boolean = false,
     val error: String? = null)
 
-class PlanificarViajeViewModel(private val routeRepository: RouteRepository) : ViewModel()
+class PlanificarViajeViewModel(private val routeRepository: IRouteRepository) : ViewModel()
 {
     private val _uiState = MutableStateFlow(PlanificarUiState())
     val uiState: StateFlow<PlanificarUiState> = _uiState.asStateFlow()
