@@ -26,8 +26,11 @@ export interface PorticoRouteResponse {
 }
 export interface PorticoResumen {
     id: number;
+    nombre?: string;
     latitud: number;
     longitud: number;
+    /** Indica si el pórtico tiene tarifa configurada (o pertenece a una autopista por tramo). */
+    tieneTarifa: boolean;
 }
 
 /** Pórtico completo para la gestión administrativa (CU20). */

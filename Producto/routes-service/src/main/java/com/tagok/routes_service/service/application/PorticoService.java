@@ -35,8 +35,9 @@ public class PorticoService
 
     public List<PorticoResumenResponse> findAll()
     {
+        // Se devuelven todos los pórticos; el flag `tieneTarifa` permite al mapa
+        // distinguir visualmente los que aún no tienen tarifa configurada.
         return porticoRepository.findAll().stream()
-            .filter(p -> p.getAutopista().getTipoCobro() == TipoCobro.TRAMO || (p.getCalendario() != null && !p.getReglas().isEmpty()))
             .map(porticoMapper::toResumenResponse)
             .toList();
     }

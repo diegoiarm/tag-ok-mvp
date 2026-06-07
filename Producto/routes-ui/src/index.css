@@ -196,3 +196,14 @@
     animation: none;
   }
 }
+
+/* Marcador de pórtico sin tarifa configurada: atenuado en el mapa */
+.portico-sin-tarifa {
+  opacity: 0.55;
+  filter: grayscale(0.3);
+  transition: opacity 0.2s ease;
+}
+
+.portico-sin-tarifa:hover {
+  opacity: 0.9;
+}

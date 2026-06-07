@@ -15,4 +15,6 @@ public class PorticoResumenResponse
     private String nombre;
     private double latitud;
     private double longitud;
+    /** Indica si el pórtico participa en el cobro (tarifa configurada o autopista por tramo). */
+    private boolean tieneTarifa;
 }

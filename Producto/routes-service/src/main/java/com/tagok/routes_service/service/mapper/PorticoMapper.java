@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import com.tagok.routes_service.domain.autopista.Autopista;
+import com.tagok.routes_service.domain.autopista.TipoCobro;
 import com.tagok.routes_service.domain.portico.Portico;
 import com.tagok.routes_service.domain.tarifa.ReglaTarifaria;
 import com.tagok.routes_service.dto.request.portico.PorticoRequest;
@@ -138,7 +139,20 @@ public class PorticoMapper
                 .nombre(portico.getNombre())
                 .latitud(portico.getLatitud())
                 .longitud(portico.getLongitud())
+                .tieneTarifa(tieneTarifa(portico))
                 .build();
+    }
+
+    /** Un pórtico participa en el cobro si su autopista es por tramo o tiene calendario + reglas. */
+    private boolean tieneTarifa(Portico portico)
+    {
+        Autopista autopista = portico.getAutopista();
+        if (autopista != null && autopista.getTipoCobro() == TipoCobro.TRAMO)
+                return true;
+
+        return portico.getCalendario() != null
+                && portico.getReglas() != null
+                && !portico.getReglas().isEmpty();
     }
 
     private List<ReglaTarifariaResponse> mapReglasToResponse(Portico portico) 

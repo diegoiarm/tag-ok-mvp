@@ -122,7 +122,7 @@ export function Mapa({ start, end }: { start: Coord; end: Coord }) {
     }, [route]);
 
     return (
-        <div style={{ height: "100vh", width: "100%" }}>
+        <div style={{ height: "100vh", width: "100%", isolation: "isolate" }}>
             <MapContainer
                 center={[start.lat, start.lon]}
                 zoom={12}
