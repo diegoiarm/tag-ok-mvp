@@ -11,6 +11,7 @@ import com.tagok.routes_service.domain.portico.Portico;
 import com.tagok.routes_service.domain.tarifa.ReglaTarifaria;
 import com.tagok.routes_service.dto.request.portico.PorticoRequest;
 import com.tagok.routes_service.dto.response.portico.CalendarioTarifarioResponse;
+import com.tagok.routes_service.dto.response.portico.PorticoAdminResponse;
 import com.tagok.routes_service.dto.response.portico.PorticoResponse;
 import com.tagok.routes_service.dto.response.portico.PorticoResumenResponse;
 import com.tagok.routes_service.dto.response.portico.PorticoTramoResponse;
@@ -107,6 +108,27 @@ public class PorticoMapper
         return reglas.stream()
             .map(reglaTarifariaMapper::toResponse)
             .toList();
+    }
+
+    public PorticoAdminResponse toAdminResponse(Portico portico)
+    {
+        Autopista autopista = portico.getAutopista();
+
+        return PorticoAdminResponse.builder()
+                .id(portico.getId())
+                .codigo(portico.getCodigo())
+                .nombre(portico.getNombre())
+                .sentido(portico.getSentido())
+                .latitud(portico.getLatitud())
+                .longitud(portico.getLongitud())
+                // Los pórticos creados antes de existir esta columna quedan como vigentes.
+                .activo(portico.getActivo() == null || portico.getActivo())
+                .autopistaId(autopista != null ? autopista.getId() : null)
+                .autopistaNombre(autopista != null ? autopista.getNombre() : null)
+                .autopistaCodigo(autopista != null ? autopista.getCodigo() : null)
+                .fechaCreacion(portico.getFechaCreacion())
+                .fechaActualizacion(portico.getFechaActualizacion())
+                .build();
     }
 
     public PorticoResumenResponse toResumenResponse(Portico portico)

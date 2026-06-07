@@ -30,6 +30,48 @@ export interface PorticoResumen {
     longitud: number;
 }
 
+/** Pórtico completo para la gestión administrativa (CU20). */
+export type PorticoAdmin = {
+    id: number;
+    codigo: string;
+    nombre: string;
+    sentido: string | null;
+    latitud: number;
+    longitud: number;
+    activo: boolean;
+    autopistaId: number | null;
+    autopistaNombre: string | null;
+    autopistaCodigo: string | null;
+    fechaCreacion: string | null;
+    fechaActualizacion: string | null;
+};
+
+export type PorticoFormInput = {
+    codigo: string;
+    nombre: string;
+    sentido: string;
+    latitud: number;
+    longitud: number;
+    autopistaId: number;
+    activo?: boolean;
+};
+
+/** Fila de carga masiva de pórticos (JSON o CSV). */
+export type PorticoBulkItem = {
+    autopistaCodigo: string;
+    codigo: string;
+    nombre: string;
+    sentido: string;
+    latitud: number | null;
+    longitud: number | null;
+};
+
+export type BulkResult = {
+    creados: number;
+    fallidos: number;
+    errores: string[];
+};
+
 export enum TipoVehiculo {
     MOTO = "MOTO",
     AUTO = "AUTO",
