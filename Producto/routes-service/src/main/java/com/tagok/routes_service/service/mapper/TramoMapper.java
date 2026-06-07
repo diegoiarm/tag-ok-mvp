@@ -8,10 +8,13 @@ import org.springframework.stereotype.Component;
 
 import com.tagok.routes_service.domain.portico.Portico;
 import com.tagok.routes_service.domain.tramo.Tramo;
+import com.tagok.routes_service.dto.request.tarifa.TarifaConfigRequest;
 import com.tagok.routes_service.dto.request.tramo.TramoRequest;
 import com.tagok.routes_service.dto.response.portico.CalendarioTarifarioResponse;
 import com.tagok.routes_service.dto.response.portico.ReglaTarifariaResponse;
 import com.tagok.routes_service.dto.response.portico.TramoRouteResponse;
+import com.tagok.routes_service.dto.response.tarifa.TarifaConfigResponse;
+import com.tagok.routes_service.dto.response.tarifa.TramoAdminResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -90,5 +93,55 @@ public class TramoMapper
         return Optional.ofNullable(tramo.getCalendario())
             .map(calendarioTarifarioMapper::toResponse)
             .orElse(null);
+    }
+
+    /** Resumen de un tramo para la gestión administrativa de tarifas (CU19). */
+    public TramoAdminResponse toAdminResponse(Tramo tramo)
+    {
+        return TramoAdminResponse.builder()
+            .id(tramo.getId())
+            .entradaCodigo(tramo.getEntrada() != null ? tramo.getEntrada().getCodigo() : null)
+            .entradaNombre(tramo.getEntrada() != null ? tramo.getEntrada().getNombre() : null)
+            .salidaCodigo(tramo.getSalida() != null ? tramo.getSalida().getCodigo() : null)
+            .salidaNombre(tramo.getSalida() != null ? tramo.getSalida().getNombre() : null)
+            .autopistaId(tramo.getAutopista() != null ? tramo.getAutopista().getId() : null)
+            .autopistaNombre(tramo.getAutopista() != null ? tramo.getAutopista().getNombre() : null)
+            .distanciaKm(tramo.getDistanciaKm())
+            .tieneTarifa(tieneTarifa(tramo))
+            .build();
+    }
+
+    private boolean tieneTarifa(Tramo tramo)
+    {
+        return tramo.getCalendario() != null
+            && tramo.getReglas() != null
+            && !tramo.getReglas().isEmpty();
+    }
+
+    /** Configuración tarifaria (reglas + calendario) de un tramo, para edición admin (CU19). */
+    public TarifaConfigResponse toTarifaConfig(Tramo tramo)
+    {
+        return TarifaConfigResponse.builder()
+            .reglas(mapReglasToResponse(tramo))
+            .calendario(mapCalendarioToResponse(tramo))
+            .build();
+    }
+
+    /**
+     * Reemplaza por completo la configuración tarifaria del tramo con la del request.
+     * {@code orphanRemoval} elimina los registros antiguos al persistir.
+     */
+    public void aplicarTarifaConfig(Tramo tramo, TarifaConfigRequest request)
+    {
+        tramo.getReglas().clear();
+        Optional.ofNullable(request.reglas())
+            .ifPresent(reglas -> reglas.stream()
+                .map(reglaTarifariaMapper::fromRequest)
+                .forEach(tramo::addRegla));
+
+        tramo.setCalendario(
+            Optional.ofNullable(request.calendario())
+                .map(calendarioTarifarioMapper::fromRequest)
+                .orElse(null));
     }
 }

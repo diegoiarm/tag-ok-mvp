@@ -30,4 +30,6 @@ public class PorticoAdminResponse
     private String autopistaCodigo;
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaActualizacion;
+    /** Indica si el pórtico tiene tarifa configurada (o pertenece a una autopista por tramo). */
+    private boolean tieneTarifa;
 }

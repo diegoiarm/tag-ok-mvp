@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { createElement, useState } from "react";
 import { CalendarDays, Clock, Hash, Mail, Phone, ShieldCheck, Star } from "lucide-react";
 import {
   Sheet,
@@ -212,11 +212,12 @@ function InfoRow({ icon: Icon, label, value, mono }: InfoRowProps) {
 }
 
 function VehiculoItem({ vehiculo }: { vehiculo: VehiculoUsuario }) {
-  const Icon = tipoVehiculoIcon(vehiculo.tipo_vehiculo);
   return (
     <li className="flex items-center gap-3 rounded-lg border border-border bg-card p-3">
       <div className="flex h-10 w-10 items-center justify-center rounded-md bg-muted shrink-0">
-        <Icon className="h-5 w-5 text-foreground" />
+        {createElement(tipoVehiculoIcon(vehiculo.tipo_vehiculo), {
+          className: "h-5 w-5 text-foreground",
+        })}
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">

@@ -1,8 +1,9 @@
 // Mapa.tsx
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { MapContainer, TileLayer, GeoJSON, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import type { GeoJsonObject } from "geojson";
 import type { Coord } from "../types/types";
 import { useRoute } from "../hooks/useRoute";
 import { usePorticos } from "../hooks/usePorticos";
@@ -35,8 +36,6 @@ export function Mapa({ start, end }: { start: Coord; end: Coord }) {
     const { data: route } = useRoute(start, end, "AUTO");
     const { data: porticos } = usePorticos();
 
-    const [geoJsonData, setGeoJsonData] = useState<any>(null);
-
     // 1. Obtener lista de cobros desde route.cobros (polimórfica)
     const cobros = route?.cobros;
 
@@ -61,32 +60,24 @@ export function Mapa({ start, end }: { start: Coord; end: Coord }) {
         return porticos?.filter((p) => !usedPorticoIds.has(p.id)) ?? [];
     }, [porticos, usedPorticoIds]);
 
-    // 4. Procesar geometría combinada de la ruta
-    useEffect(() => {
-        if (!route) {
-            setGeoJsonData(null);
-            return;
-        }
+    // 4. Geometría combinada de la ruta, derivada de la respuesta del backend.
+    const geoJsonData = useMemo<GeoJsonObject | null>(() => {
+        if (!route) return null;
 
         if (route.mergedRouteGeometry) {
             try {
-                const merged = JSON.parse(route.mergedRouteGeometry);
-                setGeoJsonData(merged);
-                return;
+                return JSON.parse(route.mergedRouteGeometry) as GeoJsonObject;
             } catch (err) {
                 console.error("Error al parsear mergedRouteGeometry", err);
             }
         }
 
-        const segments = (route as any).segments;
-        if (!segments || segments.length === 0) {
-            setGeoJsonData(null);
-            return;
-        }
+        const segments = (route as { segments?: { geometry: string }[] }).segments;
+        if (!segments || segments.length === 0) return null;
 
         const allCoords: [number, number][] = [];
 
-        segments.forEach((seg: any) => {
+        segments.forEach((seg) => {
             try {
                 const geom = JSON.parse(seg.geometry);
                 if (geom.type === "LineString") {
@@ -101,12 +92,9 @@ export function Mapa({ start, end }: { start: Coord; end: Coord }) {
             }
         });
 
-        if (allCoords.length === 0) {
-            setGeoJsonData(null);
-            return;
-        }
+        if (allCoords.length === 0) return null;
 
-        setGeoJsonData({
+        return {
             type: "FeatureCollection",
             features: [
                 {
@@ -118,7 +106,7 @@ export function Mapa({ start, end }: { start: Coord; end: Coord }) {
                     },
                 },
             ],
-        });
+        } as GeoJsonObject;
     }, [route]);
 
     return (

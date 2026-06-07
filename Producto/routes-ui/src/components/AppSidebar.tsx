@@ -7,6 +7,7 @@ import {
   BarChart3,
   Building2,
   MapPin,
+  Receipt,
   Upload,
   LogOut,
   LogIn,
@@ -36,7 +37,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useAuth } from "@/app/context/AuthContext";
+import { useAuth } from "@/app/context/auth-context";
 import { supabase } from "@/app/lib/supabase";
 import { iniciales } from "@/features/admin/lib/format";
 
@@ -55,6 +56,7 @@ const NAV_ADMIN: NavItem[] = [
   { to: "/usuarios", label: "Usuarios", icon: UsersIcon },
   { to: "/autopistas", label: "Concesionarios", icon: Building2 },
   { to: "/porticos", label: "Pórticos", icon: MapPin },
+  { to: "/tarifas", label: "Tarifas", icon: Receipt },
   { to: "/reportes", label: "Reportes", icon: BarChart3 },
   { to: "/files", label: "Subir JSONs", icon: Upload },
 ];

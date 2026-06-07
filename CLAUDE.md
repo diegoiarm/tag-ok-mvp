@@ -113,8 +113,11 @@ All client traffic goes through the gateway (`http://localhost:8080/api/...`); p
 | POST/PUT/DELETE | `/v1/porticos` (+ `/{id}`) | Toll gate CRUD |
 | PATCH | `/v1/porticos/{id}/estado` | Toggle active/inactive |
 | POST | `/v1/porticos/bulk` | Bulk create (returns per-item result) |
+| GET/PUT | `/v1/porticos/{id}/tarifas` | Get / replace a toll gate's tariff config (reglas + calendario) — CU19 |
+| GET | `/v1/tramos` | Admin list of tramos (for tariff management) |
+| GET/PUT | `/v1/tramos/{id}/tarifas` | Get / replace a tramo's tariff config — CU19 |
 | POST | `/v1/rutas` | Calculate route (returns GeoJSON) |
-| POST | `/v1/tarifas` | Create tariff rules |
+| POST | `/v1/tarifas` | Calculate the toll for a crossing (NOT tariff CRUD) |
 
 **history-service** (`/api/history/...` → strips to):
 | Method | Path | Description |

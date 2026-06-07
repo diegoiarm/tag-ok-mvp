@@ -9,13 +9,16 @@ import org.springframework.stereotype.Service;
 import com.tagok.routes_service.domain.autopista.Autopista;
 import com.tagok.routes_service.domain.autopista.TipoCobro;
 import com.tagok.routes_service.domain.portico.Portico;
+import com.tagok.routes_service.domain.tarifa.TarifaConfigValidator;
 import com.tagok.routes_service.dto.request.portico.PorticoBulkItem;
 import com.tagok.routes_service.dto.request.portico.PorticoCreateRequest;
 import com.tagok.routes_service.dto.request.portico.PorticoUpdateRequest;
+import com.tagok.routes_service.dto.request.tarifa.TarifaConfigRequest;
 import com.tagok.routes_service.dto.response.portico.BulkResultResponse;
 import com.tagok.routes_service.dto.response.portico.PorticoAdminResponse;
 import com.tagok.routes_service.dto.response.portico.PorticoResumenResponse;
 import com.tagok.routes_service.dto.response.portico.TollResponse;
+import com.tagok.routes_service.dto.response.tarifa.TarifaConfigResponse;
 import com.tagok.routes_service.exception.DuplicateResourceException;
 import com.tagok.routes_service.exception.ResourceNotFoundException;
 import com.tagok.routes_service.repository.AutopistaRepository;
@@ -136,6 +139,30 @@ public class PorticoService
 
         portico.setActivo(activo);
         return porticoMapper.toAdminResponse(porticoRepository.save(portico));
+    }
+
+    /* ===================== Gestión de tarifas (CU19) ===================== */
+
+    /** Configuración tarifaria (reglas + calendario) de un pórtico, para edición. */
+    public TarifaConfigResponse getTarifaConfig(Long id)
+    {
+        Portico portico = porticoRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Pórtico no encontrado: " + id));
+
+        return porticoMapper.toTarifaConfig(portico);
+    }
+
+    /** Reemplaza la configuración tarifaria de un pórtico tras validarla. */
+    @Transactional
+    public TarifaConfigResponse actualizarTarifaConfig(Long id, TarifaConfigRequest request)
+    {
+        Portico portico = porticoRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Pórtico no encontrado: " + id));
+
+        porticoMapper.aplicarTarifaConfig(portico, request);
+        TarifaConfigValidator.validar(portico.getReglas(), portico.getCalendario());
+
+        return porticoMapper.toTarifaConfig(porticoRepository.save(portico));
     }
 
     @Transactional

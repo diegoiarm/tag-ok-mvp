@@ -47,6 +47,8 @@ export type PorticoAdmin = {
     autopistaCodigo: string | null;
     fechaCreacion: string | null;
     fechaActualizacion: string | null;
+    /** Indica si el pórtico tiene tarifa configurada (CU19). */
+    tieneTarifa?: boolean;
 };
 
 export type PorticoFormInput = {
@@ -119,6 +121,55 @@ export type ValorTarifaResponse = {
 export type ReglaTarifariaResponse = {
     aplicaA: TipoVehiculo[];
     valores: ValorTarifaResponse[];
+};
+
+/** Configuración tarifaria completa de un pórtico o tramo (CU19). */
+export type TarifaConfigResponse = {
+    reglas: ReglaTarifariaResponse[];
+    calendario: CalendarioTarifarioResponse | null;
+};
+
+/* ---- Tipos de edición (lo que el formulario envía en el PUT) ---- */
+
+export type ValorTarifaInput = {
+    tipoTarifa: TipoTarifa;
+    valor: number;
+};
+
+export type ReglaTarifariaInput = {
+    aplicaA: TipoVehiculo[];
+    valores: ValorTarifaInput[];
+};
+
+export type RangoHorarioInput = {
+    inicio: string; // "HH:mm"
+    fin: string;
+};
+
+export type ReglaTemporalInput = {
+    tipoTarifa: TipoTarifa;
+    tipoDia: TipoDia;
+    tramos: RangoHorarioInput[];
+};
+
+export type TarifaConfigInput = {
+    reglas: ReglaTarifariaInput[];
+    calendario: {
+        reglas: ReglaTemporalInput[];
+    };
+};
+
+/** Tramo para la gestión administrativa de tarifas (CU19). */
+export type TramoAdmin = {
+    id: number;
+    entradaCodigo: string | null;
+    entradaNombre: string | null;
+    salidaCodigo: string | null;
+    salidaNombre: string | null;
+    autopistaId: number | null;
+    autopistaNombre: string | null;
+    distanciaKm: number;
+    tieneTarifa: boolean;
 };
 
 export type PorticoResponse = {

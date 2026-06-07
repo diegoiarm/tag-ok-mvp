@@ -11,6 +11,7 @@ import com.tagok.routes_service.domain.autopista.TipoCobro;
 import com.tagok.routes_service.domain.portico.Portico;
 import com.tagok.routes_service.domain.tarifa.ReglaTarifaria;
 import com.tagok.routes_service.dto.request.portico.PorticoRequest;
+import com.tagok.routes_service.dto.request.tarifa.TarifaConfigRequest;
 import com.tagok.routes_service.dto.response.portico.CalendarioTarifarioResponse;
 import com.tagok.routes_service.dto.response.portico.PorticoAdminResponse;
 import com.tagok.routes_service.dto.response.portico.PorticoResponse;
@@ -18,6 +19,7 @@ import com.tagok.routes_service.dto.response.portico.PorticoResumenResponse;
 import com.tagok.routes_service.dto.response.portico.PorticoTramoResponse;
 import com.tagok.routes_service.dto.response.portico.ReglaTarifariaResponse;
 import com.tagok.routes_service.dto.response.portico.TramoResponse;
+import com.tagok.routes_service.dto.response.tarifa.TarifaConfigResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -129,7 +131,36 @@ public class PorticoMapper
                 .autopistaCodigo(autopista != null ? autopista.getCodigo() : null)
                 .fechaCreacion(portico.getFechaCreacion())
                 .fechaActualizacion(portico.getFechaActualizacion())
+                .tieneTarifa(tieneTarifa(portico))
                 .build();
+    }
+
+    /** Configuración tarifaria (reglas + calendario) de un pórtico, para edición admin (CU19). */
+    public TarifaConfigResponse toTarifaConfig(Portico portico)
+    {
+        return TarifaConfigResponse.builder()
+                .reglas(mapReglasToResponse(portico))
+                .calendario(mapCalendarioToResponse(portico))
+                .build();
+    }
+
+    /**
+     * Reemplaza por completo la configuración tarifaria del pórtico con la del request.
+     * Gracias a {@code orphanRemoval}, limpiar la colección y reasignar el calendario
+     * elimina los registros antiguos al persistir.
+     */
+    public void aplicarTarifaConfig(Portico portico, TarifaConfigRequest request)
+    {
+        portico.getReglas().clear();
+        Optional.ofNullable(request.reglas())
+                .ifPresent(reglas -> reglas.stream()
+                        .map(reglaTarifariaMapper::fromRequest)
+                        .forEach(portico::addRegla));
+
+        portico.setCalendario(
+                Optional.ofNullable(request.calendario())
+                        .map(calendarioTarifarioMapper::fromRequest)
+                        .orElse(null));
     }
 
     public PorticoResumenResponse toResumenResponse(Portico portico)

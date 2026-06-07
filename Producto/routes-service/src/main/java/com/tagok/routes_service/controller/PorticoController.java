@@ -17,10 +17,12 @@ import com.tagok.routes_service.dto.request.portico.PorticoBulkItem;
 import com.tagok.routes_service.dto.request.portico.PorticoCreateRequest;
 import com.tagok.routes_service.dto.request.portico.PorticoEstadoRequest;
 import com.tagok.routes_service.dto.request.portico.PorticoUpdateRequest;
+import com.tagok.routes_service.dto.request.tarifa.TarifaConfigRequest;
 import com.tagok.routes_service.dto.response.portico.BulkResultResponse;
 import com.tagok.routes_service.dto.response.portico.PorticoAdminResponse;
 import com.tagok.routes_service.dto.response.portico.PorticoResumenResponse;
 import com.tagok.routes_service.dto.response.portico.TollResponse;
+import com.tagok.routes_service.dto.response.tarifa.TarifaConfigResponse;
 import com.tagok.routes_service.service.application.PorticoService;
 
 import jakarta.validation.Valid;
@@ -84,5 +86,19 @@ public class PorticoController
     public ResponseEntity<BulkResultResponse> crearMasivo(@RequestBody List<PorticoBulkItem> items)
     {
         return ResponseEntity.ok(porticoService.crearMasivo(items));
+    }
+
+    @GetMapping("/{id}/tarifas")
+    public ResponseEntity<TarifaConfigResponse> getTarifaConfig(@PathVariable Long id)
+    {
+        return ResponseEntity.ok(porticoService.getTarifaConfig(id));
+    }
+
+    @PutMapping("/{id}/tarifas")
+    public ResponseEntity<TarifaConfigResponse> actualizarTarifaConfig(
+        @PathVariable Long id,
+        @RequestBody TarifaConfigRequest request)
+    {
+        return ResponseEntity.ok(porticoService.actualizarTarifaConfig(id, request));
     }
 }

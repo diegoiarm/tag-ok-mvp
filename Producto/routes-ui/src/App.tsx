@@ -9,6 +9,7 @@ import { LoadFiles } from "./features/admin/pages/LoadFiles";
 import { ReportesPage } from "./features/admin/pages/ReportesPage";
 import { AutopistasPage } from "./features/admin/pages/AutopistasPage";
 import { PorticosPage } from "./features/admin/pages/PorticosPage";
+import { TarifasPage } from "./features/admin/pages/TarifasPage";
 
 function MapaPage() {
   const start = parseLatLng("-33.59669493677533, -70.70101359441239");
@@ -30,6 +31,7 @@ function App()
             <Route path="/usuarios" element={<UsuariosPage />} />
             <Route path="/autopistas" element={<AutopistasPage />} />
             <Route path="/porticos" element={<PorticosPage />} />
+            <Route path="/tarifas" element={<TarifasPage />} />
             <Route path="/reportes" element={<ReportesPage />} />
             <Route path="/files" element={<LoadFiles />} />
           </Route>
