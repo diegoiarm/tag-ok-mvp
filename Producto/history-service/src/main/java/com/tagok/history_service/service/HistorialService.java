@@ -1,10 +1,13 @@
 package com.tagok.history_service.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -16,6 +19,8 @@ import com.tagok.history_service.document.CruceSnapshot;
 import com.tagok.history_service.document.HistorialAnualDocument;
 import com.tagok.history_service.document.HistorialDiarioSnapshot;
 import com.tagok.history_service.document.HistorialMensualSnapshot;
+import com.tagok.history_service.dto.EstadisticasGlobalesDTO;
+import com.tagok.history_service.dto.EstadisticasGlobalesDTO.PuntoAnual;
 import com.tagok.history_service.event.dtos.HistorialCruceEvent;
 import com.tagok.history_service.repository.HistorialAnualRepository;
 import com.tagok.history_service.repository.historialProyeccion.ProyeccionAnual;
@@ -133,7 +138,52 @@ public class HistorialService
             .toList();
     }
 
-    public List<ProyeccionAnual> getResumenAnualFiltrado(String usuarioId, FiltroHistorialRequest filtro) 
+    /**
+     * Agrega el uso del historial de todos los usuarios para la reportería admin (CU18):
+     * total de cruces, gasto acumulado, usuarios con cruces y serie por año.
+     */
+    public EstadisticasGlobalesDTO getEstadisticasGlobales()
+    {
+        long totalCruces = 0;
+        BigDecimal totalGasto = BigDecimal.ZERO;
+        long usuariosConCruces = 0;
+
+        // año -> [cruces, gasto]
+        Map<Integer, long[]> crucesPorAnio = new TreeMap<>();
+        Map<Integer, BigDecimal> gastoPorAnio = new TreeMap<>();
+
+        for (HistorialAnualDocument doc : historialAnualRepository.findAll())
+        {
+            int cruces = doc.getCantidadCruces();
+            BigDecimal gasto = doc.getTotalAño() != null ? doc.getTotalAño() : BigDecimal.ZERO;
+
+            totalCruces += cruces;
+            totalGasto = totalGasto.add(gasto);
+            if (cruces > 0) usuariosConCruces++;
+
+            crucesPorAnio.computeIfAbsent(doc.getAño(), a -> new long[1])[0] += cruces;
+            gastoPorAnio.merge(doc.getAño(), gasto, BigDecimal::add);
+        }
+
+        List<PuntoAnual> porAnio = new ArrayList<>();
+        for (var entry : crucesPorAnio.entrySet())
+        {
+            porAnio.add(PuntoAnual.builder()
+                .año(entry.getKey())
+                .cruces(entry.getValue()[0])
+                .gasto(gastoPorAnio.getOrDefault(entry.getKey(), BigDecimal.ZERO))
+                .build());
+        }
+
+        return EstadisticasGlobalesDTO.builder()
+            .totalCruces(totalCruces)
+            .totalGasto(totalGasto)
+            .usuariosConCruces(usuariosConCruces)
+            .porAnio(porAnio)
+            .build();
+    }
+
+    public List<ProyeccionAnual> getResumenAnualFiltrado(String usuarioId, FiltroHistorialRequest filtro)
     {
         List<String> patentesFiltro = filtro.getPatentes() != null ? filtro.getPatentes() : List.of();
         List<String> autopistasFiltro = filtro.getAutopistas() != null ? filtro.getAutopistas() : List.of();

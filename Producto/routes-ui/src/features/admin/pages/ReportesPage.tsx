@@ -12,12 +12,15 @@ import {
   YAxis,
 } from "recharts";
 import {
-  AlertTriangle,
+  Activity,
   Car,
   Download,
   FileSpreadsheet,
-  Hourglass,
+  FileText,
+  MapPin,
   RefreshCw,
+  Route,
+  Tag,
   TrendingUp,
   Users,
   UserCheck,
@@ -54,14 +57,22 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUsuarios } from "@/hooks/useUsuarios";
+import { usePorticosAdmin } from "@/hooks/usePorticos";
+import { useAutopistas } from "@/hooks/useAutopistas";
+import {
+  useEstadisticasHistorial,
+  useEstadisticasUso,
+} from "@/hooks/useEstadisticas";
 import {
   actividadPorBucket,
   calcularKpis,
   distribucionPorTipo,
   filtrarPorRango,
+  kpisOperativos,
   registrosPorMes,
 } from "@/features/admin/lib/analytics";
 import { exportarUsuariosCsv, exportarVehiculosCsv } from "@/features/admin/lib/csv";
+import { formatCLP, tiempoRelativo } from "@/features/admin/lib/format";
 
 type Rango = "7" | "30" | "90" | "all";
 
@@ -76,6 +87,14 @@ const PIE_COLORS = [
 
 export function ReportesPage() {
   const { data: usuarios, isLoading, isError, refetch, isFetching } = useUsuarios();
+  const { data: porticos, isLoading: loadingPorticos } = usePorticosAdmin();
+  const { data: autopistas } = useAutopistas();
+  const { data: uso, isLoading: loadingUso, isError: errorUso } = useEstadisticasUso();
+  const {
+    data: historial,
+    isLoading: loadingHistorial,
+    isError: errorHistorial,
+  } = useEstadisticasHistorial();
   const [rango, setRango] = useState<Rango>("all");
 
   const usuariosFiltrados = useMemo(
@@ -87,6 +106,35 @@ export function ReportesPage() {
   const registros = useMemo(() => registrosPorMes(usuariosFiltrados), [usuariosFiltrados]);
   const distribucion = useMemo(() => distribucionPorTipo(usuariosFiltrados), [usuariosFiltrados]);
   const actividad = useMemo(() => actividadPorBucket(usuariosFiltrados), [usuariosFiltrados]);
+  const kpisOp = useMemo(
+    () => kpisOperativos(porticos, autopistas),
+    [porticos, autopistas],
+  );
+  const usoMensual = useMemo(
+    () =>
+      (uso?.porMes ?? []).map((p) => ({
+        mes: etiquetaMesIso(p.mes),
+        consultasRutas: p.consultasRutas,
+        estimaciones: p.estimaciones,
+      })),
+    [uso],
+  );
+
+  async function handleExportExcel() {
+    const { exportarReporteExcel } = await import("@/features/admin/lib/excel");
+    exportarReporteExcel({
+      rango,
+      usuarios: usuariosFiltrados,
+      kpis,
+      registros,
+      distribucion,
+      kpisOp,
+      porticos: porticos ?? [],
+      autopistas: autopistas ?? [],
+      uso,
+      historial,
+    });
+  }
 
   return (
     <div>
@@ -128,9 +176,14 @@ export function ReportesPage() {
                   Exportar
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>Exportar a CSV</DropdownMenuLabel>
+              <DropdownMenuContent align="end" className="w-64">
+                <DropdownMenuLabel>Reporte consolidado</DropdownMenuLabel>
+                <DropdownMenuItem onClick={handleExportExcel}>
+                  <FileText className="h-4 w-4" />
+                  Excel (.xlsx) — todas las hojas
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
+                <DropdownMenuLabel>Datos sueltos (CSV)</DropdownMenuLabel>
                 <DropdownMenuItem
                   onClick={() => exportarUsuariosCsv(usuariosFiltrados)}
                 >
@@ -153,9 +206,7 @@ export function ReportesPage() {
         ) : (
           <>
             <section>
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-                Adopción
-              </h2>
+              <SectionTitle>Adopción</SectionTitle>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <KpiCard
                   label="Usuarios registrados"
@@ -188,25 +239,48 @@ export function ReportesPage() {
             </section>
 
             <section>
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-                Uso funcional
-              </h2>
+              <SectionTitle>Uso funcional (producto)</SectionTitle>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <KpiCard
-                  label="Vehículos totales"
-                  value={kpis.totalVehiculos}
-                  icon={Car}
-                  loading={isLoading}
+                  label="Rutas consultadas"
+                  value={uso?.totalConsultasRutas ?? 0}
+                  icon={Route}
+                  hint={
+                    uso ? `${uso.consultasRutasUltimos30Dias} en 30 días` : undefined
+                  }
+                  loading={loadingUso}
+                  unavailable={errorUso}
                 />
                 <KpiCard
-                  label="Activos última semana"
-                  value={kpis.ultimaSemana}
+                  label="Estimaciones de tarifa"
+                  value={uso?.totalEstimaciones ?? 0}
+                  icon={Tag}
+                  hint={
+                    uso ? `${uso.estimacionesUltimos30Dias} en 30 días` : undefined
+                  }
+                  loading={loadingUso}
+                  unavailable={errorUso}
+                />
+                <KpiCard
+                  label="Cruces registrados"
+                  value={historial?.totalCruces ?? 0}
+                  icon={Activity}
+                  hint={
+                    historial
+                      ? `${historial.usuariosConCruces} usuarios con cruces`
+                      : undefined
+                  }
+                  loading={loadingHistorial}
+                  unavailable={errorHistorial}
+                />
+                <KpiCard
+                  label="Gasto en peajes"
+                  valueText={formatCLP(historial?.totalGasto)}
                   icon={TrendingUp}
                   accent="text-brand"
-                  loading={isLoading}
+                  loading={loadingHistorial}
+                  unavailable={errorHistorial}
                 />
-                <KpiPlaceholder label="Estimaciones realizadas" />
-                <KpiPlaceholder label="Rutas consultadas" />
               </div>
             </section>
 
@@ -232,6 +306,30 @@ export function ReportesPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="text-base">
+                    Uso de producto por mes
+                  </CardTitle>
+                  <CardDescription>
+                    Rutas consultadas y estimaciones de tarifa.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {loadingUso ? (
+                    <Skeleton className="h-64 w-full" />
+                  ) : errorUso ? (
+                    <EmptyChart>Estadísticas de uso no disponibles</EmptyChart>
+                  ) : usoMensual.length === 0 ? (
+                    <EmptyChart>Aún no hay actividad registrada</EmptyChart>
+                  ) : (
+                    <UsoChart data={usoMensual} />
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="grid lg:grid-cols-2 gap-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">
                     Distribución por tipo de vehículo
                   </CardTitle>
                   <CardDescription>
@@ -248,44 +346,80 @@ export function ReportesPage() {
                   )}
                 </CardContent>
               </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">
+                    Actividad de inicio de sesión
+                  </CardTitle>
+                  <CardDescription>
+                    Usuarios agrupados por la fecha de su último acceso.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {isLoading ? (
+                    <Skeleton className="h-64 w-full" />
+                  ) : (
+                    <ActividadChart data={actividad} />
+                  )}
+                </CardContent>
+              </Card>
             </div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">
-                  Actividad de inicio de sesión
-                </CardTitle>
-                <CardDescription>
-                  Usuarios agrupados por la fecha de su último acceso.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {isLoading ? (
-                  <Skeleton className="h-64 w-full" />
-                ) : (
-                  <ActividadChart data={actividad} />
-                )}
-              </CardContent>
-            </Card>
-
             <section>
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
-                <Hourglass className="h-3.5 w-3.5" />
-                Próximamente
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <PendienteCard
-                  titulo="Estimaciones y rutas"
-                  descripcion="Tracking de cálculos de presupuesto y consultas de ruta desde la app móvil."
+              <SectionTitle>Estado operativo</SectionTitle>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <KpiCard
+                  label="Pórticos activos"
+                  value={kpisOp.porticosActivos}
+                  icon={MapPin}
+                  accent="text-emerald-600 dark:text-emerald-400"
+                  hint={`de ${kpisOp.totalPorticos} totales`}
+                  loading={loadingPorticos}
                 />
-                <PendienteCard
-                  titulo="Uso del historial"
-                  descripcion="Cruces de pórticos por usuario, frecuencia y gasto acumulado."
+                <KpiCard
+                  label="Pórticos inactivos"
+                  value={kpisOp.porticosInactivos}
+                  icon={MapPin}
+                  accent="text-rose-600 dark:text-rose-400"
+                  loading={loadingPorticos}
                 />
-                <PendienteCard
-                  titulo="Auditoría de administrador"
-                  descripcion="Cambios de configuración, cargas y modificaciones manuales."
-                  icon={AlertTriangle}
+                <KpiCard
+                  label="Con tarifa configurada"
+                  value={kpisOp.porticosConTarifa}
+                  icon={Tag}
+                  hint={`${kpisOp.porticosSinTarifa} pendientes`}
+                  loading={loadingPorticos}
+                />
+                <KpiCard
+                  label="Concesionarias"
+                  value={kpisOp.totalConcesionarias}
+                  icon={Route}
+                  loading={loadingPorticos}
+                />
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3">
+                <KpiCard
+                  label="Cambios últimos 7 días"
+                  value={kpisOp.cambiosUltimos7Dias}
+                  icon={Activity}
+                  loading={loadingPorticos}
+                />
+                <KpiCard
+                  label="Cambios últimos 30 días"
+                  value={kpisOp.cambiosUltimos30Dias}
+                  icon={Activity}
+                  loading={loadingPorticos}
+                />
+                <KpiCard
+                  label="Última actualización"
+                  valueText={
+                    kpisOp.ultimaActualizacion
+                      ? tiempoRelativo(kpisOp.ultimaActualizacion)
+                      : "—"
+                  }
+                  icon={RefreshCw}
+                  loading={loadingPorticos}
                 />
               </div>
             </section>
@@ -296,16 +430,50 @@ export function ReportesPage() {
   );
 }
 
+const MESES_CORTOS = [
+  "Ene", "Feb", "Mar", "Abr", "May", "Jun",
+  "Jul", "Ago", "Sep", "Oct", "Nov", "Dic",
+];
+
+function etiquetaMesIso(iso: string): string {
+  const [anio, mes] = iso.split("-");
+  const idx = Number(mes) - 1;
+  if (idx < 0 || idx > 11) return iso;
+  return `${MESES_CORTOS[idx]} ${anio.slice(2)}`;
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+      {children}
+    </h2>
+  );
+}
+
 interface KpiCardProps {
   label: string;
-  value: number;
+  value?: number;
+  valueText?: string;
   icon?: React.ComponentType<{ className?: string }>;
   accent?: string;
   hint?: string;
   loading?: boolean;
+  unavailable?: boolean;
 }
 
-function KpiCard({ label, value, icon: Icon, accent, hint, loading }: KpiCardProps) {
+function KpiCard({
+  label,
+  value,
+  valueText,
+  icon: Icon,
+  accent,
+  hint,
+  loading,
+  unavailable,
+}: KpiCardProps) {
+  const display = unavailable
+    ? "—"
+    : valueText ?? (value ?? 0).toLocaleString("es-CL");
   return (
     <Card className="py-4">
       <CardContent className="px-4 flex items-start justify-between gap-2">
@@ -317,11 +485,14 @@ function KpiCard({ label, value, icon: Icon, accent, hint, loading }: KpiCardPro
             <Skeleton className="h-8 w-16 mt-1" />
           ) : (
             <p className={`text-2xl font-semibold mt-1 ${accent ?? ""}`}>
-              {value.toLocaleString("es-CL")}
+              {display}
             </p>
           )}
-          {hint && !loading && (
+          {hint && !loading && !unavailable && (
             <p className="text-xs text-muted-foreground mt-0.5">{hint}</p>
+          )}
+          {unavailable && !loading && (
+            <p className="text-xs text-muted-foreground/70 mt-0.5">No disponible</p>
           )}
         </div>
         {Icon && (
@@ -329,49 +500,6 @@ function KpiCard({ label, value, icon: Icon, accent, hint, loading }: KpiCardPro
             <Icon className="h-4 w-4 text-muted-foreground" />
           </div>
         )}
-      </CardContent>
-    </Card>
-  );
-}
-
-function KpiPlaceholder({ label }: { label: string }) {
-  return (
-    <Card className="py-4 border-dashed">
-      <CardContent className="px-4 flex items-start justify-between gap-2">
-        <div className="min-w-0">
-          <p className="text-xs text-muted-foreground uppercase tracking-wider truncate">
-            {label}
-          </p>
-          <p className="text-2xl font-semibold mt-1 text-muted-foreground/50">
-            —
-          </p>
-          <p className="text-xs text-muted-foreground/70 mt-0.5">Próximamente</p>
-        </div>
-        <div className="h-9 w-9 rounded-md bg-muted/50 flex items-center justify-center shrink-0">
-          <Hourglass className="h-4 w-4 text-muted-foreground/50" />
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-function PendienteCard({
-  titulo,
-  descripcion,
-  icon: Icon = Hourglass,
-}: {
-  titulo: string;
-  descripcion: string;
-  icon?: React.ComponentType<{ className?: string }>;
-}) {
-  return (
-    <Card className="border-dashed bg-muted/30">
-      <CardContent className="p-4 space-y-2">
-        <div className="flex items-center gap-2">
-          <Icon className="h-4 w-4 text-muted-foreground" />
-          <h3 className="text-sm font-medium">{titulo}</h3>
-        </div>
-        <p className="text-xs text-muted-foreground">{descripcion}</p>
       </CardContent>
     </Card>
   );
@@ -408,6 +536,30 @@ function RegistrosChart({
           fill="url(#fillAcumulado)"
         />
       </AreaChart>
+    </ChartContainer>
+  );
+}
+
+const usoConfig = {
+  consultasRutas: { label: "Rutas", color: "var(--brand)" },
+  estimaciones: { label: "Estimaciones", color: "oklch(0.72 0.14 263)" },
+} satisfies ChartConfig;
+
+function UsoChart({
+  data,
+}: {
+  data: { mes: string; consultasRutas: number; estimaciones: number }[];
+}) {
+  return (
+    <ChartContainer config={usoConfig} className="h-64 w-full">
+      <BarChart data={data} margin={{ left: 0, right: 8, top: 8 }}>
+        <CartesianGrid vertical={false} strokeDasharray="3 3" />
+        <XAxis dataKey="mes" tickLine={false} axisLine={false} tickMargin={8} fontSize={11} />
+        <YAxis tickLine={false} axisLine={false} tickMargin={8} fontSize={11} width={32} />
+        <ChartTooltip content={<ChartTooltipContent />} />
+        <Bar dataKey="consultasRutas" fill="var(--color-consultasRutas)" radius={[4, 4, 0, 0]} />
+        <Bar dataKey="estimaciones" fill="var(--color-estimaciones)" radius={[4, 4, 0, 0]} />
+      </BarChart>
     </ChartContainer>
   );
 }

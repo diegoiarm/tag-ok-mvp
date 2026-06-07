@@ -13,6 +13,7 @@ import {
   LogIn,
   ChevronsUpDown,
   ShieldCheck,
+  ScrollText,
 } from "lucide-react";
 import {
   Sidebar,
@@ -58,6 +59,7 @@ const NAV_ADMIN: NavItem[] = [
   { to: "/porticos", label: "Pórticos", icon: MapPin },
   { to: "/tarifas", label: "Tarifas", icon: Receipt },
   { to: "/reportes", label: "Reportes", icon: BarChart3 },
+  { to: "/auditoria", label: "Auditoría", icon: ScrollText },
   { to: "/files", label: "Subir JSONs", icon: Upload },
 ];
 

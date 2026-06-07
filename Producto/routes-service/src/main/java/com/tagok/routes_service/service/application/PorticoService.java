@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.tagok.routes_service.domain.auditoria.TipoAccion;
 import com.tagok.routes_service.domain.autopista.Autopista;
 import com.tagok.routes_service.domain.autopista.TipoCobro;
 import com.tagok.routes_service.domain.portico.Portico;
@@ -32,9 +33,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PorticoService
 {
+    private static final String ENTIDAD = "Pórtico";
+
     private final PorticoRepository porticoRepository;
     private final AutopistaRepository autopistaRepository;
     private final PorticoMapper porticoMapper;
+    private final AuditoriaService auditoriaService;
 
     public List<PorticoResumenResponse> findAll()
     {
@@ -98,7 +102,11 @@ public class PorticoService
             .autopista(autopista)
             .build();
 
-        return porticoMapper.toAdminResponse(porticoRepository.save(portico));
+        Portico guardado = porticoRepository.save(portico);
+        auditoriaService.registrar(TipoAccion.CREAR, ENTIDAD, String.valueOf(guardado.getId()),
+            "Creó el pórtico " + guardado.getCodigo() + " (" + guardado.getNombre() + ")"
+                + " en " + autopista.getNombre());
+        return porticoMapper.toAdminResponse(guardado);
     }
 
     /** Edita los atributos de un pórtico, permitiendo reasignar autopista y estado. */
@@ -126,7 +134,10 @@ public class PorticoService
         if (request.activo() != null)
             portico.setActivo(request.activo());
 
-        return porticoMapper.toAdminResponse(porticoRepository.save(portico));
+        Portico guardado = porticoRepository.save(portico);
+        auditoriaService.registrar(TipoAccion.ACTUALIZAR, ENTIDAD, String.valueOf(guardado.getId()),
+            "Actualizó el pórtico " + guardado.getCodigo() + " (" + guardado.getNombre() + ")");
+        return porticoMapper.toAdminResponse(guardado);
     }
 
     /** Cambia el estado vigente/desactivado de un pórtico (soft-delete histórico). */
@@ -138,7 +149,13 @@ public class PorticoService
                 "Pórtico no encontrado: " + id));
 
         portico.setActivo(activo);
-        return porticoMapper.toAdminResponse(porticoRepository.save(portico));
+        Portico guardado = porticoRepository.save(portico);
+        auditoriaService.registrar(
+            activo ? TipoAccion.ACTIVAR : TipoAccion.DESACTIVAR, ENTIDAD,
+            String.valueOf(guardado.getId()),
+            (activo ? "Activó" : "Desactivó") + " el pórtico " + guardado.getCodigo()
+                + " (" + guardado.getNombre() + ")");
+        return porticoMapper.toAdminResponse(guardado);
     }
 
     /* ===================== Gestión de tarifas (CU19) ===================== */
@@ -162,16 +179,23 @@ public class PorticoService
         porticoMapper.aplicarTarifaConfig(portico, request);
         TarifaConfigValidator.validar(portico.getReglas(), portico.getCalendario());
 
-        return porticoMapper.toTarifaConfig(porticoRepository.save(portico));
+        Portico guardado = porticoRepository.save(portico);
+        auditoriaService.registrar(TipoAccion.CONFIGURAR_TARIFA, ENTIDAD,
+            String.valueOf(guardado.getId()),
+            "Configuró la tarifa del pórtico " + guardado.getCodigo()
+                + " (" + guardado.getNombre() + ")");
+        return porticoMapper.toTarifaConfig(guardado);
     }
 
     @Transactional
     public void deleteById(Long id)
     {
-        if (!porticoRepository.existsById(id))
-            throw new ResourceNotFoundException("Pórtico no encontrado: " + id);
+        Portico portico = porticoRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Pórtico no encontrado: " + id));
 
         porticoRepository.deleteById(id);
+        auditoriaService.registrar(TipoAccion.ELIMINAR, ENTIDAD, String.valueOf(id),
+            "Eliminó el pórtico " + portico.getCodigo() + " (" + portico.getNombre() + ")");
     }
 
     /**
@@ -197,6 +221,10 @@ public class PorticoService
             else
                 creados++;
         }
+
+        if (creados > 0)
+            auditoriaService.registrar(TipoAccion.CARGA_MASIVA, ENTIDAD, null,
+                "Carga masiva de pórticos: " + creados + " creados, " + errores.size() + " fallidos");
 
         return BulkResultResponse.builder()
             .creados(creados)

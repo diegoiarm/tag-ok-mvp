@@ -41,6 +41,15 @@ export function tiempoRelativo(iso: string | null | undefined): string {
   return `Hace ${anios} año${anios === 1 ? "" : "s"}`;
 }
 
+export function formatCLP(valor: number | null | undefined): string {
+  if (valor === null || valor === undefined || Number.isNaN(valor)) return "—";
+  return valor.toLocaleString("es-CL", {
+    style: "currency",
+    currency: "CLP",
+    maximumFractionDigits: 0,
+  });
+}
+
 export function iniciales(email: string | null | undefined): string {
   if (!email) return "??";
   const local = email.split("@")[0] ?? "";

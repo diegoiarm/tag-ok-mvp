@@ -1,4 +1,5 @@
 import type { Usuario, VehiculoUsuario } from "@/hooks/useUsuarios";
+import type { AutopistaResumen, PorticoAdmin } from "@/types/types";
 
 export interface UserKpis {
   total: number;
@@ -212,6 +213,60 @@ export function topUsuariosPorVehiculos(
     }))
     .sort((a, b) => b.cantidad - a.cantidad)
     .slice(0, limit);
+}
+
+export interface KpisOperativos {
+  totalPorticos: number;
+  porticosActivos: number;
+  porticosInactivos: number;
+  porticosConTarifa: number;
+  porticosSinTarifa: number;
+  totalConcesionarias: number;
+  ultimaActualizacion: string | null;
+  cambiosUltimos7Dias: number;
+  cambiosUltimos30Dias: number;
+}
+
+export function kpisOperativos(
+  porticos: PorticoAdmin[] | undefined,
+  autopistas: AutopistaResumen[] | undefined,
+): KpisOperativos {
+  const lista = porticos ?? [];
+  const ahora = Date.now();
+  const dia = 24 * 60 * 60 * 1000;
+
+  let activos = 0;
+  let conTarifa = 0;
+  let cambios7 = 0;
+  let cambios30 = 0;
+  let ultima = 0;
+
+  for (const p of lista) {
+    if (p.activo) activos++;
+    if (p.tieneTarifa) conTarifa++;
+    if (p.fechaActualizacion) {
+      const t = new Date(p.fechaActualizacion).getTime();
+      if (!Number.isNaN(t)) {
+        if (t > ultima) ultima = t;
+        const diff = ahora - t;
+        if (diff <= 7 * dia) cambios7++;
+        if (diff <= 30 * dia) cambios30++;
+      }
+    }
+  }
+
+  const total = lista.length;
+  return {
+    totalPorticos: total,
+    porticosActivos: activos,
+    porticosInactivos: total - activos,
+    porticosConTarifa: conTarifa,
+    porticosSinTarifa: total - conTarifa,
+    totalConcesionarias: autopistas?.length ?? 0,
+    ultimaActualizacion: ultima > 0 ? new Date(ultima).toISOString() : null,
+    cambiosUltimos7Dias: cambios7,
+    cambiosUltimos30Dias: cambios30,
+  };
 }
 
 export function filtrarPorRango(

@@ -21,6 +21,7 @@ import com.tagok.history_service.dto.CruceDetalleDTO;
 import com.tagok.history_service.dto.DetalleDiaDTO;
 import com.tagok.history_service.dto.DetalleMensualDTO;
 import com.tagok.history_service.dto.DiaResumenDTO;
+import com.tagok.history_service.dto.EstadisticasGlobalesDTO;
 import com.tagok.history_service.dto.ResumenAnualDTO;
 import com.tagok.history_service.repository.historialProyeccion.ProyeccionAnual;
 import com.tagok.history_service.security.CurrentUserService;
@@ -79,8 +80,15 @@ public class HistorialController
             .orElse(ResponseEntity.notFound().build());
     }
 
+    // Endpoint admin: estadísticas agregadas de uso del historial (todos los usuarios) — CU18
+    @GetMapping("/admin/estadisticas")
+    public ResponseEntity<EstadisticasGlobalesDTO> getEstadisticasGlobales()
+    {
+        return ResponseEntity.ok(historialService.getEstadisticasGlobales());
+    }
+
     @GetMapping("/patentes")
-    public ResponseEntity<List<String>> getPatentes() 
+    public ResponseEntity<List<String>> getPatentes()
     {
         return ResponseEntity.ok(historialService.getPatentesUnicas(currentUser.getUserId()));
     }
