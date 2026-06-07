@@ -140,3 +140,59 @@
     @apply font-sans;
     }
 }
+
+/* ----------------------------------------------------------------------------
+   Animaciones de la pantalla de inicio de sesión
+   ------------------------------------------------------------------------- */
+
+/* Deriva lenta del gradiente "aurora" del panel de marca */
+@keyframes aurora-drift {
+  0%   { transform: translate3d(-6%, -4%, 0) scale(1.05); }
+  50%  { transform: translate3d(6%, 4%, 0) scale(1.15); }
+  100% { transform: translate3d(-6%, -4%, 0) scale(1.05); }
+}
+
+/* Recorrido punteado de la "ruta" que avanza */
+@keyframes route-dash {
+  to { stroke-dashoffset: -260; }
+}
+
+/* Flotación suave para los marcadores de pórtico */
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0); opacity: 0.85; }
+  50%      { transform: translateY(-6px); opacity: 1; }
+}
+
+/* Brillo que recorre el botón al pasar el cursor */
+@keyframes sheen {
+  0%   { transform: translateX(-150%); }
+  100% { transform: translateX(150%); }
+}
+
+.login-aurora {
+  animation: aurora-drift 18s ease-in-out infinite;
+  will-change: transform;
+}
+
+.login-route {
+  stroke-dasharray: 14 12;
+  animation: route-dash 6s linear infinite;
+}
+
+.login-float {
+  animation: float-soft 5s ease-in-out infinite;
+}
+
+.login-float-delayed {
+  animation: float-soft 5s ease-in-out infinite;
+  animation-delay: 1.6s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-aurora,
+  .login-route,
+  .login-float,
+  .login-float-delayed {
+    animation: none;
+  }
+}

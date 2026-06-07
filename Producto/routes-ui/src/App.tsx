@@ -23,10 +23,10 @@ function App()
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          <Route path="/login" element={<Login />} />
           <Route element={<MainLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/mapa" element={<MapaPage />} />
-            <Route path="/login" element={<Login />} />
             <Route path="/usuarios" element={<UsuariosPage />} />
             <Route path="/autopistas" element={<AutopistasPage />} />
             <Route path="/porticos" element={<PorticosPage />} />
