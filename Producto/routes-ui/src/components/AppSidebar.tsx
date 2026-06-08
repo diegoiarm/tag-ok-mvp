@@ -8,7 +8,7 @@ import {
   Building2,
   MapPin,
   Receipt,
-  Upload,
+  DatabaseBackup,
   LogOut,
   LogIn,
   ChevronsUpDown,
@@ -60,7 +60,7 @@ const NAV_ADMIN: NavItem[] = [
   { to: "/tarifas", label: "Tarifas", icon: Receipt },
   { to: "/reportes", label: "Reportes", icon: BarChart3 },
   { to: "/auditoria", label: "Auditoría", icon: ScrollText },
-  { to: "/files", label: "Subir JSONs", icon: Upload },
+  { to: "/carga-masiva", label: "Carga masiva", icon: DatabaseBackup },
 ];
 
 function isItemActive(currentPath: string, to: string): boolean {

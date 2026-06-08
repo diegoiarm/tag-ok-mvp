@@ -135,7 +135,7 @@ export function PorticosPage() {
   return (
     <div>
       <div className="mx-auto max-w-7xl px-6 py-8 space-y-6">
-        <header className="flex items-start justify-between gap-4">
+        <header className="flex items-start justify-between gap-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight">Pórticos</h1>
             <p className="text-sm text-muted-foreground mt-1">
@@ -163,14 +163,14 @@ export function PorticosPage() {
           </div>
         </header>
 
-        <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <section className="grid grid-cols-2 md:grid-cols-4 gap-3 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-75 fill-mode-both">
           <StatCard label="Total" value={stats.total} icon={MapPin} />
           <StatCard label="Vigentes" value={stats.activos} icon={Power} />
           <StatCard label="Inactivos" value={stats.inactivos} icon={CircleSlash} />
           <StatCard label="Autopistas" value={stats.autopistas} />
         </section>
 
-        <Card>
+        <Card className="animate-in fade-in slide-in-from-bottom-2 duration-500 delay-150 fill-mode-both">
           <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <CardTitle className="text-base">Listado</CardTitle>
@@ -235,7 +235,7 @@ export function PorticosPage() {
                     <TableHead className="w-0" />
                   </TableRow>
                 </TableHeader>
-                <TableBody>
+                <TableBody className="stagger-rows">
                   {filtrados.map((p) => (
                     <PorticoRow
                       key={p.id}
@@ -331,7 +331,7 @@ interface StatCardProps {
 
 function StatCard({ label, value, icon: Icon }: StatCardProps) {
   return (
-    <Card className="py-4">
+    <Card className="py-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm">
       <CardContent className="px-4 flex items-center justify-between">
         <div>
           <p className="text-xs text-muted-foreground uppercase tracking-wider">
@@ -366,7 +366,7 @@ function PorticoRow({
     (portico.latitud !== 0 || portico.longitud !== 0);
 
   return (
-    <TableRow className="hover:bg-muted/50">
+    <TableRow className="transition-colors hover:bg-muted/50">
       <TableCell>
         <div className="flex items-center gap-3 min-w-0">
           <div className="h-8 w-8 rounded-md bg-brand-soft text-brand flex items-center justify-center shrink-0">

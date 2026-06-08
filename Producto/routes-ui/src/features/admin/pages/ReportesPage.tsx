@@ -139,7 +139,7 @@ export function ReportesPage() {
   return (
     <div>
       <div className="mx-auto max-w-7xl px-6 py-8 space-y-6">
-        <header className="flex items-start justify-between gap-4 flex-wrap">
+        <header className="flex items-start justify-between gap-4 flex-wrap animate-in fade-in slide-in-from-bottom-2 duration-500">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight">
               Reportes y estadísticas
@@ -205,7 +205,7 @@ export function ReportesPage() {
           <ErrorState onRetry={refetch} />
         ) : (
           <>
-            <section>
+            <section className="animate-in fade-in slide-in-from-bottom-2 duration-500 delay-75 fill-mode-both">
               <SectionTitle>Adopción</SectionTitle>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <KpiCard
@@ -238,7 +238,7 @@ export function ReportesPage() {
               </div>
             </section>
 
-            <section>
+            <section className="animate-in fade-in slide-in-from-bottom-2 duration-500 delay-150 fill-mode-both">
               <SectionTitle>Uso funcional (producto)</SectionTitle>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <KpiCard
@@ -284,7 +284,7 @@ export function ReportesPage() {
               </div>
             </section>
 
-            <div className="grid lg:grid-cols-2 gap-4">
+            <div className="grid lg:grid-cols-2 gap-4 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-200 fill-mode-both">
               <Card>
                 <CardHeader>
                   <CardTitle className="text-base">Registros por mes</CardTitle>
@@ -326,7 +326,7 @@ export function ReportesPage() {
               </Card>
             </div>
 
-            <div className="grid lg:grid-cols-2 gap-4">
+            <div className="grid lg:grid-cols-2 gap-4 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-200 fill-mode-both">
               <Card>
                 <CardHeader>
                   <CardTitle className="text-base">
@@ -366,7 +366,7 @@ export function ReportesPage() {
               </Card>
             </div>
 
-            <section>
+            <section className="animate-in fade-in slide-in-from-bottom-2 duration-500 delay-300 fill-mode-both">
               <SectionTitle>Estado operativo</SectionTitle>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <KpiCard
@@ -475,7 +475,7 @@ function KpiCard({
     ? "—"
     : valueText ?? (value ?? 0).toLocaleString("es-CL");
   return (
-    <Card className="py-4">
+    <Card className="py-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm">
       <CardContent className="px-4 flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="text-xs text-muted-foreground uppercase tracking-wider truncate">

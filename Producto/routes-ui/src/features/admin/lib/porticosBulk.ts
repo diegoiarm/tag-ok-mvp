@@ -116,6 +116,39 @@ export function parsearArchivoPorticos(
   return items;
 }
 
+/** Genera y descarga una plantilla JSON de ejemplo (arreglo de pórticos). */
+export function descargarPlantillaJson() {
+  const ejemplo: PorticoBulkItem[] = [
+    {
+      autopistaCodigo: "CN",
+      codigo: "P0",
+      nombre: "P. San Francisco",
+      sentido: "PO",
+      latitud: -33.371363,
+      longitud: -70.52338,
+    },
+    {
+      autopistaCodigo: "CN",
+      codigo: "P1",
+      nombre: "Gran Vía",
+      sentido: "PO",
+      latitud: -33.375745,
+      longitud: -70.543111,
+    },
+  ];
+  const blob = new Blob([JSON.stringify(ejemplo, null, 2)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "plantilla_porticos.json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
 /** Genera y descarga una plantilla CSV de ejemplo. */
 export function descargarPlantillaCsv() {
   const ejemplo = [

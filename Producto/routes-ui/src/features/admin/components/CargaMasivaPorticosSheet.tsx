@@ -3,6 +3,7 @@ import {
   CheckCircle2,
   CloudUpload,
   Download,
+  FileJson,
   FileSpreadsheet,
   Loader2,
   TriangleAlert,
@@ -18,9 +19,16 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useCrearPorticosMasivo } from "@/hooks/usePorticos";
 import {
   descargarPlantillaCsv,
+  descargarPlantillaJson,
   parsearArchivoPorticos,
 } from "@/features/admin/lib/porticosBulk";
 import type { AutopistaResumen, BulkResult, PorticoBulkItem } from "@/types/types";
@@ -140,15 +148,24 @@ export function CargaMasivaPorticosSheet({
               <FileSpreadsheet className="h-4 w-4" />
               Seleccionar archivo
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={descargarPlantillaCsv}
-              disabled={subir.isPending}
-            >
-              <Download className="h-4 w-4" />
-              Plantilla CSV
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" disabled={subir.isPending}>
+                  <Download className="h-4 w-4" />
+                  Plantilla
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuItem onClick={descargarPlantillaJson}>
+                  <FileJson className="h-4 w-4" />
+                  JSON
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={descargarPlantillaCsv}>
+                  <FileSpreadsheet className="h-4 w-4" />
+                  CSV
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <input
               ref={inputRef}
               type="file"

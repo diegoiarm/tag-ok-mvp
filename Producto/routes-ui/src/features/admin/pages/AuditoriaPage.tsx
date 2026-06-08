@@ -71,7 +71,7 @@ export function AuditoriaPage() {
   return (
     <div>
       <div className="mx-auto max-w-7xl px-6 py-8 space-y-6">
-        <header className="flex items-start justify-between gap-4 flex-wrap">
+        <header className="flex items-start justify-between gap-4 flex-wrap animate-in fade-in slide-in-from-bottom-2 duration-500">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2">
               <ShieldCheck className="h-6 w-6 text-brand" />
@@ -107,7 +107,7 @@ export function AuditoriaPage() {
           </div>
         </header>
 
-        <Card>
+        <Card className="animate-in fade-in slide-in-from-bottom-2 duration-500 delay-75 fill-mode-both">
           <CardHeader>
             <CardTitle className="text-base">Registros recientes</CardTitle>
             <CardDescription>
@@ -143,9 +143,9 @@ export function AuditoriaPage() {
                     <TableHead>Detalle</TableHead>
                   </TableRow>
                 </TableHeader>
-                <TableBody>
+                <TableBody className="stagger-rows">
                   {filtrados.map((r) => (
-                    <TableRow key={r.id}>
+                    <TableRow key={r.id} className="transition-colors hover:bg-muted/50">
                       <TableCell className="text-xs text-muted-foreground tabular-nums">
                         {formatFechaHora(r.fecha)}
                       </TableCell>

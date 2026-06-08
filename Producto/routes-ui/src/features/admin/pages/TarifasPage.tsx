@@ -59,7 +59,7 @@ export function TarifasPage() {
   return (
     <div>
       <div className="mx-auto max-w-7xl px-6 py-8 space-y-6">
-        <header className="flex items-start justify-between gap-4">
+        <header className="flex items-start justify-between gap-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight">Tarifas</h1>
             <p className="text-sm text-muted-foreground mt-1">
@@ -69,7 +69,7 @@ export function TarifasPage() {
           </div>
         </header>
 
-        <div className="inline-flex rounded-md border p-1 bg-muted/40">
+        <div className="inline-flex rounded-md border p-1 bg-muted/40 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-75 fill-mode-both">
           <TabButton
             active={tab === "porticos"}
             onClick={() => setTab("porticos")}
@@ -117,7 +117,7 @@ function TabButton({
     <button
       type="button"
       onClick={onClick}
-      className={`flex items-center gap-2 rounded px-3 py-1.5 text-sm font-medium transition-colors ${
+      className={`flex items-center gap-2 rounded px-3 py-1.5 text-sm font-medium transition-all active:scale-95 ${
         active
           ? "bg-background shadow-sm text-foreground"
           : "text-muted-foreground hover:text-foreground"
@@ -184,7 +184,7 @@ function PorticosTab({
   );
 
   return (
-    <Card>
+    <Card className="animate-in fade-in slide-in-from-bottom-2 duration-500">
       <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <CardTitle className="text-base">Pórticos con cobro directo</CardTitle>
@@ -243,7 +243,7 @@ function PorticosTab({
                 <TableHead className="w-0" />
               </TableRow>
             </TableHeader>
-            <TableBody>
+            <TableBody className="stagger-rows">
               {filtrados.map((p) => (
                 <PorticoRow key={p.id} portico={p} onEditar={onEditar} />
               ))}
@@ -263,7 +263,7 @@ function PorticoRow({
   onEditar: (t: TarifaTarget) => void;
 }) {
   return (
-    <TableRow className="hover:bg-muted/50">
+    <TableRow className="transition-colors hover:bg-muted/50">
       <TableCell>
         <div className="flex items-center gap-3 min-w-0">
           <div className="h-8 w-8 rounded-md bg-brand-soft text-brand flex items-center justify-center shrink-0">
@@ -329,7 +329,7 @@ function TramosTab({
   }, [tramos, busqueda]);
 
   return (
-    <Card>
+    <Card className="animate-in fade-in slide-in-from-bottom-2 duration-500">
       <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <CardTitle className="text-base">Tramos con cobro por distancia</CardTitle>
@@ -376,7 +376,7 @@ function TramosTab({
                 <TableHead className="w-0" />
               </TableRow>
             </TableHeader>
-            <TableBody>
+            <TableBody className="stagger-rows">
               {filtrados.map((t) => (
                 <TramoRow key={t.id} tramo={t} onEditar={onEditar} />
               ))}
@@ -399,7 +399,7 @@ function TramoRow({
     tramo.salidaNombre ?? tramo.salidaCodigo ?? "?"
   }`;
   return (
-    <TableRow className="hover:bg-muted/50">
+    <TableRow className="transition-colors hover:bg-muted/50">
       <TableCell>
         <div className="flex items-center gap-3 min-w-0">
           <div className="h-8 w-8 rounded-md bg-brand-soft text-brand flex items-center justify-center shrink-0">

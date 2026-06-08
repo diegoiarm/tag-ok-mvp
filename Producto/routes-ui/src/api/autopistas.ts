@@ -69,3 +69,15 @@ export const createAutopista = async (
 export const deleteAutopista = async (id: number): Promise<void> => {
   await api.delete(`${urlBase}/${id}`);
 };
+
+/**
+ * Importa una concesionaria completa desde su JSON (metadatos + pórticos/tramos
+ * + tarifas). El cuerpo es el objeto Autopista del backend tal cual.
+ */
+export const importarAutopistaJson = async (json: unknown): Promise<void> => {
+  try {
+    await api.post(urlBase, json);
+  } catch (err) {
+    throw new Error(mensajeError(err, "No se pudo importar la concesionaria."));
+  }
+};

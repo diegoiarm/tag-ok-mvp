@@ -1,11 +1,11 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Mapa } from "./components/Mapa";
 import { Home } from "./app/pages/Home";
 import { MainLayout } from "./app/layout/MainLayout";
 import { AuthProvider } from "./app/context/AuthContext";
 import { Login } from "./app/pages/Login";
 import { UsuariosPage } from "./features/admin/pages/UsuariosPage";
-import { LoadFiles } from "./features/admin/pages/LoadFiles";
+import { CargaMasivaPage } from "./features/admin/pages/CargaMasivaPage";
 import { ReportesPage } from "./features/admin/pages/ReportesPage";
 import { AutopistasPage } from "./features/admin/pages/AutopistasPage";
 import { PorticosPage } from "./features/admin/pages/PorticosPage";
@@ -35,7 +35,9 @@ function App()
             <Route path="/tarifas" element={<TarifasPage />} />
             <Route path="/reportes" element={<ReportesPage />} />
             <Route path="/auditoria" element={<AuditoriaPage />} />
-            <Route path="/files" element={<LoadFiles />} />
+            <Route path="/carga-masiva" element={<CargaMasivaPage />} />
+            {/* Ruta antigua: redirige al nuevo hub de carga masiva. */}
+            <Route path="/files" element={<Navigate to="/carga-masiva" replace />} />
           </Route>
         </Routes>
       </BrowserRouter>
