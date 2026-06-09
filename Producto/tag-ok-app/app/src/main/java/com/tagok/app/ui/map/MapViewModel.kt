@@ -18,6 +18,7 @@ import com.tagok.app.domain.interfaces.ITarifaRepository
 import com.tagok.app.domain.model.portico.PorticoResumen
 import com.tagok.app.domain.model.portico.PorticoTipo
 import com.tagok.app.domain.model.tarifa.TarifaCalculada
+import com.tagok.app.domain.vehiculo.TipoVehiculo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -55,7 +56,7 @@ class MapViewModel(
         _uiState.update { it.copy(tarifaCalculada = null) }
     }
 
-    fun simularCruceAleatorio(vehiculo: String, context: Context)
+    fun simularCruceAleatorio(vehiculo: TipoVehiculo, context: Context)
     {
         val porticos = _uiState.value.porticos
         if (porticos.isEmpty())

@@ -209,12 +209,7 @@ fun PlanificarViajeScreen(
             PorticosContainer(
                 context = context,
                 route = route,
-<<<<<<< HEAD
-                selectedVehicle
-            )
-=======
-                vehiculo = selectedVehicle)
->>>>>>> dev
+                selectedVehicle)
         }
 
         MapControls(

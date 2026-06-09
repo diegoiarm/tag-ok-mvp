@@ -260,9 +260,18 @@ fun NavGraph() {
                         type = NavType.StringType
                         defaultValue = "AUTO"
                     }
-                )
-            ) { backStack ->
-                val vehiculo = backStack.arguments?.getString("vehiculo") ?: "AUTO"
+                ))
+            { backStack ->
+                val vehiculoString = backStack.arguments?.getString("vehiculo") ?: "AUTO"
+                val vehiculo = try
+                {
+                    TipoVehiculo.valueOf(vehiculoString)
+                }
+                catch (e: IllegalArgumentException)
+                {
+                    TipoVehiculo.AUTO
+                }
+
                 MapScreen(vehiculo = vehiculo)
             }
         }

@@ -13,6 +13,7 @@ import com.tagok.app.domain.model.portico.PorticoResumen
 import com.tagok.app.domain.model.routes.Portico
 import com.tagok.app.domain.model.routes.Route
 import com.tagok.app.domain.model.routes.Tramo
+import com.tagok.app.domain.vehiculo.TipoVehiculo
 import com.tagok.app.ui.map.vectorToBitmap
 
 @Composable
@@ -20,8 +21,7 @@ fun MapboxMapScope.PorticosContainer(
     context: Context,
     porticos: List<PorticoResumen>,
     route: Route? = null,
-    vehiculo: String
-)
+    vehiculo: TipoVehiculo)
 {
     val bitmapNormal = remember { vectorToBitmap(context, R.drawable.ic_portico) }
     val bitmapActivo = remember { vectorToBitmap(context, R.drawable.ic_portico_activo) }

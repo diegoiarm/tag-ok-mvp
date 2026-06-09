@@ -109,7 +109,7 @@ private fun MapControlButton(
 @SuppressLint("RememberReturnType")
 @Composable
 fun MapScreen(
-    vehiculo: String = TipoVehiculo.AUTO,
+    vehiculo: TipoVehiculo = TipoVehiculo.AUTO,
     viewModel: MapViewModel = viewModel(factory = MapViewModel.Factory))
 {
     val uiState by viewModel.uiState.collectAsState()
