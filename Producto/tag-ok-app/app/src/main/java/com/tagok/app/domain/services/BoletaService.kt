@@ -52,7 +52,7 @@ class BoletaService(
         fechaDesde: LocalDate,
         fechaHasta: LocalDate): Boleta = execute("Generar boleta validada")
     {
-        validarParametros(patente, autopistasSeleccionadas, fechaDesde, fechaHasta)
+        validarParametros(patente, fechaDesde, fechaHasta)
 
         val request = BoletaRequest(
             patente = patente,
@@ -65,7 +65,6 @@ class BoletaService(
 
     private fun validarParametros(
         patente: String,
-        autopistasSeleccionadas: List<String>,
         fechaDesde: LocalDate,
         fechaHasta: LocalDate)
     {
@@ -73,8 +72,6 @@ class BoletaService(
         {
             patente.isBlank() ->
                 throw ApplicationError.Validation("Seleccione una patente")
-            autopistasSeleccionadas.isEmpty() ->
-                throw ApplicationError.Validation("Seleccione al menos una autopista")
             fechaDesde > fechaHasta ->
                 throw ApplicationError.Validation("La fecha desde debe ser menor o igual a la fecha hasta")
         }

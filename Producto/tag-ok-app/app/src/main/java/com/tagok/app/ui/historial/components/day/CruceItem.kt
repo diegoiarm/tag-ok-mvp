@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.tagok.app.domain.model.history.CruceDetalle
+import com.tagok.app.ui.common.displayHorasMinutos
 import com.tagok.app.ui.historial.utils.formatCurrency
 import com.tagok.app.ui.theme.Blue40
 import com.tagok.app.ui.theme.TextSecondary
@@ -75,7 +76,7 @@ fun CruceItem(cruce: CruceDetalle)
                             tint = TextSecondary)
                         Spacer(modifier = Modifier.width(2.dp))
                         Text(
-                            text = cruce.displayDate(),
+                            text = cruce.horaFechaCruce.displayHorasMinutos(),
                             style = MaterialTheme.typography.labelSmall,
                             color = TextSecondary)
                     }

@@ -31,6 +31,7 @@ import com.tagok.app.ui.boleta.components.PatenteSelector
 import com.tagok.app.ui.common.ErrorContent
 import com.tagok.app.ui.common.LoadingState
 import com.tagok.app.ui.common.ScreenLifecycle
+import com.tagok.app.ui.common.display
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -365,7 +366,7 @@ fun BoletaItemRow(item: BoletaItem)
                     verticalAlignment = Alignment.CenterVertically)
                 {
                     Text(
-                        text = item.horaCruce.toString(),
+                        text = item.horaCruce.display(),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.outline)
 
