@@ -53,7 +53,7 @@ import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 import com.tagok.app.R
 import androidx.core.graphics.createBitmap
 import com.tagok.app.domain.vehiculo.TipoVehiculo
-import com.tagok.app.ui.map.portico.PorticosContainer
+import com.tagok.app.ui.map.portico.porticoContainer.PorticosContainer
 
 private val SANTIAGO = Point.fromLngLat(-70.6483, -33.4569)
 
@@ -200,7 +200,6 @@ fun MapScreen(
 
             PorticosContainer(
                 context = context,
-                porticos = uiState.porticos,
                 vehiculo = vehiculo)
 
             if (userLocation != null)

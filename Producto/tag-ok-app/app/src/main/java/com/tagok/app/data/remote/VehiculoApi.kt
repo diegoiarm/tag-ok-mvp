@@ -52,7 +52,7 @@ class VehiculoApi(client: HttpClient) : IVehiculoApi, ApiClient(client, TAG)
     companion object
     {
         private var BASE_URL = ApiConfig.VEHICULOS_API
-        private const val SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliYWZ2cW1vcWVhYm16aXl6aWZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3ODc5NTIsImV4cCI6MjA5MjM2Mzk1Mn0.ZYYd0xW69sq1CyT6DqsMj23zFSfedrGaed35AhE-GEs"
+        private var SUPABASE_KEY = ApiConfig.VEHICULOS_API_KEY
         private const val TAG = "VehiculoApi"
     }
 }

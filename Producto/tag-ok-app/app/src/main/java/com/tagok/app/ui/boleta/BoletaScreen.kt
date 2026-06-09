@@ -1,4 +1,3 @@
-// BoletaScreen.kt (versión simplificada)
 package com.tagok.app.ui.boleta
 
 import androidx.compose.animation.AnimatedVisibility
@@ -51,8 +50,7 @@ fun BoletaScreen(
                     IconButton(onClick = onBack) {
                         Icon(Icons.Default.ArrowBack, "Volver")
                     }
-                }
-            )
+                })
         })
     { padding ->
         Box(
@@ -156,7 +154,6 @@ private fun BoletaContent(
             .padding(horizontal = 20.dp, vertical = 24.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp))
     {
-        // 1️⃣ SECCIÓN VEHÍCULO
         FormSection(title = "Vehículo")
         {
             PatenteSelector(
@@ -165,12 +162,10 @@ private fun BoletaContent(
                 onPatenteSelected = onPatenteSelected)
         }
 
-        // 2️⃣ BOLETA GENERADA (aparece aquí ENTRE vehículo y período)
         uiState.boleta?.let { boleta ->
             BoletaResult(boleta = boleta)
         }
 
-        // 3️⃣ SECCIÓN PERÍODO
         FormSection(title = "Período")
         {
             DateRangeSelector(
@@ -180,7 +175,6 @@ private fun BoletaContent(
                 onHastaChanged = onFechaHastaChanged)
         }
 
-        // 4️⃣ SECCIÓN AUTOPISTAS
         FormSection(title = "Autopistas (opcional)")
         {
             AutopistaMultiSelect(
@@ -189,7 +183,6 @@ private fun BoletaContent(
                 onToggle = onToggleAutopista)
         }
 
-        // 5️⃣ BOTÓN GENERAR
         Button(
             onClick = onGenerarBoleta,
             enabled = !uiState.isLoading && uiState.patenteSeleccionada.isNotEmpty(),

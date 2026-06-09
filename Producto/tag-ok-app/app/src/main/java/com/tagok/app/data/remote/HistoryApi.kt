@@ -58,6 +58,31 @@ class HistoryApi(client: HttpClient) : IHistoryApi, ApiClient(client, TAG)
         }.body()
     }
 
+    override suspend fun getDetalleMensualFiltrado(
+        año: Int,
+        mes: Int,
+        filtro: FiltroHistorialRequest): DetalleMensualDTO = apiCall("Filtrar detalle mensual $mes/$año")
+    {
+        client.post("$BASE_URL/v1/historial/year/$año/month/$mes/filtrado")
+        {
+            contentType(ContentType.Application.Json)
+            setBody(filtro)
+        }.body()
+    }
+
+    override suspend fun getDetalleDiaFiltrado(
+        año: Int,
+        mes: Int,
+        dia: Int,
+        filtro: FiltroHistorialRequest): DetalleDiaDTO = apiCall("Filtrar detalle día $dia/$mes/$año")
+    {
+        client.post("$BASE_URL/v1/historial/year/$año/month/$mes/day/$dia/filtrado")
+        {
+            contentType(ContentType.Application.Json)
+            setBody(filtro)
+        }.body()
+    }
+
     companion object
     {
         private var BASE_URL = ApiConfig.HISTORY_API

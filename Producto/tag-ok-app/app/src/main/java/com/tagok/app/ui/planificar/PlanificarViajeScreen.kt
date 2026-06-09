@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -37,7 +38,7 @@ import com.tagok.app.data.GeocodingRepository
 import com.tagok.app.domain.vehiculo.TipoVehiculo
 import com.tagok.app.ui.components.map.MapControls
 import com.tagok.app.ui.map.MapViewModel
-import com.tagok.app.ui.map.portico.PorticosContainer
+import com.tagok.app.ui.map.portico.porticoContainer.PorticosContainer
 import com.tagok.app.ui.map.route.RouteLayer
 import kotlinx.coroutines.delay
 
@@ -207,10 +208,13 @@ fun PlanificarViajeScreen(
 
             PorticosContainer(
                 context = context,
-                porticos = mapUiState.porticos,
                 route = route,
+<<<<<<< HEAD
                 selectedVehicle
             )
+=======
+                vehiculo = selectedVehicle)
+>>>>>>> dev
         }
 
         MapControls(
@@ -280,5 +284,11 @@ fun PlanificarViajeScreen(
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 16.dp))
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 200.dp))
     }
 }

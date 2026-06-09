@@ -1,14 +1,17 @@
 package com.tagok.app.data.repository
 
+import com.tagok.app.data.dto.history.DetalleDiaDTO
+import com.tagok.app.data.dto.history.DetalleMensualDTO
 import com.tagok.app.data.dto.history.FiltroHistorialRequest
 import com.tagok.app.data.mapper.toDomain
 import com.tagok.app.data.remote.HistoryApi
+import com.tagok.app.data.remote.interfaces.IHistoryApi
 import com.tagok.app.domain.interfaces.IHistoryRepository
 import com.tagok.app.domain.model.history.DetalleDia
 import com.tagok.app.domain.model.history.DetalleMensual
 import com.tagok.app.domain.model.history.ResumenAnual
 
-class HistoryRepository(private val historyApi: HistoryApi) : IHistoryRepository
+class HistoryRepository(private val historyApi: IHistoryApi) : IHistoryRepository
 {
     override suspend fun getAvailableYears(): List<Int>
     {
@@ -48,5 +51,22 @@ class HistoryRepository(private val historyApi: HistoryApi) : IHistoryRepository
     override suspend fun getResumenAnualFiltrado(filtro: FiltroHistorialRequest): List<ResumenAnual>
     {
         return historyApi.getResumenAnualFiltrado(filtro).map { it.toDomain() }
+    }
+
+    override suspend fun getDetalleMensualFiltrado(
+        año: Int,
+        mes: Int,
+        filtro: FiltroHistorialRequest): DetalleMensual
+    {
+        return historyApi.getDetalleMensualFiltrado(año, mes,filtro).toDomain()
+    }
+
+    override suspend fun getDetalleDiaFiltrado(
+        año: Int,
+        mes: Int,
+        dia: Int,
+        filtro: FiltroHistorialRequest): DetalleDia
+    {
+        return historyApi.getDetalleDiaFiltrado(año, mes, dia, filtro).toDomain()
     }
 }
