@@ -1,6 +1,8 @@
 package com.tagok.app.data.remote
 
 import android.util.Log
+import com.tagok.app.data.remote.exceptions.ApiErrorType
+import com.tagok.app.data.remote.exceptions.ApiException
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
@@ -27,42 +29,64 @@ abstract class ApiClient(
         }
         catch (e: CancellationException)
         {
-            Log.w(tag, "$action cancelado")
+            Log.w(tag, "$action cancelado", e)
             throw e
         }
         catch (e: ClientRequestException)
         {
-            Log.e(tag, "$action: Error ${e.response.status} - ${e.message}")
-            throw ApiException("Error en $action: ${e.message}", e.response.status.value)
+            Log.e(tag, "$action: Error ${e.response.status}", e)
+
+            throw ApiException(
+                message = "Error del cliente",
+                statusCode = e.response.status.value,
+                type = ApiErrorType.CLIENT,
+                cause = e)
         }
         catch (e: ServerResponseException)
         {
-            Log.e(tag, "$action: Error ${e.response.status} - ${e.message}")
-            throw ApiException("Error en $action: ${e.message}", e.response.status.value)
+            Log.e(tag, "$action: Error ${e.response.status}", e)
+
+            throw ApiException(
+                message = "Error del servidor",
+                statusCode = e.response.status.value,
+                type = ApiErrorType.SERVER,
+                cause = e)
         }
         catch (e: ConnectException)
         {
-            Log.e(tag, "$action: Sin conexión")
-            throw ApiException("No se pudo conectar al servidor", 0)
+            Log.e(tag, "$action: Sin conexión", e)
+
+            throw ApiException(
+                message = "Sin conexión",
+                type = ApiErrorType.NETWORK,
+                cause = e)
         }
         catch (e: SocketTimeoutException)
         {
-            Log.e(tag, "$action: Timeout")
-            throw ApiException("Tiempo de espera agotado", 0)
+            Log.e(tag, "$action: Timeout", e)
+
+            throw ApiException(
+                message = "Timeout",
+                type = ApiErrorType.TIMEOUT,
+                cause = e)
         }
         catch (e: IOException)
         {
-            Log.e(tag, "$action: Error de red - ${e.message}")
-            throw ApiException("Error de red", 0)
+            Log.e(tag, "$action: Error de red", e)
+
+            throw ApiException(
+                message = "Error de red",
+                type = ApiErrorType.NETWORK,
+                cause = e)
         }
         catch (e: Exception)
         {
             Log.e(tag, "$action: Error inesperado", e)
-            throw ApiException("Error inesperado: ${e.message}", 0)
+
+            throw ApiException(
+                message = "Error inesperado",
+                type = ApiErrorType.UNKNOWN,
+                cause = e)
         }
     }
 }
-
-class ApiException(
-    message: String,
-    val statusCode: Int = 0) : Exception(message)
