@@ -8,12 +8,10 @@ import android.location.LocationManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -34,19 +32,13 @@ import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.extension.compose.MapEffect
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
-import com.mapbox.maps.extension.compose.annotation.generated.PolylineAnnotation
-import com.tagok.app.R
 import com.tagok.app.data.GeocodeSuggestion
 import com.tagok.app.data.GeocodingRepository
-import com.tagok.app.domain.model.routes.Portico
-import com.tagok.app.domain.model.routes.Tramo
 import com.tagok.app.domain.vehiculo.TipoVehiculo
 import com.tagok.app.ui.components.map.MapControls
 import com.tagok.app.ui.map.MapViewModel
 import com.tagok.app.ui.map.portico.PorticosContainer
 import com.tagok.app.ui.map.route.RouteLayer
-import com.tagok.app.ui.map.vectorToBitmap
-import com.tagok.app.ui.theme.Blue40
 import kotlinx.coroutines.delay
 
 private val SANTIAGO = Point.fromLngLat(-70.6483, -33.4569)
@@ -217,7 +209,8 @@ fun PlanificarViajeScreen(
                 context = context,
                 porticos = mapUiState.porticos,
                 route = route,
-                selectedVehicle)
+                selectedVehicle
+            )
         }
 
         MapControls(

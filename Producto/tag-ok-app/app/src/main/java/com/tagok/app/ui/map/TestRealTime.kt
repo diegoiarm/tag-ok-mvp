@@ -20,14 +20,13 @@ import com.tagok.app.domain.model.tarifa.Cruce
 import com.tagok.app.domain.model.tarifa.CrucePortico
 import com.tagok.app.domain.model.tarifa.CruceTramo
 import com.tagok.app.domain.model.tarifa.TarifaCalculada
-import com.tagok.app.domain.vehiculo.TipoVehiculo
 import com.tagok.app.ui.historial.utils.formatCurrency
 
 @Composable
 fun TestRealTime(
     tarifaCalculada: TarifaCalculada?,
     isCalculating: Boolean,
-    vehiculo: TipoVehiculo,
+    vehiculo: String,
     onSimularCruce: () -> Unit,
     onCerrar: () -> Unit,
     modifier: Modifier = Modifier)

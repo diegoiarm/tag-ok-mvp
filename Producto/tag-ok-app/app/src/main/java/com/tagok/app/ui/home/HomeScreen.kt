@@ -16,13 +16,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-<<<<<<< HEAD
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
-=======
-import androidx.compose.ui.graphics.Color
->>>>>>> 397d76e80b8247991f1dfec105c67214f91d00de
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -32,12 +28,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-<<<<<<< HEAD
-import com.tagok.app.data.Vehiculo
-=======
 import com.tagok.app.domain.model.vehiculo.Vehiculo
-import com.tagok.app.ui.theme.Blue40
->>>>>>> 397d76e80b8247991f1dfec105c67214f91d00de
 import com.tagok.app.ui.theme.InputBackground
 
 /**
@@ -115,7 +106,7 @@ fun HomeScreen(
                     modifier = Modifier
                         .size(32.dp)
                         .gradientTint(purpleGradient),
-                    tint = Color.White // Necesario para que el gradiente se aplique sobre la forma
+                    tint = Color.White
                 )
             }
             Spacer(Modifier.width(16.dp))
@@ -208,7 +199,7 @@ fun HomeScreen(
 
         Spacer(Modifier.weight(1f))
 
-        // Botón Inferior "Ir a la ruta" (Se mantiene rojo por contraste según imagen)
+        // Botón Inferior "Ir a la ruta"
         Button(
             onClick = { onIrARuta(tipoVehiculo) },
             modifier = Modifier
