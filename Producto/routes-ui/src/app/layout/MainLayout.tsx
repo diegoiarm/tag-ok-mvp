@@ -11,7 +11,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/mapa": "Mapa",
   "/usuarios": "Usuarios",
   "/reportes": "Reportes",
-  "/files": "Subir JSONs",
+  "/carga-masiva": "Carga masiva",
   "/login": "Iniciar sesión",
 };
 

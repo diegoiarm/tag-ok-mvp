@@ -6,11 +6,14 @@ import {
   Users as UsersIcon,
   BarChart3,
   Building2,
-  Upload,
+  MapPin,
+  Receipt,
+  DatabaseBackup,
   LogOut,
   LogIn,
   ChevronsUpDown,
   ShieldCheck,
+  ScrollText,
 } from "lucide-react";
 import {
   Sidebar,
@@ -35,7 +38,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useAuth } from "@/app/context/AuthContext";
+import { useAuth } from "@/app/context/auth-context";
 import { supabase } from "@/app/lib/supabase";
 import { iniciales } from "@/features/admin/lib/format";
 
@@ -53,8 +56,11 @@ const NAV_GENERAL: NavItem[] = [
 const NAV_ADMIN: NavItem[] = [
   { to: "/usuarios", label: "Usuarios", icon: UsersIcon },
   { to: "/autopistas", label: "Concesionarios", icon: Building2 },
+  { to: "/porticos", label: "Pórticos", icon: MapPin },
+  { to: "/tarifas", label: "Tarifas", icon: Receipt },
   { to: "/reportes", label: "Reportes", icon: BarChart3 },
-  { to: "/files", label: "Subir JSONs", icon: Upload },
+  { to: "/auditoria", label: "Auditoría", icon: ScrollText },
+  { to: "/carga-masiva", label: "Carga masiva", icon: DatabaseBackup },
 ];
 
 function isItemActive(currentPath: string, to: string): boolean {

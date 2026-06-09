@@ -1,0 +1,22 @@
+# Perfil LOCAL: servicios corriendo fuera de Docker (en el host).
+# Sobrescribe las URIs de routes en application.yml para apuntar a localhost
+# con los puertos locales de cada servicio (routes-service:8000, history-service:8003).
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: routes-service
+              uri: http://localhost:8000
+              predicates:
+                - Path=/api/routes/**
+              filters:
+                - StripPrefix=2
+
+            - id: history-service
+              uri: http://localhost:8003
+              predicates:
+                - Path=/api/history/**
+              filters:
+                - StripPrefix=2

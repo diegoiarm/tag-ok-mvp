@@ -2,6 +2,7 @@ package com.tagok.app.ui.planificar
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.MyLocation
@@ -26,6 +28,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,6 +37,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tagok.app.data.GeocodeSuggestion
 import com.tagok.app.domain.model.routes.Route
+import com.tagok.app.domain.vehiculo.TipoVehiculo
 import com.tagok.app.ui.components.map.DireccionField
 import com.tagok.app.ui.components.map.RouteResult
 import com.tagok.app.ui.theme.Blue40
@@ -52,6 +61,8 @@ import com.tagok.app.ui.theme.TextSecondary
 @Composable
 fun RouteBottomCard(
     vehiculo: String,
+    selectedVehicle: TipoVehiculo = TipoVehiculo.AUTO,
+    onVehicleSelected: (TipoVehiculo) -> Unit = {},
     isMinimized: Boolean,
     onToggleMinimized: () -> Unit,
     onBack: () -> Unit,
@@ -78,6 +89,8 @@ fun RouteBottomCard(
     onFlyToPortico: (lat: Double, lon: Double) -> Unit,
     modifier: Modifier = Modifier,)
 {
+    var vehicleDropdownExpanded by remember { mutableStateOf(false) }
+
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(20.dp),
@@ -100,17 +113,54 @@ fun RouteBottomCard(
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.weight(1f))
 
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(InputBackground)
-                        .padding(horizontal = 10.dp, vertical = 4.dp))
-                {
-                    Text(
-                        text = vehiculo,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Blue40,
-                        fontWeight = FontWeight.Bold)
+                // ── Dropdown de vehículo ──────────────────────────────────────────
+                Box {
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(InputBackground)
+                            .clickable { vehicleDropdownExpanded = true }
+                            .padding(horizontal = 10.dp, vertical = 4.dp),
+                        contentAlignment = Alignment.Center)
+                    {
+                        Row(verticalAlignment = Alignment.CenterVertically)
+                        {
+                            Text(
+                                text = selectedVehicle.displayName,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Blue40,
+                                fontWeight = FontWeight.Bold)
+                            Spacer(Modifier.width(4.dp))
+                            Icon(
+                                imageVector = if (vehicleDropdownExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                                contentDescription = "Seleccionar vehículo",
+                                modifier = Modifier.size(16.dp),
+                                tint = Blue40)
+                        }
+                    }
+
+                    DropdownMenu(
+                        expanded = vehicleDropdownExpanded,
+                        onDismissRequest = { vehicleDropdownExpanded = false })
+                    {
+                        TipoVehiculo.entries.forEach { tipo ->
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = tipo.displayName,
+                                        color = if (tipo == selectedVehicle) Blue40 else TextSecondary
+                                    )
+                                },
+                                onClick = {
+                                    onVehicleSelected(tipo)
+                                    vehicleDropdownExpanded = false
+                                },
+                                leadingIcon = if (tipo == selectedVehicle) {
+                                    { Icon(Icons.Filled.Check, null, tint = Blue40, modifier = Modifier.size(18.dp)) }
+                                } else null
+                            )
+                        }
+                    }
                 }
 
                 IconButton(onClick = onToggleMinimized)

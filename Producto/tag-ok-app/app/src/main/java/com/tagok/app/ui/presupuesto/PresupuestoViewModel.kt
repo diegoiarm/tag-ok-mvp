@@ -1,13 +1,18 @@
 package com.tagok.app.ui.presupuesto
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.tagok.app.data.NuevoPresupuesto
 import com.tagok.app.data.Presupuesto
 import com.tagok.app.data.PresupuestoRepository
-import com.tagok.app.data.Vehiculo
-import com.tagok.app.data.VehiculoRepository
+import com.tagok.app.data.remote.HttpClientProvider
+import com.tagok.app.data.remote.VehiculoApi
+import com.tagok.app.data.repository.VehiculoRepository
+import com.tagok.app.domain.interfaces.IVehiculoRepository
+import com.tagok.app.domain.model.vehiculo.Vehiculo
 import com.tagok.app.supabase
+import com.tagok.app.ui.home.HomeViewModel
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,23 +23,22 @@ import kotlinx.coroutines.launch
 data class PresupuestoUiState(
     val presupuestos: List<Presupuesto> = emptyList(),
     val vehiculos: List<Vehiculo> = emptyList(),
-    val vehiculoIdFiltro: String? = null, // null = global
+    val vehiculoIdFiltro: String? = null,
     val isLoading: Boolean = false,
     val showEditSheet: Boolean = false,
     val formMonto: String = "",
     val formUmbral1: Float = 75f,
     val formUmbral2: Float = 90f,
     val isSaving: Boolean = false,
-    val errorMsg: String? = null,
-) {
+    val errorMsg: String? = null)
+{
     val presupuestoActual: Presupuesto?
         get() = presupuestos.find { it.vehiculoId == vehiculoIdFiltro }
 }
 
-class PresupuestoViewModel : ViewModel() {
-
-    private val repo         = PresupuestoRepository()
-    private val vehiculoRepo = VehiculoRepository()
+class PresupuestoViewModel(private val vehiculoRepository: IVehiculoRepository) : ViewModel()
+{
+    private val repo = PresupuestoRepository()
 
     private val _state = MutableStateFlow(PresupuestoUiState())
     val state: StateFlow<PresupuestoUiState> = _state.asStateFlow()
@@ -46,7 +50,7 @@ class PresupuestoViewModel : ViewModel() {
             _state.update { it.copy(isLoading = true) }
             runCatching {
                 val presupuestos = repo.getAll()
-                val vehiculos    = vehiculoRepo.getVehiculos()
+                val vehiculos    = vehiculoRepository.getVehiculos()
                 _state.update { it.copy(presupuestos = presupuestos, vehiculos = vehiculos) }
             }.onFailure { e ->
                 _state.update { it.copy(errorMsg = e.message) }
@@ -110,4 +114,19 @@ class PresupuestoViewModel : ViewModel() {
     }
 
     fun clearError() = _state.update { it.copy(errorMsg = null) }
+
+    companion object
+    {
+        private const val TAG = "PresupuestoViewModel"
+        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory
+        {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T
+            {
+                val api = VehiculoApi(HttpClientProvider.client)
+                val repository = VehiculoRepository(api)
+                return PresupuestoViewModel(repository) as T
+            }
+        }
+    }
 }

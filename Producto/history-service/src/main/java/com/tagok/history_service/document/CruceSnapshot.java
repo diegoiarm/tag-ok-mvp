@@ -20,6 +20,8 @@ public class CruceSnapshot
 
     private String tipoVehiculo;
 
+    private String patente;
+
     private LocalDateTime horaFechaCruce;
 
     public static CruceSnapshot fromEvent(com.tagok.history_service.event.dtos.CruceSnapshot evento)
@@ -31,6 +33,7 @@ public class CruceSnapshot
             .tipoTarifa(evento.getTipoTarifa())
             .valor(evento.getValor())
             .tipoVehiculo(evento.getTipoVehiculo())
+            .patente(evento.getPatente())
             .horaFechaCruce(evento.getHoraFechaCruce())
             .build();
     }  

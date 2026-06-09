@@ -12,6 +12,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.tagok.routes_service.security.NoAuthException;
+
 /**
  * Traduce excepciones a respuestas JSON con un código HTTP claro, en lugar de
  * devolver 500 con stacktrace.
@@ -41,12 +43,26 @@ public class GlobalExceptionHandler
         return build(HttpStatus.BAD_REQUEST, mensaje.isBlank() ? "Datos inválidos" : mensaje);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, Object>> handleIllegalArgument(IllegalArgumentException ex)
+    {
+        // Validaciones de negocio (p. ej. configuración tarifaria inválida) → 400.
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Map<String, Object>> handleIntegrity(DataIntegrityViolationException ex)
     {
         // Red de seguridad si se viola un constraint de la BD (p. ej. condición de carrera).
         return build(HttpStatus.CONFLICT,
             "Violación de integridad: el registro ya existe o falta un dato obligatorio.");
+    }
+
+    @ExceptionHandler(NoAuthException.class)
+    public ResponseEntity<Map<String, String>> handleNoAuth(NoAuthException e) 
+    {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(Map.of("error", e.getMessage()));
     }
 
     private ResponseEntity<Map<String, Object>> build(HttpStatus status, String message)

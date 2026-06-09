@@ -58,7 +58,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -73,8 +72,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.tagok.app.data.NuevoVehiculo
-import com.tagok.app.data.Vehiculo
+import com.tagok.app.domain.model.vehiculo.NuevoVehiculo
+import com.tagok.app.domain.model.vehiculo.Vehiculo
 import com.tagok.app.supabase
 import com.tagok.app.ui.theme.Blue40
 import com.tagok.app.ui.theme.InputBackground
@@ -89,17 +88,7 @@ private val tipoOpciones = listOf(
     "CAMIONETA" to "Camioneta",
     "BUS" to "Bus",
     "CAMION" to "Camión",
-    "CAMION_REMOLQUE" to "Camión con remolque",
-)
-
-private val categoriaOpciones = listOf(
-    1 to "Categoría 1 — Motocicletas",
-    2 to "Categoría 2 — Autos y camionetas",
-    3 to "Categoría 3 — Buses",
-    4 to "Categoría 4 — Camiones 2 ejes",
-    5 to "Categoría 5 — Camiones 3 ejes",
-    6 to "Categoría 6 — Camiones 4 o más ejes",
-)
+    "CAMION_REMOLQUE" to "Camión con remolque")
 
 private fun tipoIcon(tipo: String): ImageVector = when (tipo) {
     "MOTO" -> Icons.Filled.TwoWheeler
@@ -115,8 +104,8 @@ private fun tipoDisplay(tipo: String): String =
 @Composable
 fun VehiculosScreen(
     onBack: () -> Unit,
-    viewModel: VehiculosViewModel = viewModel(),
-) {
+    viewModel: VehiculosViewModel = viewModel(factory = VehiculosViewModel.Factory))
+{
     val vehiculos by viewModel.vehiculos.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
     var showAddSheet by remember { mutableStateOf(false) }
@@ -254,11 +243,6 @@ private fun VehiculoCard(vehiculo: Vehiculo, onDelete: () -> Unit) {
                     color = MaterialTheme.colorScheme.onSurface,
                     letterSpacing = 0.5.sp,
                 )
-                Text(
-                    text = "CATEGORÍA ${vehiculo.categoria}",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = TextSecondary,
-                )
                 Spacer(Modifier.height(8.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -309,12 +293,10 @@ private fun AgregarVehiculoSheet(
     onSave: (NuevoVehiculo) -> Unit,
 ) {
     var tipoVehiculo by remember { mutableStateOf("AUTO") }
-    var categoria by remember { mutableIntStateOf(2) }
     var patente by remember { mutableStateOf("") }
     var numeroTag by remember { mutableStateOf("") }
     var alias by remember { mutableStateOf("") }
     var tipoExpanded by remember { mutableStateOf(false) }
-    var catExpanded by remember { mutableStateOf(false) }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -360,38 +342,6 @@ private fun AgregarVehiculoSheet(
                         DropdownMenuItem(
                             text = { Text(label, style = MaterialTheme.typography.bodyMedium) },
                             onClick = { tipoVehiculo = value; tipoExpanded = false },
-                        )
-                    }
-                }
-            }
-
-            Spacer(Modifier.height(12.dp))
-
-            ExposedDropdownMenuBox(
-                expanded = catExpanded,
-                onExpandedChange = { catExpanded = it },
-            ) {
-                OutlinedTextField(
-                    value = categoriaOpciones.find { it.first == categoria }?.second ?: "",
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text("Categoría de peaje", style = MaterialTheme.typography.bodySmall) },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(catExpanded) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .menuAnchor(),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = fieldColors(),
-                    singleLine = true,
-                )
-                ExposedDropdownMenu(
-                    expanded = catExpanded,
-                    onDismissRequest = { catExpanded = false },
-                ) {
-                    categoriaOpciones.forEach { (value, label) ->
-                        DropdownMenuItem(
-                            text = { Text(label, style = MaterialTheme.typography.bodyMedium) },
-                            onClick = { categoria = value; catExpanded = false },
                         )
                     }
                 }
@@ -446,9 +396,8 @@ private fun AgregarVehiculoSheet(
                             userId = userId,
                             patente = patente.trim(),
                             tipoVehiculo = tipoVehiculo,
-                            categoria = categoria,
                             numeroTag = numeroTag.trim().takeIf { it.isNotBlank() },
-                            alias = alias.trim().takeIf { it.isNotBlank() },
+                            alias = alias.trim().takeIf { it.isNotBlank() }
                         )
                     )
                 },

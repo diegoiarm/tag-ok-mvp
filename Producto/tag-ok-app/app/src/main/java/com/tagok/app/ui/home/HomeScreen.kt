@@ -16,9 +16,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+<<<<<<< HEAD
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
+=======
+import androidx.compose.ui.graphics.Color
+>>>>>>> 397d76e80b8247991f1dfec105c67214f91d00de
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -28,7 +32,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+<<<<<<< HEAD
 import com.tagok.app.data.Vehiculo
+=======
+import com.tagok.app.domain.model.vehiculo.Vehiculo
+import com.tagok.app.ui.theme.Blue40
+>>>>>>> 397d76e80b8247991f1dfec105c67214f91d00de
 import com.tagok.app.ui.theme.InputBackground
 
 /**
@@ -57,8 +66,8 @@ fun HomeScreen(
     onIrARuta: (vehiculo: String) -> Unit,
     onAgregarVehiculo: () -> Unit = {},
     onLogout: () -> Unit = {},
-    viewModel: HomeViewModel = viewModel(),
-) {
+    viewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory))
+{
     val vehiculos by viewModel.vehiculos.collectAsState()
     val loading by viewModel.loading.collectAsState()
     var vehiculoSeleccionado by remember { mutableStateOf<Vehiculo?>(null) }

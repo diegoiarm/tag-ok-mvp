@@ -12,4 +12,8 @@ import com.tagok.routes_service.domain.portico.Portico;
 public interface PorticoRepository extends JpaRepository<Portico, Long>
 {
     Optional<Portico> findByCodigo(String codigo);
+
+    boolean existsByCodigo(String codigo);
+
+    boolean existsByCodigoAndIdNot(String codigo, Long id);
 }

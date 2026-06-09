@@ -12,6 +12,7 @@ import com.tagok.app.domain.model.portico.PorticoTramoType
 import com.tagok.app.domain.model.portico.PorticoType
 import com.tagok.app.domain.model.portico.RangoHorario
 import com.tagok.app.domain.model.portico.TollType
+import com.tagok.app.domain.vehiculo.TipoVehiculo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -55,6 +56,12 @@ class PorticoDetailViewModel(private val porticoRepository: PorticoRepository) :
                     Log.e("PorticoDetailVM", "Error al cargar detalle", e)
                     _uiState.update { it.copy(error = e.message, isLoading = false) }
                 }
+        }
+    }
+
+    fun setVehiculo(vehiculo: TipoVehiculo) {
+        _uiState.update {
+            it.copy(tipoVehiculo = vehiculo.name)
         }
     }
 

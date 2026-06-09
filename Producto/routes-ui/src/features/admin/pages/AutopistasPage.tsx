@@ -50,6 +50,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useAutopistas, useDeleteAutopista } from "@/hooks/useAutopistas";
 import { AutopistaDetalleSheet } from "@/features/admin/components/AutopistaDetalleSheet";
+import { CargaConcesionariasSheet } from "@/features/admin/components/CargaConcesionariasSheet";
 import { NuevaAutopistaSheet } from "@/features/admin/components/NuevaAutopistaSheet";
 import type { AutopistaResumen, TipoCobro } from "@/types/types";
 
@@ -78,6 +79,7 @@ export function AutopistasPage() {
   const [errorEliminar, setErrorEliminar] = useState<string | null>(null);
   const [detalle, setDetalle] = useState<AutopistaResumen | null>(null);
   const [crearAbierto, setCrearAbierto] = useState(false);
+  const [importarAbierto, setImportarAbierto] = useState(false);
 
   const filtradas = useMemo(() => {
     if (!autopistas) return [];
@@ -121,7 +123,7 @@ export function AutopistasPage() {
   return (
     <div>
       <div className="mx-auto max-w-7xl px-6 py-8 space-y-6">
-        <header className="flex items-start justify-between gap-4">
+        <header className="flex items-start justify-between gap-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight">Concesionarios</h1>
             <p className="text-sm text-muted-foreground mt-1">
@@ -138,11 +140,13 @@ export function AutopistasPage() {
               <RefreshCw className={`h-4 w-4 ${isFetching ? "animate-spin" : ""}`} />
               Actualizar
             </Button>
-            <Button asChild variant="outline" size="sm">
-              <Link to="/files">
-                <Upload className="h-4 w-4" />
-                Importar JSON
-              </Link>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setImportarAbierto(true)}
+            >
+              <Upload className="h-4 w-4" />
+              Importar JSON
             </Button>
             <Button size="sm" onClick={() => setCrearAbierto(true)}>
               <Plus className="h-4 w-4" />
@@ -151,14 +155,14 @@ export function AutopistasPage() {
           </div>
         </header>
 
-        <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <section className="grid grid-cols-2 md:grid-cols-4 gap-3 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-75 fill-mode-both">
           <StatCard label="Total" value={stats.total} icon={Building2} />
           <StatCard label="Por pórtico" value={stats.porPortico} icon={MapPinned} />
           <StatCard label="Por tramo" value={stats.porTramo} icon={RouteIcon} />
           <StatCard label="Pórticos totales" value={stats.porticos} />
         </section>
 
-        <Card>
+        <Card className="animate-in fade-in slide-in-from-bottom-2 duration-500 delay-150 fill-mode-both">
           <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <CardTitle className="text-base">Listado</CardTitle>
@@ -210,7 +214,7 @@ export function AutopistasPage() {
                     <TableHead className="w-0" />
                   </TableRow>
                 </TableHeader>
-                <TableBody>
+                <TableBody className="stagger-rows">
                   {filtradas.map((a) => (
                     <AutopistaRow
                       key={a.id}
@@ -233,6 +237,11 @@ export function AutopistasPage() {
         open={crearAbierto}
         onOpenChange={setCrearAbierto}
         existentes={autopistas ?? []}
+      />
+
+      <CargaConcesionariasSheet
+        open={importarAbierto}
+        onOpenChange={setImportarAbierto}
       />
 
       <AutopistaDetalleSheet
@@ -307,7 +316,7 @@ interface StatCardProps {
 
 function StatCard({ label, value, icon: Icon, accent }: StatCardProps) {
   return (
-    <Card className="py-4">
+    <Card className="py-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm">
       <CardContent className="px-4 flex items-center justify-between">
         <div>
           <p className="text-xs text-muted-foreground uppercase tracking-wider">
@@ -338,7 +347,7 @@ function AutopistaRow({
 }) {
   const esPortico = autopista.tipoCobro === "PORTICO";
   return (
-    <TableRow className="cursor-pointer hover:bg-muted/50" onClick={onSelect}>
+    <TableRow className="cursor-pointer transition-colors hover:bg-muted/50" onClick={onSelect}>
       <TableCell>
         <div className="flex items-center gap-3 min-w-0">
           <div className="h-8 w-8 rounded-md bg-brand-soft text-brand flex items-center justify-center shrink-0">
@@ -423,7 +432,7 @@ function EmptyState({ hayAutopistas }: { hayAutopistas: boolean }) {
       </p>
       {!hayAutopistas && (
         <Button asChild size="sm" variant="outline">
-          <Link to="/files">
+          <Link to="/carga-masiva">
             <Plus className="h-4 w-4" />
             Subir JSON
           </Link>

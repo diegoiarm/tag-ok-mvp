@@ -17,8 +17,6 @@ public class KafkaHistorialCrucePublisher implements HistorialCrucePublisher
     @Override
     public void publicar(HistorialCruceEvent evento)
     {
-        evento.setUsuarioId(TOPIC);
-        
         if (evento.getUsuarioId() == null)
             throw new IllegalStateException("No hay id de usuario");
 
@@ -40,6 +38,7 @@ public class KafkaHistorialCrucePublisher implements HistorialCrucePublisher
                     metadata.offset(),
                     metadata.timestamp()
                 );
+                System.out.println("Para el usuario: " + evento.getUsuarioId());
             });
     }
 }

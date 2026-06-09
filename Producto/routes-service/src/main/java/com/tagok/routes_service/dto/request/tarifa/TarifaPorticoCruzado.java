@@ -13,6 +13,7 @@ import com.tagok.routes_service.domain.vehiculo.TipoVehiculo;
  */
 public record TarifaPorticoCruzado(
     List<PorticoCruzadoReferences> references,
+    String patente,
     TipoVehiculo vehiculo) 
 {
     

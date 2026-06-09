@@ -1,7 +1,11 @@
 package com.tagok.routes_service.domain.portico;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.tagok.routes_service.domain.autopista.Autopista;
 import com.tagok.routes_service.domain.calendario.CalendarioTarifario;
@@ -40,6 +44,16 @@ public class Portico
 
     private double latitud;
     private double longitud;
+
+    /** Estado vigente del pórtico: true = vigente, false = desactivado (histórico). */
+    @Builder.Default
+    private Boolean activo = true;
+
+    @CreationTimestamp
+    private LocalDateTime fechaCreacion;
+
+    @UpdateTimestamp
+    private LocalDateTime fechaActualizacion;
 
     @Builder.Default
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

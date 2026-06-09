@@ -12,19 +12,19 @@ import com.tagok.routes_service.events.dtos.HistorialCruceEvent;
 @Component
 public class HistorialCruceMapper 
 {
-    public HistorialCruceEvent toEvent(TarifaCalculada calculo)
+    public HistorialCruceEvent toEvent(TarifaCalculada calculo, String patente, String userId)
     {
         return HistorialCruceEvent.builder()
-            .usuarioId(null)
+            .usuarioId(userId)
             .total(calculo.total())
             .cruces(calculo.cruces().stream()
-                .map(cruce -> this.toSnapshot(cruce, calculo.vehiculo().name()))
+                .map(cruce -> this.toSnapshot(cruce, calculo.vehiculo().name(), patente))
                 .toList())
             .fechaGeneracion(LocalDateTime.now())
             .build();
     }
 
-    private CruceSnapshot toSnapshot(Cruce cruce, String tipoVehiculo)
+    private CruceSnapshot toSnapshot(Cruce cruce, String tipoVehiculo, String patente)
     {
         return CruceSnapshot.builder()
             .codigo(cruce.codigo())
@@ -33,6 +33,7 @@ public class HistorialCruceMapper
             .tipoTarifa(cruce.tipoTarifa().name())
             .valor(cruce.valor())
             .tipoVehiculo(tipoVehiculo)
+            .patente(patente)
             .horaFechaCruce(cruce.horaFechaCruce())
             .build();
     }

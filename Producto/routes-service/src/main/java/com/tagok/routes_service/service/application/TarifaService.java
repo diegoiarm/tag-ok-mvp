@@ -99,15 +99,17 @@ public class TarifaService
      * 
      * @return devuelve las tarifas para mostrarlas, pudiendo ser notificacion push etc
      */
-    public TarifaCalculada calcularCruceTarifa(TarifaPorticoCruzado request)
+    public TarifaCalculada calcularCruceTarifa(TarifaPorticoCruzado request, String userId)
     {
         TarifaRequest tarifa = new TarifaRequest(request.references(), request.vehiculo());
 
         TarifaCalculada calculo = calcularTarifa(tarifa);
 
+        var patente = request.patente();
+
         try
         {
-            HistorialCruceEvent evento = historialCruceMapper.toEvent(calculo);
+            HistorialCruceEvent evento = historialCruceMapper.toEvent(calculo, patente, userId);
             historialCrucePublisher.publicar(evento);
         }
         catch (Exception e)

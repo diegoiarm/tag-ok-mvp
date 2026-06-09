@@ -1,4 +1,9 @@
 services:
+
+  # =========================
+  # PostgreSQL (Rutas)
+  # =========================
+
   db-rutas:
     image: pgrouting/pgrouting:15-3.3-3.4.1
     container_name: db-rutas
@@ -14,17 +19,21 @@ services:
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin_container
+    depends_on:
+      - db-rutas
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
     ports:
       - "1000:80"
-    depends_on:
-      - db-rutas
     volumes:
       - pgadmin_data:/var/lib/postgresql/data
 
-  mongo:
+  # =========================
+  # MongoDB (Historial)
+  # =========================
+
+  db-historial:
     image: mongo:7
     container_name: db-historial
     environment:
@@ -38,14 +47,18 @@ services:
   mongo-express:
     image: mongo-express
     container_name: mongo_express
+    depends_on:
+      - db-historial
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: admin
       ME_CONFIG_MONGODB_ADMINPASSWORD: admin
-      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_SERVER: db-historial
     ports:
       - "8002:8081"
-    depends_on:
-      - mongo
+
+  # =========================
+  # Kafka
+  # =========================
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.0
@@ -53,6 +66,7 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+
   kafka:
     image: confluentinc/cp-kafka:7.4.0
     container_name: kafka
@@ -66,6 +80,7 @@ services:
       bash -c "
         kafka-server-start /etc/kafka/server.properties
       "
+
   kafka-setup:
     image: confluentinc/cp-kafka:7.4.0
     depends_on:
@@ -73,6 +88,53 @@ services:
     volumes:
       - ./kafka/init-topics.sh:/init-topics.sh
     command: bash /init-topics.sh
+
+  # =========================
+  # Importador (No ejecutar!)
+  # =========================
+
+  osm-importer:
+    build: ./osm-importer
+    depends_on:
+      - db-rutas
+    environment:
+      JDBC_URL: jdbc:postgresql://db-rutas:5432/db_rutas
+      JDBC_USERNAME: admin
+      JDBC_PASSWORD: admin
+
+  # =========================
+  # Servicios
+  # =========================
+
+  routes-service:
+    build: 
+      context: ./routes-service
+    container_name: routes-service
+    depends_on:
+      - db-rutas
+      - kafka-setup
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+  history-service:
+    build: 
+      context: ./history-service
+    container_name: history-service
+    depends_on:
+      - db-historial
+      - kafka-setup
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+  gateway-service:
+    build: 
+      context: ./gateway-service
+    container_name: gateway-service
+    depends_on:
+      - routes-service
+      - history-service
+    ports:
+      - "8080:8080"
 
 volumes:
   postgres_data:

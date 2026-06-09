@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.tagok.app.data.remote.HttpClientProvider
 import com.tagok.app.data.remote.RouteApi
 import com.tagok.app.data.repository.RouteRepository
+import com.tagok.app.domain.interfaces.IRouteRepository
 import com.tagok.app.domain.model.routes.Route
+import com.tagok.app.domain.vehiculo.TipoVehiculo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,11 +19,11 @@ import kotlinx.coroutines.launch
 data class PlanificarUiState(
     val singleRoute: Route? = null,
     val routes: List<Route> = emptyList(),
-    val vehiculo: String = "AUTO",
+    val vehiculo: TipoVehiculo = TipoVehiculo.AUTO,
     val isLoadingRoute: Boolean = false,
     val error: String? = null)
 
-class PlanificarViajeViewModel(private val routeRepository: RouteRepository) : ViewModel()
+class PlanificarViajeViewModel(private val routeRepository: IRouteRepository) : ViewModel()
 {
     private val _uiState = MutableStateFlow(PlanificarUiState())
     val uiState: StateFlow<PlanificarUiState> = _uiState.asStateFlow()
@@ -30,15 +32,16 @@ class PlanificarViajeViewModel(private val routeRepository: RouteRepository) : V
         lon1: Double,
         lat1: Double,
         lon2: Double,
-        lat2: Double)
+        lat2: Double,
+        vehiculo: TipoVehiculo = TipoVehiculo.AUTO)
     {
         viewModelScope.launch {
-            Log.d(TAG, "calculateRoute: solicitando ruta ($lon1, $lat1) -> ($lon2, $lat2)")
+            Log.d(TAG, "calculateRoute: solicitando ruta ($lon1, $lat1) -> ($lon2, $lat2) con vehiculo: ${vehiculo.displayName}")
             setLoadingRoute(true)
             setError(null)
 
             runCatching {
-                routeRepository.getRoute(lon1, lat1, lon2, lat2)
+                routeRepository.getRoute(lon1, lat1, lon2, lat2, vehiculo)
             }.onSuccess { route ->
                 Log.d(TAG, "calculateRoute: éxito - puntos=${route.points.size}, tolls=${route.tolls.size}, costo=${route.totalCost}")
                 setRoute(route)
@@ -69,7 +72,7 @@ class PlanificarViajeViewModel(private val routeRepository: RouteRepository) : V
         _uiState.update { it.copy(error = null) }
     }
 
-    fun setVehiculo(vehiculo: String)
+    fun setVehiculo(vehiculo: TipoVehiculo)
     {
         _uiState.update { it.copy(vehiculo = vehiculo) }
     }

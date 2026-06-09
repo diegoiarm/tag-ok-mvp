@@ -58,6 +58,7 @@ import com.mapbox.maps.extension.compose.annotation.IconImage
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 import com.tagok.app.R
 import androidx.core.graphics.createBitmap
+import com.tagok.app.domain.vehiculo.TipoVehiculo
 import com.tagok.app.ui.map.portico.PorticosContainer
 
 private val SANTIAGO = Point.fromLngLat(-70.6483, -33.4569)
@@ -93,29 +94,28 @@ private fun flyToCurrentLocation(context: Context, mapViewportState: MapViewport
 private fun MapControlButton(
     icon: ImageVector,
     contentDescription: String,
-    onClick: () -> Unit,
-) {
+    onClick: () -> Unit, )
+{
     Surface(
         onClick = onClick,
         modifier = Modifier
             .size(44.dp)
             .shadow(4.dp, CircleShape),
         shape = CircleShape,
-        color = Color.White,
-    ) {
+        color = Color.White,)
+    {
         Icon(
             imageVector = icon,
             contentDescription = contentDescription,
             modifier = Modifier.padding(10.dp),
-            tint = Color(0xFF374151),
-        )
+            tint = Color(0xFF374151),)
     }
 }
 
 @SuppressLint("RememberReturnType")
 @Composable
 fun MapScreen(
-    vehiculo: String = "AUTO",
+    vehiculo: TipoVehiculo = TipoVehiculo.AUTO,
     viewModel: MapViewModel = viewModel(factory = MapViewModel.Factory))
 {
     val uiState by viewModel.uiState.collectAsState()
@@ -123,6 +123,7 @@ fun MapScreen(
     val context = LocalContext.current
     var currentZoom by remember { mutableStateOf(12.5) }
     var userLocation by remember { mutableStateOf<Point?>(null) }
+
 
     val mapViewportState = rememberMapViewportState {
         setCameraOptions {
@@ -136,6 +137,16 @@ fun MapScreen(
         uiState.error?.let {
             snackbarHostState.showSnackbar(it)
             viewModel.clearError()
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        NotificationUtils.createNotificationChannel(context)
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.limpiarNotificaciones()
         }
     }
 
@@ -195,7 +206,8 @@ fun MapScreen(
 
             PorticosContainer(
                 context = context,
-                porticos = uiState.porticos)
+                porticos = uiState.porticos,
+                vehiculo = vehiculo)
 
             if (userLocation != null)
             {
@@ -233,6 +245,12 @@ fun MapScreen(
 
         }
         // Debug
-        TestRealTime()
+        TestRealTime(
+            tarifaCalculada = uiState.tarifaCalculada,
+            isCalculating = uiState.isCalculating,
+            vehiculo = vehiculo,
+            onSimularCruce = { viewModel.simularCruceAleatorio(vehiculo, context) },
+            onCerrar = { viewModel.clearTarifa() },
+            modifier = Modifier.align(Alignment.BottomCenter))
     }
 }

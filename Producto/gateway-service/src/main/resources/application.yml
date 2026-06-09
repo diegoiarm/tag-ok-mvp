@@ -1,0 +1,36 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${supabase.jwt.issuer-uri}
+  application:
+    name: gateway-service
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: routes-service
+              uri: http://routes-service:8080
+              predicates:
+                - Path=/api/routes/**
+              filters:
+              - StripPrefix=2
+
+            - id: history-service
+              uri: http://history-service:8080
+              predicates:
+                - Path=/api/history/**
+              filters:
+              - StripPrefix=2
+
+# Configuración de Supabase JWT
+supabase:
+  jwt:
+    issuer-uri: https://ibafvqmoqeabmziyzifk.supabase.co/auth/v1
+    # La clave pública se obtiene automáticamente del issuer
+
+server:
+  port: 8080
