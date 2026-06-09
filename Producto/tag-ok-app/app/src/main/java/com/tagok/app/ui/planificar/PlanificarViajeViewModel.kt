@@ -4,12 +4,13 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.tagok.app.data.remote.HttpClientProvider
-import com.tagok.app.data.remote.RouteApi
-import com.tagok.app.data.repository.RouteRepository
-import com.tagok.app.domain.interfaces.IRouteRepository
+import com.tagok.app.di.ServiceLocator
+import com.tagok.app.domain.exceptions.ApplicationError
 import com.tagok.app.domain.model.routes.Route
+import com.tagok.app.domain.services.PlanificarService
+import com.tagok.app.domain.services.interfaces.IPlanificarService
 import com.tagok.app.domain.vehiculo.TipoVehiculo
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,10 +24,27 @@ data class PlanificarUiState(
     val isLoadingRoute: Boolean = false,
     val error: String? = null)
 
-class PlanificarViajeViewModel(private val routeRepository: IRouteRepository) : ViewModel()
+class PlanificarViajeViewModel(
+    private val planificarService: IPlanificarService) : ViewModel()
 {
     private val _uiState = MutableStateFlow(PlanificarUiState())
     val uiState: StateFlow<PlanificarUiState> = _uiState.asStateFlow()
+
+    private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
+        val errorMessage = when (exception)
+        {
+            is ApplicationError -> exception.message ?: "Error desconocido"
+            else -> "Error inesperado: ${exception.message}"
+        }
+
+        Log.e(TAG, "Error: $errorMessage", exception)
+
+        _uiState.update {
+            it.copy(
+                error = errorMessage,
+                isLoadingRoute = false)
+        }
+    }
 
     fun calculateRoute(
         lon1: Double,
@@ -35,35 +53,33 @@ class PlanificarViajeViewModel(private val routeRepository: IRouteRepository) : 
         lat2: Double,
         vehiculo: TipoVehiculo = TipoVehiculo.AUTO)
     {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler)
+        {
             Log.d(TAG, "calculateRoute: solicitando ruta ($lon1, $lat1) -> ($lon2, $lat2) con vehiculo: ${vehiculo.displayName}")
-            setLoadingRoute(true)
-            setError(null)
 
-            runCatching {
-                routeRepository.getRoute(lon1, lat1, lon2, lat2, vehiculo)
-            }.onSuccess { route ->
-                Log.d(TAG, "calculateRoute: éxito - puntos=${route.points.size}, tolls=${route.tolls.size}, costo=${route.totalCost}")
-                setRoute(route)
+            _uiState.update { it.copy(isLoadingRoute = true, error = null) }
 
-                if (route.points.isEmpty()) Log.w(TAG, "calculateRoute: ruta sin puntos (geometry vacía)")
-                if (route.tolls.isEmpty()) Log.w(TAG, "calculateRoute: ruta sin peajes")
-            }.onFailure { e ->
-                Log.e(TAG, "calculateRoute: fallo -> ${e.message}", e)
-                setLoadingRoute(false)
-                setError(e.message)
+            val route = planificarService.calcularRuta(lon1, lat1, lon2, lat2, vehiculo)
+
+            Log.d(TAG, "calculateRoute: éxito - puntos=${route.points.size}, tolls=${route.tolls.size}, costo=${route.totalCost}")
+
+            _uiState.update {
+                it.copy(
+                    singleRoute = route,
+                    isLoadingRoute = false)
             }
+
+            if (route.points.isEmpty()) Log.w(TAG, "calculateRoute: ruta sin puntos (geometry vacía)")
+            if (route.tolls.isEmpty()) Log.w(TAG, "calculateRoute: ruta sin peajes")
         }
     }
 
-    fun resetMap()
-    {
+    fun resetMap() {
         _uiState.update {
             it.copy(
                 singleRoute = null,
                 isLoadingRoute = false,
-                error = null
-            )
+                error = null)
         }
     }
 
@@ -77,71 +93,8 @@ class PlanificarViajeViewModel(private val routeRepository: IRouteRepository) : 
         _uiState.update { it.copy(vehiculo = vehiculo) }
     }
 
-    private fun setLoadingRoute(value: Boolean)
-    {
-        _uiState.update { it.copy(isLoadingRoute = value) }
-    }
-
-    private fun setError(message: String?)
-    {
-        _uiState.update { it.copy(error = message) }
-    }
-
-    private fun setRoute(route: Route)
-    {
-        _uiState.update {
-            it.copy(
-                singleRoute = route,
-                isLoadingRoute = false
-            )
-        }
-    }
-
-    /**
-     * Futuro: solicita N rutas con distintas opciones en paralelo.
-     * Ejemplo: listOf(
-     *   RouteOptions(avoidTolls = true),
-     *   RouteOptions(vehicleType = "BICICLETA")
-     *   Falta implementar desde el api flags para decidir que ruta, hasta
-     *   aca la llamada, dejo la idea
-     * )
-     */
-    /*fun calculateMultipleRoutes(
-        lon1: Double, lat1: Double,
-        lon2: Double, lat2: Double,
-        optionsList: List<RouteOptions>)
-    {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, error = null) }
-            val results = optionsList.map { options ->
-                async {
-                    runCatching { routeRepository.getRoute(lon1, lat1, lon2, lat2, options) }
-                }
-            }.awaitAll()
-
-            // Procesar resultados, filtrar éxitos, manejar errores
-            val routes = results.filter { it.isSuccess }.map { it.getOrThrow() }
-            val firstError = results.firstOrNull { it.isFailure }?.exceptionOrNull()?.message
-            _uiState.update {
-                it.copy(
-                    multipleRoutes = routes,
-                    isLoading = false,
-                    error = firstError
-                )
-            }
-        }
-    }*/
-
     companion object {
         private const val TAG = "PlanificarViajeViewModel"
-        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                val routeApi = RouteApi(HttpClientProvider.client)
-                val route = RouteRepository(routeApi)
-
-                return PlanificarViajeViewModel(route) as T
-            }
-        }
+        val Factory = ServiceLocator.viewModels.planificarViewModelFactory()
     }
 }
