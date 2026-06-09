@@ -9,9 +9,18 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, content-type",
 }
 
+// Roles internos del panel que pueden asignarse. `null`/"" quita el acceso
+// al panel (deja al usuario como conductor sin privilegios).
+const ROLES_VALIDOS = ["super_admin", "admin_operacional"] as const
+type RolPanel = (typeof ROLES_VALIDOS)[number]
+
+// Roles con privilegio para gestionar usuarios y asignar roles.
+// "admin" es el rol legado y se trata como super administrador.
+const ROLES_SUPER = new Set(["super_admin", "admin"])
+
 interface UpdateBody {
   userId: string
-  activo: boolean
+  role: RolPanel | "" | null
 }
 
 Deno.serve(async (req) => {
@@ -37,9 +46,8 @@ Deno.serve(async (req) => {
     return new Response("Unauthorized", { status: 401, headers: corsHeaders })
   }
 
-  // Gestión de usuarios: solo Super Administrador ("super_admin" o el rol
-  // legado "admin"). El Administrador Operacional no accede a este módulo.
-  if (!["super_admin", "admin"].includes(user.app_metadata?.role)) {
+  // Solo el Super Administrador puede cambiar roles.
+  if (!ROLES_SUPER.has(user.app_metadata?.role)) {
     return new Response("Forbidden", { status: 403, headers: corsHeaders })
   }
 
@@ -53,16 +61,27 @@ Deno.serve(async (req) => {
     })
   }
 
-  if (!body.userId || typeof body.activo !== "boolean") {
+  if (!body.userId || typeof body.userId !== "string") {
     return new Response(
-      JSON.stringify({ error: "Missing fields: userId (string), activo (boolean)" }),
+      JSON.stringify({ error: "Missing field: userId (string)" }),
       { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     )
   }
 
+  const nuevoRol = body.role ? body.role : null
+  if (nuevoRol !== null && !ROLES_VALIDOS.includes(nuevoRol as RolPanel)) {
+    return new Response(
+      JSON.stringify({
+        error: `Rol inválido. Valores: ${ROLES_VALIDOS.join(", ")} o vacío`,
+      }),
+      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    )
+  }
+
+  // Evita que un super admin se quite a sí mismo el rol y quede sin acceso.
   if (body.userId === user.id) {
     return new Response(
-      JSON.stringify({ error: "No puedes desactivarte a ti mismo" }),
+      JSON.stringify({ error: "No puedes cambiar tu propio rol" }),
       { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     )
   }
@@ -71,9 +90,26 @@ Deno.serve(async (req) => {
     auth: { autoRefreshToken: false, persistSession: false },
   })
 
-  const ban_duration = body.activo ? "none" : "876000h"
+  // Conserva el resto del app_metadata; solo toca `role`.
+  const { data: target, error: getErr } = await adminClient.auth.admin.getUserById(
+    body.userId,
+  )
+  if (getErr || !target.user) {
+    return new Response(
+      JSON.stringify({ error: getErr?.message ?? "Usuario no encontrado" }),
+      { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    )
+  }
+
+  const appMetadata = { ...(target.user.app_metadata ?? {}) } as Record<string, unknown>
+  if (nuevoRol) {
+    appMetadata.role = nuevoRol
+  } else {
+    delete appMetadata.role
+  }
+
   const { data, error } = await adminClient.auth.admin.updateUserById(body.userId, {
-    ban_duration,
+    app_metadata: appMetadata,
   })
 
   if (error) {

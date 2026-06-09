@@ -40,12 +40,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/app/context/auth-context";
 import { supabase } from "@/app/lib/supabase";
+import {
+  puedeAcceder,
+  resolverRol,
+  ROL_LABEL,
+  type Seccion,
+} from "@/app/auth/roles";
 import { iniciales } from "@/features/admin/lib/format";
 
 interface NavItem {
   to: string;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
+  /** Sección que gatea el ítem; si se omite, es general (cualquier sesión). */
+  seccion?: Seccion;
 }
 
 const NAV_GENERAL: NavItem[] = [
@@ -54,13 +62,13 @@ const NAV_GENERAL: NavItem[] = [
 ];
 
 const NAV_ADMIN: NavItem[] = [
-  { to: "/usuarios", label: "Usuarios", icon: UsersIcon },
-  { to: "/autopistas", label: "Concesionarios", icon: Building2 },
-  { to: "/porticos", label: "Pórticos", icon: MapPin },
-  { to: "/tarifas", label: "Tarifas", icon: Receipt },
-  { to: "/reportes", label: "Reportes", icon: BarChart3 },
-  { to: "/auditoria", label: "Auditoría", icon: ScrollText },
-  { to: "/carga-masiva", label: "Carga masiva", icon: DatabaseBackup },
+  { to: "/usuarios", label: "Usuarios", icon: UsersIcon, seccion: "usuarios" },
+  { to: "/autopistas", label: "Concesionarios", icon: Building2, seccion: "concesionarios" },
+  { to: "/porticos", label: "Pórticos", icon: MapPin, seccion: "porticos" },
+  { to: "/tarifas", label: "Tarifas", icon: Receipt, seccion: "tarifas" },
+  { to: "/reportes", label: "Reportes", icon: BarChart3, seccion: "reportes" },
+  { to: "/auditoria", label: "Auditoría", icon: ScrollText, seccion: "auditoria" },
+  { to: "/carga-masiva", label: "Carga masiva", icon: DatabaseBackup, seccion: "carga-masiva" },
 ];
 
 function isItemActive(currentPath: string, to: string): boolean {
@@ -70,6 +78,12 @@ function isItemActive(currentPath: string, to: string): boolean {
 
 export function AppSidebar() {
   const { pathname } = useLocation();
+  const { user } = useAuth();
+  const rol = resolverRol(user);
+
+  const navAdmin = NAV_ADMIN.filter(
+    (item) => !item.seccion || puedeAcceder(rol, item.seccion),
+  );
 
   return (
     <Sidebar collapsible="icon">
@@ -103,20 +117,22 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup>
-          <SidebarGroupLabel>Administración</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {NAV_ADMIN.map((item) => (
-                <NavItemButton
-                  key={item.to}
-                  item={item}
-                  active={isItemActive(pathname, item.to)}
-                />
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {navAdmin.length > 0 && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Administración</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {navAdmin.map((item) => (
+                  <NavItemButton
+                    key={item.to}
+                    item={item}
+                    active={isItemActive(pathname, item.to)}
+                  />
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
 
       <SidebarFooter>
@@ -147,7 +163,8 @@ function NavItemButton({ item, active }: { item: NavItem; active: boolean }) {
 function UserMenu() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const isAdmin = user?.app_metadata?.role === "admin";
+  const rol = resolverRol(user);
+  const rolLabel = rol ? ROL_LABEL[rol] : "Usuario";
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -184,7 +201,7 @@ function UserMenu() {
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{user.email}</span>
                 <span className="truncate text-xs text-muted-foreground">
-                  {isAdmin ? "Administrador" : "Usuario"}
+                  {rolLabel}
                 </span>
               </div>
               <ChevronsUpDown className="ml-auto size-4 text-muted-foreground" />
@@ -197,9 +214,9 @@ function UserMenu() {
           >
             <DropdownMenuLabel className="flex flex-col gap-1">
               <span className="text-sm font-medium truncate">{user.email}</span>
-              {isAdmin && (
+              {rol && (
                 <Badge variant="outline" className="w-fit gap-1">
-                  <ShieldCheck className="h-3 w-3" /> Admin
+                  <ShieldCheck className="h-3 w-3" /> {rolLabel}
                 </Badge>
               )}
             </DropdownMenuLabel>

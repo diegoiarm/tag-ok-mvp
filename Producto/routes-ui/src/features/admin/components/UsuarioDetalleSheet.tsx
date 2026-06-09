@@ -1,4 +1,5 @@
 import { createElement, useState } from "react";
+import { toast } from "sonner";
 import { CalendarDays, Clock, Hash, Mail, Phone, ShieldCheck, Star } from "lucide-react";
 import {
   Sheet,
@@ -13,6 +14,13 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -23,7 +31,17 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import type { Usuario, VehiculoUsuario } from "@/hooks/useUsuarios";
-import { useUpdateUserStatus } from "@/hooks/useUsuarios";
+import { useUpdateUserRole, useUpdateUserStatus } from "@/hooks/useUsuarios";
+import { useAuth } from "@/app/context/auth-context";
+import {
+  esSuperAdmin,
+  resolverRol,
+  rolDesde,
+  ROL_DESCRIPCION,
+  ROL_LABEL,
+  ROLES,
+  type Rol,
+} from "@/app/auth/roles";
 import {
   categoriaLabel,
   tipoVehiculoIcon,
@@ -37,22 +55,76 @@ interface Props {
   onOpenChange: (open: boolean) => void;
 }
 
+const SIN_ACCESO = "none";
+const SIN_ACCESO_LABEL = "Sin acceso al panel";
+const SIN_ACCESO_DESC = "No puede acceder a ningún módulo del panel.";
+
 export function UsuarioDetalleSheet({ usuario, open, onOpenChange }: Props) {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const updateStatus = useUpdateUserStatus();
+  const updateRole = useUpdateUserRole();
+  const { user: authUser } = useAuth();
+
+  const puedeGestionarRoles = esSuperAdmin(resolverRol(authUser));
 
   if (!usuario) return null;
+
+  const rolUsuario = rolDesde(usuario.app_metadata?.role);
+  const esYoMismo = authUser?.id === usuario.id;
+
+  const cambiarRol = (valor: string) => {
+    const role = valor === SIN_ACCESO ? "" : (valor as Rol);
+    updateRole.mutate(
+      { userId: usuario.id, role },
+      {
+        onSuccess: () =>
+          toast.success("Rol actualizado", {
+            description: role
+              ? `${usuario.email} ahora es ${ROL_LABEL[role]}.`
+              : `${usuario.email} ya no tiene acceso al panel.`,
+          }),
+        onError: (err) =>
+          toast.error("No se pudo actualizar el rol", {
+            description: (err as Error)?.message,
+          }),
+      },
+    );
+  };
 
   const toggleActivo = () => {
     if (usuario.activo) {
       setConfirmOpen(true);
     } else {
-      updateStatus.mutate({ userId: usuario.id, activo: true });
+      updateStatus.mutate(
+        { userId: usuario.id, activo: true },
+        {
+          onSuccess: () =>
+            toast.success("Usuario activado", {
+              description: `${usuario.email} ya puede iniciar sesión.`,
+            }),
+          onError: (err) =>
+            toast.error("No se pudo activar el usuario", {
+              description: (err as Error)?.message,
+            }),
+        },
+      );
     }
   };
 
   const confirmDesactivar = () => {
-    updateStatus.mutate({ userId: usuario.id, activo: false });
+    updateStatus.mutate(
+      { userId: usuario.id, activo: false },
+      {
+        onSuccess: () =>
+          toast.success("Usuario desactivado", {
+            description: `${usuario.email} no podrá iniciar sesión.`,
+          }),
+        onError: (err) =>
+          toast.error("No se pudo desactivar el usuario", {
+            description: (err as Error)?.message,
+          }),
+      },
+    );
     setConfirmOpen(false);
   };
 
@@ -75,9 +147,9 @@ export function UsuarioDetalleSheet({ usuario, open, onOpenChange }: Props) {
                   <Badge variant={usuario.activo ? "secondary" : "destructive"}>
                     {usuario.activo ? "Activo" : "Inactivo"}
                   </Badge>
-                  {usuario.app_metadata?.role === "admin" && (
+                  {rolUsuario && (
                     <Badge variant="outline" className="gap-1">
-                      <ShieldCheck className="h-3 w-3" /> Admin
+                      <ShieldCheck className="h-3 w-3" /> {ROL_LABEL[rolUsuario]}
                     </Badge>
                   )}
                 </SheetDescription>
@@ -108,12 +180,45 @@ export function UsuarioDetalleSheet({ usuario, open, onOpenChange }: Props) {
                   onCheckedChange={toggleActivo}
                 />
               </div>
-              {updateStatus.isError && (
-                <p className="text-xs text-destructive mt-2">
-                  {(updateStatus.error as Error)?.message ?? "Error al actualizar"}
-                </p>
-              )}
             </section>
+
+            {puedeGestionarRoles && (
+              <section className="rounded-lg border border-border bg-card p-4 space-y-3">
+                <div className="space-y-1">
+                  <Label htmlFor="rol-select" className="text-sm font-medium">
+                    Rol en el panel
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    Define qué módulos del panel puede usar.
+                  </p>
+                </div>
+                <Select
+                  value={rolUsuario ?? SIN_ACCESO}
+                  onValueChange={cambiarRol}
+                  disabled={esYoMismo || updateRole.isPending}
+                >
+                  <SelectTrigger id="rol-select" className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ROLES.map((r) => (
+                      <SelectItem key={r} value={r}>
+                        {ROL_LABEL[r]}
+                      </SelectItem>
+                    ))}
+                    <SelectItem value={SIN_ACCESO}>{SIN_ACCESO_LABEL}</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  {rolUsuario ? ROL_DESCRIPCION[rolUsuario] : SIN_ACCESO_DESC}
+                </p>
+                {esYoMismo && (
+                  <p className="text-xs text-muted-foreground">
+                    No puedes cambiar tu propio rol.
+                  </p>
+                )}
+              </section>
+            )}
 
             <section className="space-y-3">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">

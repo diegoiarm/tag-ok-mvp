@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Car, RefreshCw, Search, Users } from "lucide-react";
+import { Car, RefreshCw, Search, ShieldCheck, Users } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUsuarios, type Usuario } from "@/hooks/useUsuarios";
+import { rolDesde, ROL_LABEL } from "@/app/auth/roles";
 import { iniciales, tiempoRelativo } from "@/features/admin/lib/format";
 import { UsuarioDetalleSheet } from "@/features/admin/components/UsuarioDetalleSheet";
 
@@ -154,6 +155,7 @@ export function UsuariosPage() {
                   <TableRow>
                     <TableHead>Usuario</TableHead>
                     <TableHead className="hidden md:table-cell">Estado</TableHead>
+                    <TableHead className="hidden md:table-cell">Rol</TableHead>
                     <TableHead className="hidden md:table-cell">Vehículos</TableHead>
                     <TableHead className="hidden lg:table-cell">Registrado</TableHead>
                     <TableHead>Último acceso</TableHead>
@@ -219,6 +221,7 @@ function UsuarioRow({
   usuario: Usuario;
   onClick: () => void;
 }) {
+  const rol = rolDesde(usuario.app_metadata?.role);
   return (
     <TableRow className="cursor-pointer hover:bg-muted/50" onClick={onClick}>
       <TableCell>
@@ -234,7 +237,7 @@ function UsuarioRow({
             </p>
             <p className="text-xs text-muted-foreground md:hidden">
               {usuario.activo ? "Activo" : "Inactivo"} ·{" "}
-              {usuario.vehiculos.length} veh.
+              {rol ? ROL_LABEL[rol] : "Sin rol"} · {usuario.vehiculos.length} veh.
             </p>
           </div>
         </div>
@@ -243,6 +246,19 @@ function UsuarioRow({
         <Badge variant={usuario.activo ? "secondary" : "destructive"}>
           {usuario.activo ? "Activo" : "Inactivo"}
         </Badge>
+      </TableCell>
+      <TableCell className="hidden md:table-cell">
+        {rol ? (
+          <Badge
+            variant={rol === "super_admin" ? "default" : "secondary"}
+            className="gap-1"
+          >
+            {rol === "super_admin" && <ShieldCheck className="h-3 w-3" />}
+            {ROL_LABEL[rol]}
+          </Badge>
+        ) : (
+          <span className="text-sm text-muted-foreground">—</span>
+        )}
       </TableCell>
       <TableCell className="hidden md:table-cell">
         {usuario.vehiculos.length === 0 ? (

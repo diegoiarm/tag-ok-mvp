@@ -117,3 +117,64 @@ export function useUpdateUserStatus() {
     },
   });
 }
+
+interface UpdateRoleInput {
+  userId: string;
+  /** "" o null quita el acceso al panel (conductor sin privilegios). */
+  role: "super_admin" | "admin_operacional" | "" | null;
+}
+
+async function updateUserRole(input: UpdateRoleInput): Promise<void> {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) throw new Error("No autenticado");
+
+  const res = await fetch(`${SUPABASE_FUNCTIONS_URL}/update-user-role`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${session.access_token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(input),
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    try {
+      const parsed = JSON.parse(text);
+      throw new Error(parsed.error ?? "Error al actualizar rol");
+    } catch {
+      throw new Error(text || "Error al actualizar rol");
+    }
+  }
+}
+
+export function useUpdateUserRole() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: updateUserRole,
+    onMutate: async ({ userId, role }) => {
+      await qc.cancelQueries({ queryKey: ["usuarios"] });
+      const prev = qc.getQueryData<Usuario[]>(["usuarios"]);
+      qc.setQueryData<Usuario[]>(["usuarios"], (old) =>
+        old?.map((u) =>
+          u.id === userId
+            ? {
+                ...u,
+                app_metadata: {
+                  ...u.app_metadata,
+                  role: role ? role : undefined,
+                },
+              }
+            : u,
+        ),
+      );
+      return { prev };
+    },
+    onError: (_err, _vars, ctx) => {
+      if (ctx?.prev) qc.setQueryData(["usuarios"], ctx.prev);
+    },
+    onSettled: () => {
+      qc.invalidateQueries({ queryKey: ["usuarios"] });
+    },
+  });
+}

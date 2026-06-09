@@ -3,6 +3,8 @@ import type { User } from "@supabase/supabase-js";
 
 export type AuthContextValue = {
   user: User | null;
+  /** `true` mientras Supabase resuelve la sesión inicial. */
+  loading: boolean;
 };
 
 export const AuthContext = createContext<AuthContextValue | null>(null);

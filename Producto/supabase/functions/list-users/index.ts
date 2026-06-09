@@ -32,7 +32,9 @@ Deno.serve(async (req) => {
     return new Response("Unauthorized", { status: 401, headers: corsHeaders })
   }
 
-  if (user.app_metadata?.role !== "admin") {
+  // Gestión de usuarios: solo Super Administrador ("super_admin" o el rol
+  // legado "admin"). El Administrador Operacional no accede a este módulo.
+  if (!["super_admin", "admin"].includes(user.app_metadata?.role)) {
     return new Response("Forbidden", { status: 403, headers: corsHeaders })
   }
 

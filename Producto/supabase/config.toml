@@ -423,3 +423,9 @@ enabled = true
 verify_jwt = true
 import_map = "./functions/update-user-status/deno.json"
 entrypoint = "./functions/update-user-status/index.ts"
+
+[functions.update-user-role]
+enabled = true
+verify_jwt = true
+import_map = "./functions/update-user-role/deno.json"
+entrypoint = "./functions/update-user-role/index.ts"
