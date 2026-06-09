@@ -53,7 +53,7 @@ fun HistorialScreen(
 
                 uiState.error != null -> ErrorContent(
                     message = uiState.error ?: "Error desconocido",
-                    onRetry = { viewModel.loadInitialData() },
+                    onRetry = { viewModel.refreshData() },
                     onDismiss = { viewModel.clearError() })
 
                 else -> HistorialContent(

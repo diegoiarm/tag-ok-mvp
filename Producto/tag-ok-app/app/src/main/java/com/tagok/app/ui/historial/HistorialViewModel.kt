@@ -2,20 +2,18 @@ package com.tagok.app.ui.historial
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.tagok.app.data.dto.history.FiltroHistorialRequest
-import com.tagok.app.data.remote.HistoryApi
-import com.tagok.app.data.remote.HttpClientProvider
-import com.tagok.app.data.repository.HistoryRepository
-import com.tagok.app.domain.interfaces.IHistoryRepository
+import com.tagok.app.di.ServiceLocator
+import com.tagok.app.domain.exceptions.ApplicationError
 import com.tagok.app.domain.model.history.DetalleDia
 import com.tagok.app.domain.model.history.DetalleMensual
-import com.tagok.app.domain.model.history.ResumenAnual
+import com.tagok.app.domain.services.interfaces.IHistoryService
 import com.tagok.app.ui.common.RefreshableViewModel
 import com.tagok.app.ui.historial.model.AutopistaFilter
 import com.tagok.app.ui.historial.model.PatenteFilter
 import com.tagok.app.ui.historial.model.SortOption
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,11 +21,26 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HistorialViewModel(
-    private val historyRepository: IHistoryRepository) : ViewModel(), RefreshableViewModel
+    private val historyService: IHistoryService) : ViewModel(), RefreshableViewModel
 {
-
     private val _uiState = MutableStateFlow(HistorialUiState())
     val uiState: StateFlow<HistorialUiState> = _uiState.asStateFlow()
+
+    private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
+        val errorMessage = when (exception)
+        {
+            is ApplicationError -> exception.message ?: "Error desconocido"
+            else -> "Error inesperado: ${exception.message}"
+        }
+
+        _uiState.update {
+            it.copy(
+                error = errorMessage,
+                loadingState = it.loadingState.copy(
+                    isLoading = false,
+                    isLoadingDetail = false))
+        }
+    }
 
     init
     {
@@ -38,83 +51,55 @@ class HistorialViewModel(
 
     override fun refreshData()
     {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler)
+        {
             _uiState.update { it.copy(loadingState = LoadingState(isLoading = true)) }
-
-            try
-            {
-                loadInitialData()
-            } catch (e: Exception)
-            {
-                _uiState.update {
-                    it.copy(
-                        loadingState = LoadingState(isLoading = false),
-                        error = "Error al actualizar: ${e.message}")
-                }
-            }
+            loadInitialData()
         }
     }
 
-    fun loadInitialData()
+    private suspend fun loadInitialData()
     {
-        executeWithLoading { state ->
-            try
-            {
-                val years = historyRepository.getAvailableYears()
-                val resumen = historyRepository.getResumenAnual()
-                val patentes = historyRepository.getPatentes()
-                val autopistas = historyRepository.getAutopistas()
+        val years = historyService.getAvaliableYears()
+        val resumen = historyService.getResumenAnual()
+        val patentes = historyService.getPatentes()
+        val autopistas = historyService.getAutopistas()
 
-                state.copy(
-                    listState = ListState(
-                        years = years,
-                        resumenAnual = resumen,
-                        resumenAnualOriginal = resumen),
-                    filterState = FilterState(
-                        patentes = patentes.map { PatenteFilter(patente = it) },
-                        autopistas = autopistas.map { AutopistaFilter(autopista = it) }),
-                    error = null)
-            }
-            catch (e: Exception)
-            {
-                Log.e(TAG, "Error cargando datos iniciales", e)
-                state.copy(error = e.message)
-            }
+        _uiState.update { state ->
+            state.copy(
+                listState = ListState(
+                    years = years,
+                    resumenAnual = resumen,
+                    resumenAnualOriginal = resumen),
+                filterState = FilterState(
+                    patentes = patentes.map { PatenteFilter(patente = it) },
+                    autopistas = autopistas.map { AutopistaFilter(autopista = it) }),
+                loadingState = state.loadingState.copy(isLoading = false),
+                error = null)
         }
     }
 
-    private fun <T> loadDetail(
-        action: suspend () -> T,
-        onSuccess: (HistorialUiState, T) -> HistorialUiState)
+    private fun loadDetail(
+        action: suspend () -> Unit,
+        onSuccess: suspend (HistorialUiState) -> HistorialUiState)
     {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(loadingState = it.loadingState.copy(isLoadingDetail = true))
-            }
-            try
-            {
-                val result: T = action()
-                _uiState.update { state ->
-                    onSuccess(state, result).copy(
-                        loadingState = state.loadingState.copy(isLoadingDetail = false))
-                }
-            }
-            catch (e: Exception)
-            {
-                Log.e(TAG, "Error cargando detalle", e)
-                _uiState.update {
-                    it.copy(
-                        error = e.message,
-                        loadingState = it.loadingState.copy(isLoadingDetail = false))
-                }
+        viewModelScope.launch(exceptionHandler)
+        {
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoadingDetail = true)) }
+
+            action()
+
+            _uiState.update { state ->
+                onSuccess(state).copy(
+                    loadingState = state.loadingState.copy(isLoadingDetail = false))
             }
         }
     }
 
     // ============ Navegación ============
 
-    fun navigateTo(destination: HistorialDestination)
-    {
+    fun navigateTo(destination: HistorialDestination) {
+
         when (destination)
         {
             is HistorialDestination.YearList -> navigateBack()
@@ -173,7 +158,7 @@ class HistorialViewModel(
         }
     }
 
-    // ============ Filtros de patentes ============
+    // ============ Filtros ============
 
     fun togglePatente(patente: String)
     {
@@ -239,7 +224,7 @@ class HistorialViewModel(
                     autopistas = state.filterState.autopistas.map { it.copy(isSelected = false) },
                     autopistasSeleccionadas = emptyList()))
         }
-        loadInitialData()
+        loadInitialDataWrapper()
     }
 
     fun applyFilters()
@@ -254,29 +239,37 @@ class HistorialViewModel(
 
         if (patentesSeleccionadas.isEmpty() && autopistasSeleccionadas.isEmpty())
         {
-            loadInitialData()
+            loadInitialDataWrapper()
             return
         }
 
-        executeWithLoading { state ->
-            try
-            {
-                val filtro = FiltroHistorialRequest(
-                    patentes = patentesSeleccionadas,
-                    autopistas = autopistasSeleccionadas)
-                val resumen = historyRepository.getResumenAnualFiltrado(filtro)
+        viewModelScope.launch(exceptionHandler)
+        {
+            _uiState.update { it.copy(loadingState = LoadingState(isLoading = true)) }
+
+            val filtro = FiltroHistorialRequest(
+                patentes = patentesSeleccionadas,
+                autopistas = autopistasSeleccionadas)
+
+            val resumen = historyService.getResumenAnualFiltrado(filtro)
+
+            _uiState.update { state ->
                 state.copy(
                     listState = ListState(
                         resumenAnual = resumen,
                         resumenAnualOriginal = resumen),
-                    filterState = state.filterState,
+                    loadingState = state.loadingState.copy(isLoading = false),
                     error = null)
             }
-            catch (e: Exception)
-            {
-                Log.e(TAG, "Error filtrando", e)
-                state.copy(error = e.message)
-            }
+        }
+    }
+
+    private fun loadInitialDataWrapper()
+    {
+        viewModelScope.launch(exceptionHandler)
+        {
+            _uiState.update { it.copy(loadingState = LoadingState(isLoading = true)) }
+            loadInitialData()
         }
     }
 
@@ -285,50 +278,58 @@ class HistorialViewModel(
     private fun selectYear(año: Int)
     {
         loadDetail(
-            action = { historyRepository.getDetalleAnual(año) },
-            onSuccess = { state, result ->
-                state.copy(
-                    detailState = DetailState(
-                        selectedYear = año,
-                        detalleAnual = result))
-            })
+            action = {
+                val result = historyService.getDetalleAnual(año)
+                _uiState.update { state ->
+                    state.copy(
+                        detailState = DetailState(
+                            selectedYear = año,
+                            detalleAnual = result))
+                }
+            },
+            onSuccess = { it })
     }
 
     private fun selectDay(year: Int, month: Int, day: Int)
     {
         val currentDetail = _uiState.value.detailState
 
-        if (currentDetail?.detalleMensual == null ||
-            currentDetail.detalleMensual.mes != month)
+        if (currentDetail?.detalleMensual == null || currentDetail.detalleMensual.mes != month)
         {
             loadDetail(
-                action = { historyRepository.getDetalleMensual( year, month) },
-                onSuccess = { state, result ->
-                    val mensualDetail = result as DetalleMensual
-                    loadDayDetail(year, month, day, mensualDetail)
-                    state.copy(
-                        detailState = state.detailState?.copy(
-                            detalleMensual = mensualDetail))
-                })
+                action = {
+                    val mensualDetail = historyService.getDetalleMensual(year, month)
+                    _uiState.update { state ->
+                        state.copy(
+                            detailState = state.detailState?.copy(detalleMensual = mensualDetail))
+                    }
+                    loadDayDetail(year, month, day)
+                },
+                onSuccess = { it })
         }
         else
         {
-            loadDayDetail(year, month, day, currentDetail.detalleMensual)
+            loadDayDetailWrapper(year, month, day)
         }
     }
 
-    private fun loadDayDetail(year: Int, month: Int, day: Int, mensualDetail: DetalleMensual)
+    private fun loadDayDetailWrapper(year: Int, month: Int, day: Int)
     {
-        loadDetail(
-            action = { historyRepository.getDetalleDia(year, month, day) },
-            onSuccess = { state, result ->
-                state.copy(
-                    detailState = DetailState(
-                        selectedYear = year,
-                        detalleAnual = state.detailState?.detalleAnual,
-                        detalleMensual = mensualDetail,
-                        detalleDia = result as DetalleDia))
-            })
+        viewModelScope.launch(exceptionHandler)
+        {
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoadingDetail = true)) }
+            loadDayDetail(year, month, day)
+        }
+    }
+
+    private suspend fun loadDayDetail(year: Int, month: Int, day: Int)
+    {
+        val diaDetail = historyService.getDetalleDiario(year, month, day)
+        _uiState.update { state ->
+            state.copy(
+                detailState = state.detailState?.copy(detalleDia = diaDetail),
+                loadingState = state.loadingState.copy(isLoadingDetail = false))
+        }
     }
 
     fun selectMonth(mes: Int)
@@ -336,13 +337,16 @@ class HistorialViewModel(
         val año = _uiState.value.detailState?.selectedYear ?: return
 
         loadDetail(
-            action = { historyRepository.getDetalleMensual(año, mes) },
-            onSuccess = { state, result ->
-                state.copy(
-                    detailState = state.detailState?.copy(
-                        detalleMensual = result,
-                        detalleDia = null))
-            })
+            action = {
+                val result = historyService.getDetalleMensual(año, mes)
+                _uiState.update { state ->
+                    state.copy(
+                        detailState = state.detailState?.copy(
+                            detalleMensual = result,
+                            detalleDia = null))
+                }
+            },
+            onSuccess = { it })
     }
 
     // ============ Utilidades ============
@@ -352,43 +356,8 @@ class HistorialViewModel(
         _uiState.update { it.copy(error = null) }
     }
 
-    private fun executeWithLoading(block: suspend (HistorialUiState) -> HistorialUiState)
-    {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(loadingState = LoadingState(isLoading = true))
-            }
-            try
-            {
-                _uiState.update { state ->
-                    block(state).copy(
-                        loadingState = state.loadingState.copy(isLoading = false))
-                }
-            }
-            catch (e: Exception)
-            {
-                Log.e(TAG, "Error inesperado", e)
-                _uiState.update {
-                    it.copy(
-                        error = e.message,
-                        loadingState = it.loadingState.copy(isLoading = false))
-                }
-            }
-        }
-    }
-
     companion object
     {
-        private const val TAG = "HistorialViewModel"
-        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory
-        {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T
-            {
-                val api = HistoryApi(HttpClientProvider.client)
-                val repository = HistoryRepository(api)
-                return HistorialViewModel(repository) as T
-            }
-        }
+        val Factory = ServiceLocator.viewModels.historialViewModelFactory()
     }
 }

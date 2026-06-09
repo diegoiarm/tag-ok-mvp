@@ -3,6 +3,7 @@ package com.tagok.app.di.modules
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.tagok.app.ui.boleta.BoletaViewModel
+import com.tagok.app.ui.historial.HistorialViewModel
 import com.tagok.app.ui.map.portico.porticoContainer.PorticosViewModel
 import com.tagok.app.ui.planificar.PlanificarViajeViewModel
 
@@ -32,6 +33,15 @@ object ViewModelModule
         override fun <T : ViewModel> create(modelClass: Class<T>): T
         {
             return PorticosViewModel(ServiceModule.porticoService) as T
+        }
+    }
+
+    fun historialViewModelFactory() = object : ViewModelProvider.Factory
+    {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T
+        {
+            return HistorialViewModel(ServiceModule.historyService) as T
         }
     }
 }
