@@ -66,6 +66,5 @@ fun CruceDetalleDTO.toDomain(): CruceDetalle {
         tipoTarifa = tipoTarifa,
         valor = valor,
         tipoVehiculo = tipoVehiculoDisplay,
-        horaFechaCruce = horaFechaCruce
-    )
+        horaFechaCruce = horaFechaCruce)
 }

@@ -75,7 +75,7 @@ fun CruceItem(cruce: CruceDetalle)
                             tint = TextSecondary)
                         Spacer(modifier = Modifier.width(2.dp))
                         Text(
-                            text = cruce.horaFechaCruce.takeLast(5),
+                            text = cruce.displayDate(),
                             style = MaterialTheme.typography.labelSmall,
                             color = TextSecondary)
                     }
