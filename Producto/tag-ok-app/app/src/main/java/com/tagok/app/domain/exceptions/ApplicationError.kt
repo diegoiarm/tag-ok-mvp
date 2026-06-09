@@ -22,4 +22,6 @@ sealed class ApplicationError(message: String) : Exception(message)
 
     data object Unknown :
         ApplicationError("Ocurrió un error inesperado")
+
+    class Validation(message: String) : ApplicationError(message)
 }
