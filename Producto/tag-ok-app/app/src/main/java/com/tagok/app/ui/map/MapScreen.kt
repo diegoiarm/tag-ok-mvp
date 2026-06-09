@@ -187,7 +187,8 @@ fun MapScreen(
         bmp
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize())
+    {
         MapboxMap(
             modifier = Modifier.fillMaxSize(),
             mapViewportState = mapViewportState)

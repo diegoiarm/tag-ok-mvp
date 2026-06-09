@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -32,6 +33,8 @@ import com.mapbox.geojson.Point
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import com.tagok.app.domain.model.vehiculo.Vehiculo
+import com.tagok.app.domain.vehiculo.TipoVehiculo
+import com.tagok.app.ui.map.portico.porticoContainer.PorticosContainer
 import com.tagok.app.ui.theme.InputBackground
 
 private val SANTIAGO = Point.fromLngLat(-70.6483, -33.4569)
@@ -64,6 +67,8 @@ fun HomeScreen(
     val vehiculos by viewModel.vehiculos.collectAsState()
     val loading by viewModel.loading.collectAsState()
     var vehiculoSeleccionado by remember { mutableStateOf<Vehiculo?>(null) }
+
+    val context = LocalContext.current
 
     val purpleGradient = listOf(Color(0xFF3D257B), Color(0xFF6750A4))
     val blueColor = Color(0xFF3D3DBF)
@@ -181,24 +186,27 @@ fun HomeScreen(
 
         Spacer(Modifier.height(8.dp))
 
-        // Mapa con botones y acción flotantes
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
-        ) {
+                .weight(1f))
+        {
             MapboxMap(
                 modifier = Modifier.fillMaxSize(),
-                mapViewportState = mapViewportState
-            )
+                mapViewportState = mapViewportState)
+            {
+                PorticosContainer(
+                    context = context,
+                    vehiculo = TipoVehiculo.AUTO)
+            }
 
-            // Botones flotantes sobre el mapa
+
             Row(
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(horizontal = 16.dp, vertical = 12.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
+                horizontalArrangement = Arrangement.spacedBy(12.dp))
+            {
                 ActionButton(
                     label = "Planificar viaje",
                     icon = Icons.Default.Map,
