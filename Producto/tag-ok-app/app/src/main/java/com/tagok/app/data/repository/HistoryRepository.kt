@@ -3,12 +3,13 @@ package com.tagok.app.data.repository
 import com.tagok.app.data.dto.history.FiltroHistorialRequest
 import com.tagok.app.data.mapper.toDomain
 import com.tagok.app.data.remote.HistoryApi
+import com.tagok.app.data.remote.interfaces.IHistoryApi
 import com.tagok.app.domain.interfaces.IHistoryRepository
 import com.tagok.app.domain.model.history.DetalleDia
 import com.tagok.app.domain.model.history.DetalleMensual
 import com.tagok.app.domain.model.history.ResumenAnual
 
-class HistoryRepository(private val historyApi: HistoryApi) : IHistoryRepository
+class HistoryRepository(private val historyApi: IHistoryApi) : IHistoryRepository
 {
     override suspend fun getAvailableYears(): List<Int>
     {

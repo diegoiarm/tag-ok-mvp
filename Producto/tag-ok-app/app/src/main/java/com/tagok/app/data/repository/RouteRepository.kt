@@ -5,12 +5,13 @@ import com.tagok.app.data.dto.TarifaRequest
 import com.tagok.app.data.dto.route.RouteRequest
 import com.tagok.app.data.mapper.toDomain
 import com.tagok.app.data.remote.RouteApi
+import com.tagok.app.data.remote.interfaces.IRouteApi
 import com.tagok.app.domain.interfaces.IRouteRepository
 import com.tagok.app.domain.model.routes.Route
 import com.tagok.app.domain.model.tarifa.TarifaCalculada
 import com.tagok.app.domain.vehiculo.TipoVehiculo
 
-class RouteRepository(private val api: RouteApi) : IRouteRepository
+class RouteRepository(private val api: IRouteApi) : IRouteRepository
 {
     override suspend fun getRoute(
         lon1: Double,

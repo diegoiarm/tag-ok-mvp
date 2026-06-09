@@ -8,6 +8,7 @@ import com.tagok.app.data.remote.HistoryApi
 import com.tagok.app.data.remote.HttpClientProvider
 import com.tagok.app.data.repository.BoletaRepository
 import com.tagok.app.data.repository.HistoryRepository
+import com.tagok.app.di.ServiceLocator
 import com.tagok.app.domain.exceptions.ApplicationError
 import com.tagok.app.domain.services.BoletaService
 import com.tagok.app.ui.common.RefreshableViewModel
@@ -121,20 +122,6 @@ class BoletaViewModel(
 
     companion object
     {
-        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory
-        {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T
-            {
-                val client = HttpClientProvider.client
-                val historyApi = HistoryApi(client)
-                val boletaApi = BoletaApi(client)
-                val historyRepository = HistoryRepository(historyApi)
-                val boletaRepository = BoletaRepository(boletaApi)
-                val boletaService = BoletaService(boletaRepository, historyRepository)
-
-                return BoletaViewModel(boletaService) as T
-            }
-        }
+        val Factory = ServiceLocator.viewModels.boletaViewModelFactory()
     }
 }
