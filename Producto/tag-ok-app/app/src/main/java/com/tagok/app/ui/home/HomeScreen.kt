@@ -28,12 +28,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.mapbox.geojson.Point
+import com.mapbox.maps.extension.compose.MapboxMap
+import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import com.tagok.app.domain.model.vehiculo.Vehiculo
 import com.tagok.app.ui.theme.InputBackground
 
-/**
- * Modificador para aplicar gradiente a los iconos
- */
+private val SANTIAGO = Point.fromLngLat(-70.6483, -33.4569)
+
 fun Modifier.gradientTint(colors: List<Color>): Modifier =
     this
         .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
@@ -63,8 +65,8 @@ fun HomeScreen(
     val loading by viewModel.loading.collectAsState()
     var vehiculoSeleccionado by remember { mutableStateOf<Vehiculo?>(null) }
 
-    // Gradiente del tema
     val purpleGradient = listOf(Color(0xFF3D257B), Color(0xFF6750A4))
+    val blueColor = Color(0xFF3D3DBF)
 
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(lifecycleOwner) {
@@ -80,6 +82,13 @@ fun HomeScreen(
     }
 
     val tipoVehiculo = vehiculoSeleccionado?.tipoVehiculo ?: "AUTO"
+
+    val mapViewportState = rememberMapViewportState {
+        setCameraOptions {
+            center(SANTIAGO)
+            zoom(10.0)
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -116,12 +125,11 @@ fun HomeScreen(
                 fontWeight = FontWeight.Bold
             )
             Spacer(Modifier.weight(1f))
-            // Botón de Notificaciones con Gradiente
             Box(
                 modifier = Modifier
                     .size(44.dp)
                     .clip(CircleShape)
-                    .background(Brush.linearGradient(purpleGradient))
+                    .background(blueColor)
                     .clickable { onLogout() },
                 contentAlignment = Alignment.Center
             ) {
@@ -129,7 +137,7 @@ fun HomeScreen(
             }
         }
 
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(16.dp))
 
         // Tarjeta Vehículo
         Surface(
@@ -137,13 +145,13 @@ fun HomeScreen(
                 .padding(horizontal = 24.dp)
                 .fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            color = Color(0xFFF1EEFF)
+            color = Color(0xFFDEEBFF)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
                     text = "Vehículo de hoy",
                     fontWeight = FontWeight.Medium,
-                    style = TextStyle(brush = Brush.linearGradient(purpleGradient))
+                    color = blueColor
                 )
                 Spacer(Modifier.height(12.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -151,7 +159,7 @@ fun HomeScreen(
                         CircularProgressIndicator(
                             modifier = Modifier.size(24.dp),
                             strokeWidth = 2.dp,
-                            color = purpleGradient[0]
+                            color = blueColor
                         )
                     } else {
                         LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -171,64 +179,78 @@ fun HomeScreen(
             }
         }
 
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(8.dp))
 
-        // Botones en Fila
-        Row(
+        // Mapa con botones y acción flotantes
+        Box(
             modifier = Modifier
-                .padding(horizontal = 24.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            ActionButton(
-                label = "Planificar",
-                icon = Icons.Default.Map,
-                modifier = Modifier.weight(1f),
-                gradient = purpleGradient,
-                onClick = { onPlanificarViaje(tipoVehiculo) }
-            )
-            ActionButton(
-                label = "Historial",
-                icon = Icons.Default.History,
-                modifier = Modifier.weight(1f),
-                gradient = purpleGradient,
-                onClick = onHistorialViajes
-            )
-        }
-
-
-        Spacer(Modifier.weight(1f))
-
-        // Botón Inferior "Ir a la ruta"
-        Button(
-            onClick = { onIrARuta(tipoVehiculo) },
-            modifier = Modifier
-                .padding(24.dp)
                 .fillMaxWidth()
-                .height(60.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE54D35))
+                .weight(1f)
         ) {
-            Text("Ir a la ruta", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            MapboxMap(
+                modifier = Modifier.fillMaxSize(),
+                mapViewportState = mapViewportState
+            )
+
+            // Botones flotantes sobre el mapa
+            Row(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                ActionButton(
+                    label = "Planificar viaje",
+                    icon = Icons.Default.Map,
+                    color = blueColor,
+                    onClick = { onPlanificarViaje(tipoVehiculo) }
+                )
+                ActionButton(
+                    label = "Historia",
+                    icon = Icons.Default.History,
+                    color = blueColor,
+                    onClick = onHistorialViajes
+                )
+            }
+
+            // Botón Ir a la ruta flotante
+            Button(
+                onClick = { onIrARuta(tipoVehiculo) },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(horizontal = 24.dp, vertical = 24.dp)
+                    .fillMaxWidth()
+                    .height(60.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE54D35))
+            ) {
+                Text("Ir a la ruta", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            }
         }
-        Spacer(Modifier.height(16.dp))
     }
 }
 
 @Composable
-fun ActionButton(label: String, icon: ImageVector, modifier: Modifier, gradient: List<Color>, onClick: () -> Unit) {
+fun ActionButton(
+    label: String,
+    icon: ImageVector,
+    color: Color,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
     Box(
         modifier = modifier
-            .height(56.dp)
+            .height(44.dp)
             .clip(CircleShape)
-            .background(Brush.linearGradient(gradient))
-            .clickable { onClick() },
+            .background(color)
+            .clickable { onClick() }
+            .padding(horizontal = 16.dp),
         contentAlignment = Alignment.Center
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(icon, null, modifier = Modifier.size(20.dp), tint = Color.White)
-            Spacer(Modifier.width(8.dp))
-            Text(label, fontSize = 14.sp, color = Color.White, fontWeight = FontWeight.Medium)
+            Icon(icon, null, modifier = Modifier.size(18.dp), tint = Color.White)
+            Spacer(Modifier.width(6.dp))
+            Text(label, fontSize = 13.sp, color = Color.White, fontWeight = FontWeight.Medium)
         }
     }
 }
