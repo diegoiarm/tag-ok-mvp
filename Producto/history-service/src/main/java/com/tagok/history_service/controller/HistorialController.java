@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -71,11 +72,38 @@ public class HistorialController
             .orElse(ResponseEntity.notFound().build());
     }
 
+    @PostMapping("/year/{año}/{mes}/filtrado")
+    public ResponseEntity<HistorialMensualSnapshot> getMesFiltrado(
+        @RequestHeader("X-Usuario-Id") String usuarioId,
+        @PathVariable int año,
+        @PathVariable int mes,
+        @RequestBody FiltroHistorialRequest filtro)
+    {
+        return historialService
+            .getMesFiltrado(usuarioId, año, mes, filtro)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+    }
+
     @GetMapping("/year/{año}/month/{mes}/day/{dia}")
     public ResponseEntity<DetalleDiaDTO> getDetalleDia(@PathVariable int año,@PathVariable int mes, @PathVariable int dia) 
     {
         return historialService.getDiaEspecifico(currentUser.getUserId(), año, mes, dia)
             .map(diario -> toDetalleDiaDTO(diario, año, mes))
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/year/{año}/{mes}/{dia}/filtrado")
+    public ResponseEntity<HistorialDiarioSnapshot> getDiaFiltrado(
+        @RequestHeader("X-Usuario-Id") String usuarioId,
+        @PathVariable int año,
+        @PathVariable int mes,
+        @PathVariable int dia,
+        @RequestBody FiltroHistorialRequest filtro)
+    {
+        return historialService
+            .getDiaFiltrado(usuarioId, año, mes, dia, filtro)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
     }

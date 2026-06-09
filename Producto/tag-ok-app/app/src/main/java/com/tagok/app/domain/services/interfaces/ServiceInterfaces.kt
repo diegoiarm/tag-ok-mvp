@@ -40,4 +40,6 @@ interface IHistoryService
     suspend fun getDetalleMensual(año: Int, mes: Int): DetalleMensual
     suspend fun getDetalleDiario(año: Int,mes: Int, dia: Int): DetalleDia
     suspend fun getResumenAnualFiltrado(filtro: FiltroHistorialRequest): List<ResumenAnual>
+    suspend fun getDetalleMensualFiltrado(año: Int, mes: Int, filtro: FiltroHistorialRequest): DetalleMensual
+    suspend fun getDetalleDiaFiltrado(año: Int, mes: Int, dia: Int, filtro: FiltroHistorialRequest): DetalleDia
 }

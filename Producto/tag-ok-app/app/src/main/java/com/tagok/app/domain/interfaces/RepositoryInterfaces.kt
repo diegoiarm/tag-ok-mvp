@@ -33,6 +33,8 @@ interface IHistoryRepository
     suspend fun getPatentes(): List<String>
     suspend fun getAutopistas(): List<String>
     suspend fun getResumenAnualFiltrado(filtro: FiltroHistorialRequest): List<ResumenAnual>
+    suspend fun getDetalleMensualFiltrado(año: Int, mes: Int, filtro: FiltroHistorialRequest): DetalleMensual
+    suspend fun getDetalleDiaFiltrado(año: Int, mes: Int, dia: Int, filtro: FiltroHistorialRequest): DetalleDia
 }
 
 interface IPorticoRepository

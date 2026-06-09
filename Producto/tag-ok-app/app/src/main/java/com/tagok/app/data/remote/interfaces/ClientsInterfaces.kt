@@ -31,6 +31,8 @@ interface IHistoryApi
     suspend fun getPatentes(): List<String>
     suspend fun getAutopistas(): List<String>
     suspend fun getResumenAnualFiltrado(filtro: FiltroHistorialRequest): List<ResumenAnualDTO>
+    suspend fun getDetalleMensualFiltrado(año: Int, mes: Int, filtroHistorialRequest: FiltroHistorialRequest): DetalleMensualDTO
+    suspend fun getDetalleDiaFiltrado(año: Int, mes: Int, dia: Int, filtroHistorialRequest: FiltroHistorialRequest): DetalleDiaDTO
 }
 
 interface IPorticoApi

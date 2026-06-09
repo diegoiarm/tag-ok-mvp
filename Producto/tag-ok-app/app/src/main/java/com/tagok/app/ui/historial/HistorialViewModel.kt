@@ -47,6 +47,18 @@ class HistorialViewModel(
         refreshData()
     }
 
+    private fun hasActiveFilters(): Boolean
+    {
+        val filters = _uiState.value.filterState
+
+        return filters.patentesSeleccionadas.isNotEmpty() ||
+                filters.autopistasSeleccionadas.isNotEmpty()
+    }
+
+    private fun currentFiltro() = FiltroHistorialRequest(
+        patentes = _uiState.value.filterState.patentesSeleccionadas,
+        autopistas = _uiState.value.filterState.autopistasSeleccionadas)
+
     // ============ Carga de datos ============
 
     override fun refreshData()
@@ -324,7 +336,22 @@ class HistorialViewModel(
 
     private suspend fun loadDayDetail(year: Int, month: Int, day: Int)
     {
-        val diaDetail = historyService.getDetalleDiario(year, month, day)
+        val diaDetail =
+            if (hasActiveFilters())
+            {
+                historyService.getDetalleDiaFiltrado(
+                    year,
+                    month,
+                    day,
+                    currentFiltro())
+            }
+            else
+            {
+                historyService.getDetalleDiario(
+                    year,
+                    month,
+                    day)
+            }
         _uiState.update { state ->
             state.copy(
                 detailState = state.detailState?.copy(detalleDia = diaDetail),
@@ -338,7 +365,18 @@ class HistorialViewModel(
 
         loadDetail(
             action = {
-                val result = historyService.getDetalleMensual(año, mes)
+                val result =
+                    if (hasActiveFilters())
+                    {
+                        historyService.getDetalleMensualFiltrado(
+                            año,
+                            mes,
+                            currentFiltro())
+                    }
+                    else
+                    {
+                        historyService.getDetalleMensual(año, mes)
+                    }
                 _uiState.update { state ->
                     state.copy(
                         detailState = state.detailState?.copy(

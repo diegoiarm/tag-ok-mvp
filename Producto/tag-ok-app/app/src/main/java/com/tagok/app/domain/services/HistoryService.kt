@@ -55,4 +55,21 @@ class HistoryService(private val historyRepository: IHistoryRepository) : IHisto
             historyRepository.getResumenAnualFiltrado(filtro)
         }
 
+    override suspend fun getDetalleMensualFiltrado(
+        año: Int,
+        mes: Int,
+        filtro: FiltroHistorialRequest): DetalleMensual = execute("Obteniendo detalle mensual de mes: $mes, año: $año filtrado")
+    {
+        historyRepository.getDetalleMensualFiltrado(año, mes, filtro)
+    }
+
+    override suspend fun getDetalleDiaFiltrado(
+        año: Int,
+        mes: Int,
+        dia: Int,
+        filtro: FiltroHistorialRequest): DetalleDia = execute("Obteniendo detalle diario año: $año, mes: $mes, dia: $dia filtrado")
+    {
+        historyRepository.getDetalleDiaFiltrado(año, mes, dia, filtro)
+    }
+
 }

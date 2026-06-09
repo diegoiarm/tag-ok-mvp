@@ -19,6 +19,8 @@ import com.tagok.history_service.document.CruceSnapshot;
 import com.tagok.history_service.document.HistorialAnualDocument;
 import com.tagok.history_service.document.HistorialDiarioSnapshot;
 import com.tagok.history_service.document.HistorialMensualSnapshot;
+import com.tagok.history_service.dto.CruceDetalleDTO;
+import com.tagok.history_service.dto.DetalleDiaDTO;
 import com.tagok.history_service.dto.EstadisticasGlobalesDTO;
 import com.tagok.history_service.dto.EstadisticasGlobalesDTO.PuntoAnual;
 import com.tagok.history_service.event.dtos.HistorialCruceEvent;
@@ -98,12 +100,87 @@ public class HistorialService
         return historialAnualRepository.findAll(pageable);
     }
 
+    private boolean cumpleFiltro(
+        CruceSnapshot cruce,
+        List<String> patentes,
+        List<String> autopistas)
+    {
+        boolean patenteOk =
+            patentes == null ||
+            patentes.isEmpty() ||
+            patentes.contains(cruce.getPatente());
+
+        boolean autopistaOk =
+            autopistas == null ||
+            autopistas.isEmpty() ||
+            autopistas.contains(cruce.getAutopista());
+
+        return patenteOk && autopistaOk;
+    }
+
     public Optional<HistorialMensualSnapshot> getMesEspecifico(String usuarioId, int año, int mes)
     {
         return getByUsuarioIdAndAño(usuarioId, año)
             .flatMap(historial -> historial.getMeses().stream()
                 .filter(m -> m.getMes() == mes)
                 .findFirst());
+    }
+
+    public Optional<HistorialMensualSnapshot> getMesFiltrado(
+        String usuarioId,
+        int año,
+        int mes,
+        FiltroHistorialRequest filtro)
+    {
+        return getMesEspecifico(usuarioId, año, mes)
+            .map(snapshot -> {
+
+                List<HistorialDiarioSnapshot> diasFiltrados =
+                    snapshot.getDias()
+                        .stream()
+                        .map(dia -> {
+
+                            List<CruceSnapshot> crucesFiltrados =
+                                dia.getCruces()
+                                    .stream()
+                                    .filter(c -> cumpleFiltro(
+                                        c,
+                                        filtro.getPatentes(),
+                                        filtro.getAutopistas()))
+                                    .toList();
+
+                            BigDecimal totalDia =
+                                crucesFiltrados.stream()
+                                    .map(CruceSnapshot::getValor)
+                                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                            return HistorialDiarioSnapshot.builder()
+                                .fecha(dia.getFecha())
+                                .totalDia(totalDia)
+                                .cantidadCruces(crucesFiltrados.size())
+                                .cruces(crucesFiltrados)
+                                .build();
+                        })
+                        .filter(d -> d.getCantidadCruces() > 0)
+                        .toList();
+
+                BigDecimal totalMes =
+                    diasFiltrados.stream()
+                        .map(HistorialDiarioSnapshot::getTotalDia)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                int cantidadCruces =
+                    diasFiltrados.stream()
+                        .mapToInt(HistorialDiarioSnapshot::getCantidadCruces)
+                        .sum();
+
+                return HistorialMensualSnapshot.builder()
+                    .mes(snapshot.getMes())
+                    .totalMes(totalMes)
+                    .cantidadCruces(cantidadCruces)
+                    .dias(diasFiltrados)
+                    .build();
+            });
     }
 
     public Optional<HistorialDiarioSnapshot> getDiaEspecifico(String usuarioId, int año, int mes, int dia) 
@@ -114,6 +191,39 @@ public class HistorialService
                 .filter(d -> d.getFecha().getDayOfMonth() == dia)
                 .findFirst()
             );
+    }
+
+    public Optional<HistorialDiarioSnapshot> getDiaFiltrado(
+        String usuarioId,
+        int año,
+        int mes,
+        int dia,
+        FiltroHistorialRequest filtro)
+    {
+        return getDiaEspecifico(usuarioId, año, mes, dia)
+            .map(snapshot -> {
+
+                List<CruceSnapshot> crucesFiltrados =
+                    snapshot.getCruces()
+                        .stream()
+                        .filter(c -> cumpleFiltro(
+                            c,
+                            filtro.getPatentes(),
+                            filtro.getAutopistas()))
+                        .toList();
+
+                BigDecimal totalDia =
+                    crucesFiltrados.stream()
+                        .map(CruceSnapshot::getValor)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                return HistorialDiarioSnapshot.builder()
+                    .fecha(snapshot.getFecha())
+                    .totalDia(totalDia)
+                    .cantidadCruces(crucesFiltrados.size())
+                    .cruces(crucesFiltrados)
+                    .build();
+            });
     }
 
     public List<String> getPatentesUnicas(String usuarioId) 
