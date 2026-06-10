@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import androidx.annotation.RequiresPermission
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
@@ -62,10 +63,21 @@ class LocationProvider(
     override suspend fun getCurrentLocation(): Point?
     {
         if (!hasPermission()) return null
+
         return try
         {
-            val location = fusedLocationClient.lastLocation.await()
-            location?.let {
+            val cachedLocation = fusedLocationClient.lastLocation.await()
+
+            if (cachedLocation != null && isLocationFresh(cachedLocation))
+            {
+                return Point.fromLngLat(cachedLocation.longitude, cachedLocation.latitude)
+            }
+
+            val currentLocation = fusedLocationClient.getCurrentLocation(
+                Priority.PRIORITY_BALANCED_POWER_ACCURACY,
+                null).await()
+
+            currentLocation?.let {
                 Point.fromLngLat(it.longitude, it.latitude)
             }
         }
@@ -73,6 +85,12 @@ class LocationProvider(
         {
             null
         }
+    }
+
+    private fun isLocationFresh(location: Location): Boolean
+    {
+        val maxAgeMillis = 2 * 60 * 1000
+        return System.currentTimeMillis() - location.time < maxAgeMillis
     }
 
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
