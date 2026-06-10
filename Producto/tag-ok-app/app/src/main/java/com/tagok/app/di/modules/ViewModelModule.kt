@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.tagok.app.ui.boleta.BoletaViewModel
 import com.tagok.app.ui.historial.HistorialViewModel
+import com.tagok.app.ui.map.MapViewModel
 import com.tagok.app.ui.map.portico.porticoContainer.PorticosViewModel
 import com.tagok.app.ui.planificar.PlanificarViajeViewModel
 
@@ -42,6 +43,18 @@ object ViewModelModule
         override fun <T : ViewModel> create(modelClass: Class<T>): T
         {
             return HistorialViewModel(ServiceModule.historyService) as T
+        }
+    }
+
+    fun mapViewModelFactory() = object : ViewModelProvider.Factory
+    {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T
+        {
+            return MapViewModel(
+                RepositoryModule.porticoRepository,
+                RepositoryModule.tarifaRepository,
+                ServiceModule.locationProvider) as T
         }
     }
 }

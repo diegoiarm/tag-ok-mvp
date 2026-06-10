@@ -33,9 +33,8 @@ object ServiceModule
 
     val locationProvider: ILocationProvider by lazy {
         LocationProvider(
-            context = LocationModule.appContext,
+            context = AppModule.appContext,
             fusedLocationClient = LocationModule.fusedLocationClient,
-            geofencingClient = LocationModule.geofencingClient
-        )
+            geofencingClient = LocationModule.geofencingClient)
     }
 }

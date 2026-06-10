@@ -116,7 +116,6 @@ fun MapScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     var currentZoom by remember { mutableStateOf(12.5) }
-    var userLocation by remember { mutableStateOf<Point?>(null) }
 
 
     val mapViewportState = rememberMapViewportState {
@@ -151,20 +150,16 @@ fun MapScreen(
             flyToCurrentLocation(context, mapViewportState)
     }
 
-    fun requestLocation() {
+    fun requestLocation()
+    {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_GRANTED)
         {
-            val lm = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            val location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                ?: lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-                ?: lm.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER)
-            location?.let {
-                val point = Point.fromLngLat(it.longitude, it.latitude)
-                userLocation = point
+            val point = uiState.userLocation
+            if (point != null)
+            {
                 mapViewportState.easeTo(
-                    CameraOptions.Builder().center(point).zoom(15.0).build()
-                )
+                    CameraOptions.Builder().center(point).zoom(15.0).build())
             }
         }
         else
@@ -203,9 +198,10 @@ fun MapScreen(
                 context = context,
                 vehiculo = vehiculo)
 
-            if (userLocation != null)
+            if (uiState.userLocation != null)
             {
-                PointAnnotation(point = userLocation!!) {
+                PointAnnotation(point = uiState.userLocation!!)
+                {
                     iconImage = IconImage(bitmapUsuario)
                     iconSize = 1.0
                 }

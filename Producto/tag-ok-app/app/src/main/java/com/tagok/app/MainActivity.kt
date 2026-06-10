@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.lifecycleScope
 import com.mapbox.common.MapboxOptions
 import com.tagok.app.BuildConfig
+import com.tagok.app.di.modules.AppModule
 import com.tagok.app.ui.navigation.NavGraph
 import com.tagok.app.ui.theme.TagOkAppTheme
 import io.github.jan.supabase.auth.handleDeeplinks
@@ -17,6 +18,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppModule.init(this)
         MapboxOptions.accessToken = BuildConfig.MAPBOX_ACCESS_TOKEN
         enableEdgeToEdge()
         setContent {

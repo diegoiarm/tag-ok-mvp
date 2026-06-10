@@ -7,18 +7,11 @@ import com.google.android.gms.location.LocationServices
 
 object LocationModule
 {
-    lateinit var appContext: Context
-
-    fun init(context: Context)
-    {
-        appContext = context.applicationContext
-    }
-
     val fusedLocationClient: FusedLocationProviderClient by lazy {
-        LocationServices.getFusedLocationProviderClient(appContext)
+        LocationServices.getFusedLocationProviderClient(AppModule.appContext)
     }
 
     val geofencingClient: GeofencingClient by lazy {
-        LocationServices.getGeofencingClient(appContext)
+        LocationServices.getGeofencingClient(AppModule.appContext)
     }
 }
