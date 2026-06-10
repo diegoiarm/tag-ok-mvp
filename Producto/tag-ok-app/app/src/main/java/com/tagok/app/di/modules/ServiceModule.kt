@@ -2,10 +2,12 @@ package com.tagok.app.di.modules
 
 import com.tagok.app.domain.services.BoletaService
 import com.tagok.app.domain.services.HistoryService
+import com.tagok.app.domain.services.LocationProvider
 import com.tagok.app.domain.services.PlanificarService
 import com.tagok.app.domain.services.PorticoService
 import com.tagok.app.domain.services.interfaces.IBoletaService
 import com.tagok.app.domain.services.interfaces.IHistoryService
+import com.tagok.app.domain.services.interfaces.ILocationProvider
 import com.tagok.app.domain.services.interfaces.IPlanificarService
 import com.tagok.app.domain.services.interfaces.IPorticoService
 
@@ -27,5 +29,13 @@ object ServiceModule
 
     val historyService: IHistoryService by lazy {
         HistoryService(historyRepository = RepositoryModule.historyRepository)
+    }
+
+    val locationProvider: ILocationProvider by lazy {
+        LocationProvider(
+            context = LocationModule.appContext,
+            fusedLocationClient = LocationModule.fusedLocationClient,
+            geofencingClient = LocationModule.geofencingClient
+        )
     }
 }
