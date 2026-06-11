@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.mapbox.geojson.Point
 import com.tagok.app.data.dto.PorticoCruzadoRequest
 import com.tagok.app.data.dto.TarifaRequest
 import com.tagok.app.data.remote.HttpClientProvider
@@ -13,11 +14,13 @@ import com.tagok.app.data.remote.PorticoApi
 import com.tagok.app.data.remote.TarifaApi
 import com.tagok.app.data.repository.PorticoRepository
 import com.tagok.app.data.repository.TarifaRepository
+import com.tagok.app.di.modules.ViewModelModule
 import com.tagok.app.domain.interfaces.IPorticoRepository
 import com.tagok.app.domain.interfaces.ITarifaRepository
 import com.tagok.app.domain.model.portico.PorticoResumen
 import com.tagok.app.domain.model.portico.PorticoTipo
 import com.tagok.app.domain.model.tarifa.TarifaCalculada
+import com.tagok.app.domain.services.interfaces.ILocationProvider
 import com.tagok.app.domain.vehiculo.TipoVehiculo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,11 +34,13 @@ data class MapUiState(
     val porticos: List<PorticoResumen> = emptyList(),
     val tarifaCalculada: TarifaCalculada? = null,
     val isCalculating: Boolean = false,
+    val userLocation: Point? = null,
     val error: String? = null)
 
 class MapViewModel(
     private val porticoRepository: IPorticoRepository,
-    private val tarifaRepository: ITarifaRepository) : ViewModel()
+    private val tarifaRepository: ITarifaRepository,
+    private val locationProvider: ILocationProvider) : ViewModel()
 {
     private val _uiState = MutableStateFlow(MapUiState())
     val uiState: StateFlow<MapUiState> = _uiState.asStateFlow()
@@ -43,6 +48,16 @@ class MapViewModel(
     init
     {
         loadPorticos()
+        startLocationTracking()
+    }
+
+    fun startLocationTracking()
+    {
+        viewModelScope.launch {
+            locationProvider.getLocationUpdates().collect { point ->
+                _uiState.update { it.copy(userLocation = point) }
+            }
+        }
     }
 
     fun clearError()
@@ -338,19 +353,6 @@ class MapViewModel(
     companion object
     {
         private const val TAG = "MapViewModel"
-        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory
-        {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T
-            {
-                val TarifaApi = TarifaApi(HttpClientProvider.client)
-                val tarifaRepo = TarifaRepository(TarifaApi)
-
-                val porticoApi = PorticoApi(HttpClientProvider.client)
-                val porticoRepo = PorticoRepository(porticoApi)
-
-                return MapViewModel(porticoRepo, tarifaRepo) as T
-            }
-        }
+        val Factory: ViewModelProvider.Factory = ViewModelModule.mapViewModelFactory()
     }
 }
