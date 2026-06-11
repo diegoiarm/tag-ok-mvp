@@ -1,5 +1,6 @@
 package com.tagok.app.data.dto.history
 
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -40,7 +41,7 @@ data class CruceDetalleDTO(
     val tipoTarifa: String,
     val valor: Double,
     val tipoVehiculo: String,
-    val horaFechaCruce: String)
+    val horaFechaCruce: LocalDateTime)
 
 @Serializable
 data class FiltroHistorialRequest(

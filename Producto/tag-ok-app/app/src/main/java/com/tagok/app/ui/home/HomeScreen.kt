@@ -20,6 +20,7 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,6 +32,8 @@ import com.mapbox.geojson.Point
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import com.tagok.app.domain.model.vehiculo.Vehiculo
+import com.tagok.app.domain.vehiculo.TipoVehiculo
+import com.tagok.app.ui.map.portico.porticoContainer.PorticosContainer
 import com.tagok.app.ui.theme.InputBackground
 
 private val SANTIAGO = Point.fromLngLat(-70.6483, -33.4569)
@@ -52,6 +55,8 @@ fun HomeScreen(
     val vehiculos by viewModel.vehiculos.collectAsState()
     val loading by viewModel.loading.collectAsState()
     var vehiculoSeleccionado by remember { mutableStateOf<Vehiculo?>(null) }
+
+    val context = LocalContext.current
 
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(lifecycleOwner) {
@@ -214,8 +219,13 @@ fun HomeScreen(
         ) {
             MapboxMap(
                 modifier = Modifier.fillMaxSize(),
-                mapViewportState = mapViewportState
-            )
+                mapViewportState = mapViewportState)
+            {
+                PorticosContainer(
+                    context = context,
+                    vehiculo = TipoVehiculo.AUTO)
+            }
+
 
             Button(
                 onClick = { onIrARuta(tipoVehiculo) },

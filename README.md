@@ -18,8 +18,15 @@ Los conductores urbanos enfrentan incertidumbre financiera y falta de trazabilid
 
 ## Componentes del sistema
 
+### Gateway-Service - Punto de entrada único al backend
+`Java 21 / Spring Boot 3 / Spring Gateway Webflux / Netty` - Puerto `8080`
+
+- Enrruta peticiones a los servicios
+- Integra OAuth, con Supabase como servidor, para autenticar peticiones
+- Actua como mediador entre peticiones para APIs externas
+
 ### routes-service - API de rutas y tarifas
-`Java 21 / Spring Boot 3 / PostgreSQL + PostGIS + pgRouting` - Puerto `8000`
+`Java 21 / Spring Boot 3 / PostgreSQL + PostGIS + pgRouting / Tomcat`
 
 - Calcula rutas óptimas en Santiago usando el algoritmo pgr_dijkstra sobre datos OSM (50k+ segmentos de calle).
 - Determina qué pórticos TAG cruza una ruta y calcula el costo según calendario tarifario y tipo de vehículo.
@@ -27,18 +34,11 @@ Los conductores urbanos enfrentan incertidumbre financiera y falta de trazabilid
 - Soporta dos estrategias de cobro: por pórtico cruzado y por tramo recorrido.
 
 ### history-service - Servicio de historial
-`Java 21 / Spring Boot 3 / MongoDB` - Puerto `8001`
+`Java 21 / Spring Boot 3 / MongoDB / Tomcat`
 
 - Persiste el historial de cruces de pórticos por usuario.
 - Guarda rutas calculadas con sus detalles de cobro.
 - Base de datos documental para flexibilidad en el esquema de historial.
-
-### osm-importer - Importador de datos OSM
-`Java / Maven (herramienta standalone)`
-
-- Parsea archivos GeoJSON de OpenStreetMap por cada comuna de Santiago.
-- Filtra y normaliza segmentos viales con bounding box configurable.
-- Carga los datos en la tabla `edge` mediante un pipeline de middlewares y scripts SQL secuenciales.
 
 ### routes-ui - Panel web administrativo
 `React 19 / TypeScript / Vite / Leaflet` - Puerto `5173`
@@ -57,6 +57,11 @@ Los conductores urbanos enfrentan incertidumbre financiera y falta de trazabilid
 - Registro de historial de cruces y gastos.
 - Autenticación con Supabase Auth.
 
+### Broker de eventos ApacheKafka
+
+- Comunica servicios internamente de manera asincrona, desacoplandolos y permitiendo escalabilidad horizontal
+- Un evento tiene un productor, pero puede tener muchos consumidores
+
 ---
 
 ## Stack tecnológico
@@ -65,11 +70,13 @@ Los conductores urbanos enfrentan incertidumbre financiera y falta de trazabilid
 |------|-----------|
 | App móvil | Kotlin, Jetpack Compose, Material 3 |
 | Panel web | React 19, TypeScript, Vite, Leaflet, TanStack Query |
+| API gateway | Java 21, Spring Boot 3, SpringWebFlux |
 | API principal | Java 21, Spring Boot 3, JPA/Hibernate |
 | API historial | Java 21, Spring Boot 3, Spring Data MongoDB |
 | Base de datos | PostgreSQL + PostGIS + pgRouting |
 | Historial | MongoDB |
 | Autenticación | Supabase Auth |
+| Brocker de eventos | Apache Kafka + Zookeeper |
 | Infraestructura local | Docker Compose |
 
 ---
@@ -186,15 +193,21 @@ tag-ok-mvp/
 
 ## API endpoints principales
 
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| GET | `/autopistas` | Listar todas las autopistas |
-| POST | `/autopistas` | Crear autopista con pórticos |
-| DELETE | `/autopistas/{id}` | Eliminar autopista |
-| GET | `/porticos` | Listar pórticos (resumen) |
-| GET | `/porticos/{id}` | Pórtico con calendario tarifario completo |
-| POST | `/api/tarifas/calcular` | Calcular cobro para una lista de pórticos cruzados |
-| GET | `/api/routes?lon1=&lat1=&lon2=&lat2=` | Calcular ruta (retorna GeoJSON + pórticos + costo) |
+---
+
+El sistema cuenta como punto de entrada el API gateway (gateway-service), las peticiones se envian a este servicio y es quien
+está encargado de enrrutarlas.
+
+El servicio expone el puerto 8080, contando con rutas
+
+| /api/routes/** | Servicio de rutas |
+| /api/history/** | Servicio de historial |
+
+Además de contar con la documentación generada por Swagger/OpenAPI
+url local, del recurso: http://localhost:8080/swagger-ui/index.html
+
+Esta implementación mapea tanto los modelos, rutas de recursos, metodos http y respuestas para cada servicio, funcionando como
+documentación del api.
 
 ---
 
@@ -202,60 +215,52 @@ tag-ok-mvp/
 
 - Docker Desktop
 - Java 21 + Maven
-- Node.js 20+
 - Android Studio (para la app móvil)
+
+---
+
+## Esquema de supabase
+
+## Notas de configuración
+
+Antes de iniciar el sistema, se debe hacer una configuración en el archivo de entorno '.env', donde se colocaran las urls de autenticacion, apis externas y API KEYS
 
 ---
 
 ## Instalación y ejecución
 
-### 1. Base de datos
+El sistema se encuentra bajo docker, cuenta con un archivo docker-compose.yml que gestiona la construcción de imagenes,
+para la ejecución dentro de una máquina.
 
-```bash
-cd Producto
-docker compose up -d
-```
+- Lo principal es Tener Docker Desktop abierto y ejecutandose en el equipo, junt con la compatibilidad de virtualización.
 
-Levanta PostgreSQL+PostGIS (puerto 5432), pgAdmin (puerto 5050) y MongoDB.
+- Instalar SDK, Maven para compilar proyectos java.
 
-### 2. Backend - routes-service
+- Ir a la carpeta ./tag-ok-mvp/Producto, aqui se encuentra el archivo docker-compose.yml, aqui se abren dos aristas.
 
-```bash
-cd Producto/routes-service
-./mvnw spring-boot:run
-```
+- -- Inicializar solo el backend: 'docker compose up gateway-service -d'
+- -- Inicializar el dashboard + backend: 'docker compose up frontend -d'
 
-API disponible en `http://localhost:8000`.
+- El archivo docker, esta configurado para levantar todas las dependencias.
 
-### 3. Backend - history-service
+- El sistema, necesita los datos de las calles de santiago y pórticos. Se encuentran en el repositorio.
 
-```bash
-cd Producto/history-service
-./mvnw spring-boot:run
-```
+- Para la carga de pórticos, se puede hacer desde el Dashboard de administración, cargando todos los archivos json, en ./Producto/porticos, el sistema solo aceptara los que tengan el formato requerido y se hará la carga masiva.
 
-### 4. Frontend web
+- Para cargar las calles se necesita de osm-importer, lo que realiza este programa, recoge un archivo de exportación en formato JSON, de Open Street Maps, lo formatea a los datos que necesitamos, y los importa a la base de datos del servicio de rutas. Para compliarlo se debe ir a ./Producto/osm-importer, alli:
 
-```bash
-cd Producto/routes-ui
-npm install
-npm run dev
-```
+- -- 'mvn compile' <-- Compila el proyecto
+- -- 'mvn dependency:copy-dependencies' <-- Carga las dependencias
+- -- 'java -cp "target/classes;target/dependency/*" com.roony.Main' <-- Ejecuta el archivo compilado,
 
-Panel disponible en `http://localhost:5173`.
+- se podría tener el JAR, les comparto el código fuente si se necesitara a futuro alguna modificación =) 
+
+- Con estos dos pasos el sistema ya esta listo para empezar a funcionar.
+
 
 ### 5. App Android
 
 Abrir `Producto/tag-ok-app` en Android Studio y ejecutar en emulador o dispositivo físico.
-
----
-
-## Notas de configuración
-
-- Conexión a BD configurada en `routes-service/src/main/resources/application.properties` (host `localhost:5432`, BD `db_rutas`, usuario `admin`).
-- La topología pgRouting (`createTopology.sql`) tarda 1–2 min en construirse; re-ejecutarla requiere eliminar la topología previa.
-- Los datos de calles por comuna están en `osm-importer/src/main/resources/datos-calles/comunas-separadas/`.
-- CORS del backend está configurado para `localhost:5173`.
 
 ---
 

@@ -73,14 +73,14 @@ public class HistorialController
     }
 
     @PostMapping("/year/{año}/{mes}/filtrado")
-    public ResponseEntity<HistorialMensualSnapshot> getMesFiltrado(
-        @RequestHeader("X-Usuario-Id") String usuarioId,
+    public ResponseEntity<DetalleMensualDTO> getMesFiltrado(
         @PathVariable int año,
         @PathVariable int mes,
         @RequestBody FiltroHistorialRequest filtro)
     {
         return historialService
-            .getMesFiltrado(usuarioId, año, mes, filtro)
+            .getMesFiltrado(currentUser.getUserId(), año, mes, filtro)
+            .map(mensual -> toDetalleMensualDTO(mensual, año))
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
     }
@@ -95,15 +95,15 @@ public class HistorialController
     }
 
     @PostMapping("/year/{año}/{mes}/{dia}/filtrado")
-    public ResponseEntity<HistorialDiarioSnapshot> getDiaFiltrado(
-        @RequestHeader("X-Usuario-Id") String usuarioId,
+    public ResponseEntity<DetalleDiaDTO> getDiaFiltrado(
         @PathVariable int año,
         @PathVariable int mes,
         @PathVariable int dia,
         @RequestBody FiltroHistorialRequest filtro)
     {
         return historialService
-            .getDiaFiltrado(usuarioId, año, mes, dia, filtro)
+            .getDiaFiltrado(currentUser.getUserId(), año, mes, dia, filtro)
+            .map(diario -> toDetalleDiaDTO(diario, año, mes))
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
     }

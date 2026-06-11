@@ -1,5 +1,10 @@
 package com.tagok.app.domain.model.history
 
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.format
+import kotlinx.datetime.format.DateTimeFormat
+import java.time.format.DateTimeFormatter
+
 data class ResumenAnual(
     val año: Int,
     val cantidadCruces: Int,
@@ -33,4 +38,4 @@ data class CruceDetalle(
     val tipoTarifa: String,
     val valor: Double,
     val tipoVehiculo: String,
-    val horaFechaCruce: String)
+    val horaFechaCruce: LocalDateTime)

@@ -27,8 +27,10 @@ import com.tagok.app.ui.historial.utils.formatCurrency
 fun TestRealTime(
     tarifaCalculada: TarifaCalculada?,
     isCalculating: Boolean,
+    isTracking: Boolean,
     vehiculo: TipoVehiculo,
     onSimularCruce: () -> Unit,
+    onToggleTracking: () -> Unit,
     onCerrar: () -> Unit,
     modifier: Modifier = Modifier)
 {
@@ -111,6 +113,41 @@ fun TestRealTime(
                     Icon(Icons.Filled.Casino, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Simular cruce aleatorio")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(
+                onClick = onToggleTracking,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                colors = if (isTracking)
+                    ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                else
+                    ButtonDefaults.buttonColors())
+            {
+                Icon(
+                    imageVector = if (isTracking) Icons.Filled.GpsOff else Icons.Filled.GpsFixed,
+                    contentDescription = null)
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(if (isTracking) "Detener verificación" else "Verificar cruces en tiempo real")
+            }
+
+            AnimatedVisibility(visible = isTracking)
+            {
+                Row(
+                    modifier = Modifier.padding(top = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically)
+                {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(14.dp),
+                        strokeWidth = 2.dp)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Verificando cruces con tu ubicación...",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
 
