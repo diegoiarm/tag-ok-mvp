@@ -73,7 +73,7 @@ class BoletaService(
         fechaHasta: LocalDate,
         archivo: ArchivoFactura): ComparacionFactura = execute("Comparar factura")
     {
-        validarParametros(patente, autopistasSeleccionadas, fechaDesde, fechaHasta)
+        validarParametros(patente, fechaDesde, fechaHasta)
         validarArchivo(archivo)
 
         val request = BoletaRequest(
