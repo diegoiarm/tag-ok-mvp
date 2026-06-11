@@ -3,15 +3,22 @@ package com.tagok.app.ui.navigation
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBalanceWallet
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.MonetizationOn
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.AccountBalanceWallet
+import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
@@ -50,15 +57,25 @@ import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonPrimitive
 
-private sealed class Screen(val route: String, val label: String, val icon: ImageVector) {
-    data object Home        : Screen("home",        "Home",        Icons.Filled.Home)
-    data object Presupuesto : Screen("presupuesto", "Presupuesto", Icons.Filled.MonetizationOn)
-    data object Boleta      : Screen("boleta",      "Boleta",      Icons.Filled.Description)
-    data object Perfil      : Screen("perfil",      "Perfil",      Icons.Filled.Person)
-}
+private data class NavItem(
+    val route: String,
+    val label: String,
+    val iconFilled: ImageVector,
+    val iconOutlined: ImageVector
+)
 
-private val bottomNavScreens = listOf(Screen.Home, Screen.Presupuesto, Screen.Boleta, Screen.Perfil)
+private val bottomNavItems = listOf(
+    NavItem("home",        "Home",        Icons.Filled.Home,                 Icons.Outlined.Home),
+    NavItem("presupuesto", "Presupuesto", Icons.Filled.AccountBalanceWallet, Icons.Outlined.AccountBalanceWallet),
+    NavItem("boleta",      "Boleta",      Icons.Filled.Description,          Icons.Outlined.Description),
+    NavItem("perfil",      "Perfil",      Icons.Filled.Person,               Icons.Outlined.Person),
+)
+
 private val routesSinBottomBar = setOf("login", "register")
+
+private val SelectedBlue   = Color(0xFF1C42B1)
+private val UnselectedGray = Color(0xFF9E9E9E)
+private val IndicatorBlue  = Color(0xFFEEF2FF)  // más sutil que antes (0xFFDDE5FF)
 
 @Composable
 fun NavGraph() {
@@ -68,10 +85,7 @@ fun NavGraph() {
     val scope = rememberCoroutineScope()
 
     val hasSession = remember { AuthTokenProvider.hasSession() }
-    val startDestination = if (hasSession) Screen.Home.route else "login"
-
-    val selectedColor = Color(0xFF3D3DBF)
-    val unselectedColor = Color(0xFF9E9E9E)
+    val startDestination = if (hasSession) "home" else "login"
 
     LaunchedEffect(Unit) {
         AuthTokenProvider.sessionFlow.collect { isAuthenticated ->
@@ -80,7 +94,7 @@ fun NavGraph() {
             if (isAuthenticated == null) return@collect
             val route = navController.currentDestination?.route
             if (isAuthenticated && route in routesSinBottomBar) {
-                navController.navigate(Screen.Home.route) {
+                navController.navigate("home") {
                     popUpTo("login") { inclusive = true }
                 }
             } else if (!isAuthenticated && route !in routesSinBottomBar) {
@@ -97,53 +111,64 @@ fun NavGraph() {
         containerColor = Color.Transparent,
         bottomBar = {
             if (showBottomBar) {
-                HorizontalDivider(color = Color(0xFFE0E0E0), thickness = 1.dp)
-                NavigationBar(
+                Surface(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(72.dp),
-                    containerColor = Color.White,
-                    tonalElevation = 0.dp,
-                    windowInsets = WindowInsets(0)
+                        .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
+                    shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
+                    color = Color.White,
+                    shadowElevation = 8.dp,
+                    tonalElevation = 0.dp
                 ) {
-                    bottomNavScreens.forEach { screen ->
-                        val selected = currentDestination?.hierarchy
-                            ?.any { it.route == screen.route } == true
+                    NavigationBar(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .navigationBarsPadding()  // respeta el home indicator
+                            .height(80.dp),
+                        containerColor = Color.Transparent,
+                        tonalElevation = 0.dp,
+                        windowInsets = WindowInsets(0)
+                    ) {
+                        bottomNavItems.forEach { item ->
+                            val selected = currentDestination?.hierarchy
+                                ?.any { it.route == item.route } == true
 
-                        NavigationBarItem(
-                            selected = selected,
-                            alwaysShowLabel = true,
-                            onClick = {
-                                navController.navigate(screen.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
+                            NavigationBarItem(
+                                selected = selected,
+                                alwaysShowLabel = true,
+                                onClick = {
+                                    navController.navigate(item.route) {
+                                        popUpTo(navController.graph.findStartDestination().id) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
                                     }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
-                            icon = {
-                                Icon(
-                                    imageVector = screen.icon,
-                                    contentDescription = screen.label
+                                },
+                                icon = {
+                                    Icon(
+                                        imageVector = if (selected) item.iconFilled else item.iconOutlined,
+                                        contentDescription = item.label,
+                                        modifier = Modifier.height(24.dp)
+                                    )
+                                },
+                                label = {
+                                    Text(
+                                        text = item.label,
+                                        fontSize = 11.sp,
+                                        fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
+                                        textAlign = TextAlign.Center
+                                    )
+                                },
+                                colors = NavigationBarItemDefaults.colors(
+                                    selectedIconColor   = SelectedBlue,
+                                    selectedTextColor   = SelectedBlue,
+                                    unselectedIconColor = UnselectedGray,
+                                    unselectedTextColor = UnselectedGray,
+                                    indicatorColor      = IndicatorBlue,
                                 )
-                            },
-                            label = {
-                                Text(
-                                    text = screen.label,
-                                    fontSize = 11.sp,
-                                    fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
-                                    textAlign = TextAlign.Center,
-                                )
-                            },
-                            colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = selectedColor,
-                                selectedTextColor = selectedColor,
-                                unselectedIconColor = unselectedColor,
-                                unselectedTextColor = unselectedColor,
-                                indicatorColor = Color.Transparent,
-                            ),
-                        )
+                            )
+                        }
                     }
                 }
             }
@@ -160,7 +185,7 @@ fun NavGraph() {
 
                 LaunchedEffect(uiState) {
                     if (uiState is LoginUiState.Success) {
-                        navController.navigate(Screen.Home.route) {
+                        navController.navigate("home") {
                             popUpTo("login") { inclusive = true }
                         }
                     }
@@ -179,7 +204,7 @@ fun NavGraph() {
                 val regViewModel: RegisterViewModel = viewModel()
                 RegisterScreen(
                     onSuccess = {
-                        navController.navigate(Screen.Home.route) {
+                        navController.navigate("home") {
                             popUpTo("login") { inclusive = true }
                         }
                     },
@@ -187,10 +212,12 @@ fun NavGraph() {
                 )
             }
 
-            composable(Screen.Home.route) {
+            composable("home") {
                 val nombre = remember {
                     supabase.auth.currentUserOrNull()
                         ?.userMetadata?.get("nombre")?.jsonPrimitive?.contentOrNull
+                        ?: supabase.auth.currentUserOrNull()
+                            ?.userMetadata?.get("full_name")?.jsonPrimitive?.contentOrNull
                         ?: "Usuario"
                 }
 
@@ -208,11 +235,11 @@ fun NavGraph() {
                 )
             }
 
-            composable(Screen.Presupuesto.route) {
+            composable("presupuesto") {
                 PresupuestoScreen()
             }
 
-            composable(Screen.Boleta.route) {
+            composable("boleta") {
                 BoletaScreen(
                     onVerificarFactura = { patente, desde, hasta, autopistas ->
                         val autopistasArg = android.net.Uri.encode(autopistas.joinToString("|"))
@@ -253,7 +280,7 @@ fun NavGraph() {
                     onBack = { navController.popBackStack() })
             }
 
-            composable(Screen.Perfil.route) {
+            composable("perfil") {
                 PerfilScreen(
                     onVehiculos = { navController.navigate("vehiculos") },
                     onMisRutas = { navController.navigate("historial") }
@@ -305,15 +332,12 @@ fun NavGraph() {
                         type = NavType.StringType
                         defaultValue = "AUTO"
                     }
-                ))
-            { backStack ->
+                )
+            ) { backStack ->
                 val vehiculoString = backStack.arguments?.getString("vehiculo") ?: "AUTO"
-                val vehiculo = try
-                {
+                val vehiculo = try {
                     TipoVehiculo.valueOf(vehiculoString)
-                }
-                catch (e: IllegalArgumentException)
-                {
+                } catch (e: IllegalArgumentException) {
                     TipoVehiculo.AUTO
                 }
 

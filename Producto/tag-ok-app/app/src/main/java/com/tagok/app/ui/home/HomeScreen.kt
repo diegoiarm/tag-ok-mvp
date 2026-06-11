@@ -16,11 +16,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,6 +37,10 @@ import com.tagok.app.domain.model.vehiculo.Vehiculo
 import com.tagok.app.ui.theme.InputBackground
 
 private val SANTIAGO = Point.fromLngLat(-70.6483, -33.4569)
+
+private val NavyBlue = Color(0xFF172955)
+private val BellBlue = Color(0xFF6C7CF4)
+private val PageBg = Color(0xFFF4F6FB)
 
 fun Modifier.gradientTint(colors: List<Color>): Modifier =
     this
@@ -59,14 +65,11 @@ fun HomeScreen(
     onIrARuta: (vehiculo: String) -> Unit,
     onAgregarVehiculo: () -> Unit = {},
     onLogout: () -> Unit = {},
-    viewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory))
-{
+    viewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory)
+) {
     val vehiculos by viewModel.vehiculos.collectAsState()
     val loading by viewModel.loading.collectAsState()
     var vehiculoSeleccionado by remember { mutableStateOf<Vehiculo?>(null) }
-
-    val purpleGradient = listOf(Color(0xFF3D257B), Color(0xFF6750A4))
-    val blueColor = Color(0xFF3D3DBF)
 
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(lifecycleOwner) {
@@ -93,15 +96,18 @@ fun HomeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(PageBg)
     ) {
-        Spacer(Modifier.height(52.dp))
+        Spacer(Modifier.height(16.dp))
 
-        // Header
+        // ── Header ──────────────────────────────────────────────────────────
         Row(
-            modifier = Modifier.padding(horizontal = 24.dp),
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Avatar
             Box(
                 modifier = Modifier
                     .size(52.dp)
@@ -112,124 +118,151 @@ fun HomeScreen(
                 Icon(
                     imageVector = Icons.Default.Person,
                     contentDescription = null,
-                    modifier = Modifier
-                        .size(32.dp)
-                        .gradientTint(purpleGradient),
-                    tint = Color.White
+                    modifier = Modifier.size(32.dp),
+                    tint = NavyBlue
                 )
             }
-            Spacer(Modifier.width(16.dp))
-            Text(
-                text = "Hola $nombre",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
-            )
+            Spacer(Modifier.width(12.dp))
+            Column {
+                Text(
+                    text = "¡Hola $nombre!",
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF1A1A2E)
+                )
+                Text(
+                    text = "¿Dónde vamos hoy?",
+                    fontSize = 13.sp,
+                    color = Color.Gray
+                )
+            }
             Spacer(Modifier.weight(1f))
+            // Botón campana
             Box(
                 modifier = Modifier
-                    .size(44.dp)
+                    .size(46.dp)
                     .clip(CircleShape)
-                    .background(blueColor)
+                    .background(BellBlue)
                     .clickable { onLogout() },
                 contentAlignment = Alignment.Center
             ) {
-                Icon(Icons.Default.Notifications, null, tint = Color.White)
+                Icon(
+                    Icons.Default.Notifications,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(24.dp)
+                )
             }
         }
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(20.dp))
 
-        // Tarjeta Vehículo
-        Surface(
+        // ── Tarjeta Vehículo Activo ──────────────────────────────────────────
+        Card(
             modifier = Modifier
-                .padding(horizontal = 24.dp)
+                .padding(horizontal = 20.dp)
                 .fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            color = Color(0xFFDEEBFF)
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.padding(horizontal = 29.dp, vertical = 12.dp)) {
                 Text(
-                    text = "Vehículo de hoy",
-                    fontWeight = FontWeight.Medium,
-                    color = blueColor
+                    text = "VEHÍCULO ACTIVO",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF1C42B1),
+                    letterSpacing = 1.sp
                 )
                 Spacer(Modifier.height(12.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    if (loading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(24.dp),
-                            strokeWidth = 2.dp,
-                            color = blueColor
-                        )
-                    } else {
-                        LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                            items(vehiculos) { v ->
-                                VehiculoMiniChip(
-                                    vehiculo = v,
-                                    selected = v.id == vehiculoSeleccionado?.id,
-                                    gradient = purpleGradient
-                                ) {
-                                    vehiculoSeleccionado = v
-                                }
-                            }
-                            item { AddMiniChip(purpleGradient, onAgregarVehiculo) }
+                if (loading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        strokeWidth = 2.dp,
+                        color = NavyBlue
+                    )
+                } else {
+                    LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        items(vehiculos) { v ->
+                            VehiculoMiniChip(
+                                vehiculo = v,
+                                selected = v.id == vehiculoSeleccionado?.id,
+                                color = NavyBlue
+                            ) { vehiculoSeleccionado = v }
                         }
+                        item { AddMiniChip(NavyBlue, onAgregarVehiculo) }
                     }
                 }
             }
         }
 
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(12.dp))
 
-        // Mapa con botones y acción flotantes
+        // ── Botones de acción ────────────────────────────────────────────────
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            ActionButton(
+                label = "Planificar",
+                icon = Icons.Default.AltRoute,
+                color = Color(0xFF1C42B1),
+                modifier = Modifier.weight(1f),
+                onClick = { onPlanificarViaje(tipoVehiculo) }
+            )
+            ActionButton(
+                label = "Historial",
+                icon = Icons.Default.History,
+                color = Color(0xFF1C42B1),
+                modifier = Modifier.weight(1f),
+                onClick = onHistorialViajes
+            )
+        }
+
+        Spacer(Modifier.height(12.dp))
+
+        // ── Mapa con botón flotante ──────────────────────────────────────────
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
+                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
         ) {
             MapboxMap(
                 modifier = Modifier.fillMaxSize(),
                 mapViewportState = mapViewportState
             )
 
-            // Botones flotantes sobre el mapa
-            Row(
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                ActionButton(
-                    label = "Planificar viaje",
-                    icon = Icons.Default.Map,
-                    color = blueColor,
-                    onClick = { onPlanificarViaje(tipoVehiculo) }
-                )
-                ActionButton(
-                    label = "Historia",
-                    icon = Icons.Default.History,
-                    color = blueColor,
-                    onClick = onHistorialViajes
-                )
-            }
-
-            // Botón Ir a la ruta flotante
             Button(
                 onClick = { onIrARuta(tipoVehiculo) },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(horizontal = 24.dp, vertical = 24.dp)
+                    .padding(horizontal = 28.dp, vertical = 28.dp)
                     .fillMaxWidth()
-                    .height(60.dp),
-                shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE54D35))
+                    .height(56.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = NavyBlue)
             ) {
-                Text("Ir a la ruta", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Icon(
+                    Icons.Default.Navigation,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    "Iniciar ruta",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
             }
         }
     }
 }
 
+// ── ActionButton ──────────────────────────────────────────────────────────────
 @Composable
 fun ActionButton(
     label: String,
@@ -240,31 +273,31 @@ fun ActionButton(
 ) {
     Box(
         modifier = modifier
-            .height(44.dp)
-            .clip(CircleShape)
+            .height(54.dp)
+            .clip(RoundedCornerShape(12.dp))
             .background(color)
-            .clickable { onClick() }
-            .padding(horizontal = 16.dp),
+            .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(icon, null, modifier = Modifier.size(18.dp), tint = Color.White)
-            Spacer(Modifier.width(6.dp))
-            Text(label, fontSize = 13.sp, color = Color.White, fontWeight = FontWeight.Medium)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Icon(icon, null, modifier = Modifier.size(20.dp), tint = Color.White)
+            Spacer(Modifier.width(8.dp))
+            Text(label, fontSize = 15.sp, color = Color.White, fontWeight = FontWeight.SemiBold)
         }
     }
 }
 
+// ── VehiculoMiniChip ──────────────────────────────────────────────────────────
 @Composable
-fun VehiculoMiniChip(vehiculo: Vehiculo, selected: Boolean, gradient: List<Color>, onClick: () -> Unit) {
+fun VehiculoMiniChip(vehiculo: Vehiculo, selected: Boolean, color: Color, onClick: () -> Unit) {
     Box(
         modifier = Modifier
-            .size(64.dp)
+            .size(72.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(
-                if (selected) Brush.linearGradient(gradient)
-                else SolidColor(Color(0xFFDED9F5))
-            )
+            .background(if (selected) color else Color(0xFFF0F4FF))
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
@@ -272,34 +305,46 @@ fun VehiculoMiniChip(vehiculo: Vehiculo, selected: Boolean, gradient: List<Color
             Icon(
                 imageVector = Icons.Default.DirectionsCar,
                 contentDescription = null,
-                tint = if (selected) Color.White else Color.Unspecified,
-                modifier = if (!selected) Modifier.gradientTint(gradient) else Modifier
+                tint = if (selected) Color.White else color,
+                modifier = Modifier.size(32.dp)
             )
+            Spacer(Modifier.height(4.dp))
             Text(
                 text = vehiculo.patente.take(7),
                 fontSize = 10.sp,
-                color = if (selected) Color.White else Color.Unspecified,
-                fontWeight = FontWeight.Bold,
-                style = if (!selected) TextStyle(brush = Brush.linearGradient(gradient)) else TextStyle()
+                color = if (selected) Color.White else color,
+                fontWeight = FontWeight.Bold
             )
         }
     }
 }
 
+// ── AddMiniChip ───────────────────────────────────────────────────────────────
 @Composable
-fun AddMiniChip(gradient: List<Color>, onClick: () -> Unit) {
+fun AddMiniChip(color: Color, onClick: () -> Unit) {
+    val dashColor = Color(0xFF3260D8).copy(alpha = 0.42f)
     Box(
         modifier = Modifier
-            .size(64.dp)
+            .size(72.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(Color(0xFFDED9F5))
+            .drawBehind {
+                drawRoundRect(
+                    color = dashColor,
+                    cornerRadius = CornerRadius(12.dp.toPx()),
+                    style = Stroke(
+                        width = 2.dp.toPx(),
+                        pathEffect = PathEffect.dashPathEffect(floatArrayOf(14f, 8f), 0f)
+                    )
+                )
+            }
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
         Icon(
             imageVector = Icons.Default.Add,
             contentDescription = null,
-            modifier = Modifier.gradientTint(gradient)
+            tint = dashColor,
+            modifier = Modifier.size(28.dp)
         )
     }
 }
