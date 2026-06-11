@@ -2,6 +2,7 @@
 package com.tagok.app.ui.map
 
 import android.content.Context
+import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -9,11 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.mapbox.geojson.Point
 import com.tagok.app.data.dto.PorticoCruzadoRequest
 import com.tagok.app.data.dto.TarifaRequest
-import com.tagok.app.data.remote.HttpClientProvider
-import com.tagok.app.data.remote.PorticoApi
-import com.tagok.app.data.remote.TarifaApi
-import com.tagok.app.data.repository.PorticoRepository
-import com.tagok.app.data.repository.TarifaRepository
+import com.tagok.app.data.dto.portico.TramoResponse
 import com.tagok.app.di.modules.ViewModelModule
 import com.tagok.app.domain.interfaces.IPorticoRepository
 import com.tagok.app.domain.interfaces.ITarifaRepository
@@ -34,6 +31,7 @@ data class MapUiState(
     val porticos: List<PorticoResumen> = emptyList(),
     val tarifaCalculada: TarifaCalculada? = null,
     val isCalculating: Boolean = false,
+    val isTracking: Boolean = false,
     val userLocation: Point? = null,
     val error: String? = null)
 
@@ -45,17 +43,40 @@ class MapViewModel(
     private val _uiState = MutableStateFlow(MapUiState())
     val uiState: StateFlow<MapUiState> = _uiState.asStateFlow()
 
+    // Verificación de cruces en tiempo real
+    private val ultimosCrucesDetectados = mutableMapOf<Long, Long>()
+    private var entradaTramoPendiente: EntradaTramoPendiente? = null
+    private var trackingVehiculo: TipoVehiculo = TipoVehiculo.AUTO
+    private var trackingContext: Context? = null
+
+    private data class EntradaTramoPendiente(
+        val portico: PorticoResumen,
+        val tramos: List<TramoResponse>,
+        val horaFechaCruce: String)
+
     init
     {
         loadPorticos()
         startLocationTracking()
     }
 
-    fun startLocationTracking()
+    /**
+     * Colector único del flujo de ubicación del LocationProvider:
+     * siempre actualiza el punto azul del usuario y, cuando la verificación
+     * en tiempo real está activa, evalúa si se cruzó un pórtico.
+     */
+    private fun startLocationTracking()
     {
         viewModelScope.launch {
             locationProvider.getLocationUpdates().collect { point ->
                 _uiState.update { it.copy(userLocation = point) }
+
+                if (_uiState.value.isTracking)
+                {
+                    val context = trackingContext
+                    if (context != null)
+                        verificarCruce(point, trackingVehiculo, context)
+                }
             }
         }
     }
@@ -90,7 +111,7 @@ class MapViewModel(
         Log.d(TAG, "══════════════════════════════════════════")
         Log.d(TAG, "Datos iniciales:")
         Log.d(TAG, "   • Vehículo: ${vehiculo.displayName} (${vehiculo.name})")
-        Log.d(TAG, "   • Patente: ABCD-33")
+        Log.d(TAG, "   • Patente: $PATENTE")
         Log.d(TAG, "   • Fecha/Hora: ${now.format(formatter)}")
         Log.d(TAG, "   • Pórtico aleatorio: id=${porticoAleatorio.id}, nombre=${porticoAleatorio.nombre}")
         Log.d(TAG, "   • Total pórticos disponibles: ${porticos.size}")
@@ -117,7 +138,7 @@ class MapViewModel(
                                     salidaId = null,
                                     salidaHoraFechaCruce = null)),
                             vehiculo = vehiculo.name,
-                            patente = "ABCD-33"
+                            patente = PATENTE
                         )
 
                         Log.d(TAG, "   • Request: $req")
@@ -145,7 +166,7 @@ class MapViewModel(
                                         salidaId = null,
                                         salidaHoraFechaCruce = null)),
                                 vehiculo = vehiculo.name,
-                                patente = "ABCD-33")
+                                patente = PATENTE)
                         }
                         else
                         {
@@ -201,7 +222,7 @@ class MapViewModel(
                                         )
                                     ),
                                     vehiculo = vehiculo.name,
-                                    patente = "ABCD-33"
+                                    patente = PATENTE
                                 )
                             }
                             else
@@ -234,7 +255,7 @@ class MapViewModel(
                                             salidaId = porticoSalida.id,
                                             salidaHoraFechaCruce = now.plusMinutes(15).format(formatter))),
                                     vehiculo = vehiculo.name,
-                                    patente = "ABCD-33"
+                                    patente = PATENTE
                                 )
                             }
                         }
@@ -318,6 +339,176 @@ class MapViewModel(
         }
     }
 
+    fun toggleTracking(vehiculo: TipoVehiculo, context: Context)
+    {
+        if (_uiState.value.isTracking)
+            detenerTracking()
+        else
+            iniciarTracking(vehiculo, context)
+    }
+
+    fun iniciarTracking(vehiculo: TipoVehiculo, context: Context)
+    {
+        Log.d(TAG, "══════════════════════════════════════════")
+        Log.d(TAG, "INICIO VERIFICACIÓN DE CRUCES EN TIEMPO REAL")
+        Log.d(TAG, "══════════════════════════════════════════")
+        Log.d(TAG, "   • Vehículo: ${vehiculo.displayName}")
+        Log.d(TAG, "   • Radio de detección: $RADIO_DETECCION_METROS m")
+
+        trackingVehiculo = vehiculo
+        trackingContext = context.applicationContext
+        _uiState.update { it.copy(isTracking = true, error = null) }
+    }
+
+    fun detenerTracking()
+    {
+        Log.d(TAG, "detenerTracking: finalizando verificación en tiempo real")
+        entradaTramoPendiente = null
+        _uiState.update { it.copy(isTracking = false) }
+    }
+
+    private suspend fun verificarCruce(point: Point, vehiculo: TipoVehiculo, context: Context)
+    {
+        val ahora = System.currentTimeMillis()
+
+        val porticoCruzado = _uiState.value.porticos.firstOrNull { portico ->
+            val distancia = distanciaMetros(
+                point.latitude(), point.longitude(),
+                portico.latitud, portico.longitud)
+            val ultimoCruce = ultimosCrucesDetectados[portico.id]
+            val fueraDeCooldown = ultimoCruce == null || ahora - ultimoCruce > COOLDOWN_CRUCE_MS
+
+            distancia <= RADIO_DETECCION_METROS && fueraDeCooldown
+        } ?: return
+
+        ultimosCrucesDetectados[porticoCruzado.id] = ahora
+        Log.d(TAG, "══════════════════════════════════════════")
+        Log.d(TAG, "CRUCE DETECTADO EN TIEMPO REAL")
+        Log.d(TAG, "══════════════════════════════════════════")
+        Log.d(TAG, "   • Pórtico: ${porticoCruzado.nombre} (id=${porticoCruzado.id})")
+        Log.d(TAG, "   • Posición: ${point.latitude()}, ${point.longitude()}")
+
+        procesarCruceDetectado(porticoCruzado, vehiculo, context)
+    }
+
+    private suspend fun procesarCruceDetectado(
+        portico: PorticoResumen,
+        vehiculo: TipoVehiculo,
+        context: Context)
+    {
+        _uiState.update { it.copy(isCalculating = true, error = null) }
+
+        try
+        {
+            val now = LocalDateTime.now()
+            val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+
+            val request = when (porticoRepository.getPorticoTipo(portico.id))
+            {
+                PorticoTipo.PORTICO -> requestPorticoSimple(portico, vehiculo, now.format(formatter))
+
+                PorticoTipo.TRAMO -> {
+                    val porticoTramo = porticoRepository.getSalidasTramo(portico.id)
+
+                    // Caso especial (ej. P110 La Pirámide): autopista de TRAMO sin tramos asociados
+                    if (porticoTramo.tramos.isEmpty())
+                    {
+                        Log.w(TAG, "Pórtico de TRAMO sin tramos asociados; tratándolo como PÓRTICO SIMPLE")
+                        requestPorticoSimple(portico, vehiculo, now.format(formatter))
+                    }
+                    else
+                    {
+                        val pendiente = entradaTramoPendiente
+                        val tramoCompletado = pendiente?.tramos?.firstOrNull { tramo ->
+                            tramo.nombreSalida.equals(portico.nombre, ignoreCase = true)
+                        }
+
+                        if (pendiente != null && tramoCompletado != null)
+                        {
+                            // Salida del tramo: cerrar con la entrada registrada
+                            Log.d(TAG, "Tramo completado: ${pendiente.portico.nombre} → ${portico.nombre}")
+                            entradaTramoPendiente = null
+
+                            TarifaRequest(
+                                references = listOf(
+                                    PorticoCruzadoRequest(
+                                        porticoId = pendiente.portico.id,
+                                        porticoHoraFechaCruce = pendiente.horaFechaCruce,
+                                        salidaId = portico.id,
+                                        salidaHoraFechaCruce = now.format(formatter))),
+                                vehiculo = vehiculo.name,
+                                patente = PATENTE)
+                        }
+                        else
+                        {
+                            val tramosDesdeEstePortico = porticoTramo.tramos.filter { tramo ->
+                                tramo.nombreEntrada.equals(portico.nombre, ignoreCase = true)
+                            }
+
+                            if (tramosDesdeEstePortico.isEmpty())
+                            {
+                                Log.w(TAG, "Pórtico ${portico.nombre} es solo salida y no hay entrada pendiente; cruce ignorado")
+                                _uiState.update { it.copy(isCalculating = false) }
+                                return
+                            }
+
+                            // Entrada del tramo: registrar y esperar el pórtico de salida
+                            Log.d(TAG, "Entrada de tramo registrada: ${portico.nombre}; esperando salida")
+                            entradaTramoPendiente = EntradaTramoPendiente(
+                                portico = portico,
+                                tramos = tramosDesdeEstePortico,
+                                horaFechaCruce = now.format(formatter))
+                            _uiState.update { it.copy(isCalculating = false) }
+                            return
+                        }
+                    }
+                }
+            }
+
+            Log.d(TAG, "Enviando request a calculateTarifa...")
+            val response = tarifaRepository.calculateTarifa(request)
+
+            Log.d(TAG, "Cruce verificado: total=${response.total}, cruces=${response.cruces.size}")
+
+            _uiState.update {
+                it.copy(
+                    tarifaCalculada = response,
+                    isCalculating = false)
+            }
+
+            NotificationUtils.agregarMultiplesCruces(context, response)
+        }
+        catch (e: Exception)
+        {
+            Log.e(TAG, "Error procesando cruce en tiempo real: ${e.message}", e)
+            _uiState.update {
+                it.copy(
+                    error = "Error al calcular tarifa: ${e.message}",
+                    isCalculating = false)
+            }
+        }
+    }
+
+    private fun requestPorticoSimple(
+        portico: PorticoResumen,
+        vehiculo: TipoVehiculo,
+        horaFechaCruce: String) = TarifaRequest(
+        references = listOf(
+            PorticoCruzadoRequest(
+                porticoId = portico.id,
+                porticoHoraFechaCruce = horaFechaCruce,
+                salidaId = null,
+                salidaHoraFechaCruce = null)),
+        vehiculo = vehiculo.name,
+        patente = PATENTE)
+
+    private fun distanciaMetros(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Float
+    {
+        val resultado = FloatArray(1)
+        Location.distanceBetween(lat1, lon1, lat2, lon2, resultado)
+        return resultado[0]
+    }
+
     fun limpiarNotificaciones()
     {
         Log.d(TAG, "limpiarNotificaciones: reiniciando acumulador")
@@ -353,6 +544,9 @@ class MapViewModel(
     companion object
     {
         private const val TAG = "MapViewModel"
+        private const val PATENTE = "ABCD-33"
+        private const val RADIO_DETECCION_METROS = 150f
+        private const val COOLDOWN_CRUCE_MS = 3 * 60 * 1000L
         val Factory: ViewModelProvider.Factory = ViewModelModule.mapViewModelFactory()
     }
 }

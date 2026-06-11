@@ -150,6 +150,25 @@ fun MapScreen(
             flyToCurrentLocation(context, mapViewportState)
     }
 
+    val trackingPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission())
+    { granted ->
+        if (granted)
+            viewModel.toggleTracking(vehiculo, context)
+    }
+
+    fun toggleTracking() {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+            == PackageManager.PERMISSION_GRANTED)
+        {
+            viewModel.toggleTracking(vehiculo, context)
+        }
+        else
+        {
+            trackingPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
+
     fun requestLocation()
     {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -238,8 +257,10 @@ fun MapScreen(
         TestRealTime(
             tarifaCalculada = uiState.tarifaCalculada,
             isCalculating = uiState.isCalculating,
+            isTracking = uiState.isTracking,
             vehiculo = vehiculo,
             onSimularCruce = { viewModel.simularCruceAleatorio(vehiculo, context) },
+            onToggleTracking = { toggleTracking() },
             onCerrar = { viewModel.clearTarifa() },
             modifier = Modifier.align(Alignment.BottomCenter))
     }

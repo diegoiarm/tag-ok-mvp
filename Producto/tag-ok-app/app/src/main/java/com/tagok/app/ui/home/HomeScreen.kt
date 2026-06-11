@@ -23,11 +23,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
-<<<<<<< HEAD
-=======
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
->>>>>>> 4797e9f8cc1921270f0fc8f98a88fbbada7997d5
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -78,14 +74,8 @@ fun HomeScreen(
     val loading by viewModel.loading.collectAsState()
     var vehiculoSeleccionado by remember { mutableStateOf<Vehiculo?>(null) }
 
-<<<<<<< HEAD
-=======
     val context = LocalContext.current
 
-    val purpleGradient = listOf(Color(0xFF3D257B), Color(0xFF6750A4))
-    val blueColor = Color(0xFF3D3DBF)
-
->>>>>>> 4797e9f8cc1921270f0fc8f98a88fbbada7997d5
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(lifecycleOwner) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
@@ -213,7 +203,6 @@ fun HomeScreen(
 
         Spacer(Modifier.height(12.dp))
 
-<<<<<<< HEAD
         // ── Botones de acción ────────────────────────────────────────────────
         Row(
             modifier = Modifier
@@ -246,13 +235,6 @@ fun HomeScreen(
                 .weight(1f)
                 .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
         ) {
-=======
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f))
-        {
->>>>>>> 4797e9f8cc1921270f0fc8f98a88fbbada7997d5
             MapboxMap(
                 modifier = Modifier.fillMaxSize(),
                 mapViewportState = mapViewportState)
@@ -263,30 +245,6 @@ fun HomeScreen(
             }
 
 
-<<<<<<< HEAD
-=======
-            Row(
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp))
-            {
-                ActionButton(
-                    label = "Planificar viaje",
-                    icon = Icons.Default.Map,
-                    color = blueColor,
-                    onClick = { onPlanificarViaje(tipoVehiculo) }
-                )
-                ActionButton(
-                    label = "Historia",
-                    icon = Icons.Default.History,
-                    color = blueColor,
-                    onClick = onHistorialViajes
-                )
-            }
-
-            // Botón Ir a la ruta flotante
->>>>>>> 4797e9f8cc1921270f0fc8f98a88fbbada7997d5
             Button(
                 onClick = { onIrARuta(tipoVehiculo) },
                 modifier = Modifier
