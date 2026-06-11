@@ -31,6 +31,7 @@ import com.tagok.app.ui.auth.AuthViewModel
 import com.tagok.app.ui.auth.LoginScreen
 import com.tagok.app.ui.auth.LoginUiState
 import com.tagok.app.ui.boleta.BoletaScreen
+import com.tagok.app.ui.boleta.comparacion.ComparacionScreen
 import com.tagok.app.ui.historial.HistorialScreen
 import com.tagok.app.ui.home.HomeScreen
 import com.tagok.app.ui.map.MapScreen
@@ -42,6 +43,10 @@ import com.tagok.app.ui.register.RegisterViewModel
 import com.tagok.app.ui.vehiculos.VehiculosScreen
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonPrimitive
 
@@ -70,6 +75,9 @@ fun NavGraph() {
 
     LaunchedEffect(Unit) {
         AuthTokenProvider.sessionFlow.collect { isAuthenticated ->
+            // null = sesión aún cargando (p.ej. tras recrear el proceso al volver del
+            // selector de archivos): no tocar la navegación hasta que se resuelva.
+            if (isAuthenticated == null) return@collect
             val route = navController.currentDestination?.route
             if (isAuthenticated && route in routesSinBottomBar) {
                 navController.navigate(Screen.Home.route) {
@@ -205,7 +213,44 @@ fun NavGraph() {
             }
 
             composable(Screen.Boleta.route) {
-                BoletaScreen()
+                BoletaScreen(
+                    onVerificarFactura = { patente, desde, hasta, autopistas ->
+                        val autopistasArg = android.net.Uri.encode(autopistas.joinToString("|"))
+                        navController.navigate(
+                            "comparacion?patente=${android.net.Uri.encode(patente)}" +
+                                "&desde=$desde&hasta=$hasta&autopistas=$autopistasArg")
+                    })
+            }
+
+            composable(
+                route = "comparacion?patente={patente}&desde={desde}&hasta={hasta}&autopistas={autopistas}",
+                arguments = listOf(
+                    navArgument("patente") { type = NavType.StringType; defaultValue = "" },
+                    navArgument("desde") { type = NavType.StringType; defaultValue = "" },
+                    navArgument("hasta") { type = NavType.StringType; defaultValue = "" },
+                    navArgument("autopistas") { type = NavType.StringType; defaultValue = "" }))
+            { backStack ->
+                val args = backStack.arguments
+                val hoy = Clock.System.now()
+                    .toLocalDateTime(TimeZone.currentSystemDefault())
+                    .date
+
+                val fechaDesde = try {
+                    LocalDate.parse(args?.getString("desde") ?: "")
+                } catch (e: Exception) { hoy }
+
+                val fechaHasta = try {
+                    LocalDate.parse(args?.getString("hasta") ?: "")
+                } catch (e: Exception) { hoy }
+
+                ComparacionScreen(
+                    patente = args?.getString("patente") ?: "",
+                    fechaDesde = fechaDesde,
+                    fechaHasta = fechaHasta,
+                    autopistas = (args?.getString("autopistas") ?: "")
+                        .split("|")
+                        .filter { it.isNotBlank() },
+                    onBack = { navController.popBackStack() })
             }
 
             composable(Screen.Perfil.route) {

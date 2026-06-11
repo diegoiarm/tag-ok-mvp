@@ -3,6 +3,8 @@ package com.tagok.app.data.remote.interfaces
 import com.tagok.app.data.dto.TarifaRequest
 import com.tagok.app.data.dto.boleta.BoletaDto
 import com.tagok.app.data.dto.boleta.BoletaRequest
+import com.tagok.app.data.dto.boleta.ComparacionFacturaDto
+import com.tagok.app.domain.model.boleta.ArchivoFactura
 import com.tagok.app.data.dto.history.DetalleDiaDTO
 import com.tagok.app.data.dto.history.DetalleMensualDTO
 import com.tagok.app.data.dto.history.FiltroHistorialRequest
@@ -19,6 +21,7 @@ import io.ktor.client.statement.HttpResponse
 interface IBoletaApi
 {
     suspend fun generarBoleta(request: BoletaRequest): BoletaDto
+    suspend fun compararFactura(request: BoletaRequest, archivo: ArchivoFactura): ComparacionFacturaDto
 }
 
 interface IHistoryApi

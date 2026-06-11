@@ -4,7 +4,9 @@ import com.tagok.app.data.dto.TarifaRequest
 import com.tagok.app.data.dto.boleta.BoletaRequest
 import com.tagok.app.data.dto.history.FiltroHistorialRequest
 import com.tagok.app.data.dto.portico.PorticoTramoResponse
+import com.tagok.app.domain.model.boleta.ArchivoFactura
 import com.tagok.app.domain.model.boleta.Boleta
+import com.tagok.app.domain.model.boleta.ComparacionFactura
 import com.tagok.app.domain.model.history.DetalleDia
 import com.tagok.app.domain.model.history.DetalleMensual
 import com.tagok.app.domain.model.history.ResumenAnual
@@ -21,6 +23,7 @@ import io.ktor.client.statement.HttpResponse
 interface IBoletaRepository
 {
     suspend fun generarBoleta(request: BoletaRequest): Boleta
+    suspend fun compararFactura(request: BoletaRequest, archivo: ArchivoFactura): ComparacionFactura
 }
 
 interface IHistoryRepository

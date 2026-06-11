@@ -1,10 +1,13 @@
 package com.tagok.app.domain.services
 
 import com.tagok.app.data.dto.boleta.BoletaRequest
+import com.tagok.app.data.remote.exceptions.ApiException
 import com.tagok.app.domain.exceptions.ApplicationError
 import com.tagok.app.domain.interfaces.IBoletaRepository
 import com.tagok.app.domain.interfaces.IHistoryRepository
+import com.tagok.app.domain.model.boleta.ArchivoFactura
 import com.tagok.app.domain.model.boleta.Boleta
+import com.tagok.app.domain.model.boleta.ComparacionFactura
 import com.tagok.app.domain.services.interfaces.IBoletaService
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -63,6 +66,51 @@ class BoletaService(
         boletaRepository.generarBoleta(request)
     }
 
+    suspend fun compararFacturaValidada(
+        patente: String,
+        autopistasSeleccionadas: List<String>,
+        fechaDesde: LocalDate,
+        fechaHasta: LocalDate,
+        archivo: ArchivoFactura): ComparacionFactura = execute("Comparar factura")
+    {
+        validarParametros(patente, autopistasSeleccionadas, fechaDesde, fechaHasta)
+        validarArchivo(archivo)
+
+        val request = BoletaRequest(
+            patente = patente,
+            autopistas = autopistasSeleccionadas,
+            fechaDesde = fechaDesde,
+            fechaHasta = fechaHasta)
+
+        try
+        {
+            boletaRepository.compararFactura(request, archivo)
+        }
+        catch (e: ApiException)
+        {
+            // 400/502/503 traen el mensaje del backend (archivo inválido, IA sin
+            // configurar, cuota de Gemini agotada): mostrarlo tal cual al usuario
+            val mensaje = e.message
+            if (e.statusCode in MOSTRAR_MENSAJE_BACKEND && !mensaje.isNullOrBlank())
+            {
+                throw ApplicationError.Validation(mensaje)
+            }
+            throw e
+        }
+    }
+
+    private fun validarArchivo(archivo: ArchivoFactura)
+    {
+        when
+        {
+            archivo.bytes.isEmpty() ->
+                throw ApplicationError.Validation("El archivo adjunto está vacío")
+            archivo.bytes.size > MAX_ARCHIVO_BYTES ->
+                throw ApplicationError.Validation(
+                    "El archivo supera el límite de 10 MB (${archivo.tamanoLegible})")
+        }
+    }
+
     private fun validarParametros(
         patente: String,
         autopistasSeleccionadas: List<String>,
@@ -97,6 +145,12 @@ class BoletaService(
             dayOfMonth = 5)
 
         return Pair(desde, hasta)
+    }
+
+    companion object
+    {
+        private const val MAX_ARCHIVO_BYTES = 10 * 1024 * 1024
+        private val MOSTRAR_MENSAJE_BACKEND = setOf(400, 502, 503)
     }
 }
 

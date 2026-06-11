@@ -32,6 +32,12 @@ abstract class ApiClient(
             Log.w(tag, "$action cancelado", e)
             throw e
         }
+        catch (e: ApiException)
+        {
+            // Ya viene tipificada (p. ej. con el mensaje de error del backend): no re-envolver
+            Log.e(tag, "$action: ${e.message}", e)
+            throw e
+        }
         catch (e: ClientRequestException)
         {
             Log.e(tag, "$action: Error ${e.response.status}", e)

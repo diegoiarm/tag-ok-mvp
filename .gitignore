@@ -50,3 +50,6 @@ Thumbs.db
 # ─── Logs ───────────────────────────────────────────────────────────
 *.log
 logs/
+
+# ─── Artefactos generados por scripts de prueba ─────────────────────
+Producto/scripts/factura-simulada.html

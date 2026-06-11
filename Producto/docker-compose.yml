@@ -74,6 +74,8 @@ services:
       - zookeeper
     ports:
       - "9092:9092"
+      # Listener para clientes corriendo en el host (perfiles `local`)
+      - "29092:29092"
     volumes:
       - ./kafka/server.properties:/etc/kafka/server.properties
     command: >
@@ -125,6 +127,7 @@ services:
       - kafka-setup
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
 
   gateway-service:
     build: 

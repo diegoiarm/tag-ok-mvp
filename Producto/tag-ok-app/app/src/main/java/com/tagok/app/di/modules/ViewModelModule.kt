@@ -3,9 +3,11 @@ package com.tagok.app.di.modules
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.tagok.app.ui.boleta.BoletaViewModel
+import com.tagok.app.ui.boleta.comparacion.ComparacionViewModel
 import com.tagok.app.ui.historial.HistorialViewModel
 import com.tagok.app.ui.map.portico.porticoContainer.PorticosViewModel
 import com.tagok.app.ui.planificar.PlanificarViajeViewModel
+import kotlinx.datetime.LocalDate
 
 object ViewModelModule
 {
@@ -15,6 +17,24 @@ object ViewModelModule
         override fun <T : ViewModel> create(modelClass: Class<T>): T
         {
             return BoletaViewModel(ServiceModule.boletaService) as T
+        }
+    }
+
+    fun comparacionViewModelFactory(
+        patente: String,
+        fechaDesde: LocalDate,
+        fechaHasta: LocalDate,
+        autopistas: List<String>) = object : ViewModelProvider.Factory
+    {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T
+        {
+            return ComparacionViewModel(
+                ServiceModule.boletaService,
+                patente,
+                fechaDesde,
+                fechaHasta,
+                autopistas) as T
         }
     }
 

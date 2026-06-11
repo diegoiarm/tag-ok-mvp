@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.DocumentScanner
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -36,6 +37,11 @@ import com.tagok.app.ui.common.ScreenLifecycle
 @Composable
 fun BoletaScreen(
     onBack: () -> Unit = {},
+    onVerificarFactura: (
+        patente: String,
+        fechaDesde: kotlinx.datetime.LocalDate,
+        fechaHasta: kotlinx.datetime.LocalDate,
+        autopistas: List<String>) -> Unit = { _, _, _, _ -> },
     viewModel: BoletaViewModel = viewModel(factory = BoletaViewModel.Factory))
 {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -78,7 +84,8 @@ fun BoletaScreen(
                         onFechaDesdeChanged = viewModel::setFechaDesde,
                         onFechaHastaChanged = viewModel::setFechaHasta,
                         onToggleAutopista = viewModel::toggleAutopista,
-                        onGenerarBoleta = viewModel::generarBoleta)
+                        onGenerarBoleta = viewModel::generarBoleta,
+                        onVerificarFactura = onVerificarFactura)
                 }
             }
 
@@ -145,7 +152,12 @@ private fun BoletaContent(
     onFechaDesdeChanged: (kotlinx.datetime.LocalDate) -> Unit,
     onFechaHastaChanged: (kotlinx.datetime.LocalDate) -> Unit,
     onToggleAutopista: (String) -> Unit,
-    onGenerarBoleta: () -> Unit)
+    onGenerarBoleta: () -> Unit,
+    onVerificarFactura: (
+        patente: String,
+        fechaDesde: kotlinx.datetime.LocalDate,
+        fechaHasta: kotlinx.datetime.LocalDate,
+        autopistas: List<String>) -> Unit = { _, _, _, _ -> })
 {
     Column(
         modifier = Modifier
@@ -164,6 +176,31 @@ private fun BoletaContent(
 
         uiState.boleta?.let { boleta ->
             BoletaResult(boleta = boleta)
+
+            // Atajo a la verificación con IA: compara esta boleta contra la
+            // factura (PDF o foto) que entrega la concesionaria
+            FilledTonalButton(
+                onClick = {
+                    onVerificarFactura(
+                        uiState.patenteSeleccionada,
+                        uiState.fechaDesde,
+                        uiState.fechaHasta,
+                        uiState.autopistasSeleccionadas)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp),
+                shape = MaterialTheme.shapes.medium)
+            {
+                Icon(
+                    Icons.Default.DocumentScanner,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp))
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Verificar factura con IA",
+                    style = MaterialTheme.typography.titleSmall)
+            }
         }
 
         FormSection(title = "Período")

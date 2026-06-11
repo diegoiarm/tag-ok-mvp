@@ -85,6 +85,8 @@ Route calculation calls `pgRouting` via native SQL in `RouteRepository`. The DB 
 ### history-service
 MongoDB-backed (`historial_db`). Consumes the Kafka `portico-cruzado` topic (consumer group `history-service`) to build per-user crossing history, aggregated annually/monthly/daily (`HistorialAnualDocument` with nested snapshots). Also stores saved routes (`RutaGuardada`) and generates billing (`BoletaController`).
 
+**Invoice comparison (IA)**: `POST /v1/boleta/comparar` accepts a client invoice (PDF or camera photo) plus boleta filters, extracts its line items with Gemini, and deterministically diffs them against the app-generated boleta. Decoupled design: `ia/ExtractorFacturaIA` is the provider-agnostic port; `ia/gemini/GeminiExtractorFactura` is the Gemini REST adapter (free tier, structured JSON output via `response_schema`); `service/ComparadorFacturas` does the matching in plain code (no AI). Requires the `GEMINI_API_KEY` env var (free key from https://aistudio.google.com/apikey) — without it the endpoint returns 503; Gemini free-tier rate limits surface as 502. Model configurable via `GEMINI_MODEL` (default `gemini-2.5-flash`).
+
 ### Frontend (routes-ui)
 React 19 + Vite + React Router + **TanStack React Query**. Supabase client in `src/app/lib/supabase.ts`. Admin features live under `src/features/admin/` (pages: Autopistas, Porticos, Reportes, Usuarios). `Mapa` renders a Leaflet map with a GeoJSON route layer and clickable toll-gate marks showing tariff info. Routes: `/`, `/mapa`, `/login`, `/usuarios`, `/autopistas`, `/porticos`, `/reportes`, `/files`.
 
@@ -94,11 +96,13 @@ Used for auth (JWT issuer for the gateway) and user management. Edge functions i
 ### Kafka
 Single topic `portico-cruzado` (3 partitions, replication 1), created by `Producto/kafka/init-topics.sh` (the `kafka-setup` one-shot container). routes-service is the producer; history-service the consumer.
 
+To seed test data, `Producto/scripts/simular-cruces.ps1` publishes simulated crossing events for a user/patente (params `-UsuarioId` — the Supabase `sub` UUID — `-Patente`, `-Dias`, `-CrucesPorDia`, `-Limpiar` to wipe that user's Mongo history first, `-ConDiferencias`) and writes `factura-simulada.html` (print to PDF / photograph) for testing the AI invoice comparison. `Producto/scripts/simular-boleta-vespucio-sur.ps1` instead seeds the 19 exact crossings of a real Vespucio Sur boleta (patente JHGK50, 16/02–12/03/2026, total $8.521,49) so the comparison is run against the real boleta PDF; `-ConDiferencias` seeds 3 deliberate deviations (MONTO_DIFERENTE / SOLO_EN_FACTURA / SOLO_EN_APP) and it always wipes the user's history first. Both send events via `docker cp` + in-container redirect because PowerShell 5.1 pipes prepend a BOM that breaks the consumer's JSON parsing.
+
 ### osm-importer
 One-time job that imports OSM street data into PostGIS and builds the pgRouting topology (SQL in `src/main/resources/database-scripts/`). Marked `# No ejecutar!` in compose. Its Dockerfile is single-stage and expects a pre-built `target/osm-importer.jar`; build it with `.\mvnw clean package` first if you ever need to run it.
 
 ### Android (tag-ok-app)
-Jetpack Compose skeleton — Material 3 theme only. `MainActivity.kt` is the entry point.
+Kotlin / Jetpack Compose (Material 3) app, no longer a skeleton: layered `data` (Ktor + DTOs + mappers) / `domain` (models + services) / `ui` (Compose + ViewModels) architecture with manual DI (`di/ServiceLocator` + modules). Talks to the gateway at `http://10.0.2.2:8080/api` (`data/remote/ApiConfig.kt`); `AuthPlugin` attaches the Supabase Bearer token. Screens: home, mapa (Mapbox), planificar, historial, boleta, presupuesto, vehículos, perfil, login/registro. Invoice verification UI lives in `ui/boleta/comparacion/` (attach PDF / camera photo / gallery image → `POST /v1/boleta/comparar`), reached from BoletaScreen via the "Verificar factura con IA" button shown after generating a boleta.
 
 ## Key API Endpoints
 All client traffic goes through the gateway (`http://localhost:8080/api/...`); paths below are the **service-internal** paths after `StripPrefix`.
@@ -126,13 +130,14 @@ All client traffic goes through the gateway (`http://localhost:8080/api/...`); p
 | GET | `/v1/historial/patentes`, `/autopistas` | Filter option lists |
 | POST | `/v1/historial/resumen-filtrado` | Filtered summary |
 | POST | `/v1/boleta/obtener` | Generate billing document |
+| POST | `/v1/boleta/comparar` | Compare app boleta vs client invoice (multipart: `archivo` PDF/image + `patente`, `fechaDesde`, `fechaHasta`, optional `autopistas`) — uses Gemini |
 | GET/POST | `/rutas-guardadas` (+ `/{idToken}`) | Saved routes |
 
 ## Service Connections (local dev)
 Docker-mapped host ports (see `docker-compose.yml`) and the values the `local` Spring profiles expect:
 - **PostgreSQL (db-rutas)**: `localhost:5431` → DB `db_rutas`, user/pass `admin/admin` (container exposes 5432)
 - **MongoDB (db-historial)**: `localhost:5678` → DB `historial_db`, user/pass `admin/admin`
-- **Kafka**: `localhost:9092`
+- **Kafka**: `localhost:29092` from the host (`local` profiles); `kafka:9092` inside Docker. The broker has two advertised listeners (`kafka/server.properties`) — connecting from the host to `localhost:9092` does NOT work (the broker advertises `kafka:9092`, which doesn't resolve outside Docker, so host clients silently never join; Kafka logs are suppressed to ERROR in the services).
 - **pgAdmin**: `localhost:1000` (login `admin@admin.com` / `admin`)
 - **mongo-express**: `localhost:8002`
 
