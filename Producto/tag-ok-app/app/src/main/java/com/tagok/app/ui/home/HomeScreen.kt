@@ -8,18 +8,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.AltRoute
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -39,23 +36,8 @@ import com.tagok.app.ui.theme.InputBackground
 private val SANTIAGO = Point.fromLngLat(-70.6483, -33.4569)
 
 private val NavyBlue = Color(0xFF172955)
-private val BellBlue = Color(0xFF6C7CF4)
 private val PageBg = Color(0xFFF4F6FB)
-
-fun Modifier.gradientTint(colors: List<Color>): Modifier =
-    this
-        .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
-        .drawWithCache {
-            val brush = Brush.linearGradient(
-                colors = colors,
-                start = Offset.Zero,
-                end = Offset(size.width, size.height)
-            )
-            onDrawWithContent {
-                drawContent()
-                drawRect(brush = brush, blendMode = BlendMode.SrcAtop)
-            }
-        }
+private val IndicatorBlue  = Color(0xFFEEF2FF)
 
 @Composable
 fun HomeScreen(
@@ -79,7 +61,7 @@ fun HomeScreen(
     }
 
     LaunchedEffect(vehiculos) {
-        if (vehiculoSeleccionado == null || vehiculoSeleccionado !in vehiculos) {
+        if (vehiculoSeleccionado == null || !vehiculos.any { it.id == vehiculoSeleccionado?.id }) {
             vehiculoSeleccionado = vehiculos.firstOrNull { it.esPrincipal } ?: vehiculos.firstOrNull()
         }
     }
@@ -142,14 +124,14 @@ fun HomeScreen(
                 modifier = Modifier
                     .size(46.dp)
                     .clip(CircleShape)
-                    .background(BellBlue)
+                    .background(IndicatorBlue)
                     .clickable { onLogout() },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    Icons.Default.Notifications,
+                    imageVector = Icons.Default.Notifications,
                     contentDescription = null,
-                    tint = Color.White,
+                    tint = Color(0xFF1C42B1),
                     modifier = Modifier.size(24.dp)
                 )
             }
@@ -190,7 +172,7 @@ fun HomeScreen(
                                 color = NavyBlue
                             ) { vehiculoSeleccionado = v }
                         }
-                        item { AddMiniChip(NavyBlue, onAgregarVehiculo) }
+                        item { AddMiniChip(onAgregarVehiculo) }
                     }
                 }
             }
@@ -207,7 +189,7 @@ fun HomeScreen(
         ) {
             ActionButton(
                 label = "Planificar",
-                icon = Icons.Default.AltRoute,
+                icon = Icons.AutoMirrored.Filled.AltRoute,
                 color = Color(0xFF1C42B1),
                 modifier = Modifier.weight(1f),
                 onClick = { onPlanificarViaje(tipoVehiculo) }
@@ -246,7 +228,7 @@ fun HomeScreen(
                 colors = ButtonDefaults.buttonColors(containerColor = NavyBlue)
             ) {
                 Icon(
-                    Icons.Default.Navigation,
+                    imageVector = Icons.Default.Navigation,
                     contentDescription = null,
                     tint = Color.White,
                     modifier = Modifier.size(20.dp)
@@ -283,7 +265,12 @@ fun ActionButton(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Icon(icon, null, modifier = Modifier.size(20.dp), tint = Color.White)
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                modifier = Modifier.size(20.dp),
+                tint = Color.White
+            )
             Spacer(Modifier.width(8.dp))
             Text(label, fontSize = 15.sp, color = Color.White, fontWeight = FontWeight.SemiBold)
         }
@@ -321,7 +308,7 @@ fun VehiculoMiniChip(vehiculo: Vehiculo, selected: Boolean, color: Color, onClic
 
 // ── AddMiniChip ───────────────────────────────────────────────────────────────
 @Composable
-fun AddMiniChip(color: Color, onClick: () -> Unit) {
+fun AddMiniChip(onClick: () -> Unit) {
     val dashColor = Color(0xFF3260D8).copy(alpha = 0.42f)
     Box(
         modifier = Modifier
