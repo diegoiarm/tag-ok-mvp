@@ -57,6 +57,11 @@ Los conductores urbanos enfrentan incertidumbre financiera y falta de trazabilid
 - Registro de historial de cruces y gastos.
 - Autenticación con Supabase Auth.
 
+### Broker de eventos ApacheKafka
+
+- Comunica servicios internamente de manera asincrona, desacoplandolos y permitiendo escalabilidad horizontal
+- Un evento tiene un productor, pero puede tener muchos consumidores
+
 ---
 
 ## Stack tecnológico
@@ -214,6 +219,14 @@ documentación del api.
 
 ---
 
+## Esquema de supabase
+
+## Notas de configuración
+
+Antes de iniciar el sistema, se debe hacer una configuración en el archivo de entorno '.env', donde se colocaran las urls de autenticacion, apis externas y API KEYS
+
+---
+
 ## Instalación y ejecución
 
 El sistema se encuentra bajo docker, cuenta con un archivo docker-compose.yml que gestiona la construcción de imagenes,
@@ -248,15 +261,6 @@ para la ejecución dentro de una máquina.
 ### 5. App Android
 
 Abrir `Producto/tag-ok-app` en Android Studio y ejecutar en emulador o dispositivo físico.
-
----
-
-## Notas de configuración
-
-- Conexión a BD configurada en `routes-service/src/main/resources/application.properties` (host `localhost:5432`, BD `db_rutas`, usuario `admin`).
-- La topología pgRouting (`createTopology.sql`) tarda 1–2 min en construirse; re-ejecutarla requiere eliminar la topología previa.
-- Los datos de calles por comuna están en `osm-importer/src/main/resources/datos-calles/comunas-separadas/`.
-- CORS del backend está configurado para `localhost:5173`.
 
 ---
 
