@@ -238,7 +238,9 @@ para la ejecución dentro de una máquina.
 
 - -- 'mvn compile' <-- Compila el proyecto
 - -- 'mvn dependency:copy-dependencies' <-- Carga las dependencias
-- -- 'java -cp "target/classes;target/dependency/*" com.roony.Main' <-- Ejecuta el archivo compilado
+- -- 'java -cp "target/classes;target/dependency/*" com.roony.Main' <-- Ejecuta el archivo compilado,
+
+- se podría tener el JAR, les comparto el código fuente si se necesitara a futuro alguna modificación =) 
 
 - Con estos dos pasos el sistema ya esta listo para empezar a funcionar.
 
