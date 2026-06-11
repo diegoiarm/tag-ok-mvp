@@ -4,6 +4,7 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: ${supabase.jwt.issuer-uri}
+
   application:
     name: gateway-service
 
@@ -12,25 +13,56 @@ spring:
       server:
         webflux:
           routes:
+            # =========================
+            # Rutas de negocio
+            # =========================
+
             - id: routes-service
               uri: http://routes-service:8080
               predicates:
                 - Path=/api/routes/**
               filters:
-              - StripPrefix=2
+                - StripPrefix=2
 
             - id: history-service
               uri: http://history-service:8080
               predicates:
                 - Path=/api/history/**
               filters:
-              - StripPrefix=2
+                - StripPrefix=2
+
+            # =========================
+            # OpenAPI / Swagger
+            # =========================
+
+            - id: routes-service-docs
+              uri: http://routes-service:8080
+              predicates:
+                - Path=/routes/v3/api-docs
+              filters:
+                - SetPath=/v3/api-docs
+
+            - id: history-service-docs
+              uri: http://history-service:8080
+              predicates:
+                - Path=/history/v3/api-docs
+              filters:
+                - SetPath=/v3/api-docs
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    urls:
+      - name: routes-service
+        url: /routes/v3/api-docs
+
+      - name: history-service
+        url: /history/v3/api-docs
 
 # Configuración de Supabase JWT
 supabase:
   jwt:
     issuer-uri: https://ibafvqmoqeabmziyzifk.supabase.co/auth/v1
-    # La clave pública se obtiene automáticamente del issuer
 
 server:
   port: 8080
