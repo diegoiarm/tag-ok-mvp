@@ -60,18 +60,18 @@ services:
   # Kafka
   # =========================
 
-  zookeeper:
+  zookeeper-tag:
     image: confluentinc/cp-zookeeper:7.4.0
-    container_name: zookeeper
+    container_name: zookeeper-tag
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
-  kafka:
+  kafka-tag:
     image: confluentinc/cp-kafka:7.4.0
-    container_name: kafka
+    container_name: kafka-tag
     depends_on:
-      - zookeeper
+      - zookeeper-tag
     ports:
       - "9092:9092"
       # Listener para clientes corriendo en el host (perfiles `local`)
@@ -83,10 +83,10 @@ services:
         kafka-server-start /etc/kafka/server.properties
       "
 
-  kafka-setup:
+  kafka-setup-tag:
     image: confluentinc/cp-kafka:7.4.0
     depends_on:
-      - kafka
+      - kafka-tag
     volumes:
       - ./kafka/init-topics.sh:/init-topics.sh
     command: bash /init-topics.sh
@@ -101,7 +101,7 @@ services:
     container_name: routes-service
     depends_on:
       - db-rutas
-      - kafka-setup
+      - kafka-setup-tag
     environment:
       SPRING_PROFILES_ACTIVE: docker
 
@@ -111,7 +111,7 @@ services:
     container_name: history-service
     depends_on:
       - db-historial
-      - kafka-setup
+      - kafka-setup-tag
     environment:
       SPRING_PROFILES_ACTIVE: docker
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
@@ -126,9 +126,9 @@ services:
     ports:
       - "8080:8080"
 
-  frontend:
+  frontend-tag:
       build: ./routes-ui
-      container_name: frontend
+      container_name: frontend-tag
       ports:
         - "80:80"
       depends_on:

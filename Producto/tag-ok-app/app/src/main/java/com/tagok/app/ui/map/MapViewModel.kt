@@ -17,6 +17,7 @@ import com.tagok.app.domain.interfaces.ITarifaRepository
 import com.tagok.app.domain.model.portico.PorticoResumen
 import com.tagok.app.domain.model.portico.PorticoTipo
 import com.tagok.app.domain.model.tarifa.TarifaCalculada
+import com.tagok.app.domain.model.vehiculo.Vehiculo
 import com.tagok.app.domain.services.interfaces.ILocationProvider
 import com.tagok.app.domain.vehiculo.TipoVehiculo
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,6 +34,7 @@ data class MapUiState(
     val isCalculating: Boolean = false,
     val isTracking: Boolean = false,
     val userLocation: Point? = null,
+    val selectedVehiculo: Vehiculo? = null,
     val error: String? = null)
 
 class MapViewModel(
@@ -46,7 +48,6 @@ class MapViewModel(
     // Verificación de cruces en tiempo real
     private val ultimosCrucesDetectados = mutableMapOf<Long, Long>()
     private var entradaTramoPendiente: EntradaTramoPendiente? = null
-    private var trackingVehiculo: TipoVehiculo = TipoVehiculo.AUTO
     private var trackingContext: Context? = null
 
     private data class EntradaTramoPendiente(
@@ -74,8 +75,8 @@ class MapViewModel(
                 if (_uiState.value.isTracking)
                 {
                     val context = trackingContext
-                    if (context != null)
-                        verificarCruce(point, trackingVehiculo, context)
+                    if (context != null && _uiState.value.selectedVehiculo != null)
+                        verificarCruce(point, _uiState.value.selectedVehiculo!!, context)
                 }
             }
         }
@@ -92,7 +93,7 @@ class MapViewModel(
         _uiState.update { it.copy(tarifaCalculada = null) }
     }
 
-    fun simularCruceAleatorio(vehiculo: TipoVehiculo, context: Context)
+    fun simularCruceAleatorio(vehiculo: Vehiculo, context: Context)
     {
         val porticos = _uiState.value.porticos
         if (porticos.isEmpty())
@@ -110,8 +111,8 @@ class MapViewModel(
         Log.d(TAG, "INICIO SIMULACIÓN DE CRUCE")
         Log.d(TAG, "══════════════════════════════════════════")
         Log.d(TAG, "Datos iniciales:")
-        Log.d(TAG, "   • Vehículo: ${vehiculo.displayName} (${vehiculo.name})")
-        Log.d(TAG, "   • Patente: $PATENTE")
+        Log.d(TAG, "   • Vehículo: ${vehiculo.alias}")
+        Log.d(TAG, "   • Patente: ${vehiculo.patente}")
         Log.d(TAG, "   • Fecha/Hora: ${now.format(formatter)}")
         Log.d(TAG, "   • Pórtico aleatorio: id=${porticoAleatorio.id}, nombre=${porticoAleatorio.nombre}")
         Log.d(TAG, "   • Total pórticos disponibles: ${porticos.size}")
@@ -137,8 +138,8 @@ class MapViewModel(
                                     porticoHoraFechaCruce = now.format(formatter),
                                     salidaId = null,
                                     salidaHoraFechaCruce = null)),
-                            vehiculo = vehiculo.name,
-                            patente = PATENTE
+                            vehiculo = vehiculo.tipoVehiculo,
+                            patente = vehiculo.patente
                         )
 
                         Log.d(TAG, "   • Request: $req")
@@ -165,8 +166,8 @@ class MapViewModel(
                                         porticoHoraFechaCruce = now.format(formatter),
                                         salidaId = null,
                                         salidaHoraFechaCruce = null)),
-                                vehiculo = vehiculo.name,
-                                patente = PATENTE)
+                                vehiculo = vehiculo.tipoVehiculo,
+                                patente = vehiculo.patente)
                         }
                         else
                         {
@@ -221,8 +222,8 @@ class MapViewModel(
                                             salidaHoraFechaCruce = now.plusMinutes(15).format(formatter)
                                         )
                                     ),
-                                    vehiculo = vehiculo.name,
-                                    patente = PATENTE
+                                    vehiculo = vehiculo.tipoVehiculo,
+                                    patente = vehiculo.patente
                                 )
                             }
                             else
@@ -254,8 +255,8 @@ class MapViewModel(
                                             porticoHoraFechaCruce = now.format(formatter),
                                             salidaId = porticoSalida.id,
                                             salidaHoraFechaCruce = now.plusMinutes(15).format(formatter))),
-                                    vehiculo = vehiculo.name,
-                                    patente = PATENTE
+                                    vehiculo = vehiculo.tipoVehiculo,
+                                    patente = vehiculo.patente
                                 )
                             }
                         }
@@ -339,7 +340,7 @@ class MapViewModel(
         }
     }
 
-    fun toggleTracking(vehiculo: TipoVehiculo, context: Context)
+    fun toggleTracking(vehiculo: Vehiculo, context: Context)
     {
         if (_uiState.value.isTracking)
             detenerTracking()
@@ -347,15 +348,14 @@ class MapViewModel(
             iniciarTracking(vehiculo, context)
     }
 
-    fun iniciarTracking(vehiculo: TipoVehiculo, context: Context)
+    fun iniciarTracking(vehiculo: Vehiculo, context: Context)
     {
         Log.d(TAG, "══════════════════════════════════════════")
         Log.d(TAG, "INICIO VERIFICACIÓN DE CRUCES EN TIEMPO REAL")
         Log.d(TAG, "══════════════════════════════════════════")
-        Log.d(TAG, "   • Vehículo: ${vehiculo.displayName}")
+        Log.d(TAG, "   • Vehículo: ${vehiculo.alias}")
         Log.d(TAG, "   • Radio de detección: $RADIO_DETECCION_METROS m")
 
-        trackingVehiculo = vehiculo
         trackingContext = context.applicationContext
         _uiState.update { it.copy(isTracking = true, error = null) }
     }
@@ -367,33 +367,59 @@ class MapViewModel(
         _uiState.update { it.copy(isTracking = false) }
     }
 
-    private suspend fun verificarCruce(point: Point, vehiculo: TipoVehiculo, context: Context)
+    private suspend fun verificarCruce(
+        point: Point,
+        vehiculo: Vehiculo,
+        context: Context)
     {
         val ahora = System.currentTimeMillis()
 
-        val porticoCruzado = _uiState.value.porticos.firstOrNull { portico ->
+        _uiState.value.porticos.forEach { portico ->
+
             val distancia = distanciaMetros(
                 point.latitude(), point.longitude(),
                 portico.latitud, portico.longitud)
+
             val ultimoCruce = ultimosCrucesDetectados[portico.id]
-            val fueraDeCooldown = ultimoCruce == null || ahora - ultimoCruce > COOLDOWN_CRUCE_MS
+            val fueraDeCooldown =
+                ultimoCruce == null || ahora - ultimoCruce > COOLDOWN_CRUCE_MS
 
-            distancia <= RADIO_DETECCION_METROS && fueraDeCooldown
-        } ?: return
+            if (distancia > RADIO_DETECCION_METROS)
+            {
+                proximidadPorPortico[portico.id] = false
+                return@forEach
+            }
 
-        ultimosCrucesDetectados[porticoCruzado.id] = ahora
-        Log.d(TAG, "══════════════════════════════════════════")
-        Log.d(TAG, "CRUCE DETECTADO EN TIEMPO REAL")
-        Log.d(TAG, "══════════════════════════════════════════")
-        Log.d(TAG, "   • Pórtico: ${porticoCruzado.nombre} (id=${porticoCruzado.id})")
-        Log.d(TAG, "   • Posición: ${point.latitude()}, ${point.longitude()}")
+            if (distancia <= RADIO_DETECCION_METROS)
+            {
+                proximidadPorPortico[portico.id] = true
+                Log.d(TAG, "Cerca de ${portico.nombre} (${distancia}m)")
+            }
 
-        procesarCruceDetectado(porticoCruzado, vehiculo, context)
+            val estabaCerca = proximidadPorPortico[portico.id] == true
+
+            if (distancia <= RADIO_COBRO_METROS && estabaCerca && fueraDeCooldown)
+            {
+
+                ultimosCrucesDetectados[portico.id] = ahora
+                proximidadPorPortico[portico.id] = false
+
+                Log.d(TAG, "══════════════════════════════════════════")
+                Log.d(TAG, "CRUCE DETECTADO EN TIEMPO REAL")
+                Log.d(TAG, "══════════════════════════════════════════")
+                Log.d(TAG, "   • Pórtico: ${portico.nombre} (id=${portico.id})")
+                Log.d(TAG, "   • Posición: ${point.latitude()}, ${point.longitude()}")
+                Log.d(TAG, "   • Distancia: ${distancia}m")
+
+                procesarCruceDetectado(portico, vehiculo, context)
+                return
+            }
+        }
     }
 
     private suspend fun procesarCruceDetectado(
         portico: PorticoResumen,
-        vehiculo: TipoVehiculo,
+        vehiculo: Vehiculo,
         context: Context)
     {
         _uiState.update { it.copy(isCalculating = true, error = null) }
@@ -436,8 +462,8 @@ class MapViewModel(
                                         porticoHoraFechaCruce = pendiente.horaFechaCruce,
                                         salidaId = portico.id,
                                         salidaHoraFechaCruce = now.format(formatter))),
-                                vehiculo = vehiculo.name,
-                                patente = PATENTE)
+                                vehiculo = vehiculo.tipoVehiculo,
+                                patente = vehiculo.patente)
                         }
                         else
                         {
@@ -491,7 +517,7 @@ class MapViewModel(
 
     private fun requestPorticoSimple(
         portico: PorticoResumen,
-        vehiculo: TipoVehiculo,
+        vehiculo: Vehiculo,
         horaFechaCruce: String) = TarifaRequest(
         references = listOf(
             PorticoCruzadoRequest(
@@ -499,8 +525,8 @@ class MapViewModel(
                 porticoHoraFechaCruce = horaFechaCruce,
                 salidaId = null,
                 salidaHoraFechaCruce = null)),
-        vehiculo = vehiculo.name,
-        patente = PATENTE)
+        vehiculo = vehiculo.tipoVehiculo,
+        patente = vehiculo.patente)
 
     private fun distanciaMetros(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Float
     {
@@ -541,11 +567,19 @@ class MapViewModel(
         }
     }
 
+    fun seleccionarVehiculo(vehiculo: Vehiculo)
+    {
+        _uiState.update {
+            it.copy(selectedVehiculo = vehiculo)
+        }
+    }
+
     companion object
     {
         private const val TAG = "MapViewModel"
-        private const val PATENTE = "ABCD-33"
         private const val RADIO_DETECCION_METROS = 150f
+        private const val RADIO_COBRO_METROS = 10f
+        private val proximidadPorPortico = mutableMapOf<Long, Boolean>()
         private const val COOLDOWN_CRUCE_MS = 3 * 60 * 1000L
         val Factory: ViewModelProvider.Factory = ViewModelModule.mapViewModelFactory()
     }

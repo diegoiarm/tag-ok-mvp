@@ -341,7 +341,7 @@ fun NavGraph() {
                     TipoVehiculo.AUTO
                 }
 
-                MapScreen(vehiculo = vehiculo)
+                MapScreen()
             }
         }
     }

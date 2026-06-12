@@ -20,11 +20,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -39,6 +42,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -50,8 +54,8 @@ import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import com.mapbox.maps.extension.compose.annotation.IconImage
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
-import com.tagok.app.R
 import androidx.core.graphics.createBitmap
+import com.tagok.app.domain.model.vehiculo.Vehiculo
 import com.tagok.app.domain.vehiculo.TipoVehiculo
 import com.tagok.app.ui.map.portico.porticoContainer.PorticosContainer
 
@@ -109,14 +113,15 @@ private fun MapControlButton(
 @SuppressLint("RememberReturnType")
 @Composable
 fun MapScreen(
-    vehiculo: TipoVehiculo = TipoVehiculo.AUTO,
-    viewModel: MapViewModel = viewModel(factory = MapViewModel.Factory))
-{
+    viewModel: MapViewModel = viewModel(factory = MapViewModel.Factory)) {
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     var currentZoom by remember { mutableStateOf(12.5) }
 
+    var showVehiculoSheet by remember { mutableStateOf(false) }
+
+    val selectedVehiculo: Vehiculo? = uiState.selectedVehiculo
 
     val mapViewportState = rememberMapViewportState {
         setCameraOptions {
@@ -137,6 +142,13 @@ fun MapScreen(
         NotificationUtils.createNotificationChannel(context)
     }
 
+    LaunchedEffect(Unit) {
+        if (uiState.selectedVehiculo == null)
+        {
+            showVehiculoSheet = true
+        }
+    }
+
     DisposableEffect(Unit) {
         onDispose {
             viewModel.limpiarNotificaciones()
@@ -153,12 +165,25 @@ fun MapScreen(
     val trackingPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission())
     { granted ->
-        if (granted)
-            viewModel.toggleTracking(vehiculo, context)
+        if (granted && selectedVehiculo != null)
+        {
+            viewModel.toggleTracking(selectedVehiculo!!, context)
+        }
     }
 
-    fun toggleTracking() {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+    fun toggleTracking()
+    {
+        val vehiculo = selectedVehiculo
+
+        if (vehiculo == null)
+        {
+            showVehiculoSheet = true
+            return
+        }
+
+        if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_GRANTED)
         {
             viewModel.toggleTracking(vehiculo, context)
@@ -171,14 +196,19 @@ fun MapScreen(
 
     fun requestLocation()
     {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_GRANTED)
         {
             val point = uiState.userLocation
             if (point != null)
             {
                 mapViewportState.easeTo(
-                    CameraOptions.Builder().center(point).zoom(15.0).build())
+                    CameraOptions.Builder()
+                        .center(point)
+                        .zoom(15.0)
+                        .build())
             }
         }
         else
@@ -186,8 +216,6 @@ fun MapScreen(
             permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
     }
-
-    val bitmapNormal = remember { vectorToBitmap(context, R.drawable.ic_portico) }
 
     val bitmapUsuario = remember {
         val bmp = createBitmap(48, 48)
@@ -207,7 +235,8 @@ fun MapScreen(
             modifier = Modifier.fillMaxSize(),
             mapViewportState = mapViewportState)
         {
-            MapEffect(Unit) { mapView ->
+            MapEffect(Unit)
+            { mapView ->
                 mapView.mapboxMap.subscribeCameraChanged {
                     currentZoom = mapView.mapboxMap.cameraState.zoom
                 }
@@ -215,7 +244,7 @@ fun MapScreen(
 
             PorticosContainer(
                 context = context,
-                vehiculo = vehiculo)
+                vehiculo = TipoVehiculo.valueOf(selectedVehiculo?.tipoVehiculo ?: "AUTO"))
 
             if (uiState.userLocation != null)
             {
@@ -223,6 +252,45 @@ fun MapScreen(
                 {
                     iconImage = IconImage(bitmapUsuario)
                     iconSize = 1.0
+                }
+            }
+        }
+        Surface(
+            onClick = { showVehiculoSheet = true },
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(top = 24.dp, start = 12.dp)
+                .size(44.dp)
+                .shadow(4.dp, CircleShape),
+            shape = CircleShape,
+            color = if (selectedVehiculo != null) Color(0xFF10B981) else Color.White)
+        {
+            Box(contentAlignment = Alignment.Center) {
+                if (selectedVehiculo != null) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(4.dp))
+                    {
+                        Text(
+                            text = selectedVehiculo.alias?.take(2)?.uppercase() ?: "Sin Alias",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1)
+                        Icon(
+                            imageVector = Icons.Default.DirectionsCar,
+                            contentDescription = "Cambiar vehículo",
+                            tint = Color.White,
+                            modifier = Modifier.size(16.dp))
+                    }
+                }
+                else
+                {
+                    Icon(
+                        imageVector = Icons.Default.DirectionsCar,
+                        contentDescription = "Seleccionar vehículo",
+                        tint = Color(0xFF374151),
+                        modifier = Modifier.padding(10.dp))
                 }
             }
         }
@@ -236,7 +304,8 @@ fun MapScreen(
             MapControlButton(
                 icon = Icons.Filled.MyLocation,
                 contentDescription = "Mi ubicación",
-                onClick = { requestLocation() })
+                onClick = { requestLocation() }
+            )
             MapControlButton(
                 icon = Icons.Filled.Add,
                 contentDescription = "Acercar",
@@ -251,15 +320,29 @@ fun MapScreen(
                     val newZoom = (currentZoom - 1.0).coerceAtLeast(1.0)
                     mapViewportState.easeTo(CameraOptions.Builder().zoom(newZoom).build())
                 })
-
         }
+
+        if (showVehiculoSheet)
+        {
+            VehiculoSelectorSheet(
+                selected = selectedVehiculo,
+                onSelect = {
+                    viewModel.seleccionarVehiculo(it)
+                    showVehiculoSheet = false
+                },
+                onDismiss = { showVehiculoSheet = false })
+        }
+
         // Debug
         TestRealTime(
             tarifaCalculada = uiState.tarifaCalculada,
             isCalculating = uiState.isCalculating,
             isTracking = uiState.isTracking,
-            vehiculo = vehiculo,
-            onSimularCruce = { viewModel.simularCruceAleatorio(vehiculo, context) },
+            vehiculo = selectedVehiculo,
+            onSimularCruce = {
+                val v = selectedVehiculo
+                if (v != null) viewModel.simularCruceAleatorio(v, context)
+            },
             onToggleTracking = { toggleTracking() },
             onCerrar = { viewModel.clearTarifa() },
             modifier = Modifier.align(Alignment.BottomCenter))
