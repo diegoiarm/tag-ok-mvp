@@ -20,7 +20,7 @@ import com.tagok.app.domain.model.tarifa.Cruce
 import com.tagok.app.domain.model.tarifa.CrucePortico
 import com.tagok.app.domain.model.tarifa.CruceTramo
 import com.tagok.app.domain.model.tarifa.TarifaCalculada
-import com.tagok.app.domain.vehiculo.TipoVehiculo
+import com.tagok.app.domain.model.vehiculo.Vehiculo
 import com.tagok.app.ui.historial.utils.formatCurrency
 
 @Composable
@@ -28,7 +28,7 @@ fun TestRealTime(
     tarifaCalculada: TarifaCalculada?,
     isCalculating: Boolean,
     isTracking: Boolean,
-    vehiculo: TipoVehiculo,
+    vehiculo: Vehiculo?,
     onSimularCruce: () -> Unit,
     onToggleTracking: () -> Unit,
     onCerrar: () -> Unit,
@@ -75,7 +75,7 @@ fun TestRealTime(
                     tint = MaterialTheme.colorScheme.onSurfaceVariant)
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "Vehículo: ${vehiculo.displayName}",
+                    text = "Vehículo: ${vehiculo?.alias}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Spacer(modifier = Modifier.width(8.dp))
@@ -85,10 +85,12 @@ fun TestRealTime(
                     modifier = Modifier.size(16.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant)
                 Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = "ABCD-33",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                vehiculo?.patente?.let {
+                    Text(
+                        text = it ,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
             }
 
             Spacer(modifier = Modifier.height(12.dp))
