@@ -367,28 +367,54 @@ class MapViewModel(
         _uiState.update { it.copy(isTracking = false) }
     }
 
-    private suspend fun verificarCruce(point: Point, vehiculo: TipoVehiculo, context: Context)
+    private suspend fun verificarCruce(
+        point: Point,
+        vehiculo: TipoVehiculo,
+        context: Context)
     {
         val ahora = System.currentTimeMillis()
 
-        val porticoCruzado = _uiState.value.porticos.firstOrNull { portico ->
+        _uiState.value.porticos.forEach { portico ->
+
             val distancia = distanciaMetros(
                 point.latitude(), point.longitude(),
                 portico.latitud, portico.longitud)
+
             val ultimoCruce = ultimosCrucesDetectados[portico.id]
-            val fueraDeCooldown = ultimoCruce == null || ahora - ultimoCruce > COOLDOWN_CRUCE_MS
+            val fueraDeCooldown =
+                ultimoCruce == null || ahora - ultimoCruce > COOLDOWN_CRUCE_MS
 
-            distancia <= RADIO_DETECCION_METROS && fueraDeCooldown
-        } ?: return
+            if (distancia > RADIO_DETECCION_METROS)
+            {
+                proximidadPorPortico[portico.id] = false
+                return@forEach
+            }
 
-        ultimosCrucesDetectados[porticoCruzado.id] = ahora
-        Log.d(TAG, "══════════════════════════════════════════")
-        Log.d(TAG, "CRUCE DETECTADO EN TIEMPO REAL")
-        Log.d(TAG, "══════════════════════════════════════════")
-        Log.d(TAG, "   • Pórtico: ${porticoCruzado.nombre} (id=${porticoCruzado.id})")
-        Log.d(TAG, "   • Posición: ${point.latitude()}, ${point.longitude()}")
+            if (distancia <= RADIO_DETECCION_METROS)
+            {
+                proximidadPorPortico[portico.id] = true
+                Log.d(TAG, "Cerca de ${portico.nombre} (${distancia}m)")
+            }
 
-        procesarCruceDetectado(porticoCruzado, vehiculo, context)
+            val estabaCerca = proximidadPorPortico[portico.id] == true
+
+            if (distancia <= RADIO_COBRO_METROS && estabaCerca && fueraDeCooldown)
+            {
+
+                ultimosCrucesDetectados[portico.id] = ahora
+                proximidadPorPortico[portico.id] = false
+
+                Log.d(TAG, "══════════════════════════════════════════")
+                Log.d(TAG, "CRUCE DETECTADO EN TIEMPO REAL")
+                Log.d(TAG, "══════════════════════════════════════════")
+                Log.d(TAG, "   • Pórtico: ${portico.nombre} (id=${portico.id})")
+                Log.d(TAG, "   • Posición: ${point.latitude()}, ${point.longitude()}")
+                Log.d(TAG, "   • Distancia: ${distancia}m")
+
+                procesarCruceDetectado(portico, vehiculo, context)
+                return
+            }
+        }
     }
 
     private suspend fun procesarCruceDetectado(
@@ -546,6 +572,8 @@ class MapViewModel(
         private const val TAG = "MapViewModel"
         private const val PATENTE = "ABCD-33"
         private const val RADIO_DETECCION_METROS = 150f
+        private const val RADIO_COBRO_METROS = 10f
+        private val proximidadPorPortico = mutableMapOf<Long, Boolean>()
         private const val COOLDOWN_CRUCE_MS = 3 * 60 * 1000L
         val Factory: ViewModelProvider.Factory = ViewModelModule.mapViewModelFactory()
     }
