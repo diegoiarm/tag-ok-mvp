@@ -2,6 +2,8 @@ package com.tagok.history_service.service;
 
 import java.io.IOException;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,10 +33,31 @@ public class ComparacionFacturaService
         byte[] contenido = leerArchivo(archivo);
         String mimeType = validarMime(archivo);
 
+        // La extracción con Gemini (hasta 60 s) y la generación de la boleta
+        // (consulta a Mongo) son independientes: se ejecutan en paralelo.
+        CompletableFuture<FacturaExtraidaDTO> extraccion =
+            CompletableFuture.supplyAsync(() -> extractorFacturaIA.extraer(contenido, mimeType));
+
         BoletaDTO boletaApp = boletaService.generarBoleta(userId, request);
-        FacturaExtraidaDTO facturaCliente = extractorFacturaIA.extraer(contenido, mimeType);
+        FacturaExtraidaDTO facturaCliente = esperarExtraccion(extraccion);
 
         return comparadorFacturas.comparar(boletaApp, facturaCliente);
+    }
+
+    private FacturaExtraidaDTO esperarExtraccion(CompletableFuture<FacturaExtraidaDTO> extraccion)
+    {
+        try
+        {
+            return extraccion.join();
+        }
+        catch (CompletionException e)
+        {
+            // Re-lanza la excepción original (IAException, etc.) para que el
+            // handler la traduzca al código HTTP correcto, no a un 500 genérico.
+            if (e.getCause() instanceof RuntimeException causa)
+                throw causa;
+            throw e;
+        }
     }
 
     private byte[] leerArchivo(MultipartFile archivo)
