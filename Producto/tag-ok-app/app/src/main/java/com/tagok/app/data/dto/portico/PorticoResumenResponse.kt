@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PorticoResumenResponse(
     val id: Long,
-    val nombre: String,
+    val nombre: String? = null,
     val latitud: Double,
     val longitud: Double)

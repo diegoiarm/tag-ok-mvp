@@ -7,9 +7,9 @@ import kotlinx.serialization.Serializable
 @SerialName("PORTICO")
 data class PorticoResponse(
     val id: Long,
-    val codigo: String,
-    val nombre: String,
-    val sentido: String,
+    val codigo: String? = null,
+    val nombre: String? = null,
+    val sentido: String? = null,
     val latitud: Double,
     val longitud: Double,
     val autopista: String,
