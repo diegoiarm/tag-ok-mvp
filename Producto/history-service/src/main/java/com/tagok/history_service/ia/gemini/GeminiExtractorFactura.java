@@ -54,6 +54,8 @@ public class GeminiExtractorFactura implements ExtractorFacturaIA
     {
         this.apiKey = apiKey;
         this.model = model;
+        log.info("Extractor Gemini configurado con modelo '{}' (api-key {})",
+            model, (apiKey == null || apiKey.isBlank()) ? "ausente" : "presente");
 
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
         factory.setConnectTimeout(10_000);
