@@ -19,10 +19,9 @@ class VehiculoApi(client: HttpClient) : IVehiculoApi, ApiClient(client, TAG)
 
     override suspend fun getVehiculos(): List<VehiculoDto> = apiCall("Obtener vehiculos")
     {
-        client.get("$BASE_URL/rest/v1/vehiculos")
+        client.get("$BASE_URL/vehiculos")
         {
             contentType(ContentType.Application.Json)
-            header("apikey", SUPABASE_KEY)
             parameter("select", "user_id,patente,tipo_vehiculo,numero_tag,alias,id,created_at")
             parameter("order", "created_at.asc")
         }.body()
@@ -30,10 +29,9 @@ class VehiculoApi(client: HttpClient) : IVehiculoApi, ApiClient(client, TAG)
 
     override suspend fun insertVehiculo(request: NuevoVehiculoRequest) = apiCall("Insertar Vehiculo")
     {
-        client.post("$BASE_URL/rest/v1/vehiculos")
+        client.post("$BASE_URL/vehiculos")
         {
             contentType(ContentType.Application.Json)
-            header("apikey", SUPABASE_KEY)
             header("Prefer", "return=minimal")
             setBody(request)
         }
@@ -41,10 +39,9 @@ class VehiculoApi(client: HttpClient) : IVehiculoApi, ApiClient(client, TAG)
 
     override suspend fun deleteVehiculo(id: String) = apiCall("Borrar vehiculo: ${id}")
     {
-        client.delete("$BASE_URL/rest/v1/vehiculos")
+        client.delete("$BASE_URL/vehiculos")
         {
             contentType(ContentType.Application.Json)
-            header("apikey", SUPABASE_KEY)
             parameter("id", "eq.$id")
         }
     }
@@ -52,7 +49,6 @@ class VehiculoApi(client: HttpClient) : IVehiculoApi, ApiClient(client, TAG)
     companion object
     {
         private var BASE_URL = ApiConfig.VEHICULOS_API
-        private var SUPABASE_KEY = ApiConfig.VEHICULOS_API_KEY
         private const val TAG = "VehiculoApi"
     }
 }

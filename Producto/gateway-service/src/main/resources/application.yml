@@ -1,22 +1,19 @@
+server:
+  port: ${SERVER_PORT:8080}
+
 spring:
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: ${SUPABASE_JWT_ISSUER_URI}
-
   application:
     name: gateway-service
-
   cloud:
     gateway:
       server:
         webflux:
           routes:
-            # =========================
-            # Rutas de negocio
-            # =========================
-
             - id: routes-service
               uri: http://routes-service:8080
               predicates:
@@ -31,9 +28,14 @@ spring:
               filters:
                 - StripPrefix=2
 
-            # =========================
-            # OpenAPI / Swagger
-            # =========================
+            - id: supabase-vehiculos
+              uri: ${SUPABASE_URL}
+              predicates:
+                - Path=/api/vehiculos/**
+              filters:
+                - StripPrefix=2
+                - PrefixPath=/rest/v1
+                - AddRequestHeader=apikey, ${SUPABASE_ANON_KEY}
 
             - id: routes-service-docs
               uri: http://routes-service:8080
@@ -55,8 +57,5 @@ springdoc:
     urls:
       - name: routes-service
         url: /routes/v3/api-docs
-
       - name: history-service
         url: /history/v3/api-docs
-server:
-  port: ${SERVER_PORT:8080}

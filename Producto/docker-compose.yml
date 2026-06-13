@@ -135,6 +135,8 @@ services:
     environment:
       SERVER_PORT: ${SERVER_PORT}
       SUPABASE_JWT_ISSUER_URI: ${SUPABASE_JWT_ISSUER_URI}
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY} 
 
   frontend-tag:
       build: ./routes-ui
