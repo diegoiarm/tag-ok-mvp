@@ -75,7 +75,7 @@ fun PorticoResumenResponse.toDomain(): PorticoResumen
 {
     return PorticoResumen(
         id,
-        nombre,
+        nombre ?: "Pórtico $id",
         latitud,
         longitud
     )
@@ -88,9 +88,9 @@ fun TollResponse.toDomain(): TollType
         is PorticoResponse -> {
             PorticoType(
                 id,
-                codigo,
-                nombre,
-                sentido,
+                codigo ?: "No asignado",
+                nombre ?: "Pórtico $id",
+                sentido ?: "No asignado",
                 latitud,
                 longitud,
                 autopista,
@@ -102,8 +102,8 @@ fun TollResponse.toDomain(): TollType
         is PorticoTramoResponse -> {
             PorticoTramoType(
                 id,
-                codigo,
-                nombre,
+                codigo ?: "No asignado",
+                nombre ?: "Pórtico $id",
                 latitud,
                 longitud,
                 autopista,

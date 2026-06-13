@@ -7,8 +7,8 @@ import kotlinx.serialization.Serializable
 @SerialName("TRAMO")
 data class PorticoTramoResponse(
     var id: Long,
-    var codigo: String,
-    var nombre: String,
+    var codigo: String? = null,
+    var nombre: String? = null,
     var latitud: Double,
     var longitud: Double,
     var autopista: String,
