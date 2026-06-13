@@ -75,16 +75,18 @@ private val LightBlueBg = Color(0xFFEEF2FF)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PresupuestoScreen(viewModel: PresupuestoViewModel = viewModel(factory = PresupuestoViewModel.Factory)) {
+fun PresupuestoScreen(viewModel: PresupuestoViewModel = viewModel(factory = PresupuestoViewModel.Factory))
+{
     val state by viewModel.state.collectAsState()
     val sheetState = rememberModalBottomSheetState()
 
-    Box(modifier = Modifier.fillMaxSize().background(PageBg)) {
+    Box(modifier = Modifier.fillMaxSize().background(PageBg))
+    {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-        ) {
+                .verticalScroll(rememberScrollState()),)
+        {
             Spacer(Modifier.height(16.dp))
 
             // ── Header ──────────────────────────────────────────────────────────
@@ -93,13 +95,11 @@ fun PresupuestoScreen(viewModel: PresupuestoViewModel = viewModel(factory = Pres
                     text       = "Presupuesto",
                     fontWeight = FontWeight.Bold,
                     fontSize   = 22.sp,
-                    color      = Color(0xFF1A1A2E),
-                )
+                    color      = Color(0xFF1A1A2E),)
                 Text(
                     text     = "Control de gastos en peajes",
                     fontSize = 13.sp,
-                    color    = Color.Gray,
-                )
+                    color    = Color.Gray,)
             }
 
             Spacer(Modifier.height(20.dp))
@@ -109,16 +109,16 @@ fun PresupuestoScreen(viewModel: PresupuestoViewModel = viewModel(factory = Pres
                 modifier  = Modifier.padding(horizontal = 20.dp).fillMaxWidth(),
                 shape     = RoundedCornerShape(16.dp),
                 colors    = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-            ) {
-                Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)) {
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),)
+            {
+                Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp))
+                {
                     Text(
                         text          = "VEHÍCULO",
                         fontSize      = 12.sp,
                         fontWeight    = FontWeight.Bold,
                         color         = AccentBlue,
-                        letterSpacing = 1.sp,
-                    )
+                        letterSpacing = 1.sp,)
                     Spacer(Modifier.height(10.dp))
                     VehiculoFiltroRow(state = state, onSeleccionar = viewModel::seleccionarVehiculo)
                 }
@@ -130,54 +130,35 @@ fun PresupuestoScreen(viewModel: PresupuestoViewModel = viewModel(factory = Pres
                 Box(Modifier.fillMaxWidth().height(300.dp), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(color = NavyBlue, strokeWidth = 2.dp)
                 }
-            } else if (state.presupuestoActual == null) {
+            } else if (state.presupuestos.isEmpty()) {
                 EmptyState(onConfigurar = viewModel::abrirEditSheet)
             } else {
-                val presupuesto = state.presupuestoActual!!
-                // TODO: reemplazar con datos reales del historial (MongoDB) cuando estén disponibles
-                val gastoActual = 0
-                val peajesCount = 0
-                val porcentaje  = if (presupuesto.montoMensual > 0)
-                    (gastoActual.toFloat() / presupuesto.montoMensual).coerceIn(0f, 1f)
-                else 0f
+                // Lista todos los presupuestos
+                Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+                    state.presupuestos.forEach { presupuesto ->
+                        // Determinar etiqueta del vehículo
+                        val vehiculo = state.vehiculos.find { it.id == presupuesto.vehiculoId }
+                        val etiqueta = if (presupuesto.vehiculoId == null) "🌍 Global"
+                        else (vehiculo?.alias?.takeIf { it.isNotBlank() } ?: vehiculo?.patente ?: "Vehículo")
 
-                BudgetCard(
-                    montoMaximo = presupuesto.montoMensual,
-                    gastoActual = gastoActual,
-                    peajesCount = peajesCount,
-                    porcentaje  = porcentaje,
-                )
-
-                Spacer(Modifier.height(12.dp))
-
-                AlertasCard(
-                    umbral1          = presupuesto.umbralAlerta1,
-                    umbral2          = presupuesto.umbralAlerta2,
-                    porcentajeActual = (porcentaje * 100).toInt(),
-                )
-
-                Spacer(Modifier.height(20.dp))
-
-                // Botón editar — mismo estilo que ActionButton en Home
-                Box(
-                    modifier = Modifier
-                        .padding(horizontal = 20.dp)
-                        .fillMaxWidth()
-                        .height(54.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(NavyBlue),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    TextButton(
-                        onClick   = viewModel::abrirEditSheet,
-                        modifier  = Modifier.fillMaxSize(),
-                    ) {
-                        Text(
-                            "Editar presupuesto",
-                            fontSize   = 15.sp,
-                            color      = Color.White,
-                            fontWeight = FontWeight.SemiBold,
-                        )
+                        Card(
+                            modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                        ) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                Text(
+                                    text = etiqueta,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp,
+                                    color = NavyBlue
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text("💰 Límite: ${presupuesto.montoMensual.toCLP()}", fontSize = 13.sp, color = TextDark)
+                                Text("⚠️ Alertas: ${presupuesto.umbralAlerta1}% / ${presupuesto.umbralAlerta2}%", fontSize = 13.sp, color = TextDark)
+                            }
+                        }
                     }
                 }
             }
@@ -186,7 +167,8 @@ fun PresupuestoScreen(viewModel: PresupuestoViewModel = viewModel(factory = Pres
         }
     }
 
-    if (state.errorMsg != null) {
+    if (state.errorMsg != null)
+    {
         AlertDialog(
             onDismissRequest = viewModel::clearError,
             title            = { Text("Error de validación", fontWeight = FontWeight.SemiBold) },
@@ -195,16 +177,16 @@ fun PresupuestoScreen(viewModel: PresupuestoViewModel = viewModel(factory = Pres
                 TextButton(onClick = viewModel::clearError) {
                     Text("Entendido", color = AccentBlue, fontWeight = FontWeight.SemiBold)
                 }
-            },
-        )
+            })
     }
 
-    if (state.showEditSheet) {
+    if (state.showEditSheet)
+    {
         ModalBottomSheet(
             onDismissRequest = viewModel::cerrarEditSheet,
             sheetState       = sheetState,
-            containerColor   = Color.White,
-        ) {
+            containerColor   = Color.White)
+        {
             EditPresupuestoSheet(state = state, viewModel = viewModel)
         }
     }
@@ -214,31 +196,30 @@ fun PresupuestoScreen(viewModel: PresupuestoViewModel = viewModel(factory = Pres
 @Composable
 private fun VehiculoFiltroRow(
     state: PresupuestoUiState,
-    onSeleccionar: (String?) -> Unit,
-) {
+    onSeleccionar: (String?) -> Unit)
+{
     LazyRow(
         contentPadding        = PaddingValues(end = 4.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
+        horizontalArrangement = Arrangement.spacedBy(8.dp))
+    {
         item {
             FiltroChip(
                 label    = "Global",
                 selected = state.vehiculoIdFiltro == null,
-                onClick  = { onSeleccionar(null) },
-            )
+                onClick  = { onSeleccionar(null) },)
         }
         items(state.vehiculos) { v ->
             FiltroChip(
                 label    = v.alias?.takeIf { it.isNotBlank() } ?: v.patente,
                 selected = state.vehiculoIdFiltro == v.id,
-                onClick  = { onSeleccionar(v.id) },
-            )
+                onClick  = { onSeleccionar(v.id) })
         }
     }
 }
 
 @Composable
-private fun FiltroChip(label: String, selected: Boolean, onClick: () -> Unit) {
+private fun FiltroChip(label: String, selected: Boolean, onClick: () -> Unit)
+{
     FilterChip(
         selected = selected,
         onClick  = onClick,
@@ -247,15 +228,12 @@ private fun FiltroChip(label: String, selected: Boolean, onClick: () -> Unit) {
             selectedContainerColor = NavyBlue,
             selectedLabelColor     = Color.White,
             containerColor         = Color.White,
-            labelColor             = Color.Gray,
-        ),
+            labelColor             = Color.Gray,),
         border = FilterChipDefaults.filterChipBorder(
             enabled             = true,
             selected            = selected,
             borderColor         = DividerGray,
-            selectedBorderColor = NavyBlue,
-        ),
-    )
+            selectedBorderColor = NavyBlue,),)
 }
 
 // ─── Tarjeta principal con donut chart ───────────────────────────────────────
@@ -264,27 +242,25 @@ private fun BudgetCard(
     montoMaximo: Int,
     gastoActual: Int,
     peajesCount: Int,
-    porcentaje: Float,
-) {
+    porcentaje: Float, )
+{
     Card(
         modifier  = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
         shape     = RoundedCornerShape(16.dp),
         colors    = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-    ) {
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp))
+    {
         Column(
             modifier            = Modifier.padding(horizontal = 24.dp, vertical = 20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            // Label sección
+            horizontalAlignment = Alignment.CenterHorizontally)
+        {
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text          = "PRESUPUESTO MENSUAL",
                     fontSize      = 12.sp,
                     fontWeight    = FontWeight.Bold,
                     color         = AccentBlue,
-                    letterSpacing = 1.sp,
-                )
+                    letterSpacing = 1.sp,)
             }
 
             Spacer(Modifier.height(16.dp))

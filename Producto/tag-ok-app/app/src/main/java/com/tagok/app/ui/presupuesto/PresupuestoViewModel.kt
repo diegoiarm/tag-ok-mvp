@@ -4,15 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.tagok.app.data.NuevoPresupuesto
-import com.tagok.app.data.Presupuesto
-import com.tagok.app.data.PresupuestoRepository
-import com.tagok.app.data.remote.HttpClientProvider
-import com.tagok.app.data.remote.VehiculoApi
-import com.tagok.app.data.repository.VehiculoRepository
+import com.tagok.app.di.modules.ViewModelModule
+import com.tagok.app.domain.interfaces.IPresupuestoRepository
 import com.tagok.app.domain.interfaces.IVehiculoRepository
+import com.tagok.app.domain.model.presupuesto.Presupuesto
 import com.tagok.app.domain.model.vehiculo.Vehiculo
 import com.tagok.app.supabase
-import com.tagok.app.ui.home.HomeViewModel
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -36,20 +33,21 @@ data class PresupuestoUiState(
         get() = presupuestos.find { it.vehiculoId == vehiculoIdFiltro }
 }
 
-class PresupuestoViewModel(private val vehiculoRepository: IVehiculoRepository) : ViewModel()
+class PresupuestoViewModel(
+    private val vehiculoRepository: IVehiculoRepository,
+    private val presupuestoRepository: IPresupuestoRepository) : ViewModel()
 {
-    private val repo = PresupuestoRepository()
-
     private val _state = MutableStateFlow(PresupuestoUiState())
     val state: StateFlow<PresupuestoUiState> = _state.asStateFlow()
 
     init { cargar() }
 
-    fun cargar() {
+    fun cargar()
+    {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
             runCatching {
-                val presupuestos = repo.getAll()
+                val presupuestos = presupuestoRepository.getAll()
                 val vehiculos    = vehiculoRepository.getVehiculos()
                 _state.update { it.copy(presupuestos = presupuestos, vehiculos = vehiculos) }
             }.onFailure { e ->
@@ -95,7 +93,7 @@ class PresupuestoViewModel(private val vehiculoRepository: IVehiculoRepository) 
         viewModelScope.launch {
             _state.update { it.copy(isSaving = true) }
             runCatching {
-                repo.save(
+                presupuestoRepository.save(
                     NuevoPresupuesto(
                         userId        = userId,
                         vehiculoId    = s.vehiculoIdFiltro,
@@ -118,15 +116,6 @@ class PresupuestoViewModel(private val vehiculoRepository: IVehiculoRepository) 
     companion object
     {
         private const val TAG = "PresupuestoViewModel"
-        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory
-        {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T
-            {
-                val api = VehiculoApi(HttpClientProvider.client)
-                val repository = VehiculoRepository(api)
-                return PresupuestoViewModel(repository) as T
-            }
-        }
+        val Factory: ViewModelProvider.Factory = ViewModelModule.presupuestoViewModelFactory()
     }
 }

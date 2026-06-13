@@ -8,6 +8,7 @@ import com.tagok.app.ui.historial.HistorialViewModel
 import com.tagok.app.ui.map.MapViewModel
 import com.tagok.app.ui.map.portico.porticoContainer.PorticosViewModel
 import com.tagok.app.ui.planificar.PlanificarViajeViewModel
+import com.tagok.app.ui.presupuesto.PresupuestoViewModel
 import kotlinx.datetime.LocalDate
 
 object ViewModelModule
@@ -75,6 +76,15 @@ object ViewModelModule
                 RepositoryModule.porticoRepository,
                 RepositoryModule.tarifaRepository,
                 ServiceModule.locationProvider) as T
+        }
+    }
+
+    fun presupuestoViewModelFactory() = object : ViewModelProvider.Factory
+    {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T
+        {
+            return PresupuestoViewModel(RepositoryModule.vehiculoRepository, RepositoryModule.presupuestoRepository) as T
         }
     }
 }

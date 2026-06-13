@@ -1,5 +1,6 @@
 package com.tagok.app.domain.interfaces
 
+import com.tagok.app.data.NuevoPresupuesto
 import com.tagok.app.data.dto.TarifaRequest
 import com.tagok.app.data.dto.boleta.BoletaRequest
 import com.tagok.app.data.dto.history.FiltroHistorialRequest
@@ -13,6 +14,7 @@ import com.tagok.app.domain.model.history.ResumenAnual
 import com.tagok.app.domain.model.portico.PorticoResumen
 import com.tagok.app.domain.model.portico.PorticoTipo
 import com.tagok.app.domain.model.portico.TollType
+import com.tagok.app.domain.model.presupuesto.Presupuesto
 import com.tagok.app.domain.model.routes.Route
 import com.tagok.app.domain.model.tarifa.TarifaCalculada
 import com.tagok.app.domain.model.vehiculo.NuevoVehiculo
@@ -63,5 +65,12 @@ interface IVehiculoRepository
     suspend fun getVehiculos(): List<Vehiculo>
     suspend fun insertVehiculo(nuevo: NuevoVehiculo): HttpResponse
     suspend fun deleteVehiculo(id: String): HttpResponse
+}
+
+interface IPresupuestoRepository
+{
+    suspend fun getAll(): List<Presupuesto>
+    suspend fun save(nuevo: NuevoPresupuesto)
+    suspend fun delete(id: String)
 }
 

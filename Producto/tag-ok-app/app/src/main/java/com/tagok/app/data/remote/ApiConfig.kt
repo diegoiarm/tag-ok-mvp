@@ -9,4 +9,5 @@ object ApiConfig
     const val HISTORY_API: String = "$GATEWAY_URL/history"
     const val BOLETA_API: String = "$GATEWAY_URL/history"
     const val VEHICULOS_API = "$GATEWAY_URL/vehiculos"
+    const val PRESUPUESTO_API = "$GATEWAY_URL/presupuesto"
 }

@@ -11,6 +11,9 @@ import com.tagok.app.data.dto.history.FiltroHistorialRequest
 import com.tagok.app.data.dto.history.ResumenAnualDTO
 import com.tagok.app.data.dto.portico.PorticoResumenResponse
 import com.tagok.app.data.dto.portico.TollResponse
+import com.tagok.app.data.dto.presupuesto.ActualizarPresupuestoRequest
+import com.tagok.app.data.dto.presupuesto.NuevoPresupuestoRequest
+import com.tagok.app.data.dto.presupuesto.PresupuestoDto
 import com.tagok.app.data.dto.route.RouteRequest
 import com.tagok.app.data.dto.route.RouteResponse
 import com.tagok.app.data.dto.tarifa.TarifaCalculadaResponse
@@ -59,4 +62,20 @@ interface IVehiculoApi
     suspend fun getVehiculos(): List<VehiculoDto>
     suspend fun insertVehiculo(request: NuevoVehiculoRequest): HttpResponse
     suspend fun deleteVehiculo(id: String): HttpResponse
+}
+
+interface IPresupuestoApi
+{
+    suspend fun getAll(): List<PresupuestoDto>
+
+    suspend fun getByUserAndVehicle(
+        userId: String,
+        vehiculoId: String?
+    ): List<PresupuestoDto>
+
+    suspend fun insert(request: NuevoPresupuestoRequest): HttpResponse
+
+    suspend fun update(id: String, request: ActualizarPresupuestoRequest): HttpResponse
+
+    suspend fun delete(id: String): HttpResponse
 }

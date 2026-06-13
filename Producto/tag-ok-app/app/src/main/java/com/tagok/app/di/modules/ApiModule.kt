@@ -3,12 +3,14 @@ package com.tagok.app.di.modules
 import com.tagok.app.data.remote.BoletaApi
 import com.tagok.app.data.remote.HistoryApi
 import com.tagok.app.data.remote.PorticoApi
+import com.tagok.app.data.remote.PresupuestoApi
 import com.tagok.app.data.remote.RouteApi
 import com.tagok.app.data.remote.TarifaApi
 import com.tagok.app.data.remote.VehiculoApi
 import com.tagok.app.data.remote.interfaces.IBoletaApi
 import com.tagok.app.data.remote.interfaces.IHistoryApi
 import com.tagok.app.data.remote.interfaces.IPorticoApi
+import com.tagok.app.data.remote.interfaces.IPresupuestoApi
 import com.tagok.app.data.remote.interfaces.IRouteApi
 import com.tagok.app.data.remote.interfaces.ITarifaApi
 import com.tagok.app.data.remote.interfaces.IVehiculoApi
@@ -37,5 +39,9 @@ object ApiModule
 
     val vehiculoApi: IVehiculoApi by lazy {
         VehiculoApi(NetworkModule.httpClient)
+    }
+
+    val presupuestoApi: IPresupuestoApi by lazy {
+        PresupuestoApi(NetworkModule.httpClient)
     }
 }

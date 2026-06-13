@@ -37,6 +37,15 @@ spring:
                 - PrefixPath=/rest/v1
                 - AddRequestHeader=apikey, ${SUPABASE_ANON_KEY}
 
+            - id: supabase-presupuestos
+              uri: ${SUPABASE_URL}
+              predicates:
+                - Path=/api/presupuesto/**
+              filters:
+                - StripPrefix=2
+                - PrefixPath=/rest/v1
+                - AddRequestHeader=apikey, ${SUPABASE_ANON_KEY}
+
             - id: routes-service-docs
               uri: http://routes-service:8080
               predicates:
