@@ -221,6 +221,11 @@ documentación del api.
 
 ## Esquema de supabase
 
+- El esquema de tablas que usa supabase se encuentra en ./Producto/supabase/supabase-schema.sql
+
+- Te da las tablas necesarias junto a las funciones de presupuesto (edge functions)
+
+
 ## Notas de configuración
 
 Antes de iniciar el sistema, se debe hacer una configuración en el archivo de entorno '.env', donde se colocaran las urls de autenticacion, apis externas y API KEYS
