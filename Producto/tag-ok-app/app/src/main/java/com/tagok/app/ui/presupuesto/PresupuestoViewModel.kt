@@ -26,6 +26,7 @@ data class PresupuestoUiState(
     val formMonto: String = "",
     val formUmbral1: Float = 75f,
     val formUmbral2: Float = 90f,
+    val formAlertasActivas: Boolean = true,
     val isSaving: Boolean = false,
     val errorMsg: String? = null)
 {
@@ -64,10 +65,11 @@ class PresupuestoViewModel(
         val actual = _state.value.presupuestoActual
         _state.update {
             it.copy(
-                showEditSheet = true,
-                formMonto     = actual?.montoMensual?.toString() ?: "",
-                formUmbral1   = actual?.umbralAlerta1?.toFloat() ?: 75f,
-                formUmbral2   = actual?.umbralAlerta2?.toFloat() ?: 90f,
+                showEditSheet      = true,
+                formMonto          = actual?.montoMensual?.toString() ?: "",
+                formUmbral1        = actual?.umbralAlerta1?.toFloat() ?: 75f,
+                formUmbral2        = actual?.umbralAlerta2?.toFloat() ?: 90f,
+                formAlertasActivas = actual?.alertasActivas ?: true,
             )
         }
     }
@@ -77,6 +79,7 @@ class PresupuestoViewModel(
     fun updateFormMonto(v: String)   = _state.update { it.copy(formMonto = v) }
     fun updateUmbral1(v: Float) = _state.update { it.copy(formUmbral1 = v) }
     fun updateUmbral2(v: Float) = _state.update { it.copy(formUmbral2 = v) }
+    fun updateAlertasActivas(v: Boolean) = _state.update { it.copy(formAlertasActivas = v) }
 
     fun guardar() {
         val s      = _state.value
@@ -95,11 +98,12 @@ class PresupuestoViewModel(
             runCatching {
                 presupuestoRepository.save(
                     NuevoPresupuesto(
-                        userId        = userId,
-                        vehiculoId    = s.vehiculoIdFiltro,
-                        montoMensual  = monto,
-                        umbralAlerta1 = s.formUmbral1.toInt(),
-                        umbralAlerta2 = s.formUmbral2.toInt(),
+                        userId         = userId,
+                        vehiculoId     = s.vehiculoIdFiltro,
+                        montoMensual   = monto,
+                        umbralAlerta1  = s.formUmbral1.toInt(),
+                        umbralAlerta2  = s.formUmbral2.toInt(),
+                        alertasActivas = s.formAlertasActivas,
                     )
                 )
             }.onSuccess {

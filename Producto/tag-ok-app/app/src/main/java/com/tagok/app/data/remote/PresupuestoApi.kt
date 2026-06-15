@@ -1,6 +1,5 @@
 package com.tagok.app.data.remote
 
-import android.util.Log
 import com.tagok.app.data.dto.presupuesto.PresupuestoDto
 import com.tagok.app.data.dto.presupuesto.NuevoPresupuestoRequest
 import com.tagok.app.data.dto.presupuesto.ActualizarPresupuestoRequest
@@ -14,24 +13,21 @@ import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.patch
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import kotlinx.serialization.json.Json
 
 class PresupuestoApi(client: HttpClient) : IPresupuestoApi, ApiClient(client, TAG)
 {
     override suspend fun getAll(): List<PresupuestoDto> = apiCall("Obtener presupuestos")
     {
-        val response = client.get("$BASE_URL/presupuesto")
+        // .body() usa el ContentNegotiation con ignoreUnknownKeys=true: tolera columnas
+        // nuevas en la tabla (p.ej. alertas_activas) sin romper apps con DTO viejo.
+        client.get("$BASE_URL/presupuesto")
         {
             contentType(ContentType.Application.Json)
             parameter("select", "*")
             parameter("order", "created_at.asc")
-        }
-        val bodyText = response.bodyAsText()
-        Log.d(TAG, "Respuesta cruda: $bodyText")
-        Json.decodeFromString<List<PresupuestoDto>>(bodyText)
+        }.body()
     }
 
     override suspend fun getByUserAndVehicle(

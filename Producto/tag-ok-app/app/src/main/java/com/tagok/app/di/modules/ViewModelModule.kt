@@ -7,6 +7,7 @@ import com.tagok.app.ui.boleta.comparacion.ComparacionViewModel
 import com.tagok.app.ui.historial.HistorialViewModel
 import com.tagok.app.ui.map.MapViewModel
 import com.tagok.app.ui.map.portico.porticoContainer.PorticosViewModel
+import com.tagok.app.ui.notificaciones.NotificacionesViewModel
 import com.tagok.app.ui.planificar.PlanificarViajeViewModel
 import com.tagok.app.ui.presupuesto.PresupuestoViewModel
 import kotlinx.datetime.LocalDate
@@ -85,6 +86,15 @@ object ViewModelModule
         override fun <T : ViewModel> create(modelClass: Class<T>): T
         {
             return PresupuestoViewModel(RepositoryModule.vehiculoRepository, RepositoryModule.presupuestoRepository) as T
+        }
+    }
+
+    fun notificacionesViewModelFactory() = object : ViewModelProvider.Factory
+    {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T
+        {
+            return NotificacionesViewModel(RepositoryModule.notificacionRepository) as T
         }
     }
 }

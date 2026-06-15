@@ -1,5 +1,10 @@
 package com.tagok.app.ui.home
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -24,6 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
@@ -33,6 +39,7 @@ import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import com.tagok.app.domain.model.vehiculo.Vehiculo
 import com.tagok.app.domain.vehiculo.TipoVehiculo
+import com.tagok.app.ui.map.NotificationUtils
 import com.tagok.app.ui.map.portico.porticoContainer.PorticosContainer
 import com.tagok.app.ui.theme.InputBackground
 
@@ -49,19 +56,48 @@ fun HomeScreen(
     onHistorialViajes: () -> Unit,
     onIrARuta: (vehiculo: String) -> Unit,
     onAgregarVehiculo: () -> Unit = {},
-    onLogout: () -> Unit = {},
+    onNotificaciones: () -> Unit = {},
     viewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory)
 ) {
     val vehiculos by viewModel.vehiculos.collectAsState()
     val loading by viewModel.loading.collectAsState()
+    val unreadCount by viewModel.unreadCount.collectAsState()
+    val alertasPendientes by viewModel.alertasPendientes.collectAsState()
     var vehiculoSeleccionado by remember { mutableStateOf<Vehiculo?>(null) }
 
     val context = LocalContext.current
+
+    // Android 13+: solicitar permiso de notificaciones una vez (si no, la notificación
+    // local del sistema no se muestra; la campanita y el badge funcionan igual).
+    val permisoNotificaciones = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()) { }
+    LaunchedEffect(Unit) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+            != PackageManager.PERMISSION_GRANTED) {
+            permisoNotificaciones.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
 
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(lifecycleOwner) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
             viewModel.cargar()
+        }
+    }
+
+    // Dispara notificaciones locales de Android para las alertas recién generadas.
+    LaunchedEffect(alertasPendientes) {
+        if (alertasPendientes.isNotEmpty()) {
+            NotificationUtils.createNotificationChannel(context)
+            alertasPendientes.forEachIndexed { index, alerta ->
+                NotificationUtils.notificarAlertaPresupuesto(
+                    context = context,
+                    id = (alerta.vehiculoId ?: "global").hashCode() + (alerta.umbral ?: index),
+                    titulo = alerta.titulo,
+                    cuerpo = alerta.cuerpo)
+            }
+            viewModel.consumirAlertas()
         }
     }
 
@@ -124,21 +160,39 @@ fun HomeScreen(
                 )
             }
             Spacer(Modifier.weight(1f))
-            // Botón campana
-            Box(
-                modifier = Modifier
-                    .size(46.dp)
-                    .clip(CircleShape)
-                    .background(IndicatorBlue)
-                    .clickable { onLogout() },
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Notifications,
-                    contentDescription = null,
-                    tint = Color(0xFF1C42B1),
-                    modifier = Modifier.size(24.dp)
-                )
+            // Botón campana → historial de notificaciones, con badge de no-leídas
+            Box(contentAlignment = Alignment.TopEnd) {
+                Box(
+                    modifier = Modifier
+                        .size(46.dp)
+                        .clip(CircleShape)
+                        .background(IndicatorBlue)
+                        .clickable { onNotificaciones() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Notifications,
+                        contentDescription = "Notificaciones",
+                        tint = Color(0xFF1C42B1),
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+                if (unreadCount > 0) {
+                    Box(
+                        modifier = Modifier
+                            .size(18.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xFFEF4444)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = if (unreadCount > 9) "9+" else unreadCount.toString(),
+                            color = Color.White,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
             }
         }
 

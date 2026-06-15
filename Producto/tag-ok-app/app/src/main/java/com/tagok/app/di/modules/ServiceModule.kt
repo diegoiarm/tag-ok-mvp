@@ -1,5 +1,6 @@
 package com.tagok.app.di.modules
 
+import com.tagok.app.domain.services.AlertaService
 import com.tagok.app.domain.services.BoletaService
 import com.tagok.app.domain.services.HistoryService
 import com.tagok.app.domain.services.LocationProvider
@@ -29,6 +30,14 @@ object ServiceModule
 
     val historyService: IHistoryService by lazy {
         HistoryService(historyRepository = RepositoryModule.historyRepository)
+    }
+
+    val alertaService: AlertaService by lazy {
+        AlertaService(
+            presupuestoRepository = RepositoryModule.presupuestoRepository,
+            vehiculoRepository = RepositoryModule.vehiculoRepository,
+            historyRepository = RepositoryModule.historyRepository,
+            notificacionRepository = RepositoryModule.notificacionRepository)
     }
 
     val locationProvider: ILocationProvider by lazy {

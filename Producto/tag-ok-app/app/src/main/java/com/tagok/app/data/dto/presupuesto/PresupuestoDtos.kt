@@ -11,6 +11,7 @@ data class PresupuestoDto(
     @SerialName("monto_mensual") val montoMensual: Int,
     @SerialName("umbral_alerta_1") val umbralAlerta1: Int,
     @SerialName("umbral_alerta_2") val umbralAlerta2: Int,
+    @SerialName("alertas_activas") val alertasActivas: Boolean = true,
     @SerialName("created_at") val createdAt: String? = null
 )
 
@@ -20,12 +21,14 @@ data class NuevoPresupuestoRequest(
     @SerialName("vehiculo_id") val vehiculoId: String? = null,
     @SerialName("monto_mensual") val montoMensual: Int,
     @SerialName("umbral_alerta_1") val umbralAlerta1: Int,
-    @SerialName("umbral_alerta_2") val umbralAlerta2: Int
+    @SerialName("umbral_alerta_2") val umbralAlerta2: Int,
+    @SerialName("alertas_activas") val alertasActivas: Boolean = true
 )
 
 @Serializable
 data class ActualizarPresupuestoRequest(
     @SerialName("monto_mensual") val montoMensual: Int,
     @SerialName("umbral_alerta_1") val umbralAlerta1: Int,
-    @SerialName("umbral_alerta_2") val umbralAlerta2: Int
+    @SerialName("umbral_alerta_2") val umbralAlerta2: Int,
+    @SerialName("alertas_activas") val alertasActivas: Boolean = true
 )

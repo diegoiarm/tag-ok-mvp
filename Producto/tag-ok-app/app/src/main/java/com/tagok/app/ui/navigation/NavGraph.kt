@@ -42,6 +42,7 @@ import com.tagok.app.ui.boleta.comparacion.ComparacionScreen
 import com.tagok.app.ui.historial.HistorialScreen
 import com.tagok.app.ui.home.HomeScreen
 import com.tagok.app.ui.map.MapScreen
+import com.tagok.app.ui.notificaciones.NotificacionesScreen
 import com.tagok.app.ui.perfil.PerfilScreen
 import com.tagok.app.ui.planificar.PlanificarViajeScreen
 import com.tagok.app.ui.presupuesto.PresupuestoScreen
@@ -227,12 +228,12 @@ fun NavGraph() {
                     onHistorialViajes = { navController.navigate("historial") },
                     onIrARuta = { v -> navController.navigate("map/$v") },
                     onAgregarVehiculo = { navController.navigate("vehiculos") },
-                    onLogout = {
-                        scope.launch {
-                            supabase.auth.signOut()
-                        }
-                    }
+                    onNotificaciones = { navController.navigate("notificaciones") }
                 )
+            }
+
+            composable("notificaciones") {
+                NotificacionesScreen(onBack = { navController.popBackStack() })
             }
 
             composable("presupuesto") {
@@ -283,7 +284,12 @@ fun NavGraph() {
             composable("perfil") {
                 PerfilScreen(
                     onVehiculos = { navController.navigate("vehiculos") },
-                    onMisRutas = { navController.navigate("historial") }
+                    onMisRutas = { navController.navigate("historial") },
+                    onLogout = {
+                        scope.launch {
+                            supabase.auth.signOut()
+                        }
+                    }
                 )
             }
 

@@ -1,6 +1,7 @@
 package com.tagok.app.ui.presupuesto
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,6 +39,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -142,7 +145,13 @@ fun PresupuestoScreen(viewModel: PresupuestoViewModel = viewModel(factory = Pres
                         else (vehiculo?.alias?.takeIf { it.isNotBlank() } ?: vehiculo?.patente ?: "Vehículo")
 
                         Card(
-                            modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 12.dp)
+                                .clickable {
+                                    viewModel.seleccionarVehiculo(presupuesto.vehiculoId)
+                                    viewModel.abrirEditSheet()
+                                },
                             shape = RoundedCornerShape(12.dp),
                             colors = CardDefaults.cardColors(containerColor = Color.White),
                             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -156,7 +165,11 @@ fun PresupuestoScreen(viewModel: PresupuestoViewModel = viewModel(factory = Pres
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text("💰 Límite: ${presupuesto.montoMensual.toCLP()}", fontSize = 13.sp, color = TextDark)
-                                Text("⚠️ Alertas: ${presupuesto.umbralAlerta1}% / ${presupuesto.umbralAlerta2}%", fontSize = 13.sp, color = TextDark)
+                                if (presupuesto.alertasActivas) {
+                                    Text("⚠️ Alertas: ${presupuesto.umbralAlerta1}% / ${presupuesto.umbralAlerta2}%", fontSize = 13.sp, color = TextDark)
+                                } else {
+                                    Text("🔕 Alertas desactivadas", fontSize = 13.sp, color = Color.Gray)
+                                }
                             }
                         }
                     }
@@ -538,27 +551,60 @@ private fun EditPresupuestoSheet(state: PresupuestoUiState, viewModel: Presupues
             ),
         )
 
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(20.dp))
 
-        UmbralSlider(
-            label   = "Primera alerta",
-            value   = state.formUmbral1,
-            onValue = viewModel::updateUmbral1,
-            range   = 10f..99f,
-            color   = getThresholdColor(state.formUmbral1),
-        )
+        // ── CU14: activar / desactivar alertas ──────────────────────────────
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text("Alertas de presupuesto", fontSize = 14.sp, color = TextDark, fontWeight = FontWeight.Medium)
+                Text(
+                    if (state.formAlertasActivas) "Te avisaremos al acercarte al límite"
+                    else "No recibirás avisos de este presupuesto",
+                    fontSize = 12.sp,
+                    color    = Color.Gray,
+                )
+            }
+            Switch(
+                checked         = state.formAlertasActivas,
+                onCheckedChange = viewModel::updateAlertasActivas,
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor   = Color.White,
+                    checkedTrackColor   = NavyBlue,
+                    uncheckedThumbColor = Color.White,
+                    uncheckedTrackColor = DividerGray,
+                ),
+            )
+        }
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(20.dp))
 
-        UmbralSlider(
-            label   = "Segunda alerta",
-            value   = state.formUmbral2,
-            onValue = viewModel::updateUmbral2,
-            range   = 10f..100f,
-            color   = getThresholdColor(state.formUmbral2),
-        )
+        // ── CU15: condiciones de alerta (solo si están activas) ─────────────
+        if (state.formAlertasActivas) {
+            UmbralSlider(
+                label   = "Primera alerta",
+                value   = state.formUmbral1,
+                onValue = viewModel::updateUmbral1,
+                range   = 10f..99f,
+                color   = getThresholdColor(state.formUmbral1),
+            )
 
-        Spacer(Modifier.height(28.dp))
+            Spacer(Modifier.height(16.dp))
+
+            UmbralSlider(
+                label   = "Segunda alerta",
+                value   = state.formUmbral2,
+                onValue = viewModel::updateUmbral2,
+                range   = 10f..100f,
+                color   = getThresholdColor(state.formUmbral2),
+            )
+
+            Spacer(Modifier.height(28.dp))
+        } else {
+            Spacer(Modifier.height(8.dp))
+        }
 
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             TextButton(

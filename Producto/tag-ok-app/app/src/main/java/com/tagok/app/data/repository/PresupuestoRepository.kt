@@ -27,19 +27,21 @@ class PresupuestoRepository(private val api: IPresupuestoApi) : IPresupuestoRepo
             api.update(
                 id = existing.id,
                 request = ActualizarPresupuestoRequest(
-                    montoMensual  = nuevo.montoMensual,
-                    umbralAlerta1 = nuevo.umbralAlerta1,
-                    umbralAlerta2 = nuevo.umbralAlerta2,))
+                    montoMensual   = nuevo.montoMensual,
+                    umbralAlerta1  = nuevo.umbralAlerta1,
+                    umbralAlerta2  = nuevo.umbralAlerta2,
+                    alertasActivas = nuevo.alertasActivas,))
         }
         else
         {
             api.insert(
                 NuevoPresupuestoRequest(
-                    userId        = nuevo.userId,
-                    vehiculoId    = nuevo.vehiculoId,
-                    montoMensual  = nuevo.montoMensual,
-                    umbralAlerta1 = nuevo.umbralAlerta1,
-                    umbralAlerta2 = nuevo.umbralAlerta2,))
+                    userId         = nuevo.userId,
+                    vehiculoId     = nuevo.vehiculoId,
+                    montoMensual   = nuevo.montoMensual,
+                    umbralAlerta1  = nuevo.umbralAlerta1,
+                    umbralAlerta2  = nuevo.umbralAlerta2,
+                    alertasActivas = nuevo.alertasActivas,))
         }
     }
 

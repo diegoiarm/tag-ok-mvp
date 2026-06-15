@@ -21,8 +21,26 @@ CREATE TABLE public.presupuesto (
   monto_mensual integer NOT NULL CHECK (monto_mensual > 0),
   umbral_alerta_1 integer NOT NULL DEFAULT 75 CHECK (umbral_alerta_1 >= 1 AND umbral_alerta_1 <= 99),
   umbral_alerta_2 integer NOT NULL DEFAULT 90 CHECK (umbral_alerta_2 >= 1 AND umbral_alerta_2 <= 100),
+  alertas_activas boolean NOT NULL DEFAULT true,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   CONSTRAINT presupuesto_pkey PRIMARY KEY (id),
   CONSTRAINT presupuesto_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id),
   CONSTRAINT presupuesto_vehiculo_id_fkey FOREIGN KEY (vehiculo_id) REFERENCES public.vehiculos(id)
+);
+
+CREATE TABLE public.notificacion (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL,
+  vehiculo_id uuid,
+  tipo text NOT NULL DEFAULT 'PRESUPUESTO_UMBRAL',
+  titulo text NOT NULL,
+  cuerpo text NOT NULL,
+  umbral integer,
+  porcentaje integer,
+  periodo text,
+  leida boolean NOT NULL DEFAULT false,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT notificacion_pkey PRIMARY KEY (id),
+  CONSTRAINT notificacion_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id),
+  CONSTRAINT notificacion_vehiculo_id_fkey FOREIGN KEY (vehiculo_id) REFERENCES public.vehiculos(id)
 );
