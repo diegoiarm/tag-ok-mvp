@@ -15,7 +15,9 @@ import com.tagok.app.domain.model.tarifa.TarifaCalculada
 object NotificationUtils
 {
     private const val CHANNEL_CRUCES = "channel_cruces"
+    private const val CHANNEL_PRESUPUESTO = "channel_presupuesto"
     private const val NOTIFICATION_ID = 1001
+    private const val PRESUPUESTO_ID_BASE = 2000
     private const val MAX_CRUCES_VISIBLES = 3
 
     // Acumulador de cruces
@@ -36,7 +38,45 @@ object NotificationUtils
 
             val notificationManager = context.getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)
+
+            val channelPresupuesto = NotificationChannel(
+                CHANNEL_PRESUPUESTO,
+                "Alertas de presupuesto",
+                NotificationManager.IMPORTANCE_HIGH).apply {
+                description = "Avisos al acercarte al límite de gasto mensual"
+            }
+            notificationManager.createNotificationChannel(channelPresupuesto)
         }
+    }
+
+    /** CU14/CU15: muestra una alerta local de presupuesto. [id] debe ser único por alerta. */
+    fun notificarAlertaPresupuesto(
+        context: Context,
+        id: Int,
+        titulo: String,
+        cuerpo: String)
+    {
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            PRESUPUESTO_ID_BASE + id,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+
+        val notification = NotificationCompat.Builder(context, CHANNEL_PRESUPUESTO)
+            .setSmallIcon(R.drawable.ic_portico)
+            .setContentTitle(titulo)
+            .setContentText(cuerpo)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(cuerpo))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .build()
+
+        context.getSystemService(NotificationManager::class.java)
+            .notify(PRESUPUESTO_ID_BASE + id, notification)
     }
 
     fun agregarCruce(

@@ -6,9 +6,10 @@ import com.tagok.app.domain.model.presupuesto.Presupuesto
 fun PresupuestoDto.toDomain(): Presupuesto = Presupuesto(
     id = id,
     userId = userId,
-    vehiculoId = vehiculoId ?: "Sin especificar",
+    vehiculoId = vehiculoId,
     montoMensual = montoMensual,
     umbralAlerta1 = umbralAlerta1,
     umbralAlerta2 = umbralAlerta2,
+    alertasActivas = alertasActivas,
     createdAt = createdAt ?: "Sin especificar"
 )

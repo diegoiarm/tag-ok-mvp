@@ -21,6 +21,7 @@ data class NuevoPresupuesto(
     @SerialName("monto_mensual")   val montoMensual: Int,
     @SerialName("umbral_alerta_1") val umbralAlerta1: Int = 75,
     @SerialName("umbral_alerta_2") val umbralAlerta2: Int = 90,
+    @SerialName("alertas_activas") val alertasActivas: Boolean = true,
 )
 
 @Serializable

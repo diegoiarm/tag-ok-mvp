@@ -71,6 +71,7 @@ private val TextDark     = Color(0xFF111827)
 fun PerfilScreen(
     onVehiculos: () -> Unit = {},
     onMisRutas: () -> Unit = {},
+    onLogout: () -> Unit = {},
     viewModel: PerfilViewModel = viewModel(),
 ) {
     val state by viewModel.state.collectAsState()
@@ -131,6 +132,19 @@ fun PerfilScreen(
                 onGuardar = viewModel::guardar,
                 onCancelar = viewModel::cancelEditing,
             )
+
+            if (!state.isEditing) {
+                Spacer(Modifier.height(12.dp))
+                TextButton(
+                    onClick = onLogout,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
+                    colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFFEF4444)),
+                ) {
+                    Text("Cerrar sesión", fontWeight = FontWeight.SemiBold)
+                }
+            }
 
             Spacer(Modifier.height(40.dp))
         }

@@ -11,6 +11,8 @@ import com.tagok.app.domain.model.boleta.ComparacionFactura
 import com.tagok.app.domain.model.history.DetalleDia
 import com.tagok.app.domain.model.history.DetalleMensual
 import com.tagok.app.domain.model.history.ResumenAnual
+import com.tagok.app.domain.model.notificacion.Notificacion
+import com.tagok.app.domain.model.notificacion.NuevaNotificacion
 import com.tagok.app.domain.model.portico.PorticoResumen
 import com.tagok.app.domain.model.portico.PorticoTipo
 import com.tagok.app.domain.model.portico.TollType
@@ -72,5 +74,13 @@ interface IPresupuestoRepository
     suspend fun getAll(): List<Presupuesto>
     suspend fun save(nuevo: NuevoPresupuesto)
     suspend fun delete(id: String)
+}
+
+interface INotificacionRepository
+{
+    suspend fun getAll(): List<Notificacion>
+    suspend fun getByPeriodo(userId: String, periodo: String): List<Notificacion>
+    suspend fun crear(nueva: NuevaNotificacion)
+    suspend fun marcarLeida(id: String)
 }
 

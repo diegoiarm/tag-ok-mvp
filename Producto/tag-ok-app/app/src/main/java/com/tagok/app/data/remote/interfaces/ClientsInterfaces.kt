@@ -9,6 +9,8 @@ import com.tagok.app.data.dto.history.DetalleDiaDTO
 import com.tagok.app.data.dto.history.DetalleMensualDTO
 import com.tagok.app.data.dto.history.FiltroHistorialRequest
 import com.tagok.app.data.dto.history.ResumenAnualDTO
+import com.tagok.app.data.dto.notificacion.NotificacionDto
+import com.tagok.app.data.dto.notificacion.NuevaNotificacionRequest
 import com.tagok.app.data.dto.portico.PorticoResumenResponse
 import com.tagok.app.data.dto.portico.TollResponse
 import com.tagok.app.data.dto.presupuesto.ActualizarPresupuestoRequest
@@ -62,6 +64,17 @@ interface IVehiculoApi
     suspend fun getVehiculos(): List<VehiculoDto>
     suspend fun insertVehiculo(request: NuevoVehiculoRequest): HttpResponse
     suspend fun deleteVehiculo(id: String): HttpResponse
+}
+
+interface INotificacionApi
+{
+    suspend fun getAll(): List<NotificacionDto>
+
+    suspend fun getByPeriodo(userId: String, periodo: String): List<NotificacionDto>
+
+    suspend fun insert(request: NuevaNotificacionRequest): HttpResponse
+
+    suspend fun marcarLeida(id: String): HttpResponse
 }
 
 interface IPresupuestoApi

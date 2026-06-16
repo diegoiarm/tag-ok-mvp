@@ -46,6 +46,15 @@ spring:
                 - PrefixPath=/rest/v1
                 - AddRequestHeader=apikey, ${SUPABASE_ANON_KEY}
 
+            - id: supabase-notificaciones
+              uri: ${SUPABASE_URL}
+              predicates:
+                - Path=/api/notificaciones/**
+              filters:
+                - StripPrefix=2
+                - PrefixPath=/rest/v1
+                - AddRequestHeader=apikey, ${SUPABASE_ANON_KEY}
+
             - id: routes-service-docs
               uri: http://routes-service:8080
               predicates:
