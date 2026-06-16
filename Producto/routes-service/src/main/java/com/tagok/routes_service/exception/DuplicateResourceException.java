@@ -1,13 +1,12 @@
 package com.tagok.routes_service.exception;
 
-/**
- * Se lanza cuando se intenta crear o actualizar un recurso con un valor único
- * que ya está en uso (por ejemplo, nombre o código de autopista duplicado).
- */
-public class DuplicateResourceException extends RuntimeException
+import io.github.roony11_1.error.core.StandardErrorCategories;
+import io.github.roony11_1.error.core.exceptions.AppException;
+
+public class DuplicateResourceException extends AppException 
 {
-    public DuplicateResourceException(String message)
+    public DuplicateResourceException(String message) 
     {
-        super(message);
+        super("ROUTE-001", message, StandardErrorCategories.ALREADY_EXISTS, message);
     }
 }

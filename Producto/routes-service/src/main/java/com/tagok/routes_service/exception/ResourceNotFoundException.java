@@ -1,12 +1,12 @@
 package com.tagok.routes_service.exception;
 
-/**
- * Se lanza cuando un recurso solicitado por id no existe.
- */
-public class ResourceNotFoundException extends RuntimeException
+import io.github.roony11_1.error.core.StandardErrorCategories;
+import io.github.roony11_1.error.core.exceptions.AppException;
+
+public class ResourceNotFoundException extends AppException 
 {
-    public ResourceNotFoundException(String message)
+    public ResourceNotFoundException(String message) 
     {
-        super(message);
+        super("ROUTE-002", message, StandardErrorCategories.NOT_FOUND, message);
     }
 }

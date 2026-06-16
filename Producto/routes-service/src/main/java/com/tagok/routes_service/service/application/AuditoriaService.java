@@ -11,10 +11,13 @@ import com.tagok.routes_service.dto.response.auditoria.RegistroAuditoriaResponse
 import com.tagok.routes_service.repository.RegistroAuditoriaRepository;
 import com.tagok.routes_service.security.CurrentUserService;
 
+import io.github.roony11_1.error.core.ErrorHandler;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuditoriaService
 {
     private static final int MAX_REGISTROS = 200;
@@ -26,9 +29,9 @@ public class AuditoriaService
      * Registra una acción administrativa. Es best-effort: si el guardado falla no
      * debe interrumpir la operación principal. El usuario se resuelve del JWT actual.
      */
-    public void registrar(TipoAccion accion, String entidad, String entidadId, String descripcion)
+    public void registrar(TipoAccion accion, String entidad, String entidadId, String descripcion) 
     {
-        try
+        try 
         {
             auditoriaRepository.save(RegistroAuditoria.builder()
                 .accion(accion)
@@ -38,10 +41,10 @@ public class AuditoriaService
                 .usuarioId(currentUserService.getUserId())
                 .usuarioEmail(currentUserService.getEmail())
                 .build());
-        }
-        catch (Exception e)
+        } 
+        catch (Exception e) 
         {
-            System.err.println("No fue posible registrar la auditoría: " + e.getMessage());
+            ErrorHandler.toErrorResponse(e);
         }
     }
 

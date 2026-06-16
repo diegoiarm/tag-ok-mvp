@@ -15,6 +15,7 @@ import com.tagok.routes_service.dto.response.uso.EstadisticasUsoResponse.PuntoMe
 import com.tagok.routes_service.repository.EventoUsoRepository;
 import com.tagok.routes_service.repository.EventoUsoRepository.ConteoMensualUso;
 
+import io.github.roony11_1.error.core.ErrorHandler;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -27,18 +28,18 @@ public class UsoService
      * Registra un evento de uso. Es best-effort: si el guardado falla no debe
      * interrumpir la operación principal (cálculo de ruta / estimación).
      */
-    public void registrar(TipoEventoUso tipo, String usuarioId)
+    public void registrar(TipoEventoUso tipo, String usuarioId) 
     {
-        try
+        try 
         {
             eventoUsoRepository.save(EventoUso.builder()
                 .tipo(tipo)
                 .usuarioId(usuarioId)
                 .build());
-        }
-        catch (Exception e)
+        } 
+        catch (Exception e) 
         {
-            System.err.println("No fue posible registrar el evento de uso: " + e.getMessage());
+            ErrorHandler.toErrorResponse(e);
         }
     }
 
