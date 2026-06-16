@@ -10,9 +10,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.Color
 import com.tagok.app.domain.model.history.DetalleDia
-import com.tagok.app.ui.theme.Blue40
-import com.tagok.app.ui.theme.TextSecondary
+import com.tagok.app.ui.theme.AccentBlue
 
 @Composable
 fun DetalleDiaContent(
@@ -38,16 +38,16 @@ fun DetalleDiaContent(
                     text = "Detalle de cruces",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = TextSecondary)
+                    color = Color.Gray)
                 Surface(
                     shape = RoundedCornerShape(8.dp),
-                    color = Blue40.copy(alpha = 0.1f))
+                    color = AccentBlue.copy(alpha = 0.1f))
                 {
                     Text(
                         text = "${detalle.cruces.size} cruces",
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                         style = MaterialTheme.typography.labelSmall,
-                        color = Blue40,
+                        color = AccentBlue,
                         fontWeight = FontWeight.Bold)
                 }
             }

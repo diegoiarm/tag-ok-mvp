@@ -5,9 +5,11 @@ import com.tagok.app.data.remote.exceptions.ApiException
 import com.tagok.app.domain.exceptions.ApplicationError
 import com.tagok.app.domain.interfaces.IBoletaRepository
 import com.tagok.app.domain.interfaces.IHistoryRepository
+import com.tagok.app.domain.interfaces.IVehiculoRepository
 import com.tagok.app.domain.model.boleta.ArchivoFactura
 import com.tagok.app.domain.model.boleta.Boleta
 import com.tagok.app.domain.model.boleta.ComparacionFactura
+import com.tagok.app.domain.model.vehiculo.Vehiculo
 import com.tagok.app.domain.services.interfaces.IBoletaService
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -20,7 +22,8 @@ import kotlinx.datetime.toLocalDateTime
 
 class BoletaService(
     private val boletaRepository: IBoletaRepository,
-    private val historyRepository: IHistoryRepository) : IBoletaService, ApplicationService()
+    private val historyRepository: IHistoryRepository,
+    private val vehiculoRepository: IVehiculoRepository) : IBoletaService, ApplicationService()
 {
     override suspend fun generarBoleta(request: BoletaRequest): Boleta =
         execute("Generar boleta")
@@ -31,21 +34,23 @@ class BoletaService(
     suspend fun cargarDatosIniciales(): DatosBoleta = execute("Cargar datos iniciales")
     {
         coroutineScope {
-            val patentesDeferred = async { historyRepository.getPatentes() }
+            // Mismos vehículos registrados que en Home/Presupuesto, no solo los que
+            // ya tienen cruces facturables en el historial
+            val vehiculosDeferred = async { vehiculoRepository.getVehiculos() }
             val autopistasDeferred = async { historyRepository.getAutopistas() }
 
-            val patentes = patentesDeferred.await()
+            val vehiculos = vehiculosDeferred.await()
             val autopistas = autopistasDeferred.await()
 
             val (fechaDesde, fechaHasta) = calcularFechasPorDefecto()
-            val patentePorDefecto = if (patentes.isNotEmpty()) patentes.first() else ""
+            val vehiculoPorDefecto = vehiculos.firstOrNull { it.esPrincipal } ?: vehiculos.firstOrNull()
 
             DatosBoleta(
-                patentes = patentes,
+                vehiculos = vehiculos,
                 autopistas = autopistas,
                 fechaDesde = fechaDesde,
                 fechaHasta = fechaHasta,
-                patentePorDefecto = patentePorDefecto)
+                patentePorDefecto = vehiculoPorDefecto?.patente ?: "")
         }
     }
 
@@ -152,7 +157,7 @@ class BoletaService(
 }
 
 data class DatosBoleta(
-    val patentes: List<String>,
+    val vehiculos: List<Vehiculo>,
     val autopistas: List<String>,
     val fechaDesde: LocalDate,
     val fechaHasta: LocalDate,

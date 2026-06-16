@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.tagok.app.domain.model.history.ResumenAnual
 import com.tagok.app.ui.historial.components.shared.TotalItem
 import com.tagok.app.ui.historial.utils.formatCurrency
-import com.tagok.app.ui.theme.Blue40
+import com.tagok.app.ui.theme.NavyBlue
 
 @Composable
 fun ResumenTotalCard(resumen: List<ResumenAnual>) {
@@ -26,7 +26,7 @@ fun ResumenTotalCard(resumen: List<ResumenAnual>) {
 
     Card(
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Blue40),
+        colors = CardDefaults.cardColors(containerColor = NavyBlue),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp))
     {
         Column(

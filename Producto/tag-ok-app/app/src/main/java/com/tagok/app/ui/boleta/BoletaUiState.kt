@@ -1,13 +1,14 @@
 package com.tagok.app.ui.boleta
 
 import com.tagok.app.domain.model.boleta.Boleta
+import com.tagok.app.domain.model.vehiculo.Vehiculo
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 data class BoletaUiState(
-    val patentes: List<String> = emptyList(),
+    val vehiculos: List<Vehiculo> = emptyList(),
     val patenteSeleccionada: String = "",
     val autopistas: List<String> = emptyList(),
     val autopistasSeleccionadas: List<String> = emptyList(),

@@ -54,7 +54,7 @@ class BoletaViewModel(
 
             _uiState.update { state ->
                 state.copy(
-                    patentes = datos.patentes,
+                    vehiculos = datos.vehiculos,
                     autopistas = datos.autopistas,
                     fechaDesde = datos.fechaDesde,
                     fechaHasta = datos.fechaHasta,

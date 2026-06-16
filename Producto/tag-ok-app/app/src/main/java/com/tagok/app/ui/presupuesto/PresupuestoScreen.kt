@@ -62,18 +62,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.tagok.app.ui.theme.AccentBlue
+import com.tagok.app.ui.theme.DividerGray
+import com.tagok.app.ui.theme.GreenSafe
+import com.tagok.app.ui.theme.LightBlueBg
+import com.tagok.app.ui.theme.NavyBlue
+import com.tagok.app.ui.theme.OrangeWarn
+import com.tagok.app.ui.theme.PageBg
+import com.tagok.app.ui.theme.RedAlert
+import com.tagok.app.ui.theme.TextDark
 import java.text.NumberFormat
 import java.util.Locale
-
-private val NavyBlue    = Color(0xFF172955)
-private val AccentBlue  = Color(0xFF1C42B1)
-private val PageBg      = Color(0xFFF4F6FB)
-private val DividerGray = Color(0xFFE5E7EB)
-private val TextDark    = Color(0xFF111827)
-private val OrangeWarn  = Color(0xFFF59E0B)
-private val RedAlert    = Color(0xFFEF4444)
-private val GreenSafe   = Color(0xFF22C55E)
-private val LightBlueBg = Color(0xFFEEF2FF)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -209,7 +208,7 @@ private fun VehiculoFiltroRow(
         }
         items(state.vehiculos) { v ->
             FiltroChip(
-                label    = v.alias?.takeIf { it.isNotBlank() } ?: v.patente,
+                label    = v.patente,
                 selected = state.vehiculoIdFiltro == v.id,
                 onClick  = { onSeleccionar(v.id) })
         }
@@ -515,7 +514,7 @@ private fun EditPresupuestoSheet(state: PresupuestoUiState, viewModel: Presupues
         )
         val vehiculoLabel = state.vehiculos
             .find { it.id == state.vehiculoIdFiltro }
-            ?.let { it.alias?.takeIf { a -> a.isNotBlank() } ?: it.patente }
+            ?.patente
             ?: "Global"
         Text("Para: $vehiculoLabel", fontSize = 12.sp, color = Color.Gray)
 

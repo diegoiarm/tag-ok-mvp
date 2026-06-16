@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.tagok.app.domain.model.history.ResumenAnual
 import com.tagok.app.ui.historial.components.shared.TotalItem
 import com.tagok.app.ui.historial.utils.formatCurrency
-import com.tagok.app.ui.theme.Blue40
+import com.tagok.app.ui.theme.NavyBlue
 
 @Composable
 fun VistaMeses(
@@ -36,7 +36,7 @@ fun VistaMeses(
                     .fillMaxWidth()
                     .background(
                         brush = Brush.horizontalGradient(
-                            colors = listOf(Blue40, Blue40.copy(alpha = 0.8f))))
+                            colors = listOf(NavyBlue, NavyBlue.copy(alpha = 0.8f))))
                     .padding(20.dp))
             {
                 Column(

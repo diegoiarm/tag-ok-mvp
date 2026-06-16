@@ -1,6 +1,5 @@
 package com.tagok.app.ui.vehiculos
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -53,6 +52,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -75,12 +75,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tagok.app.domain.model.vehiculo.NuevoVehiculo
 import com.tagok.app.domain.model.vehiculo.Vehiculo
 import com.tagok.app.supabase
-import com.tagok.app.ui.theme.Blue40
-import com.tagok.app.ui.theme.InputBackground
-import com.tagok.app.ui.theme.TextSecondary
+import com.tagok.app.ui.theme.AccentBlue
+import com.tagok.app.ui.theme.LightBlueBg
+import com.tagok.app.ui.theme.NavyBlue
+import com.tagok.app.ui.theme.PageBg
+import com.tagok.app.ui.theme.TextDark
 import io.github.jan.supabase.auth.auth
-
-private val CardDark = Color(0xFF1F2937)
 
 private val tipoOpciones = listOf(
     "AUTO" to "Automóvil",
@@ -120,20 +120,22 @@ fun VehiculosScreen(
     }
 
     Scaffold(
+        containerColor = PageBg,
         topBar = {
             TopAppBar(
-                title = { Text("Vehículos", fontWeight = FontWeight.Bold) },
+                title = { Text("Vehículos", fontWeight = FontWeight.Bold, color = TextDark) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver", tint = NavyBlue)
                     }
                 },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = PageBg),
             )
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showAddSheet = true },
-                containerColor = CardDark,
+                containerColor = NavyBlue,
             ) {
                 Icon(Icons.Filled.Add, contentDescription = "Agregar vehículo", tint = Color.White)
             }
@@ -144,7 +146,7 @@ fun VehiculosScreen(
             uiState is VehiculosUiState.Loading -> Box(
                 Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
-            ) { CircularProgressIndicator(color = Blue40) }
+            ) { CircularProgressIndicator(color = NavyBlue) }
 
             vehiculos.isEmpty() -> Box(
                 Modifier
@@ -154,7 +156,7 @@ fun VehiculosScreen(
             ) {
                 Text(
                     text = "No tienes vehículos registrados.\nToca + para agregar uno.",
-                    color = TextSecondary,
+                    color = Color.Gray,
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center,
                 )
@@ -209,8 +211,8 @@ private fun VehiculoCard(vehiculo: Vehiculo, onDelete: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(1.dp, Blue40),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Row(
             modifier = Modifier
@@ -222,13 +224,13 @@ private fun VehiculoCard(vehiculo: Vehiculo, onDelete: () -> Unit) {
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape)
-                    .background(Blue40.copy(alpha = 0.10f)),
+                    .background(LightBlueBg),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     imageVector = tipoIcon(vehiculo.tipoVehiculo),
                     contentDescription = null,
-                    tint = Blue40,
+                    tint = AccentBlue,
                     modifier = Modifier.size(26.dp),
                 )
             }
@@ -240,7 +242,7 @@ private fun VehiculoCard(vehiculo: Vehiculo, onDelete: () -> Unit) {
                     text = tipoDisplay(vehiculo.tipoVehiculo).uppercase(),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = TextDark,
                     letterSpacing = 0.5.sp,
                 )
                 Spacer(Modifier.height(8.dp))
@@ -250,14 +252,14 @@ private fun VehiculoCard(vehiculo: Vehiculo, onDelete: () -> Unit) {
                 ) {
                     Box(
                         modifier = Modifier
-                            .background(InputBackground, RoundedCornerShape(6.dp))
+                            .background(LightBlueBg, RoundedCornerShape(6.dp))
                             .padding(horizontal = 8.dp, vertical = 3.dp),
                     ) {
                         Text(
                             text = vehiculo.patente,
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.SemiBold,
-                            color = Blue40,
+                            color = AccentBlue,
                             letterSpacing = 1.sp,
                         )
                     }
@@ -266,7 +268,7 @@ private fun VehiculoCard(vehiculo: Vehiculo, onDelete: () -> Unit) {
                         Text(
                             text = alias,
                             style = MaterialTheme.typography.labelSmall,
-                            color = TextSecondary,
+                            color = Color.Gray,
                         )
                     }
                 }
@@ -278,7 +280,7 @@ private fun VehiculoCard(vehiculo: Vehiculo, onDelete: () -> Unit) {
                 Icon(
                     imageVector = Icons.Filled.Delete,
                     contentDescription = "Eliminar",
-                    tint = TextSecondary,
+                    tint = Color.Gray,
                     modifier = Modifier.size(18.dp),
                 )
             }
@@ -406,7 +408,7 @@ private fun AgregarVehiculoSheet(
                     .fillMaxWidth()
                     .height(52.dp),
                 shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = CardDark),
+                colors = ButtonDefaults.buttonColors(containerColor = NavyBlue),
             ) {
                 Text("Guardar vehículo", fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
             }
@@ -416,9 +418,9 @@ private fun AgregarVehiculoSheet(
 
 @Composable
 private fun fieldColors() = OutlinedTextFieldDefaults.colors(
-    unfocusedContainerColor = InputBackground,
-    focusedContainerColor = InputBackground,
+    unfocusedContainerColor = LightBlueBg,
+    focusedContainerColor = LightBlueBg,
     unfocusedBorderColor = Color.Transparent,
-    focusedBorderColor = Blue40,
-    focusedLabelColor = Blue40,
+    focusedBorderColor = NavyBlue,
+    focusedLabelColor = NavyBlue,
 )

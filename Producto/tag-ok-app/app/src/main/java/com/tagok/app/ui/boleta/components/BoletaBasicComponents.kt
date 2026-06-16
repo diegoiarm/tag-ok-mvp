@@ -1,51 +1,47 @@
 package com.tagok.app.ui.boleta.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.tagok.app.ui.theme.Blue40
-import com.tagok.app.ui.theme.TextSecondary
+import androidx.compose.ui.unit.sp
+import com.tagok.app.domain.model.vehiculo.Vehiculo
+import com.tagok.app.ui.theme.AccentBlue
+import com.tagok.app.ui.theme.DividerGray
+import com.tagok.app.ui.theme.NavyBlue
+import com.tagok.app.ui.theme.TextDark
 import kotlinx.datetime.LocalDate
 import java.time.ZoneId
 
 @Composable
 fun PatenteSelector(
-    patentes: List<String>,
+    vehiculos: List<Vehiculo>,
     selected: String,
     onPatenteSelected: (String) -> Unit)
 {
-    Column {
+    if (vehiculos.isEmpty())
+    {
         Text(
-            text = "Patente del vehículo",
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 8.dp))
-
-        if (patentes.isEmpty())
+            text = "No hay vehículos registrados",
+            fontSize = 13.sp,
+            color = androidx.compose.ui.graphics.Color.Gray)
+    }
+    else
+    {
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp))
         {
-            Text(
-                text = "No hay patentes disponibles",
-                style = MaterialTheme.typography.bodyMedium,
-                color = TextSecondary)
-        }
-        else
-        {
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp))
-            {
-                items(patentes) { patente ->
-                    FilterChip(
-                        selected = patente == selected,
-                        onClick = { onPatenteSelected(patente) },
-                        label = { Text(patente) },
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = Blue40,
-                            selectedLabelColor = MaterialTheme.colorScheme.onPrimary))
-                }
+            items(vehiculos) { vehiculo ->
+                BrandChip(
+                    label = vehiculo.patente,
+                    selected = vehiculo.patente == selected,
+                    onClick = { onPatenteSelected(vehiculo.patente) })
             }
         }
     }
@@ -62,117 +58,96 @@ fun DateRangeSelector(
     var showDesdePicker by remember { mutableStateOf(false) }
     var showHastaPicker by remember { mutableStateOf(false) }
 
-    Column {
-        Text(
-            text = "Rango de fechas",
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 8.dp))
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(10.dp))
+    {
+        DateBox(label = "Desde", value = formatDate(fechaDesde), modifier = Modifier.weight(1f), onClick = { showDesdePicker = true })
+        DateBox(label = "Hasta", value = formatDate(fechaHasta), modifier = Modifier.weight(1f), onClick = { showHastaPicker = true })
+    }
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp))
-        {
-            // Fecha Desde
-            OutlinedCard(
-                modifier = Modifier
-                    .weight(1f),
-                onClick = { showDesdePicker = true })
-            {
-                Column(
-                    modifier = Modifier.padding(12.dp),
-                    horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally)
+    // DatePickerDialog para Desde
+    if (showDesdePicker)
+    {
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = localDateToMillis(fechaDesde))
+
+        DatePickerDialog(
+            onDismissRequest = { showDesdePicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        datePickerState.selectedDateMillis?.let { millis ->
+                            onDesdeChanged(millisToLocalDate(millis))
+                        }
+                        showDesdePicker = false
+                    })
                 {
-                    Text(
-                        text = "Desde",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Text(
-                        text = formatDate(fechaDesde),
-                        style = MaterialTheme.typography.bodyLarge)
+                    Text("OK", color = AccentBlue, fontWeight = FontWeight.SemiBold)
                 }
-            }
-
-            // Fecha Hasta
-            OutlinedCard(
-                modifier = Modifier
-                    .weight(1f),
-                onClick = { showHastaPicker = true })
-            {
-                Column(
-                    modifier = Modifier.padding(12.dp),
-                    horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally) {
-                    Text(
-                        text = "Hasta",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Text(
-                        text = formatDate(fechaHasta),
-                        style = MaterialTheme.typography.bodyLarge)
+            },
+            dismissButton = {
+                TextButton(onClick = { showDesdePicker = false }) {
+                    Text("Cancelar", color = androidx.compose.ui.graphics.Color.Gray)
                 }
-            }
-        }
-
-        // DatePickerDialog para Desde
-        if (showDesdePicker)
+            })
         {
-            val datePickerState = rememberDatePickerState(
-                initialSelectedDateMillis = localDateToMillis(fechaDesde))
-
-            DatePickerDialog(
-                onDismissRequest = { showDesdePicker = false },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            datePickerState.selectedDateMillis?.let { millis ->
-                                onDesdeChanged(millisToLocalDate(millis))
-                            }
-                            showDesdePicker = false
-                        })
-                    {
-                        Text("OK")
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = { showDesdePicker = false }) {
-                        Text("Cancelar")
-                    }
-                })
-            {
-                DatePicker(state = datePickerState)
-            }
+            DatePicker(state = datePickerState)
         }
+    }
 
-        // DatePickerDialog para Hasta
-        if (showHastaPicker)
+    // DatePickerDialog para Hasta
+    if (showHastaPicker)
+    {
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = localDateToMillis(fechaHasta))
+
+        DatePickerDialog(
+            onDismissRequest = { showHastaPicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        datePickerState.selectedDateMillis?.let { millis ->
+                            onHastaChanged(millisToLocalDate(millis))
+                        }
+                        showHastaPicker = false
+                    })
+                {
+                    Text("OK", color = AccentBlue, fontWeight = FontWeight.SemiBold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showHastaPicker = false }) {
+                    Text("Cancelar", color = androidx.compose.ui.graphics.Color.Gray)
+                }
+            })
         {
-            val datePickerState = rememberDatePickerState(
-                initialSelectedDateMillis = localDateToMillis(fechaHasta))
-
-            DatePickerDialog(
-                onDismissRequest = { showHastaPicker = false },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            datePickerState.selectedDateMillis?.let { millis ->
-                                onHastaChanged(millisToLocalDate(millis))
-                            }
-                            showHastaPicker = false
-                        })
-                    {
-                        Text("OK")
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = { showHastaPicker = false }) {
-                        Text("Cancelar")
-                    }
-                })
-            {
-                DatePicker(state = datePickerState)
-            }
+            DatePicker(state = datePickerState)
         }
     }
 }
+
+@Composable
+private fun DateBox(label: String, value: String, modifier: Modifier = Modifier, onClick: () -> Unit)
+{
+    Card(
+        modifier = modifier,
+        onClick = onClick,
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = androidx.compose.ui.graphics.Color.White),
+        border = androidx.compose.foundation.BorderStroke(1.dp, DividerGray))
+    {
+        Column(
+            modifier = Modifier.padding(vertical = 12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally)
+        {
+            Text(label, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = AccentBlue, letterSpacing = 0.5.sp)
+            Spacer(Modifier.height(2.dp))
+            Text(value, fontSize = 14.sp, fontWeight = FontWeight.Medium, color = TextDark)
+        }
+    }
+}
+
 private fun formatDate(date: LocalDate): String
 {
     return "${date.dayOfMonth.toString().padStart(2, '0')}/" +
@@ -208,45 +183,54 @@ fun AutopistaMultiSelect(
     selected: List<String>,
     onToggle: (String) -> Unit)
 {
-    Column {
+    if (autopistas.isEmpty())
+    {
         Text(
-            text = "Autopistas (opcional - dejar vacío para todas)",
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 8.dp))
-
-        if (autopistas.isEmpty())
+            text = "No hay autopistas disponibles",
+            fontSize = 13.sp,
+            color = androidx.compose.ui.graphics.Color.Gray)
+    } else
+    {
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp))
         {
-            Text(
-                text = "No hay autopistas disponibles",
-                style = MaterialTheme.typography.bodyMedium,
-                color = TextSecondary)
-        } else
-        {
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp))
-            {
-                items(autopistas) { autopista ->
-                    FilterChip(
-                        selected = autopista in selected,
-                        onClick = { onToggle(autopista) },
-                        label = { Text(autopista) },
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = Blue40,
-                            selectedLabelColor = MaterialTheme.colorScheme.onPrimary))
-                }
+            items(autopistas) { autopista ->
+                BrandChip(
+                    label = autopista,
+                    selected = autopista in selected,
+                    onClick = { onToggle(autopista) })
             }
+        }
 
-            if (selected.isNotEmpty())
+        if (selected.isNotEmpty())
+        {
+            TextButton(
+                onClick = {
+                    // Limpiar todas las selecciones
+                    selected.forEach { onToggle(it) }
+                })
             {
-                TextButton(
-                    onClick = {
-                        // Limpiar todas las selecciones
-                        selected.forEach { onToggle(it) }
-                    })
-                {
-                    Text("Limpiar selección")
-                }
+                Text("Limpiar selección", color = AccentBlue, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
             }
         }
     }
+}
+
+@Composable
+private fun BrandChip(label: String, selected: Boolean, onClick: () -> Unit)
+{
+    FilterChip(
+        selected = selected,
+        onClick = onClick,
+        label = { Text(label, fontSize = 13.sp) },
+        colors = FilterChipDefaults.filterChipColors(
+            selectedContainerColor = NavyBlue,
+            selectedLabelColor = androidx.compose.ui.graphics.Color.White,
+            containerColor = androidx.compose.ui.graphics.Color.White,
+            labelColor = androidx.compose.ui.graphics.Color.Gray),
+        border = FilterChipDefaults.filterChipBorder(
+            enabled = true,
+            selected = selected,
+            borderColor = DividerGray,
+            selectedBorderColor = NavyBlue))
 }

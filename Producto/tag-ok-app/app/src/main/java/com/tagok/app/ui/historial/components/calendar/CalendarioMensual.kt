@@ -18,9 +18,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.tagok.app.domain.model.history.DetalleMensual
 import com.tagok.app.ui.historial.components.shared.InfoItem
+import androidx.compose.ui.graphics.Color
 import com.tagok.app.ui.historial.utils.formatCurrency
-import com.tagok.app.ui.theme.Blue40
-import com.tagok.app.ui.theme.TextSecondary
+import com.tagok.app.ui.theme.AccentBlue
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -48,8 +48,8 @@ fun CalendarioMensual(
                     .background(
                         brush = Brush.linearGradient(
                             colors = listOf(
-                                Blue40.copy(alpha = 0.1f),
-                                Blue40.copy(alpha = 0.05f))))
+                                AccentBlue.copy(alpha = 0.1f),
+                                AccentBlue.copy(alpha = 0.05f))))
                     .padding(16.dp))
             {
                 Row(
@@ -86,7 +86,7 @@ fun CalendarioMensual(
                     modifier = Modifier.weight(1f),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.labelMedium,
-                    color = if (day == "Dom") MaterialTheme.colorScheme.error else TextSecondary,
+                    color = if (day == "Dom") MaterialTheme.colorScheme.error else Color.Gray,
                     fontWeight = FontWeight.Bold)
             }
         }

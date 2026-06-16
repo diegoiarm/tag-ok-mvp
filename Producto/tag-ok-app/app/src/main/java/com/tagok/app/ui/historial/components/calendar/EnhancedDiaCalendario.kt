@@ -15,9 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.tagok.app.ui.theme.Blue40
-import com.tagok.app.ui.theme.InputBackground
-import com.tagok.app.ui.theme.TextSecondary
+import com.tagok.app.ui.theme.LightBlueBg
+import com.tagok.app.ui.theme.NavyBlue
 
 @Composable
 fun EnhancedDiaCalendario(
@@ -30,27 +29,27 @@ fun EnhancedDiaCalendario(
 {
     val backgroundColor = when
     {
-        !tieneDatos && isToday -> Blue40.copy(alpha = 0.05f)
+        !tieneDatos && isToday -> NavyBlue.copy(alpha = 0.05f)
         !tieneDatos -> Color.White
-        intensidad < 0.2f -> Blue40.copy(alpha = 0.1f)
-        intensidad < 0.4f -> Blue40.copy(alpha = 0.25f)
-        intensidad < 0.6f -> Blue40.copy(alpha = 0.45f)
-        intensidad < 0.8f -> Blue40.copy(alpha = 0.65f)
-        else -> Blue40
+        intensidad < 0.2f -> NavyBlue.copy(alpha = 0.1f)
+        intensidad < 0.4f -> NavyBlue.copy(alpha = 0.25f)
+        intensidad < 0.6f -> NavyBlue.copy(alpha = 0.45f)
+        intensidad < 0.8f -> NavyBlue.copy(alpha = 0.65f)
+        else -> NavyBlue
     }
 
     val borderColor = when
     {
-        isToday -> Blue40
-        !tieneDatos -> InputBackground
-        else -> Blue40.copy(alpha = 0.3f + (intensidad * 0.7f))
+        isToday -> NavyBlue
+        !tieneDatos -> LightBlueBg
+        else -> NavyBlue.copy(alpha = 0.3f + (intensidad * 0.7f))
     }
 
     val textColor = when
     {
-        !tieneDatos && !isToday -> TextSecondary
+        !tieneDatos && !isToday -> Color.Gray
         intensidad > 0.6f -> Color.White
-        else -> Blue40
+        else -> NavyBlue
     }
 
     Box(
@@ -78,7 +77,7 @@ fun EnhancedDiaCalendario(
                 Text(
                     text = "$cantidad",
                     style = MaterialTheme.typography.labelSmall,
-                    color = if (intensidad > 0.6f) Color.White.copy(alpha = 0.8f) else Blue40.copy(alpha = 0.7f),
+                    color = if (intensidad > 0.6f) Color.White.copy(alpha = 0.8f) else NavyBlue.copy(alpha = 0.7f),
                     fontSize = 9.sp,
                     fontWeight = FontWeight.Bold)
             }

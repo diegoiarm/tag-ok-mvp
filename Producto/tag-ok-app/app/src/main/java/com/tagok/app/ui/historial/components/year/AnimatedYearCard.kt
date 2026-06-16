@@ -13,10 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.Color
 import com.tagok.app.domain.model.history.ResumenAnual
 import com.tagok.app.ui.historial.utils.formatCurrency
-import com.tagok.app.ui.theme.Blue40
-import com.tagok.app.ui.theme.TextSecondary
+import com.tagok.app.ui.theme.AccentBlue
 
 @Composable
 fun AnimatedYearCard(
@@ -47,18 +47,18 @@ fun AnimatedYearCard(
                         text = "${anual.año}",
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
-                        color = Blue40)
+                        color = AccentBlue)
                     if (intensidad > 0.7f) {
                         Spacer(modifier = Modifier.width(8.dp))
                         Surface(
                             shape = RoundedCornerShape(12.dp),
-                            color = Blue40.copy(alpha = 0.1f))
+                            color = AccentBlue.copy(alpha = 0.1f))
                         {
                             Text(
                                 text = "Más activo",
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                                 style = MaterialTheme.typography.labelSmall,
-                                color = Blue40,
+                                color = AccentBlue,
                                 fontWeight = FontWeight.Bold)
                         }
                     }
@@ -70,29 +70,29 @@ fun AnimatedYearCard(
                         Icons.Filled.Toll,
                         contentDescription = "Cruces",
                         modifier = Modifier.size(16.dp),
-                        tint = TextSecondary)
+                        tint = Color.Gray)
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = "${anual.cantidadCruces} cruces",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = TextSecondary)
+                        color = Color.Gray)
                     Spacer(modifier = Modifier.width(12.dp))
                     Icon(
                         Icons.Filled.MonetizationOn,
                         contentDescription = "Total",
                         modifier = Modifier.size(16.dp),
-                        tint = TextSecondary)
+                        tint = Color.Gray)
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = anual.totalAño.formatCurrency(),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = TextSecondary)
+                        color = Color.Gray)
                 }
             }
             Icon(
                 Icons.Filled.ChevronRight,
                 contentDescription = "Ver meses",
-                tint = Blue40.copy(alpha = 0.5f))
+                tint = AccentBlue.copy(alpha = 0.5f))
         }
     }
 }
