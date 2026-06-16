@@ -85,7 +85,10 @@ object ViewModelModule
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T
         {
-            return PresupuestoViewModel(RepositoryModule.vehiculoRepository, RepositoryModule.presupuestoRepository) as T
+            return PresupuestoViewModel(
+                RepositoryModule.vehiculoRepository,
+                RepositoryModule.presupuestoRepository,
+                RepositoryModule.historyRepository) as T
         }
     }
 

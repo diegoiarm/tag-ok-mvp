@@ -4,9 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.tagok.app.data.NuevoPresupuesto
+import com.tagok.app.data.dto.history.FiltroHistorialRequest
 import com.tagok.app.di.modules.ViewModelModule
+import com.tagok.app.domain.interfaces.IHistoryRepository
 import com.tagok.app.domain.interfaces.IPresupuestoRepository
 import com.tagok.app.domain.interfaces.IVehiculoRepository
+import com.tagok.app.domain.model.history.DetalleMensual
 import com.tagok.app.domain.model.presupuesto.Presupuesto
 import com.tagok.app.domain.model.vehiculo.Vehiculo
 import com.tagok.app.supabase
@@ -16,12 +19,18 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 data class PresupuestoUiState(
     val presupuestos: List<Presupuesto> = emptyList(),
     val vehiculos: List<Vehiculo> = emptyList(),
     val vehiculoIdFiltro: String? = null,
     val isLoading: Boolean = false,
+    val gastoActual: Int = 0,
+    val peajesCount: Int = 0,
+    val isLoadingGasto: Boolean = false,
     val showEditSheet: Boolean = false,
     val formMonto: String = "",
     val formUmbral1: Float = 75f,
@@ -36,7 +45,8 @@ data class PresupuestoUiState(
 
 class PresupuestoViewModel(
     private val vehiculoRepository: IVehiculoRepository,
-    private val presupuestoRepository: IPresupuestoRepository) : ViewModel()
+    private val presupuestoRepository: IPresupuestoRepository,
+    private val historyRepository: IHistoryRepository) : ViewModel()
 {
     private val _state = MutableStateFlow(PresupuestoUiState())
     val state: StateFlow<PresupuestoUiState> = _state.asStateFlow()
@@ -55,11 +65,45 @@ class PresupuestoViewModel(
                 _state.update { it.copy(errorMsg = e.message) }
             }
             _state.update { it.copy(isLoading = false) }
+            cargarGasto()
         }
     }
 
-    fun seleccionarVehiculo(vehiculoId: String?) =
+    fun seleccionarVehiculo(vehiculoId: String?)
+    {
         _state.update { it.copy(vehiculoIdFiltro = vehiculoId) }
+        viewModelScope.launch { cargarGasto() }
+    }
+
+    private suspend fun cargarGasto()
+    {
+        _state.update { it.copy(isLoadingGasto = true) }
+        val s = _state.value
+        runCatching {
+            val hoy = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+            if (s.vehiculoIdFiltro == null)
+            {
+                historyRepository.getDetalleMensual(hoy.year, hoy.monthNumber)
+            }
+            else
+            {
+                val patente = s.vehiculos.find { it.id == s.vehiculoIdFiltro }?.patente
+                    ?: return@runCatching DetalleMensual(hoy.year, hoy.monthNumber, emptyList(), 0.0)
+                historyRepository.getDetalleMensualFiltrado(
+                    hoy.year, hoy.monthNumber, FiltroHistorialRequest(patentes = listOf(patente)))
+            }
+        }.onSuccess { detalle ->
+            _state.update {
+                it.copy(
+                    gastoActual = detalle.totalMes.toInt(),
+                    peajesCount = detalle.dias.sumOf { d -> d.cantidadCruces },
+                )
+            }
+        }.onFailure {
+            _state.update { it.copy(gastoActual = 0, peajesCount = 0) }
+        }
+        _state.update { it.copy(isLoadingGasto = false) }
+    }
 
     fun abrirEditSheet() {
         val actual = _state.value.presupuestoActual
