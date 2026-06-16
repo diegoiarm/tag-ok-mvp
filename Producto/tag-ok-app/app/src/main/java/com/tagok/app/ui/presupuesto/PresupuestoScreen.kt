@@ -1,7 +1,6 @@
 package com.tagok.app.ui.presupuesto
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -133,46 +132,33 @@ fun PresupuestoScreen(viewModel: PresupuestoViewModel = viewModel(factory = Pres
                 Box(Modifier.fillMaxWidth().height(300.dp), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(color = NavyBlue, strokeWidth = 2.dp)
                 }
-            } else if (state.presupuestos.isEmpty()) {
+            } else if (state.presupuestoActual == null) {
                 EmptyState(onConfigurar = viewModel::abrirEditSheet)
             } else {
-                // Lista todos los presupuestos
-                Column(modifier = Modifier.padding(horizontal = 20.dp)) {
-                    state.presupuestos.forEach { presupuesto ->
-                        // Determinar etiqueta del vehículo
-                        val vehiculo = state.vehiculos.find { it.id == presupuesto.vehiculoId }
-                        val etiqueta = if (presupuesto.vehiculoId == null) "🌍 Global"
-                        else (vehiculo?.alias?.takeIf { it.isNotBlank() } ?: vehiculo?.patente ?: "Vehículo")
+                val presupuesto = state.presupuestoActual!!
+                val porcentaje = if (presupuesto.montoMensual > 0)
+                    (state.gastoActual.toFloat() / presupuesto.montoMensual).coerceIn(0f, 1f)
+                else 0f
 
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 12.dp)
-                                .clickable {
-                                    viewModel.seleccionarVehiculo(presupuesto.vehiculoId)
-                                    viewModel.abrirEditSheet()
-                                },
-                            shape = RoundedCornerShape(12.dp),
-                            colors = CardDefaults.cardColors(containerColor = Color.White),
-                            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-                        ) {
-                            Column(modifier = Modifier.padding(16.dp)) {
-                                Text(
-                                    text = etiqueta,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 14.sp,
-                                    color = NavyBlue
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text("💰 Límite: ${presupuesto.montoMensual.toCLP()}", fontSize = 13.sp, color = TextDark)
-                                if (presupuesto.alertasActivas) {
-                                    Text("⚠️ Alertas: ${presupuesto.umbralAlerta1}% / ${presupuesto.umbralAlerta2}%", fontSize = 13.sp, color = TextDark)
-                                } else {
-                                    Text("🔕 Alertas desactivadas", fontSize = 13.sp, color = Color.Gray)
-                                }
-                            }
-                        }
-                    }
+                BudgetCard(
+                    montoMaximo = presupuesto.montoMensual,
+                    gastoActual = state.gastoActual,
+                    peajesCount = state.peajesCount,
+                    porcentaje  = porcentaje,
+                )
+
+                Spacer(Modifier.height(16.dp))
+
+                Button(
+                    onClick  = viewModel::abrirEditSheet,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp)
+                        .height(50.dp),
+                    shape  = RoundedCornerShape(14.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = NavyBlue),
+                ) {
+                    Text("Editar presupuesto", fontWeight = FontWeight.SemiBold, color = Color.White)
                 }
             }
 
