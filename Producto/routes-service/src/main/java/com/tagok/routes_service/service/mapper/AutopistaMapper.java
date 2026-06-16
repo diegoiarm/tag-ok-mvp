@@ -13,6 +13,7 @@ import com.tagok.routes_service.domain.tramo.Tramo;
 import com.tagok.routes_service.dto.request.autopista.AutopistaRequest;
 import com.tagok.routes_service.dto.response.autopista.AutopistaResponse;
 
+import io.github.roony11_1.error.core.exceptions.InvalidInputException;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -43,10 +44,10 @@ public class AutopistaMapper implements IEntityMapper<AutopistaResponse, Autopis
             .ifPresent(tramosReq -> tramosReq.forEach(tr -> 
             {
                 Portico entrada = Optional.ofNullable(porticosMap.get(tr.entrada()))
-                    .orElseThrow(() -> new IllegalArgumentException(
+                    .orElseThrow(() -> new InvalidInputException(
                         "Pórtico entrada no encontrado: " + tr.entrada()));
                 Portico salida = Optional.ofNullable(porticosMap.get(tr.salida()))
-                    .orElseThrow(() -> new IllegalArgumentException(
+                    .orElseThrow(() -> new InvalidInputException(
                         "Pórtico salida no encontrado: " + tr.salida()));
 
                 Tramo tramo = tramoMapper.fromRequest(tr, entrada, salida);

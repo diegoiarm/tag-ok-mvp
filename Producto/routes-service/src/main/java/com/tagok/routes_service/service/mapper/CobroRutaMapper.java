@@ -9,6 +9,8 @@ import com.tagok.routes_service.dto.response.route.CobroPorticoResponse;
 import com.tagok.routes_service.dto.response.route.CobroRutaResponse;
 import com.tagok.routes_service.dto.response.route.CobroTramoResponse;
 
+import io.github.roony11_1.error.core.exceptions.InternalErrorException;
+
 @Component
 public class CobroRutaMapper 
 {
@@ -47,6 +49,6 @@ public class CobroRutaMapper
             );
         }
 
-        throw new IllegalStateException("Tipo de cruce desconocido: " + cruce.getClass());
+        throw new InternalErrorException("Tipo de cruce desconocido: " + cruce.getClass());
     }
 }
