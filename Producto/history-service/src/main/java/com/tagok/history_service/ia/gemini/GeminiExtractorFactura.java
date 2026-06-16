@@ -99,20 +99,20 @@ public class GeminiExtractorFactura implements ExtractorFacturaIA
             if (e.getStatusCode().value() == 429)
             {
                 throw new IAException(
-                    "Límite de uso del tier gratuito de Gemini alcanzado. Intenta nuevamente en unos minutos.", e);
+                    "Límite de uso del tier gratuito de Gemini alcanzado. Intenta nuevamente en unos minutos.");
             }
             if (e.getStatusCode().value() == 403)
             {
                 throw new IAException(
                     "Gemini rechazó la solicitud (403): la API key es inválida, tiene restricciones "
                         + "(p.ej. limitada a apps Android/IP/referer) o la Generative Language API no está "
-                        + "habilitada para su proyecto.", e);
+                        + "habilitada para su proyecto.");
             }
-            throw new IAException("Gemini respondió HTTP " + e.getStatusCode().value(), e);
+            throw new IAException("Gemini respondió HTTP " + e.getStatusCode().value());
         }
         catch (ResourceAccessException e)
         {
-            throw new IAException("No se pudo contactar a Gemini (timeout o problema de red)", e);
+            throw new IAException("No se pudo contactar a Gemini (timeout o problema de red)");
         }
     }
 
@@ -170,7 +170,7 @@ public class GeminiExtractorFactura implements ExtractorFacturaIA
         }
         catch (Exception e)
         {
-            throw new IAException("No se pudo interpretar la respuesta de Gemini", e);
+            throw new IAException("No se pudo interpretar la respuesta de Gemini");
         }
     }
 }

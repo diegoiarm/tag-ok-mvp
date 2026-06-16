@@ -1,14 +1,18 @@
 package com.tagok.history_service.ia;
 
-public class IAException extends RuntimeException
+import io.github.roony11_1.error.core.exceptions.AppException;
+
+public class IAException extends AppException 
 {
-    public IAException(String message)
+    public IAException(String message) 
     {
-        super(message);
+        super("IA-001", message, GeminiErrorCategories.GEMINI_UNAVAILABLE,
+              message);
     }
 
-    public IAException(String message, Throwable cause)
+    public IAException(String message, Throwable cause) 
     {
-        super(message, cause);
+        super("IA-001", message, GeminiErrorCategories.GEMINI_UNAVAILABLE, message);
+        initCause(cause);
     }
 }

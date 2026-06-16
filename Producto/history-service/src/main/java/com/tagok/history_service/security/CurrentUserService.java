@@ -1,6 +1,7 @@
 package com.tagok.history_service.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tagok.history_service.exception.AuthenticationException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -15,29 +16,23 @@ public class CurrentUserService
     public String getUserId() 
     {
         String token = extractToken();
-        if (token != null) 
-        {
-            Map<String, Object> claims = parseToken(token);
-            if (claims != null) 
-                {
-                return (String) claims.get("sub");
-            }
-        }
-        return null;
+        Map<String, Object> claims = parseToken(token);
+
+        if (claims == null || !claims.containsKey("sub")) 
+            throw new AuthenticationException("El token no contiene un subject (userId)");
+
+        return (String) claims.get("sub");
     }
 
     public String getEmail() 
     {
         String token = extractToken();
-        if (token != null) 
-            {
-            Map<String, Object> claims = parseToken(token);
-            if (claims != null) 
-            {
-                return (String) claims.get("email");
-            }
-        }
-        return null;
+        Map<String, Object> claims = parseToken(token);
+
+        if (claims == null || !claims.containsKey("email"))
+            throw new AuthenticationException("El token no contiene el claim 'email'");
+
+        return (String) claims.get("email");
     }
 
     private String extractToken() 
@@ -45,21 +40,24 @@ public class CurrentUserService
         try 
         {
             ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-            if (attrs == null) 
-                return null;
-            
+            if (attrs == null)
+                throw new AuthenticationException("No hay contexto de petición");
+
             HttpServletRequest request = attrs.getRequest();
             String authHeader = request.getHeader("Authorization");
-            
-            if (authHeader != null && authHeader.startsWith("Bearer ")) 
-            {
+
+            if (authHeader != null && authHeader.startsWith("Bearer "))
                 return authHeader.substring(7);
-            }
-        } catch (Exception e) 
+
+            throw new AuthenticationException("Cabecera Authorization no encontrada o mal formada");
+        } catch (AuthenticationException e) 
         {
-            System.err.println("Error extrayendo token: " + e.getMessage());
+            throw e;
+        } 
+        catch (Exception e) 
+        {
+            throw new AuthenticationException("Error al extraer el token: " + e.getMessage());
         }
-        return null;
     }
 
     private Map<String, Object> parseToken(String token) 
@@ -68,15 +66,19 @@ public class CurrentUserService
         {
             String[] parts = token.split("\\.");
             if (parts.length >= 2) 
-                {
+            {
                 String payload = new String(Base64.getUrlDecoder().decode(parts[1]));
                 return new ObjectMapper().readValue(payload, Map.class);
             }
+            throw new AuthenticationException("Formato de token inválido");
+        } 
+        catch (AuthenticationException e) 
+        {
+            throw e;
         } 
         catch (Exception e) 
         {
-            System.err.println("Error parseando token: " + e.getMessage());
+            throw new AuthenticationException("Error al parsear el token: " + e.getMessage());
         }
-        return null;
     }
 }

@@ -1,15 +1,10 @@
-//package com.tagok.history_service.controller;
-
-//public class RutaGuardadaController {
-    
-//}
-
 package com.tagok.history_service.controller;
 
 import com.tagok.history_service.domain.RutaGuardada;
 import com.tagok.history_service.service.RutaGuardadaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -25,7 +20,7 @@ public class RutaGuardadaController {
     }
 
     @PostMapping
-    public ResponseEntity<RutaGuardada> save(@RequestBody RutaGuardada ruta) {
+    public ResponseEntity<RutaGuardada> save(@RequestBody @NonNull RutaGuardada ruta) {
         return ResponseEntity.status(201).body(service.save(ruta));
     }
 }
