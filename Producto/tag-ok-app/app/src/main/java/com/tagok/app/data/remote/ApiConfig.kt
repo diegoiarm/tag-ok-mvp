@@ -5,7 +5,7 @@ object ApiConfig
     // Emulador Android: 10.0.2.2 es el alias del host (loopback de tu PC), evita el firewall.
     // Para un dispositivo fisico en la misma WiFi, usa la IP LAN del PC (p.ej. 192.168.1.10)
     // y abre el puerto 8080 en el Firewall de Windows.
-    private const val GATEWAY_URL: String = "http://10.0.2.2:8080/api"
+    private const val GATEWAY_URL: String = "http://192.168.1.10:8080/api"
 
     const val ROUTES_API: String = "$GATEWAY_URL/routes"
     const val TARIFA_API: String = "$GATEWAY_URL/routes"

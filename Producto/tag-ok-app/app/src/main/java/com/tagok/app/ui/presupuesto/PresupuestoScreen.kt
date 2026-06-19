@@ -43,9 +43,17 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -80,6 +88,21 @@ fun PresupuestoScreen(viewModel: PresupuestoViewModel = viewModel(factory = Pres
 {
     val state by viewModel.state.collectAsState()
     val sheetState = rememberModalBottomSheetState()
+    val context = LocalContext.current
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { }
+
+    LaunchedEffect(state.presupuestoActual) {
+        val actual = state.presupuestoActual
+        if (actual != null && actual.alertasActivas && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize().background(PageBg))
     {
@@ -500,6 +523,11 @@ private fun EmptyState(onConfigurar: () -> Unit) {
 // ─── Bottom sheet de edición ──────────────────────────────────────────────────
 @Composable
 private fun EditPresupuestoSheet(state: PresupuestoUiState, viewModel: PresupuestoViewModel) {
+    val context = LocalContext.current
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -554,7 +582,15 @@ private fun EditPresupuestoSheet(state: PresupuestoUiState, viewModel: Presupues
             }
             Switch(
                 checked         = state.formAlertasActivas,
-                onCheckedChange = viewModel::updateAlertasActivas,
+                onCheckedChange = { active ->
+                    viewModel.updateAlertasActivas(active)
+                    if (active && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+                            != PackageManager.PERMISSION_GRANTED) {
+                            permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                        }
+                    }
+                },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor   = Color.White,
                     checkedTrackColor   = NavyBlue,

@@ -70,7 +70,7 @@ public class HistorialController
             .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/year/{año}/{mes}/filtrado")
+    @PostMapping("/year/{año}/month/{mes}/filtrado")
     public ResponseEntity<DetalleMensualDTO> getMesFiltrado(
         @PathVariable int año,
         @PathVariable int mes,
@@ -92,7 +92,7 @@ public class HistorialController
             .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/year/{año}/{mes}/{dia}/filtrado")
+    @PostMapping("/year/{año}/month/{mes}/day/{dia}/filtrado")
     public ResponseEntity<DetalleDiaDTO> getDiaFiltrado(
         @PathVariable int año,
         @PathVariable int mes,

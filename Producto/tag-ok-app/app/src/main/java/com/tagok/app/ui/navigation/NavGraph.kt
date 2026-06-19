@@ -202,7 +202,7 @@ fun NavGraph() {
             }
 
             composable("register") {
-                val regViewModel: RegisterViewModel = viewModel()
+                val regViewModel: RegisterViewModel = viewModel(factory = RegisterViewModel.Factory)
                 RegisterScreen(
                     onSuccess = {
                         navController.navigate("home") {
