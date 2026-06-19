@@ -20,14 +20,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -255,46 +252,6 @@ fun MapScreen(
                 }
             }
         }
-        Surface(
-            onClick = { showVehiculoSheet = true },
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(top = 24.dp, start = 12.dp)
-                .size(44.dp)
-                .shadow(4.dp, CircleShape),
-            shape = CircleShape,
-            color = if (selectedVehiculo != null) Color(0xFF10B981) else Color.White)
-        {
-            Box(contentAlignment = Alignment.Center) {
-                if (selectedVehiculo != null) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(4.dp))
-                    {
-                        Text(
-                            text = selectedVehiculo.alias?.take(2)?.uppercase() ?: "Sin Alias",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold,
-                            maxLines = 1)
-                        Icon(
-                            imageVector = Icons.Default.DirectionsCar,
-                            contentDescription = "Cambiar vehículo",
-                            tint = Color.White,
-                            modifier = Modifier.size(16.dp))
-                    }
-                }
-                else
-                {
-                    Icon(
-                        imageVector = Icons.Default.DirectionsCar,
-                        contentDescription = "Seleccionar vehículo",
-                        tint = Color(0xFF374151),
-                        modifier = Modifier.padding(10.dp))
-                }
-            }
-        }
-
         Column(
             modifier = Modifier
                 .align(Alignment.TopEnd)
@@ -345,6 +302,7 @@ fun MapScreen(
             },
             onToggleTracking = { toggleTracking() },
             onCerrar = { viewModel.clearTarifa() },
+            onCambiarVehiculo = { showVehiculoSheet = true },
             modifier = Modifier.align(Alignment.BottomCenter))
     }
 }

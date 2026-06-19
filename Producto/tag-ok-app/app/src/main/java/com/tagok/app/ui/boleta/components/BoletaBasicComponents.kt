@@ -138,7 +138,7 @@ private fun DateBox(label: String, value: String, modifier: Modifier = Modifier,
         border = androidx.compose.foundation.BorderStroke(1.dp, DividerGray))
     {
         Column(
-            modifier = Modifier.padding(vertical = 12.dp),
+            modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
             horizontalAlignment = Alignment.CenterHorizontally)
         {
             Text(label, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = AccentBlue, letterSpacing = 0.5.sp)

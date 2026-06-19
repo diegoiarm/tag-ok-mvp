@@ -19,8 +19,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.tagok.app.domain.model.routes.Route
 import com.tagok.app.ui.components.routes.TollItem
-import com.tagok.app.ui.theme.Blue40
-import com.tagok.app.ui.theme.InputBackground
+import com.tagok.app.ui.theme.AccentBlue
+import com.tagok.app.ui.theme.DividerGray
+import com.tagok.app.ui.theme.NavyBlue
 import com.tagok.app.ui.theme.TextSecondary
 
 @Composable
@@ -42,7 +43,7 @@ fun RouteResult(
             Text(
                 text = if (tollCount > 0) "· $tollCount pórtico(s) en ruta" else "· sin pórticos en ruta",
                 style = MaterialTheme.typography.bodySmall,
-                color = if (tollCount > 0) Blue40 else TextSecondary,
+                color = if (tollCount > 0) AccentBlue else TextSecondary,
                 fontWeight = if (tollCount > 0) FontWeight.Medium else FontWeight.Normal,)
         }
 
@@ -61,7 +62,7 @@ fun RouteResult(
                 text = "${"%.0f".format(route?.totalCost)} CLP",
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
-                color = Blue40)
+                color = NavyBlue)
         }
 
         if (route?.tolls?.isNotEmpty() == true)
@@ -74,7 +75,7 @@ fun RouteResult(
             {
                 route.tolls.forEach { toll ->
                     TollItem(toll = toll, onFlyToPortico = onFlyToPortico)
-                    HorizontalDivider(color = InputBackground)
+                    HorizontalDivider(color = DividerGray)
                 }
             }
         }
