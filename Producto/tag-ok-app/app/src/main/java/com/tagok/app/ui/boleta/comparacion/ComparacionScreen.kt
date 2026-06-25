@@ -16,11 +16,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.tagok.app.ui.theme.NavyBlue
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
@@ -77,12 +79,18 @@ fun ComparacionScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Verificar factura") },
+                title = { Text("Verificar factura", color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, "Volver")
+                        Icon(Icons.Default.ArrowBack, "Volver", tint = Color.White)
                     }
-                })
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = NavyBlue,
+                    titleContentColor = Color.White,
+                    navigationIconContentColor = Color.White
+                )
+            )
         })
     { padding ->
         Box(

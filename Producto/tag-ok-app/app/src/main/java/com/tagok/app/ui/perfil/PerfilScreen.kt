@@ -425,7 +425,7 @@ private fun BottomActions(
             shape = RoundedCornerShape(14.dp),
             colors = ButtonDefaults.buttonColors(containerColor = NavyBlue),
         ) {
-            Text("Editar", fontWeight = FontWeight.SemiBold)
+            Text("Editar", fontWeight = FontWeight.SemiBold, color = Color.White)
         }
     }
 }

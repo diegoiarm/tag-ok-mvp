@@ -3,9 +3,9 @@
     android:height="32dp"
     android:viewportWidth="32"
     android:viewportHeight="32">
-    <!-- Pin azul — pórtico en la ruta actual -->
+    <!-- Pin azul marino — pórtico en la ruta actual -->
     <path
-        android:fillColor="#1565C0"
+        android:fillColor="#172955"
         android:pathData="M16,2C10.48,2 6,6.48 6,12C6,19.5 16,30 16,30C16,30 26,19.5 26,12C26,6.48 21.52,2 16,2Z"/>
     <!-- Barrera interior: poste izquierdo -->
     <path

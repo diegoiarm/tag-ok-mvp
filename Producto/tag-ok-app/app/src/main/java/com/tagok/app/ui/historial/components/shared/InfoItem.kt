@@ -18,27 +18,29 @@ fun InfoItem(
     icon: ImageVector,
     label: String,
     value: String,
-    modifier: Modifier = Modifier)
-{
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally)
-    {
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Icon(
             imageVector = icon,
             contentDescription = label,
             modifier = Modifier.size(20.dp),
-            tint = AccentBlue.copy(alpha = 0.7f))
-
+            tint = Color.White.copy(alpha = 0.85f)
+        )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = value,
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
-            color = AccentBlue)
+            color = Color.White
+        )
         Text(
             text = label,
             style = MaterialTheme.typography.labelSmall,
-            color = Color.Gray)
+            color = Color.White.copy(alpha = 0.7f)
+        )
     }
 }

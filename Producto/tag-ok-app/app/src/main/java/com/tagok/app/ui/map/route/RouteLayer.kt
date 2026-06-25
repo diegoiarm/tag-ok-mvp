@@ -6,6 +6,7 @@ import com.mapbox.geojson.Point
 import com.mapbox.maps.extension.compose.annotation.generated.PolylineAnnotation
 import com.tagok.app.domain.model.routes.Route
 import com.tagok.app.ui.theme.Blue40
+import com.tagok.app.ui.theme.NavyBlue
 
 @Composable
 fun RouteLayer(route: Route? = null)
@@ -22,7 +23,7 @@ fun RouteLayer(route: Route? = null)
 
     PolylineAnnotation(points = points)
     {
-        lineColor = Blue40
+        lineColor = NavyBlue
         lineWidth = 5.0
         lineOpacity = 0.9
     }

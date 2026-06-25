@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.tagok.app.data.GeocodeSuggestion
 import com.tagok.app.ui.theme.AccentBlue
 import com.tagok.app.ui.theme.DividerGray
+import com.tagok.app.ui.theme.NavyBlue
 import com.tagok.app.ui.theme.TextSecondary
 
 @Composable
@@ -52,7 +53,7 @@ fun DireccionField(
                 Icon(
                     imageVector = leadingIcon,
                     contentDescription = null,
-                    tint = AccentBlue,
+                    tint = NavyBlue,
                     modifier = Modifier.size(18.dp),
                 )
             },
@@ -61,14 +62,17 @@ fun DireccionField(
                     CircularProgressIndicator(
                         modifier = Modifier.size(16.dp),
                         strokeWidth = 2.dp,
-                        color = AccentBlue)
+                        color = NavyBlue)
             },
             singleLine = true,
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = AccentBlue,
+                focusedBorderColor = NavyBlue,
                 unfocusedBorderColor = DividerGray,
-                focusedLabelColor = AccentBlue,
+                focusedLabelColor = NavyBlue,
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.Black,
+                cursorColor = Color.Black
             ),
         )
 

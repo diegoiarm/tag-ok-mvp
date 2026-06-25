@@ -17,14 +17,15 @@ import androidx.compose.ui.graphics.Color
 import com.tagok.app.domain.model.history.ResumenAnual
 import com.tagok.app.ui.historial.utils.formatCurrency
 import com.tagok.app.ui.theme.AccentBlue
+import com.tagok.app.ui.theme.NavyBlue
 
 @Composable
 fun AnimatedYearCard(
     anual: ResumenAnual,
     maxCruces: Int,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier)
-{
+    modifier: Modifier = Modifier
+) {
     val intensidad = if (maxCruces > 0) (anual.cantidadCruces.toFloat() / maxCruces) else 0f
 
     Card(
@@ -32,67 +33,74 @@ fun AnimatedYearCard(
             .fillMaxWidth()
             .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp))
-    {
+        colors = CardDefaults.cardColors(containerColor = NavyBlue),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically)
-        {
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Column {
                 Row(verticalAlignment = Alignment.Bottom) {
                     Text(
                         text = "${anual.año}",
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
-                        color = AccentBlue)
+                        color = Color.White
+                    )
                     if (intensidad > 0.7f) {
                         Spacer(modifier = Modifier.width(8.dp))
                         Surface(
                             shape = RoundedCornerShape(12.dp),
-                            color = AccentBlue.copy(alpha = 0.1f))
-                        {
+                            color = Color.White.copy(alpha = 0.2f)
+                        ) {
                             Text(
                                 text = "Más activo",
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                                 style = MaterialTheme.typography.labelSmall,
-                                color = AccentBlue,
-                                fontWeight = FontWeight.Bold)
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                     }
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-                Row(verticalAlignment = Alignment.CenterVertically)
-                {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         Icons.Filled.Toll,
                         contentDescription = "Cruces",
                         modifier = Modifier.size(16.dp),
-                        tint = Color.Gray)
+                        tint = Color.White.copy(alpha = 0.85f)
+                    )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = "${anual.cantidadCruces} cruces",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray)
+                        color = Color.White.copy(alpha = 0.85f)
+                    )
                     Spacer(modifier = Modifier.width(12.dp))
                     Icon(
                         Icons.Filled.MonetizationOn,
                         contentDescription = "Total",
                         modifier = Modifier.size(16.dp),
-                        tint = Color.Gray)
+                        tint = Color.White.copy(alpha = 0.85f)
+                    )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = anual.totalAño.formatCurrency(),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray)
+                        color = Color.White.copy(alpha = 0.85f)
+                    )
                 }
             }
             Icon(
                 Icons.Filled.ChevronRight,
                 contentDescription = "Ver meses",
-                tint = AccentBlue.copy(alpha = 0.5f))
+                tint = Color.White.copy(alpha = 0.6f)
+            )
         }
     }
 }

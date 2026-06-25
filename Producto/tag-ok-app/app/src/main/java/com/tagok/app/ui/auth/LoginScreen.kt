@@ -56,9 +56,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.tagok.app.ui.theme.Blue40
-import com.tagok.app.ui.theme.InputBackground
-import com.tagok.app.ui.theme.TextSecondary
+import com.tagok.app.ui.theme.NavyBlue
 
 @Composable
 fun LoginScreen(
@@ -84,7 +82,7 @@ fun LoginScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(NavyBlue)
     ) {
         Column(
             modifier = Modifier
@@ -110,7 +108,7 @@ fun LoginScreen(
                 text = "Iniciar sesión",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onBackground,
+                color = Color.White,
             )
 
             Spacer(modifier = Modifier.height(4.dp))
@@ -118,7 +116,7 @@ fun LoginScreen(
             Text(
                 text = "Accede a tu cuenta para continuar",
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextSecondary,
+                color = Color.White.copy(alpha = 0.8f),
             )
 
             Spacer(modifier = Modifier.height(36.dp))
@@ -127,15 +125,18 @@ fun LoginScreen(
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Correo electrónico") },
+                label = { Text("Correo electrónico", color = Color.White.copy(alpha = 0.7f)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedContainerColor = InputBackground,
-                    focusedContainerColor = InputBackground,
+                    unfocusedContainerColor = Color.White.copy(alpha = 0.15f),
+                    focusedContainerColor = Color.White.copy(alpha = 0.15f),
                     unfocusedBorderColor = Color.Transparent,
-                    focusedBorderColor = Blue40,
+                    focusedBorderColor = Color.White,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    cursorColor = Color.White,
                 ),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
@@ -152,25 +153,28 @@ fun LoginScreen(
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Contraseña") },
+                label = { Text("Contraseña", color = Color.White.copy(alpha = 0.7f)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedContainerColor = InputBackground,
-                    focusedContainerColor = InputBackground,
+                    unfocusedContainerColor = Color.White.copy(alpha = 0.15f),
+                    focusedContainerColor = Color.White.copy(alpha = 0.15f),
                     unfocusedBorderColor = Color.Transparent,
-                    focusedBorderColor = Blue40,
+                    focusedBorderColor = Color.White,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    cursorColor = Color.White,
                 ),
                 visualTransformation = if (passwordVisible) VisualTransformation.None
-                                       else PasswordVisualTransformation(),
+                else PasswordVisualTransformation(),
                 trailingIcon = {
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Icon(
                             imageVector = if (passwordVisible) Icons.Filled.Visibility
-                                          else Icons.Filled.VisibilityOff,
+                            else Icons.Filled.VisibilityOff,
                             contentDescription = null,
-                            tint = TextSecondary,
+                            tint = Color.White.copy(alpha = 0.7f),
                         )
                     }
                 },
@@ -193,7 +197,7 @@ fun LoginScreen(
                 Text(
                     text = "Olvidé mi contraseña",
                     style = MaterialTheme.typography.bodySmall,
-                    color = Blue40,
+                    color = Color.White.copy(alpha = 0.7f),
                     modifier = Modifier.clickable { /* TODO: pantalla de recuperación */ },
                 )
             }
@@ -208,7 +212,10 @@ fun LoginScreen(
                     .fillMaxWidth()
                     .height(52.dp),
                 shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Blue40),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = NavyBlue,
+                    contentColor = Color.White
+                ),
             ) {
                 if (uiState is LoginUiState.Loading) {
                     CircularProgressIndicator(
@@ -232,13 +239,13 @@ fun LoginScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                HorizontalDivider(modifier = Modifier.weight(1f), color = Color(0xFFE5E7EB))
+                HorizontalDivider(modifier = Modifier.weight(1f), color = Color.White.copy(alpha = 0.3f))
                 Text(
                     text = "  o  ",
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondary,
+                    color = Color.White.copy(alpha = 0.8f),
                 )
-                HorizontalDivider(modifier = Modifier.weight(1f), color = Color(0xFFE5E7EB))
+                HorizontalDivider(modifier = Modifier.weight(1f), color = Color.White.copy(alpha = 0.3f))
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -251,8 +258,11 @@ fun LoginScreen(
                     .fillMaxWidth()
                     .height(52.dp),
                 shape = RoundedCornerShape(14.dp),
-                border = BorderStroke(1.dp, Color(0xFFE5E7EB)),
-                colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.White),
+                border = BorderStroke(1.dp, Color.White.copy(alpha = 0.5f)),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = Color.White.copy(alpha = 0.2f),
+                    contentColor = Color.White
+                ),
             ) {
                 Text(
                     text = "G",
@@ -264,7 +274,7 @@ fun LoginScreen(
                     text = "   Continuar con Google",
                     fontWeight = FontWeight.Medium,
                     fontSize = 15.sp,
-                    color = MaterialTheme.colorScheme.onBackground,
+                    color = Color.White,
                 )
             }
 
@@ -275,12 +285,12 @@ fun LoginScreen(
                 Text(
                     text = "¿No tienes cuenta? ",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextSecondary,
+                    color = Color.White.copy(alpha = 0.8f),
                 )
                 Text(
                     text = "Regístrate",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Blue40,
+                    color = Color.White,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.clickable { onNavigateToRegister() },
                 )
@@ -295,7 +305,7 @@ fun LoginScreen(
         ) { data ->
             Snackbar(
                 snackbarData = data,
-                containerColor = Color(0xFF1F2937),
+                containerColor = NavyBlue,
                 contentColor = Color.White,
                 shape = RoundedCornerShape(12.dp),
             )

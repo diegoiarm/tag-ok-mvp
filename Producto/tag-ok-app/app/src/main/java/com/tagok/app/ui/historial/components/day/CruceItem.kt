@@ -19,89 +19,94 @@ import com.tagok.app.ui.common.displayHorasMinutos
 import com.tagok.app.ui.historial.utils.formatCurrency
 import com.tagok.app.ui.theme.AccentBlue
 import com.tagok.app.ui.theme.LightBlueBg
+import com.tagok.app.ui.theme.NavyBlue
 
 @Composable
-fun CruceItem(cruce: CruceDetalle)
-{
+fun CruceItem(cruce: CruceDetalle) {
     Card(
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp))
-    {
-        Row(modifier = Modifier.padding(12.dp))
-        {
+        colors = CardDefaults.cardColors(containerColor = NavyBlue),   // fondo azul marino
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Row(modifier = Modifier.padding(12.dp)) {
+            // Ícono del vehículo con fondo semitransparente
             Box(
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
-                    .background(LightBlueBg),
-                contentAlignment = Alignment.Center)
-            {
+                    .background(Color.White.copy(alpha = 0.2f)),
+                contentAlignment = Alignment.Center
+            ) {
                 Icon(
-                    imageVector = when
-                    {
+                    imageVector = when {
                         cruce.tipoVehiculo.contains("MOTO", ignoreCase = true) -> Icons.Filled.TwoWheeler
                         cruce.tipoVehiculo.contains("BUS", ignoreCase = true) -> Icons.Filled.DirectionsBus
                         cruce.tipoVehiculo.contains("CAMION", ignoreCase = true) -> Icons.Filled.LocalShipping
                         else -> Icons.Filled.DirectionsCar
                     },
                     contentDescription = cruce.tipoVehiculo,
-                    tint = AccentBlue,
+                    tint = Color.White,
                     modifier = Modifier.size(20.dp)
                 )
             }
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            Column(modifier = Modifier.weight(1f))
-            {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = cruce.nombre,
                     style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Bold)
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = "${cruce.autopista} • ${cruce.codigo}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray)
+                    color = Color.White.copy(alpha = 0.7f)
+                )
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween)
-                {
-                    Row(verticalAlignment = Alignment.CenterVertically)
-                    {
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             Icons.Filled.Schedule,
                             contentDescription = null,
                             modifier = Modifier.size(12.dp),
-                            tint = Color.Gray)
+                            tint = Color.White.copy(alpha = 0.7f)
+                        )
                         Spacer(modifier = Modifier.width(2.dp))
                         Text(
                             text = cruce.horaFechaCruce.displayHorasMinutos(),
                             style = MaterialTheme.typography.labelSmall,
-                            color = Color.Gray)
+                            color = Color.White.copy(alpha = 0.7f)
+                        )
                     }
                     Text(
                         text = "Tarifa: ${cruce.tipoTarifa}",
                         style = MaterialTheme.typography.labelSmall,
-                        color = Color.Gray)
+                        color = Color.White.copy(alpha = 0.7f)
+                    )
                 }
             }
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            Column(horizontalAlignment = Alignment.End)
-            {
+            Column(horizontalAlignment = Alignment.End) {
                 Text(
                     text = cruce.valor.formatCurrency(),
                     style = MaterialTheme.typography.titleMedium,
-                    color = AccentBlue,
-                    fontWeight = FontWeight.Bold)
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = cruce.tipoVehiculo,
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color.Gray)
+                    color = Color.White.copy(alpha = 0.7f)
+                )
             }
         }
     }

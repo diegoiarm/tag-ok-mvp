@@ -249,14 +249,14 @@ fun HomeScreen(
             ActionButton(
                 label = "Planificar",
                 icon = Icons.AutoMirrored.Filled.AltRoute,
-                color = Color(0xFF1C42B1),
+                color = NavyBlue,
                 modifier = Modifier.weight(1f),
                 onClick = { onPlanificarViaje(tipoVehiculo) }
             )
             ActionButton(
                 label = "Historial",
                 icon = Icons.Default.History,
-                color = Color(0xFF1C42B1),
+                color = NavyBlue,
                 modifier = Modifier.weight(1f),
                 onClick = onHistorialViajes
             )
@@ -301,7 +301,8 @@ fun HomeScreen(
                 Text(
                     "Iniciar ruta",
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.White
                 )
             }
         }

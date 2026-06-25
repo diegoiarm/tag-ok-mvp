@@ -3,9 +3,9 @@
     android:height="32dp"
     android:viewportWidth="32"
     android:viewportHeight="32">
-    <!-- Pin gris — pórtico fuera de la ruta -->
+    <!-- Pin gris medio — pórtico fuera de la ruta -->
     <path
-        android:fillColor="#94A3B8"
+        android:fillColor="#64748B"
         android:pathData="M16,2C10.48,2 6,6.48 6,12C6,19.5 16,30 16,30C16,30 26,19.5 26,12C26,6.48 21.52,2 16,2Z"/>
     <!-- Barrera interior: poste izquierdo -->
     <path

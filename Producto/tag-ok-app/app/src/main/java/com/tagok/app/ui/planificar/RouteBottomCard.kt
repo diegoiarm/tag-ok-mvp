@@ -34,6 +34,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -121,7 +122,7 @@ fun RouteBottomCard(
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(8.dp))
-                            .background(LightBlueBg)
+                            .background(NavyBlue)
                             .clickable { vehicleDropdownExpanded = true }
                             .padding(horizontal = 10.dp, vertical = 4.dp),
                         contentAlignment = Alignment.Center)
@@ -131,34 +132,37 @@ fun RouteBottomCard(
                             Text(
                                 text = selectedVehicle.displayName,
                                 style = MaterialTheme.typography.labelSmall,
-                                color = NavyBlue,
+                                color = Color.White,
                                 fontWeight = FontWeight.Bold)
                             Spacer(Modifier.width(4.dp))
                             Icon(
                                 imageVector = if (vehicleDropdownExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
                                 contentDescription = "Seleccionar vehículo",
                                 modifier = Modifier.size(16.dp),
-                                tint = NavyBlue)
+                                tint = Color.White)
                         }
                     }
 
                     DropdownMenu(
                         expanded = vehicleDropdownExpanded,
-                        onDismissRequest = { vehicleDropdownExpanded = false })
+                        onDismissRequest = { vehicleDropdownExpanded = false },
+                        modifier = Modifier.background(Color.White))
                     {
                         TipoVehiculo.entries.forEach { tipo ->
+                            val isSelected = tipo == selectedVehicle
                             DropdownMenuItem(
                                 text = {
                                     Text(
                                         text = tipo.displayName,
-                                        color = if (tipo == selectedVehicle) NavyBlue else TextSecondary
+                                        color = if (isSelected) NavyBlue else TextDark,
+                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                                     )
                                 },
                                 onClick = {
                                     onVehicleSelected(tipo)
                                     vehicleDropdownExpanded = false
                                 },
-                                leadingIcon = if (tipo == selectedVehicle) {
+                                leadingIcon = if (isSelected) {
                                     { Icon(Icons.Filled.Check, null, tint = NavyBlue, modifier = Modifier.size(18.dp)) }
                                 } else null
                             )
@@ -188,8 +192,7 @@ fun RouteBottomCard(
                         onSugerenciaClick = onOrigenSugerenciaClick,
                         label = "Origen",
                         leadingIcon = Icons.Filled.MyLocation,
-                        cargando = buscandoOrigen,
-                    )
+                        cargando = buscandoOrigen)
 
                     Spacer(Modifier.height(8.dp))
 
@@ -235,7 +238,8 @@ fun RouteBottomCard(
                                 Text(
                                     text = "Calcular ruta",
                                     fontWeight = FontWeight.SemiBold,
-                                    fontSize = 14.sp)
+                                    fontSize = 14.sp,
+                                    color = Color.White)
                         }
                     }
 
@@ -297,7 +301,8 @@ fun RouteBottomCard(
                                 Icon(
                                     Icons.Filled.Refresh,
                                     contentDescription = "Recalcular",
-                                    modifier = Modifier.size(16.dp))
+                                    modifier = Modifier.size(16.dp),
+                                    tint = Color.White)
                         }
                     }
                 }

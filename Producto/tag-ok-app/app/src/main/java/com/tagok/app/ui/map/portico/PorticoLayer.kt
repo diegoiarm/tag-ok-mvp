@@ -25,7 +25,7 @@ fun MapboxMapScope.PorticosLayer(
         {
             PointAnnotation(point = Point.fromLngLat(portico.longitud, portico.latitud)) {
                 iconImage = IconImage(bitmap)
-                iconSize = if (activo) 1.5 else 0.5
+                iconSize = if (activo) 1.5 else 0.8
                 interactionsState.onClicked {
                     onPorticoClick(portico)
                     true
