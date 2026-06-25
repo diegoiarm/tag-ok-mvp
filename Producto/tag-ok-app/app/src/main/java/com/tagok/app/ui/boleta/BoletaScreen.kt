@@ -3,9 +3,7 @@ package com.tagok.app.ui.boleta
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
-import androidx.compose.foundation.hoverable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsHoveredAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,18 +11,20 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DocumentScanner
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.tagok.app.domain.model.boleta.Boleta
 import com.tagok.app.domain.model.boleta.BoletaItem
 import com.tagok.app.ui.boleta.components.AutopistaMultiSelect
 import com.tagok.app.ui.boleta.components.DateRangeSelector
@@ -33,11 +33,14 @@ import com.tagok.app.ui.common.ErrorContent
 import com.tagok.app.ui.common.LoadingState
 import com.tagok.app.ui.common.ScreenLifecycle
 import com.tagok.app.ui.common.display
+import com.tagok.app.ui.theme.AccentBlue
+import com.tagok.app.ui.theme.LightBlueBg
+import com.tagok.app.ui.theme.NavyBlue
+import com.tagok.app.ui.theme.PageBg
+import com.tagok.app.ui.theme.TextDark
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BoletaScreen(
-    onBack: () -> Unit = {},
     onVerificarFactura: (
         patente: String,
         fechaDesde: kotlinx.datetime.LocalDate,
@@ -49,74 +52,48 @@ fun BoletaScreen(
 
     ScreenLifecycle(viewModel = viewModel)
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Generar Boleta") },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, "Volver")
-                    }
-                })
-        })
-    { padding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding))
+    Box(modifier = Modifier.fillMaxSize().background(PageBg))
+    {
+        when
         {
-            when
-            {
-                uiState.isLoading && uiState.patentes.isEmpty() -> {
-                    LoadingState(message = "Cargando datos...")
-                }
-
-                uiState.error != null && uiState.patentes.isEmpty() -> {
-                    ErrorContent(
-                        message = uiState.error ?: "Error desconocido",
-                        onRetry = { viewModel.refreshData() },
-                        onDismiss = { viewModel.clearError() })
-                }
-
-                else -> {
-                    BoletaContent(
-                        uiState = uiState,
-                        onPatenteSelected = viewModel::setPatente,
-                        onFechaDesdeChanged = viewModel::setFechaDesde,
-                        onFechaHastaChanged = viewModel::setFechaHasta,
-                        onToggleAutopista = viewModel::toggleAutopista,
-                        onGenerarBoleta = viewModel::generarBoleta,
-                        onVerificarFactura = onVerificarFactura)
-                }
+            uiState.isLoading && uiState.vehiculos.isEmpty() -> {
+                LoadingState(message = "Cargando datos...")
             }
 
-            if (uiState.isLoading && uiState.patentes.isNotEmpty())
-            {
-                LoadingOverlay()
+            uiState.error != null && uiState.vehiculos.isEmpty() -> {
+                ErrorContent(
+                    message = uiState.error ?: "Error desconocido",
+                    onRetry = { viewModel.refreshData() },
+                    onDismiss = { viewModel.clearError() })
             }
+
+            else -> {
+                BoletaContent(
+                    uiState = uiState,
+                    onPatenteSelected = viewModel::setPatente,
+                    onFechaDesdeChanged = viewModel::setFechaDesde,
+                    onFechaHastaChanged = viewModel::setFechaHasta,
+                    onToggleAutopista = viewModel::toggleAutopista,
+                    onGenerarBoleta = viewModel::generarBoleta,
+                    onVerificarFactura = onVerificarFactura)
+            }
+        }
+
+        if (uiState.isLoading && uiState.vehiculos.isNotEmpty())
+        {
+            LoadingOverlay()
         }
     }
 
-    if (uiState.error != null && uiState.patentes.isNotEmpty())
+    if (uiState.error != null && uiState.vehiculos.isNotEmpty())
     {
         AlertDialog(
             onDismissRequest = { viewModel.clearError() },
-            title = {
-                Text(
-                    text = "Error",
-                    fontWeight = FontWeight.Bold)
-            },
-            text = {
-                Text(
-                    text = uiState.error ?: "",
-                    modifier = Modifier.padding(vertical = 8.dp))
-            },
+            title = { Text("Error", fontWeight = FontWeight.SemiBold) },
+            text = { Text(uiState.error ?: "") },
             confirmButton = {
-                TextButton(
-                    onClick = { viewModel.clearError() },
-                    modifier = Modifier.padding(8.dp))
-                {
-                    Text("Entendido")
+                TextButton(onClick = { viewModel.clearError() }) {
+                    Text("Entendido", color = AccentBlue, fontWeight = FontWeight.SemiBold)
                 }
             })
     }
@@ -130,6 +107,8 @@ private fun LoadingOverlay()
         contentAlignment = Alignment.Center)
     {
         Card(
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp))
         {
             Column(
@@ -137,10 +116,11 @@ private fun LoadingOverlay()
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp))
             {
-                CircularProgressIndicator()
+                CircularProgressIndicator(color = NavyBlue, strokeWidth = 2.dp)
                 Text(
                     text = "Generando boleta...",
-                    style = MaterialTheme.typography.bodyMedium)
+                    fontSize = 13.sp,
+                    color = TextDark)
             }
         }
     }
@@ -158,54 +138,40 @@ private fun BoletaContent(
         patente: String,
         fechaDesde: kotlinx.datetime.LocalDate,
         fechaHasta: kotlinx.datetime.LocalDate,
-        autopistas: List<String>) -> Unit = { _, _, _, _ -> })
+        autopistas: List<String>) -> Unit)
 {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp, vertical = 24.dp),
-        verticalArrangement = Arrangement.spacedBy(20.dp))
+            .verticalScroll(rememberScrollState()))
     {
-        FormSection(title = "Vehículo")
-        {
+        Spacer(Modifier.height(16.dp))
+
+        // ── Header ──────────────────────────────────────────────────────────
+        Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+            Text(
+                text = "Generar Boleta",
+                fontWeight = FontWeight.Bold,
+                fontSize = 22.sp,
+                color = Color(0xFF1A1A2E))
+            Text(
+                text = "Tu boleta de cruces y peajes",
+                fontSize = 13.sp,
+                color = Color.Gray)
+        }
+
+        Spacer(Modifier.height(20.dp))
+
+        SectionCard(title = "VEHÍCULO") {
             PatenteSelector(
-                patentes = uiState.patentes,
+                vehiculos = uiState.vehiculos,
                 selected = uiState.patenteSeleccionada,
                 onPatenteSelected = onPatenteSelected)
         }
 
-        uiState.boleta?.let { boleta ->
-            BoletaResult(boleta = boleta)
+        Spacer(Modifier.height(12.dp))
 
-            // Atajo a la verificación con IA: compara esta boleta contra la
-            // factura (PDF o foto) que entrega la concesionaria
-            FilledTonalButton(
-                onClick = {
-                    onVerificarFactura(
-                        uiState.patenteSeleccionada,
-                        uiState.fechaDesde,
-                        uiState.fechaHasta,
-                        uiState.autopistasSeleccionadas)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(52.dp),
-                shape = MaterialTheme.shapes.medium)
-            {
-                Icon(
-                    Icons.Default.DocumentScanner,
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp))
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "Verificar factura con IA",
-                    style = MaterialTheme.typography.titleSmall)
-            }
-        }
-
-        FormSection(title = "Período")
-        {
+        SectionCard(title = "PERÍODO") {
             DateRangeSelector(
                 fechaDesde = uiState.fechaDesde,
                 fechaHasta = uiState.fechaHasta,
@@ -213,33 +179,108 @@ private fun BoletaContent(
                 onHastaChanged = onFechaHastaChanged)
         }
 
-        FormSection(title = "Autopistas (opcional)")
-        {
+        Spacer(Modifier.height(12.dp))
+
+        SectionCard(title = "AUTOPISTAS (OPCIONAL)") {
             AutopistaMultiSelect(
                 autopistas = uiState.autopistas,
                 selected = uiState.autopistasSeleccionadas,
                 onToggle = onToggleAutopista)
         }
 
+        Spacer(Modifier.height(16.dp))
+
         Button(
             onClick = onGenerarBoleta,
             enabled = !uiState.isLoading && uiState.patenteSeleccionada.isNotEmpty(),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp),
-            shape = MaterialTheme.shapes.medium)
+                .padding(horizontal = 20.dp)
+                .height(50.dp),
+            shape = RoundedCornerShape(14.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = NavyBlue))
         {
             Text(
-                text = if (uiState.boleta != null) "Regenerar Boleta" else "Generar Boleta",
-                style = MaterialTheme.typography.titleMedium)
+                text = if (uiState.boleta != null) "Regenerar boleta" else "Generar boleta",
+                fontWeight = FontWeight.SemiBold,
+                color = Color.White)
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        uiState.boleta?.let { boleta ->
+            Spacer(Modifier.height(16.dp))
+            BoletaResultCard(boleta = boleta)
+
+            Spacer(Modifier.height(12.dp))
+
+            // Atajo a la verificación con IA: compara esta boleta contra la
+            // factura (PDF o foto) que entrega la concesionaria
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+                    .height(50.dp)
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(LightBlueBg),
+                contentAlignment = Alignment.Center)
+            {
+                TextButton(
+                    onClick = {
+                        onVerificarFactura(
+                            uiState.patenteSeleccionada,
+                            uiState.fechaDesde,
+                            uiState.fechaHasta,
+                            uiState.autopistasSeleccionadas)
+                    },
+                    modifier = Modifier.fillMaxSize())
+                {
+                    Icon(
+                        Icons.Default.DocumentScanner,
+                        contentDescription = null,
+                        tint = AccentBlue,
+                        modifier = Modifier.size(18.dp))
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = "Verificar factura con IA",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = AccentBlue)
+                }
+            }
+        }
+
+        Spacer(Modifier.height(32.dp))
     }
 }
 
+// ─── Tarjeta de sección (mismo estilo que la tarjeta "VEHÍCULO" de Presupuesto) ──
 @Composable
-private fun BoletaResult(boleta: com.tagok.app.domain.model.boleta.Boleta)
+private fun SectionCard(
+    title: String,
+    content: @Composable () -> Unit)
+{
+    Card(
+        modifier = Modifier.padding(horizontal = 20.dp).fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp))
+    {
+        Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 14.dp))
+        {
+            Text(
+                text = title,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                color = AccentBlue,
+                letterSpacing = 1.sp)
+            Spacer(Modifier.height(10.dp))
+            content()
+        }
+    }
+}
+
+// ─── Resultado de la boleta generada ─────────────────────────────────────────
+@Composable
+private fun BoletaResultCard(boleta: Boleta)
 {
     var visible by remember { mutableStateOf(false) }
 
@@ -251,98 +292,48 @@ private fun BoletaResult(boleta: com.tagok.app.domain.model.boleta.Boleta)
         visible = visible,
         enter = fadeIn() + slideInVertically(initialOffsetY = { -40 }))
     {
-        Column(
-            modifier = Modifier.fillMaxWidth())
+        Card(
+            modifier = Modifier.padding(horizontal = 20.dp).fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp))
         {
-            HorizontalDivider(
-                modifier = Modifier.padding(vertical = 4.dp),
-                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
-                thickness = 2.dp)
-
-            Text(
-                text = "📄 Boleta Generada",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(vertical = 8.dp))
-
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp))
+            Column(modifier = Modifier.padding(horizontal = 24.dp, vertical = 20.dp))
             {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically)
-                {
-                    Column {
-                        Text(
-                            text = "Total a pagar",
-                            style = MaterialTheme.typography.titleSmall,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f))
-                        Text(
-                            text = "${boleta.items.size} transacciones",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.5f))
+                Text(
+                    text = "BOLETA GENERADA",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = AccentBlue,
+                    letterSpacing = 1.sp)
+
+                Spacer(Modifier.height(16.dp))
+
+                Text(
+                    text = "$${String.format("%.2f", boleta.total)}",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 32.sp,
+                    color = TextDark)
+                Text(
+                    text = "Total a pagar · ${boleta.items.size} transacciones",
+                    fontSize = 13.sp,
+                    color = Color.Gray)
+
+                if (boleta.items.isNotEmpty()) {
+                    Spacer(Modifier.height(20.dp))
+
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(max = 360.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp))
+                    {
+                        items(boleta.items) { item ->
+                            BoletaItemRow(item = item)
+                        }
                     }
-                    Text(
-                        text = "$${String.format("%.2f", boleta.total)}",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer)
                 }
             }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = "Detalle de transacciones",
-                style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(bottom = 8.dp))
-
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = 400.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp))
-            {
-                items(boleta.items) { item ->
-                    BoletaItemRow(item = item)
-                }
-            }
-
-            HorizontalDivider(
-                modifier = Modifier.padding(vertical = 4.dp),
-                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
-                thickness = 2.dp
-            )
-        }
-    }
-}
-
-@Composable
-private fun FormSection(
-    title: String,
-    content: @Composable () -> Unit)
-{
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)))
-    {
-        Column(modifier = Modifier.padding(16.dp))
-        {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(bottom = 12.dp))
-            content()
         }
     }
 }
@@ -350,53 +341,39 @@ private fun FormSection(
 @Composable
 fun BoletaItemRow(item: BoletaItem)
 {
-    val interactionSource = remember { MutableInteractionSource() }
-    val isHovered by interactionSource.collectIsHoveredAsState()
-
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .hoverable(interactionSource),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = if (isHovered) 6.dp else 1.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (isHovered)
-            {
-                MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.1f)
-            }
-            else
-            {
-                MaterialTheme.colorScheme.surface
-            }),
-        shape = RoundedCornerShape(12.dp))
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = PageBg),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp))
     {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(14.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically)
         {
-            Column(
-                modifier = Modifier.weight(1f))
+            Column(modifier = Modifier.weight(1f))
             {
                 Text(
                     text = item.nombre,
-                    style = MaterialTheme.typography.titleMedium,
+                    fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
+                    color = TextDark,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis)
 
-                Spacer(modifier = Modifier.height(6.dp))
+                Spacer(Modifier.height(4.dp))
 
                 Text(
                     text = item.autopista,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 12.sp,
+                    color = Color.Gray,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis)
 
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(Modifier.height(4.dp))
 
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -404,53 +381,36 @@ fun BoletaItemRow(item: BoletaItem)
                 {
                     Text(
                         text = item.horaCruce.display(),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.outline)
+                        fontSize = 11.sp,
+                        color = Color.Gray)
 
                     Box(
                         modifier = Modifier
-                            .width(3.dp)
-                            .height(3.dp)
+                            .size(3.dp)
                             .clip(RoundedCornerShape(50))
-                            .defaultMinSize(minWidth = 3.dp, minHeight = 3.dp))
-                    {
-                        Surface(
-                            modifier = Modifier.fillMaxSize(),
-                            color = MaterialTheme.colorScheme.outline,
-                            shape = RoundedCornerShape(50)) {}
-                    }
+                            .background(Color.Gray))
 
                     Text(
                         text = item.tipoTarifa,
-                        style = MaterialTheme.typography.bodySmall,
+                        fontSize = 11.sp,
                         fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.primary)
+                        color = AccentBlue)
                 }
             }
 
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(Modifier.width(12.dp))
 
-            Surface(
-                color = if (isHovered)
-                {
-                    MaterialTheme.colorScheme.primary
-                }
-                else
-                {
-                    MaterialTheme.colorScheme.secondaryContainer
-                },
-                shape = RoundedCornerShape(8.dp))
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(LightBlueBg)
+                    .padding(horizontal = 10.dp, vertical = 6.dp))
             {
                 Text(
                     text = "$${String.format("%.2f", item.valor)}",
-                    style = MaterialTheme.typography.titleMedium,
+                    fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    color = if (isHovered) {
-                        MaterialTheme.colorScheme.onPrimary
-                    } else {
-                        MaterialTheme.colorScheme.onSecondaryContainer
-                    },
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp))
+                    color = AccentBlue)
             }
         }
     }

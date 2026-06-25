@@ -54,8 +54,10 @@ import com.tagok.app.domain.model.routes.Route
 import com.tagok.app.domain.vehiculo.TipoVehiculo
 import com.tagok.app.ui.components.map.DireccionField
 import com.tagok.app.ui.components.map.RouteResult
-import com.tagok.app.ui.theme.Blue40
-import com.tagok.app.ui.theme.InputBackground
+import com.tagok.app.ui.theme.DividerGray
+import com.tagok.app.ui.theme.LightBlueBg
+import com.tagok.app.ui.theme.NavyBlue
+import com.tagok.app.ui.theme.TextDark
 import com.tagok.app.ui.theme.TextSecondary
 
 @Composable
@@ -93,9 +95,9 @@ fun RouteBottomCard(
 
     Card(
         modifier = modifier,
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp))
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp))
     {
         Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp))
         {
@@ -111,6 +113,7 @@ fun RouteBottomCard(
                     text = "Planificar viaje",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
+                    color = TextDark,
                     modifier = Modifier.weight(1f))
 
                 // ── Dropdown de vehículo ──────────────────────────────────────────
@@ -118,7 +121,7 @@ fun RouteBottomCard(
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(8.dp))
-                            .background(InputBackground)
+                            .background(LightBlueBg)
                             .clickable { vehicleDropdownExpanded = true }
                             .padding(horizontal = 10.dp, vertical = 4.dp),
                         contentAlignment = Alignment.Center)
@@ -128,14 +131,14 @@ fun RouteBottomCard(
                             Text(
                                 text = selectedVehicle.displayName,
                                 style = MaterialTheme.typography.labelSmall,
-                                color = Blue40,
+                                color = NavyBlue,
                                 fontWeight = FontWeight.Bold)
                             Spacer(Modifier.width(4.dp))
                             Icon(
                                 imageVector = if (vehicleDropdownExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
                                 contentDescription = "Seleccionar vehículo",
                                 modifier = Modifier.size(16.dp),
-                                tint = Blue40)
+                                tint = NavyBlue)
                         }
                     }
 
@@ -148,7 +151,7 @@ fun RouteBottomCard(
                                 text = {
                                     Text(
                                         text = tipo.displayName,
-                                        color = if (tipo == selectedVehicle) Blue40 else TextSecondary
+                                        color = if (tipo == selectedVehicle) NavyBlue else TextSecondary
                                     )
                                 },
                                 onClick = {
@@ -156,7 +159,7 @@ fun RouteBottomCard(
                                     vehicleDropdownExpanded = false
                                 },
                                 leadingIcon = if (tipo == selectedVehicle) {
-                                    { Icon(Icons.Filled.Check, null, tint = Blue40, modifier = Modifier.size(18.dp)) }
+                                    { Icon(Icons.Filled.Check, null, tint = NavyBlue, modifier = Modifier.size(18.dp)) }
                                 } else null
                             )
                         }
@@ -219,9 +222,9 @@ fun RouteBottomCard(
                             enabled = origenSeleccionado != null && destinoSeleccionado != null && !isLoadingRoute,
                             modifier = Modifier
                                 .weight(2f)
-                                .height(44.dp),
-                            shape = RoundedCornerShape(13.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = Blue40))
+                                .height(48.dp),
+                            shape = RoundedCornerShape(14.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = NavyBlue))
                         {
                             if (isLoadingRoute)
                                 CircularProgressIndicator(
@@ -239,7 +242,7 @@ fun RouteBottomCard(
                     if (hasRoutePoints)
                     {
                         Spacer(Modifier.height(8.dp))
-                        HorizontalDivider(color = InputBackground)
+                        HorizontalDivider(color = DividerGray)
                         Spacer(Modifier.height(8.dp))
                         RouteResult(
                             vehiculo = vehiculo,
@@ -273,15 +276,15 @@ fun RouteBottomCard(
                                 text = "${"%.0f".format(route?.totalCost)} CLP",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = Blue40)
+                                color = NavyBlue)
                         }
 
                         Button(
                             onClick = onCalcular,
                             enabled = !isLoadingRoute,
-                            modifier = Modifier.height(36.dp),
-                            shape = RoundedCornerShape(10.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = Blue40),
+                            modifier = Modifier.height(40.dp),
+                            shape = RoundedCornerShape(14.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = NavyBlue),
                             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp)
                         )
                         {

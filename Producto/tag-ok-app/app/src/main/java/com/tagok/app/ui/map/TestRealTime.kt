@@ -6,6 +6,8 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -14,14 +16,23 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.tagok.app.domain.model.tarifa.Cruce
 import com.tagok.app.domain.model.tarifa.CrucePortico
 import com.tagok.app.domain.model.tarifa.CruceTramo
 import com.tagok.app.domain.model.tarifa.TarifaCalculada
 import com.tagok.app.domain.model.vehiculo.Vehiculo
 import com.tagok.app.ui.historial.utils.formatCurrency
+import com.tagok.app.ui.theme.AccentBlue
+import com.tagok.app.ui.theme.DividerGray
+import com.tagok.app.ui.theme.NavyBlue
+import com.tagok.app.ui.theme.PageBg
+import com.tagok.app.ui.theme.TextDark
+import com.tagok.app.ui.theme.TextSecondary
 
 @Composable
 fun TestRealTime(
@@ -32,15 +43,16 @@ fun TestRealTime(
     onSimularCruce: () -> Unit,
     onToggleTracking: () -> Unit,
     onCerrar: () -> Unit,
+    onCambiarVehiculo: () -> Unit,
     modifier: Modifier = Modifier)
 {
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp))
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp))
     {
         Column(
             modifier = Modifier.padding(16.dp))
@@ -54,42 +66,57 @@ fun TestRealTime(
                 Text(
                     text = "Simular Cruce",
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold)
+                    fontWeight = FontWeight.Bold,
+                    color = TextDark)
                 if (tarifaCalculada != null)
                 {
                     IconButton(onClick = onCerrar)
                     {
-                        Icon(Icons.Filled.Close, "Cerrar")
+                        Icon(Icons.Filled.Close, "Cerrar", tint = TextSecondary)
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-            Row(verticalAlignment = Alignment.CenterVertically)
+            if (vehiculo != null)
             {
-                Icon(
-                    imageVector = Icons.Filled.DirectionsCar,
-                    contentDescription = null,
-                    modifier = Modifier.size(16.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = "Vehículo: ${vehiculo?.alias}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Spacer(modifier = Modifier.width(8.dp))
-                Icon(
-                    imageVector = Icons.Filled.Numbers,
-                    contentDescription = null,
-                    modifier = Modifier.size(16.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                Spacer(modifier = Modifier.width(4.dp))
-                vehiculo?.patente?.let {
-                    Text(
-                        text = it ,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(PageBg)
+                        .clickable { onCambiarVehiculo() }
+                        .padding(horizontal = 12.dp, vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically)
+                {
+                    Box(
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(Color.White),
+                        contentAlignment = Alignment.Center)
+                    {
+                        Icon(
+                            imageVector = Icons.Filled.DirectionsCar,
+                            contentDescription = null,
+                            tint = AccentBlue,
+                            modifier = Modifier.size(20.dp))
+                    }
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Column {
+                        Text(
+                            text = vehiculo.tipoVehiculo ?: "VEHÍCULO",
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = TextDark,
+                            letterSpacing = 0.8.sp)
+                        Text(
+                            text = "${vehiculo.patente ?: ""}  ${vehiculo.alias ?: ""}".trim(),
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = TextSecondary)
+                    }
                 }
             }
 
@@ -97,16 +124,19 @@ fun TestRealTime(
 
             Button(
                 onClick = onSimularCruce,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
                 enabled = !isCalculating,
-                shape = RoundedCornerShape(12.dp))
+                shape = RoundedCornerShape(14.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = NavyBlue))
             {
                 if (isCalculating)
                 {
                     CircularProgressIndicator(
                         modifier = Modifier.size(18.dp),
                         strokeWidth = 2.dp,
-                        color = MaterialTheme.colorScheme.onPrimary)
+                        color = Color.White)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Calculando...")
                 }
@@ -114,7 +144,7 @@ fun TestRealTime(
                 {
                     Icon(Icons.Filled.Casino, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Simular cruce aleatorio")
+                    Text("Simular cruce aleatorio", fontWeight = FontWeight.SemiBold)
                 }
             }
 
@@ -122,18 +152,22 @@ fun TestRealTime(
 
             Button(
                 onClick = onToggleTracking,
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                shape = RoundedCornerShape(14.dp),
                 colors = if (isTracking)
                     ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                 else
-                    ButtonDefaults.buttonColors())
+                    ButtonDefaults.buttonColors(containerColor = NavyBlue))
             {
                 Icon(
                     imageVector = if (isTracking) Icons.Filled.GpsOff else Icons.Filled.GpsFixed,
                     contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(if (isTracking) "Detener verificación" else "Verificar cruces en tiempo real")
+                Text(
+                    if (isTracking) "Detener verificación" else "Verificar cruces en tiempo real",
+                    fontWeight = FontWeight.SemiBold)
             }
 
             AnimatedVisibility(visible = isTracking)
@@ -144,12 +178,13 @@ fun TestRealTime(
                 {
                     CircularProgressIndicator(
                         modifier = Modifier.size(14.dp),
-                        strokeWidth = 2.dp)
+                        strokeWidth = 2.dp,
+                        color = AccentBlue)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "Verificando cruces con tu ubicación...",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        color = TextSecondary)
                 }
             }
 
@@ -161,7 +196,7 @@ fun TestRealTime(
                 tarifaCalculada?.let { tarifa ->
                     Column {
                         Spacer(modifier = Modifier.height(16.dp))
-                        HorizontalDivider()
+                        HorizontalDivider(color = DividerGray)
                         Spacer(modifier = Modifier.height(12.dp))
 
                         Row(
@@ -172,12 +207,12 @@ fun TestRealTime(
                             Text(
                                 text = "Total calculado",
                                 style = MaterialTheme.typography.titleSmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                color = TextSecondary)
                             Text(
                                 text = tarifa.total.formatCurrency(),
                                 style = MaterialTheme.typography.titleLarge,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary)
+                                color = NavyBlue)
                         }
 
                         Spacer(modifier = Modifier.height(12.dp))
@@ -186,7 +221,7 @@ fun TestRealTime(
                             text = "Cruces (${tarifa.cruces.size})",
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            color = TextSecondary)
 
                         Spacer(modifier = Modifier.height(8.dp))
 
@@ -205,8 +240,7 @@ fun TestRealTime(
 private fun CruceItem(cruce: Cruce)
 {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)),
+        colors = CardDefaults.cardColors(containerColor = PageBg),
         shape = RoundedCornerShape(12.dp))
     {
         Row(
@@ -220,7 +254,7 @@ private fun CruceItem(cruce: Cruce)
                     is CruceTramo -> Icons.Filled.SwapHoriz
                 },
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
+                tint = AccentBlue,
                 modifier = Modifier.size(24.dp))
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -230,24 +264,25 @@ private fun CruceItem(cruce: Cruce)
                 Text(
                     text = cruce.nombre,
                     style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold)
+                    fontWeight = FontWeight.Bold,
+                    color = TextDark)
                 Text(
                     text = "${cruce.autopista} • ${cruce.codigo}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    color = TextSecondary)
                 when (cruce)
                 {
                     is CruceTramo -> {
                         Text(
                             text = "${cruce.nombreEntrada} → ${cruce.nombreSalida}",
                             style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            color = TextSecondary)
                     }
                     is CrucePortico -> {
                         Text(
                             text = "${cruce.nombre}",
                             style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            color = TextSecondary)
                     }
                 }
             }
@@ -258,11 +293,11 @@ private fun CruceItem(cruce: Cruce)
                     text = cruce.valor.formatCurrency(),
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary)
+                    color = NavyBlue)
                 Text(
                     text = cruce.tipoTarifa,
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    color = TextSecondary)
             }
         }
     }

@@ -1,11 +1,13 @@
 // HistorialScreen.kt
 package com.tagok.app.ui.historial
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tagok.app.ui.common.ScreenLifecycle
@@ -18,6 +20,7 @@ import com.tagok.app.ui.historial.components.month.VistaMeses
 import com.tagok.app.ui.historial.components.shared.FilterChips
 import com.tagok.app.ui.historial.components.year.VistaAnual
 import com.tagok.app.ui.historial.model.SortOption
+import com.tagok.app.ui.theme.PageBg
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +48,7 @@ fun HistorialScreen(
                 })
         })
     { padding ->
-        Box(modifier = Modifier.fillMaxSize().padding(padding))
+        Box(modifier = Modifier.fillMaxSize().padding(padding).background(PageBg))
         {
             when
             {
@@ -209,6 +212,6 @@ private fun EmptyStateContent()
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center)
     {
-        Text("No hay datos disponibles")
+        Text("No hay datos disponibles", color = Color.Gray)
     }
 }

@@ -15,11 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.Color
 import com.tagok.app.ui.historial.model.AutopistaFilter
 import com.tagok.app.ui.historial.model.PatenteFilter
 import com.tagok.app.ui.historial.model.SortOption
-import com.tagok.app.ui.theme.Blue40
-import com.tagok.app.ui.theme.TextSecondary
+import com.tagok.app.ui.theme.AccentBlue
+import com.tagok.app.ui.theme.NavyBlue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -97,9 +98,10 @@ fun FilterChips(
                     }
                 },
                 colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = Blue40.copy(alpha = 0.15f),
-                    selectedLabelColor = Blue40,
-                    selectedLeadingIconColor = Blue40))
+                    selectedContainerColor = NavyBlue,
+                    selectedLabelColor = Color.White,
+                    selectedLeadingIconColor = Color.White,
+                    selectedTrailingIconColor = Color.White))
         }
     }
 
@@ -151,10 +153,10 @@ private fun SortChip(
                 )
             },
             colors = FilterChipDefaults.filterChipColors(
-                selectedContainerColor = Blue40.copy(alpha = 0.15f),
-                selectedLabelColor = Blue40,
-                selectedLeadingIconColor = Blue40,
-                selectedTrailingIconColor = Blue40
+                selectedContainerColor = NavyBlue,
+                selectedLabelColor = Color.White,
+                selectedLeadingIconColor = Color.White,
+                selectedTrailingIconColor = Color.White
             )
         )
 
@@ -178,7 +180,7 @@ private fun SortChip(
                                 Icon(
                                     Icons.Filled.Check,
                                     contentDescription = "Seleccionado",
-                                    tint = Blue40,
+                                    tint = NavyBlue,
                                     modifier = Modifier.size(18.dp)
                                 )
                             }
@@ -192,7 +194,7 @@ private fun SortChip(
                         Icon(
                             imageVector = getSortIcon(option),
                             contentDescription = null,
-                            tint = TextSecondary,
+                            tint = Color.Gray,
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -247,14 +249,14 @@ private fun FilterModal(
                     text = "Patentes",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = Blue40
+                    color = AccentBlue
                 )
 
                 if (patentes.isEmpty()) {
                     Text(
                         text = "No hay patentes disponibles",
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextSecondary
+                        color = Color.Gray
                     )
                 } else {
                     Row(
@@ -265,7 +267,7 @@ private fun FilterModal(
                         Text(
                             text = "${patentesSeleccionadas.size} de ${patentes.size} seleccionadas",
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextSecondary
+                            color = Color.Gray
                         )
                         if (patentesSeleccionadas.isNotEmpty()) {
                             TextButton(onClick = onClearPatentes) {
@@ -288,7 +290,7 @@ private fun FilterModal(
                             Checkbox(
                                 checked = patente.isSelected,
                                 onCheckedChange = { onPatenteToggle(patente.patente) },
-                                colors = CheckboxDefaults.colors(checkedColor = Blue40)
+                                colors = CheckboxDefaults.colors(checkedColor = NavyBlue)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
@@ -300,7 +302,7 @@ private fun FilterModal(
                                 Icon(
                                     Icons.Filled.Check,
                                     contentDescription = "Seleccionada",
-                                    tint = Blue40,
+                                    tint = NavyBlue,
                                     modifier = Modifier.size(18.dp)
                                 )
                             }
@@ -315,14 +317,14 @@ private fun FilterModal(
                     text = "Autopistas",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = Blue40
+                    color = AccentBlue
                 )
 
                 if (autopistas.isEmpty()) {
                     Text(
                         text = "No hay autopistas disponibles",
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextSecondary
+                        color = Color.Gray
                     )
                 } else {
                     Row(
@@ -333,7 +335,7 @@ private fun FilterModal(
                         Text(
                             text = "${autopistasSeleccionadas.size} de ${autopistas.size} seleccionadas",
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextSecondary
+                            color = Color.Gray
                         )
                         if (autopistasSeleccionadas.isNotEmpty()) {
                             TextButton(onClick = onClearAutopistas) {
@@ -356,7 +358,7 @@ private fun FilterModal(
                             Checkbox(
                                 checked = autopista.isSelected,
                                 onCheckedChange = { onAutopistaToggle(autopista.autopista) },
-                                colors = CheckboxDefaults.colors(checkedColor = Blue40))
+                                colors = CheckboxDefaults.colors(checkedColor = NavyBlue))
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = autopista.autopista,
@@ -367,7 +369,7 @@ private fun FilterModal(
                                 Icon(
                                     Icons.Filled.Check,
                                     contentDescription = "Seleccionada",
-                                    tint = Blue40,
+                                    tint = NavyBlue,
                                     modifier = Modifier.size(18.dp))
                             }
                         }

@@ -17,7 +17,8 @@ object ServiceModule
     val boletaService: BoletaService by lazy {
         BoletaService(
             boletaRepository = RepositoryModule.boletaRepository,
-            historyRepository = RepositoryModule.historyRepository)
+            historyRepository = RepositoryModule.historyRepository,
+            vehiculoRepository = RepositoryModule.vehiculoRepository)
     }
 
     val planificarService: IPlanificarService by lazy {

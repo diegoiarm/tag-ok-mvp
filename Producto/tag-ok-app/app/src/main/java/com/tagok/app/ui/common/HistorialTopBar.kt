@@ -5,7 +5,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.font.FontWeight
 import com.tagok.app.ui.historial.HistorialDestination
+import com.tagok.app.ui.theme.NavyBlue
+import com.tagok.app.ui.theme.PageBg
+import com.tagok.app.ui.theme.TextDark
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -17,15 +21,14 @@ fun HistorialTopBar(
 
     TopAppBar(
         title = {
-            Text(getTitle(currentDestination))
+            Text(getTitle(currentDestination), fontWeight = FontWeight.Bold, color = TextDark)
         },
         navigationIcon = {
-            if (navigationStack.size > 1) {
-                IconButton(onClick = onBack) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
-                }
+            IconButton(onClick = onBack) {
+                Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = NavyBlue)
             }
-        })
+        },
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = PageBg))
 }
 
 private fun getTitle(destination: HistorialDestination?): String

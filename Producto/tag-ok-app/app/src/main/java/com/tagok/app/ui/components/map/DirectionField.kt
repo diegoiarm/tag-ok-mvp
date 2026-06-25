@@ -22,12 +22,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.tagok.app.data.GeocodeSuggestion
-import com.tagok.app.ui.theme.Blue40
-import com.tagok.app.ui.theme.InputBackground
+import com.tagok.app.ui.theme.AccentBlue
+import com.tagok.app.ui.theme.DividerGray
 import com.tagok.app.ui.theme.TextSecondary
 
 @Composable
@@ -51,7 +52,7 @@ fun DireccionField(
                 Icon(
                     imageVector = leadingIcon,
                     contentDescription = null,
-                    tint = Blue40,
+                    tint = AccentBlue,
                     modifier = Modifier.size(18.dp),
                 )
             },
@@ -60,14 +61,14 @@ fun DireccionField(
                     CircularProgressIndicator(
                         modifier = Modifier.size(16.dp),
                         strokeWidth = 2.dp,
-                        color = Blue40)
+                        color = AccentBlue)
             },
             singleLine = true,
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Blue40,
-                unfocusedBorderColor = InputBackground,
-                focusedLabelColor = Blue40,
+                focusedBorderColor = AccentBlue,
+                unfocusedBorderColor = DividerGray,
+                focusedLabelColor = AccentBlue,
             ),
         )
 
@@ -78,7 +79,7 @@ fun DireccionField(
                     .fillMaxWidth()
                     .padding(top = 2.dp),
                 shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp))
             {
                 Column {
@@ -108,7 +109,7 @@ fun DireccionField(
                         if (index < sugerencias.size - 1)
                             HorizontalDivider(
                                 modifier = Modifier.padding(horizontal = 14.dp),
-                                color = InputBackground)
+                                color = DividerGray)
                     }
                 }
             }

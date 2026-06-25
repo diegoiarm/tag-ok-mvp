@@ -58,14 +58,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.tagok.app.ui.theme.Blue40
-import com.tagok.app.ui.theme.InputBackground
-import com.tagok.app.ui.theme.TextPrimary
-import com.tagok.app.ui.theme.TextSecondary
-
-private val SurfaceGray  = Color(0xFFF3F4F6)
-private val DividerGray  = Color(0xFFE5E7EB)
-private val TextDark     = Color(0xFF111827)
+import com.tagok.app.ui.theme.AccentBlue
+import com.tagok.app.ui.theme.DividerGray
+import com.tagok.app.ui.theme.LightBlueBg
+import com.tagok.app.ui.theme.NavyBlue
+import com.tagok.app.ui.theme.PageBg
+import com.tagok.app.ui.theme.TextDark
 
 @Composable
 fun PerfilScreen(
@@ -86,18 +84,39 @@ fun PerfilScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        containerColor = SurfaceGray,
+        containerColor = PageBg,
     ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
                 .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Spacer(Modifier.height(36.dp))
+            Spacer(Modifier.height(16.dp))
 
-            AvatarSection(nombre = state.nombre, apellidos = state.apellidos)
+            // ── Header ──────────────────────────────────────────────────────────
+            Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+                Text(
+                    text = "Perfil",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp,
+                    color = Color(0xFF1A1A2E),
+                )
+                Text(
+                    text = "Tu información y vehículos",
+                    fontSize = 13.sp,
+                    color = Color.Gray,
+                )
+            }
+
+            Spacer(Modifier.height(20.dp))
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                AvatarSection(nombre = state.nombre, apellidos = state.apellidos)
+            }
 
             Spacer(Modifier.height(24.dp))
 
@@ -116,8 +135,12 @@ fun PerfilScreen(
                             onCiudad    = viewModel::updateCiudad,
                         )
                     } else {
+                        SectionLabel("INFORMACIÓN")
+                        Spacer(Modifier.height(10.dp))
                         InfoSection(state = state)
-                        Spacer(Modifier.height(12.dp))
+                        Spacer(Modifier.height(20.dp))
+                        SectionLabel("ACCESOS RÁPIDOS")
+                        Spacer(Modifier.height(10.dp))
                         NavSection(onVehiculos = onVehiculos, onMisRutas = onMisRutas)
                     }
                 }
@@ -151,6 +174,19 @@ fun PerfilScreen(
     }
 }
 
+// ─── Label de sección (mismo estilo que las tarjetas "VEHÍCULO" de Presupuesto) ─
+@Composable
+private fun SectionLabel(text: String) {
+    Text(
+        text = text,
+        fontSize = 12.sp,
+        fontWeight = FontWeight.Bold,
+        color = AccentBlue,
+        letterSpacing = 1.sp,
+        modifier = Modifier.padding(horizontal = 20.dp),
+    )
+}
+
 // ─── Avatar ───────────────────────────────────────────────────────────────────
 @Composable
 private fun AvatarSection(nombre: String, apellidos: String) {
@@ -164,14 +200,14 @@ private fun AvatarSection(nombre: String, apellidos: String) {
         modifier = Modifier
             .size(96.dp)
             .clip(CircleShape)
-            .background(InputBackground),
+            .background(LightBlueBg),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             text = initials,
             fontWeight = FontWeight.Bold,
             fontSize = 34.sp,
-            color = Blue40,
+            color = NavyBlue,
         )
     }
 
@@ -194,7 +230,7 @@ private fun InfoSection(state: PerfilState) {
             .padding(horizontal = 20.dp),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(0.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(modifier = Modifier.padding(vertical = 4.dp)) {
             InfoRow(Icons.Filled.Phone, state.celular.ifBlank { "Sin teléfono" }, state.celular.isBlank())
@@ -214,12 +250,12 @@ private fun InfoRow(icon: ImageVector, value: String, faded: Boolean = false) {
             .padding(horizontal = 18.dp, vertical = 15.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(icon, null, tint = if (faded) TextSecondary else Blue40, modifier = Modifier.size(20.dp))
+        Icon(icon, null, tint = if (faded) Color.Gray else AccentBlue, modifier = Modifier.size(20.dp))
         Spacer(Modifier.width(14.dp))
         Text(
             text = value,
             fontSize = 14.sp,
-            color = if (faded) TextSecondary else TextPrimary,
+            color = if (faded) Color.Gray else TextDark,
         )
     }
 }
@@ -233,7 +269,7 @@ private fun NavSection(onVehiculos: () -> Unit, onMisRutas: () -> Unit) {
             .padding(horizontal = 20.dp),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(0.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(modifier = Modifier.padding(vertical = 4.dp)) {
             NavRow(Icons.Filled.DirectionsCar, "Vehículos", onVehiculos)
@@ -256,13 +292,13 @@ private fun NavRow(icon: ImageVector, label: String, onClick: () -> Unit) {
                 .padding(horizontal = 18.dp, vertical = 15.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(icon, null, tint = Blue40, modifier = Modifier.size(20.dp))
+            Icon(icon, null, tint = AccentBlue, modifier = Modifier.size(20.dp))
             Spacer(Modifier.width(14.dp))
-            Text(label, fontSize = 14.sp, color = TextPrimary, modifier = Modifier.weight(1f))
+            Text(label, fontSize = 14.sp, color = TextDark, modifier = Modifier.weight(1f))
             Icon(
                 Icons.AutoMirrored.Filled.ArrowForward,
                 null,
-                tint = TextSecondary,
+                tint = Color.Gray,
                 modifier = Modifier.size(16.dp),
             )
         }
@@ -284,7 +320,7 @@ private fun EditSection(
             .padding(horizontal = 20.dp),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(0.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             EditField("Nombre",    state.nombre,    onNombre)
@@ -300,14 +336,14 @@ private fun EditSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
-                    .background(SurfaceGray)
+                    .background(PageBg)
                     .padding(horizontal = 14.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Icon(Icons.Filled.Email, null, tint = TextSecondary, modifier = Modifier.size(16.dp))
+                Icon(Icons.Filled.Email, null, tint = Color.Gray, modifier = Modifier.size(16.dp))
                 Spacer(Modifier.width(8.dp))
-                Text(state.email, fontSize = 13.sp, color = TextSecondary, modifier = Modifier.weight(1f))
-                Text("· no editable", fontSize = 11.sp, color = TextSecondary)
+                Text(state.email, fontSize = 13.sp, color = Color.Gray, modifier = Modifier.weight(1f))
+                Text("· no editable", fontSize = 11.sp, color = Color.Gray)
             }
         }
     }
@@ -329,9 +365,9 @@ private fun EditField(
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         shape = RoundedCornerShape(12.dp),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = Blue40,
+            focusedBorderColor = NavyBlue,
             unfocusedBorderColor = DividerGray,
-            focusedLabelColor = Blue40,
+            focusedLabelColor = NavyBlue,
         ),
     )
 }
@@ -355,7 +391,7 @@ private fun BottomActions(
             TextButton(
                 onClick = onCancelar,
                 modifier = Modifier.weight(1f),
-                colors = ButtonDefaults.textButtonColors(contentColor = TextSecondary),
+                colors = ButtonDefaults.textButtonColors(contentColor = Color.Gray),
             ) {
                 Text("Cancelar", fontWeight = FontWeight.SemiBold)
             }
@@ -366,7 +402,7 @@ private fun BottomActions(
                     .weight(2f)
                     .height(48.dp),
                 shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Blue40),
+                colors = ButtonDefaults.buttonColors(containerColor = NavyBlue),
             ) {
                 if (isSaving) {
                     CircularProgressIndicator(
@@ -387,7 +423,7 @@ private fun BottomActions(
                 .padding(horizontal = 20.dp)
                 .height(48.dp),
             shape = RoundedCornerShape(14.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Blue40),
+            colors = ButtonDefaults.buttonColors(containerColor = NavyBlue),
         ) {
             Text("Editar", fontWeight = FontWeight.SemiBold)
         }

@@ -11,13 +11,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.tagok.app.domain.model.history.CruceDetalle
 import com.tagok.app.ui.common.displayHorasMinutos
 import com.tagok.app.ui.historial.utils.formatCurrency
-import com.tagok.app.ui.theme.Blue40
-import com.tagok.app.ui.theme.TextSecondary
+import com.tagok.app.ui.theme.AccentBlue
+import com.tagok.app.ui.theme.LightBlueBg
 
 @Composable
 fun CruceItem(cruce: CruceDetalle)
@@ -32,7 +33,7 @@ fun CruceItem(cruce: CruceDetalle)
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
-                    .background(Blue40.copy(alpha = 0.1f)),
+                    .background(LightBlueBg),
                 contentAlignment = Alignment.Center)
             {
                 Icon(
@@ -44,7 +45,7 @@ fun CruceItem(cruce: CruceDetalle)
                         else -> Icons.Filled.DirectionsCar
                     },
                     contentDescription = cruce.tipoVehiculo,
-                    tint = Blue40,
+                    tint = AccentBlue,
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -61,7 +62,7 @@ fun CruceItem(cruce: CruceDetalle)
                 Text(
                     text = "${cruce.autopista} • ${cruce.codigo}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondary)
+                    color = Color.Gray)
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -73,17 +74,17 @@ fun CruceItem(cruce: CruceDetalle)
                             Icons.Filled.Schedule,
                             contentDescription = null,
                             modifier = Modifier.size(12.dp),
-                            tint = TextSecondary)
+                            tint = Color.Gray)
                         Spacer(modifier = Modifier.width(2.dp))
                         Text(
                             text = cruce.horaFechaCruce.displayHorasMinutos(),
                             style = MaterialTheme.typography.labelSmall,
-                            color = TextSecondary)
+                            color = Color.Gray)
                     }
                     Text(
                         text = "Tarifa: ${cruce.tipoTarifa}",
                         style = MaterialTheme.typography.labelSmall,
-                        color = TextSecondary)
+                        color = Color.Gray)
                 }
             }
 
@@ -94,13 +95,13 @@ fun CruceItem(cruce: CruceDetalle)
                 Text(
                     text = cruce.valor.formatCurrency(),
                     style = MaterialTheme.typography.titleMedium,
-                    color = Blue40,
+                    color = AccentBlue,
                     fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = cruce.tipoVehiculo,
                     style = MaterialTheme.typography.labelSmall,
-                    color = TextSecondary)
+                    color = Color.Gray)
             }
         }
     }

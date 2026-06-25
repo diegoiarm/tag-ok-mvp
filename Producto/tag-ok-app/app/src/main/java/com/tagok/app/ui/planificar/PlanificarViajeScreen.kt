@@ -44,7 +44,7 @@ import kotlinx.coroutines.delay
 
 private val SANTIAGO = Point.fromLngLat(-70.6483, -33.4569)
 
-private val EJEMPLO_ORIGEN = GeocodeSuggestion(placeName = "Inicio", lon = -70.701013, lat = -33.596694)
+private val EJEMPLO_ORIGEN = GeocodeSuggestion(placeName = "Inicio", lon = -70.6922003, lat = -33.5764206)
 private val EJEMPLO_DESTINO = GeocodeSuggestion(placeName = "Fin", lon = -70.565223, lat = -33.430858)
 
 @SuppressLint("MissingPermission")

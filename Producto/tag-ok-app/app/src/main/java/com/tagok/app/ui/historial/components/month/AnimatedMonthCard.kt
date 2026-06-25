@@ -15,9 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.tagok.app.ui.historial.utils.getShortMonthName
-import com.tagok.app.ui.theme.Blue40
-import com.tagok.app.ui.theme.InputBackground
-import com.tagok.app.ui.theme.TextSecondary
+import com.tagok.app.ui.theme.LightBlueBg
+import com.tagok.app.ui.theme.NavyBlue
 
 @Composable
 fun AnimatedMonthCard(
@@ -44,7 +43,7 @@ fun AnimatedMonthCard(
             .clickable(enabled = activo, onClick = onClick),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (activo) Blue40 else InputBackground),
+            containerColor = if (activo) NavyBlue else LightBlueBg),
         elevation = CardDefaults.cardElevation(
             defaultElevation = if (activo) 8.dp else 2.dp))
     {
@@ -58,7 +57,7 @@ fun AnimatedMonthCard(
                     text = getShortMonthName(mes),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = if (activo) FontWeight.Bold else FontWeight.Medium,
-                    color = if (activo) Color.White else TextSecondary)
+                    color = if (activo) Color.White else Color.Gray)
                 if (activo)
                 {
                     Spacer(modifier = Modifier.height(4.dp))
