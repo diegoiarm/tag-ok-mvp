@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TAG OK · Galaxia Demo S22 Ultra (Chroma Verde)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; }
+
+    body {
+      background: radial-gradient(ellipse at 40% 50%, #0B1A2F 0%, #030712 70%);
+      font-family: system-ui, sans-serif;
+    }
+
+    /* ===== Estrellas fijas ===== */
+    .stars {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: transparent;
+      overflow: hidden;
+    }
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: twinkle var(--duration) ease-in-out infinite;
+      box-shadow: 0 0 6px 1px rgba(255,255,255,0.8);
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.5); }
+    }
+
+    /* ===== Auroras ===== */
+    .aurora {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.25;
+      pointer-events: none;
+    }
+    .aurora-1 {
+      width: 85vw; height: 85vw;
+      background: radial-gradient(circle, rgba(34,197,94,0.4) 0%, transparent 70%);
+      top: -20%; left: -15%;
+      animation: drift1 18s ease-in-out infinite alternate;
+    }
+    .aurora-2 {
+      width: 75vw; height: 75vw;
+      background: radial-gradient(circle, rgba(6,182,212,0.35) 0%, transparent 70%);
+      bottom: -25%; right: -15%;
+      animation: drift2 22s ease-in-out infinite alternate;
+    }
+    .aurora-3 {
+      width: 65vw; height: 65vw;
+      background: radial-gradient(circle, rgba(168,85,247,0.25) 0%, transparent 70%);
+      top: 40%; left: 30%;
+      animation: drift3 20s ease-in-out infinite alternate;
+    }
+
+    @keyframes drift1 {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(8vw, 5vh) scale(1.1); }
+    }
+    @keyframes drift2 {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(-6vw, -4vh) scale(1.12); }
+    }
+    @keyframes drift3 {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(3vw, -6vh) scale(1.07); }
+    }
+
+    /* ===== Cuadrícula sutil ===== */
+    .map-grid {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    /* ===== Estrella fugaz ===== */
+    .shooting-star {
+      position: absolute;
+      top: -10%;
+      left: 80%;
+      width: 2px;
+      height: 80px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 70%);
+      border-radius: 50%;
+      box-shadow: 0 0 20px 4px rgba(52,211,153,0.8);
+      animation: shoot 4s linear infinite;
+      pointer-events: none;
+      transform: rotate(-30deg);
+      opacity: 0;
+    }
+    @keyframes shoot {
+      0% { transform: translateX(0) translateY(0) rotate(-30deg); opacity: 0; }
+      10% { opacity: 1; }
+      30% { opacity: 0.8; }
+      100% { transform: translateX(-300px) translateY(400px) rotate(-30deg); opacity: 0; }
+    }
+
+    /* ===== Partículas con estela suave ===== */
+    .particle-container {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .particle {
+      position: absolute;
+      background: rgba(52,211,153,0.9);
+      border-radius: 50%;
+      box-shadow: 0 0 15px 5px rgba(52,211,153,0.6);
+      animation: floatParticle var(--duration) linear infinite;
+    }
+    .particle::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(52,211,153,0.4) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.7;
+    }
+    @keyframes floatParticle {
+      0%   { transform: translate(0, 0) scale(1); opacity: 0; }
+      20%  { opacity: 0.9; }
+      80%  { opacity: 0.8; }
+      100% { transform: translate(var(--dx), var(--dy)) scale(1.5); opacity: 0; }
+    }
+
+    /* ===== Objetos rotando en el horizonte ===== */
+    .horizon {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 30%;
+      pointer-events: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .orbit {
+      position: absolute;
+      border: 1px solid rgba(52,211,153,0.15);
+      border-radius: 50%;
+      animation: rotate var(--speed) linear infinite;
+    }
+    .orbit-1 {
+      width: 500px; height: 500px;
+      --speed: 25s;
+      bottom: -250px;
+    }
+    .orbit-2 {
+      width: 700px; height: 700px;
+      --speed: 35s;
+      bottom: -350px;
+      border-color: rgba(34,197,94,0.2);
+    }
+    .orbit-3 {
+      width: 900px; height: 900px;
+      --speed: 45s;
+      bottom: -450px;
+      border-color: rgba(16,185,129,0.1);
+    }
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Pequeños planetas/satélites sobre los anillos */
+    .satellite {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: #34D399;
+      border-radius: 50%;
+      box-shadow: 0 0 15px #10B981;
+      animation: orbitSatellite var(--speed) linear infinite;
+      bottom: 0;
+    }
+    .satellite-1 {
+      --speed: 25s;
+      width: 10px; height: 10px;
+      left: 20%;
+      bottom: -250px;
+    }
+    .satellite-2 {
+      --speed: 35s;
+      left: 70%;
+      bottom: -350px;
+    }
+    @keyframes orbitSatellite {
+      0%   { transform: translate(-50%, 0) rotate(0deg) translateX(var(--radius)); }
+      100% { transform: translate(-50%, 0) rotate(360deg) translateX(var(--radius)); }
+    }
+    .satellite-1 { --radius: 250px; }
+    .satellite-2 { --radius: 350px; }
+
+    /* ===== Rutas animadas ===== */
+    .route-path {
+      stroke-dasharray: 800;
+      animation: drawRoute 10s ease-out forwards infinite;
+    }
+    .route-path-delayed { animation-delay: 3s; }
+    @keyframes drawRoute {
+      0%   { stroke-dashoffset: 800; opacity: 0.5; }
+      50%  { opacity: 1; }
+      100% { stroke-dashoffset: 0; opacity: 0.3; }
+    }
+
+    /* Nodos */
+    .pin {
+      position: absolute;
+      width: 12px; height: 12px;
+      background: #34D399;
+      border-radius: 50%;
+      box-shadow: 0 0 20px #10B981, 0 0 40px #047857;
+      animation: pulsePin 2.5s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .pin-delayed { animation-delay: 1.5s; }
+    @keyframes pulsePin {
+      0%, 100% { transform: scale(1); opacity: 0.7; }
+      50%      { transform: scale(1.8); opacity: 1; }
+    }
+
+    /* ===== Teléfono S22 Ultra ===== */
+    .phone-frame {
+      width: 330px;
+      height: 690px;
+      background: linear-gradient(145deg, #0B3D2E 0%, #064E3B 30%, #065F46 60%, #022C22 100%);
+      border-radius: 28px;
+      box-shadow: 
+        0 0 0 2px #1F2937,
+        0 0 0 5px #111827,
+        0 25px 50px rgba(0,0,0,0.7),
+        inset 0 0 30px rgba(0,255,150,0.08);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+    }
+    .phone-frame::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(0,255,200,0.15) 100%);
+      pointer-events: none;
+    }
+
+    .phone-screen {
+      width: calc(100% - 12px);
+      height: calc(100% - 12px);
+      background-color: #00FF00;
+      border-radius: 20px;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
+    }
+
+    .camera-cutout {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 12px;
+      height: 12px;
+      background: #0A0A0A;
+      border-radius: 50%;
+      border: 2px solid #1F2937;
+      z-index: 25;
+    }
+  </style>
+</head>
+<body>
+  <div class="relative w-full h-full flex items-center justify-center overflow-hidden">
+    
+    <!-- Estrellas fijas generadas con JS -->
+    <div id="stars-container" class="stars"></div>
+
+    <!-- Auroras -->
+    <div class="aurora aurora-1"></div>
+    <div class="aurora aurora-2"></div>
+    <div class="aurora aurora-3"></div>
+
+    <!-- Cuadrícula -->
+    <div class="map-grid"></div>
+
+    <!-- Estrella fugaz -->
+    <div class="shooting-star"></div>
+
+    <!-- Rutas SVG -->
+    <svg class="absolute inset-0 w-full h-full opacity-20 pointer-events-none" viewBox="0 0 500 700" preserveAspectRatio="xMidYMid slice" fill="none">
+      <path class="route-path" d="M-30 600 C 150 530, 100 380, 250 340 S 400 200, 370 80 S 440 -30, 520 -20" stroke="#34D399" stroke-width="3" stroke-linecap="round"/>
+      <path class="route-path route-path-delayed" d="M-50 650 C 200 580, 180 420, 320 370 S 450 250, 430 140 S 490 30, 560 50" stroke="#2DD4BF" stroke-width="2" stroke-dasharray="600" stroke-linecap="round"/>
+      <path class="route-path" style="animation-delay: 5s;" d="M-80 500 C 180 400, 220 250, 360 200 S 480 100, 450 0" stroke="#8B5CF6" stroke-width="2.5" stroke-dasharray="700" stroke-linecap="round"/>
+    </svg>
+
+    <!-- Nodos -->
+    <div class="pin" style="top: 48%; left: 55%;"></div>
+    <div class="pin pin-delayed" style="top: 12%; left: 78%;"></div>
+    <div class="pin" style="top: 70%; left: 30%; animation-delay: 0.7s;"></div>
+    <div class="pin pin-delayed" style="top: 35%; left: 82%;"></div>
+
+    <!-- Partículas con estela -->
+    <div id="particles-container" class="particle-container"></div>
+
+    <!-- Horizonte con objetos rotando -->
+    <div class="horizon">
+      <div class="orbit orbit-1"></div>
+      <div class="orbit orbit-2"></div>
+      <div class="orbit orbit-3"></div>
+      <div class="satellite satellite-1"></div>
+      <div class="satellite satellite-2"></div>
+    </div>
+
+    <!-- Teléfono -->
+    <div class="phone-frame">
+      <div class="camera-cutout"></div>
+      <div class="phone-screen"></div>
+    </div>
+  </div>
+
+  <script>
+    // Generar estrellas fijas aleatorias
+    const starsContainer = document.getElementById('stars-container');
+    for (let i = 0; i < 120; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
+      star.style.animationDelay = Math.random() * 5 + 's';
+      star.style.width = Math.random() * 3 + 1 + 'px';
+      star.style.height = star.style.width;
+      starsContainer.appendChild(star);
+    }
+
+    // Generar partículas flotantes
+    const particlesContainer = document.getElementById('particles-container');
+    for (let i = 0; i < 25; i++) {
+      const particle = document.createElement('div');
+      particle.classList.add('particle');
+      const size = Math.random() * 8 + 3;
+      const left = Math.random() * 100;
+      const top = Math.random() * 100;
+      const duration = Math.random() * 20 + 15;
+      const delay = Math.random() * 10;
+      const dx = (Math.random() - 0.5) * 300;
+      const dy = (Math.random() - 0.5) * 300;
+      particle.style.width = size + 'px';
+      particle.style.height = size + 'px';
+      particle.style.left = left + '%';
+      particle.style.top = top + '%';
+      particle.style.setProperty('--dx', dx + 'px');
+      particle.style.setProperty('--dy', dy + 'px');
+      particle.style.setProperty('--duration', duration + 's');
+      particle.style.animationDelay = delay + 's';
+      particlesContainer.appendChild(particle);
+    }
+  </script>
+</body>
+</html>

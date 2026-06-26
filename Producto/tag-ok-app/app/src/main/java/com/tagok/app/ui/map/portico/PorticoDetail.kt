@@ -24,53 +24,52 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tagok.app.domain.model.portico.PorticoTramoType
 import com.tagok.app.domain.model.portico.PorticoType
 import com.tagok.app.domain.model.portico.TollType
 import com.tagok.app.domain.vehiculo.TipoVehiculo
-import com.tagok.app.ui.theme.Blue40
-import com.tagok.app.ui.theme.InputBackground
-import com.tagok.app.ui.theme.TextSecondary
+import com.tagok.app.ui.theme.NavyBlue
 
 @Composable
 fun PorticoDetail(
     porticoId: Long,
     onDismiss: () -> Unit,
     vehiculo: TipoVehiculo,
-    viewModel: PorticoDetailViewModel = viewModel(factory = PorticoDetailViewModel.Factory))
-{
+    viewModel: PorticoDetailViewModel = viewModel(factory = PorticoDetailViewModel.Factory)
+) {
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(porticoId) { viewModel.load(porticoId) }
 
-    LaunchedEffect(vehiculo) {
-        viewModel.setVehiculo(vehiculo)
-    }
+    LaunchedEffect(vehiculo) { viewModel.setVehiculo(vehiculo) }
 
-    BasePorticoBottomSheet(title = "Detalle del pórtico", onDismiss = onDismiss)
-    {
-        when
-        {
+    BasePorticoBottomSheet(title = "Detalle del pórtico", onDismiss = onDismiss) {
+        when {
             uiState.isLoading -> Box(
                 modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center)
-            {
-                CircularProgressIndicator(color = Blue40, modifier = Modifier.size(32.dp))
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    color = Color.White,          // indicador blanco sobre fondo NavyBlue
+                    modifier = Modifier.size(32.dp)
+                )
             }
 
             uiState.error != null -> Text(
                 text = "No se pudo cargar la información.",
                 style = MaterialTheme.typography.bodySmall,
-                color = TextSecondary
+                color = Color.White.copy(alpha = 0.7f)
             )
 
             uiState.detalle != null -> PorticoDetalleContent(
                 detalle = uiState.detalle!!,
                 tipoTarifa = uiState.tipoTarifaActual ?: "TBFP",
                 diaActual = uiState.diaActual,
-                tipoAuto = uiState.tipoVehiculo ?: "AUTO")
+                tipoAuto = uiState.tipoVehiculo ?: "AUTO"
+            )
         }
     }
 }
@@ -80,10 +79,9 @@ fun PorticoDetalleContent(
     detalle: TollType,
     tipoTarifa: String,
     diaActual: String?,
-    tipoAuto: String)
-{
-    when (detalle)
-    {
+    tipoAuto: String
+) {
+    when (detalle) {
         is PorticoType -> PorticoTypeContent(detalle, tipoTarifa, diaActual, tipoAuto)
         is PorticoTramoType -> PorticoTramoContent(detalle, tipoTarifa, diaActual, tipoAuto)
     }
@@ -92,9 +90,13 @@ fun PorticoDetalleContent(
 // ── PorticoType ──────────────────────────────────────────────────────────────
 
 @Composable
-private fun PorticoTypeContent(detalle: PorticoType, tipoTarifa: String, diaActual: String?, tipoAuto: String) {
-    Column(verticalArrangement = Arrangement.spacedBy(10.dp))
-    {
+private fun PorticoTypeContent(
+    detalle: PorticoType,
+    tipoTarifa: String,
+    diaActual: String?,
+    tipoAuto: String
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         DetalleRow("Nombre", detalle.nombre)
         DetalleRow("Autopista", detalle.autopista)
         DetalleRow("Sentido", detalle.sentido)
@@ -106,7 +108,8 @@ private fun PorticoTypeContent(detalle: PorticoType, tipoTarifa: String, diaActu
             calendario = detalle.calendario,
             tipoTarifa,
             diaActual,
-            tipoAuto)
+            tipoAuto
+        )
     }
 }
 
@@ -117,12 +120,12 @@ private fun PorticoTramoContent(
     detalle: PorticoTramoType,
     tipoTarifa: String,
     diaActual: String?,
-    tipoAuto: String)
-{
+    tipoAuto: String
+) {
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(10.dp))
-    {
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
         DetalleRow("Nombre", detalle.nombre)
         DetalleRow("Autopista", detalle.autopista)
         DetalleRow("Código", detalle.codigo)
@@ -132,15 +135,15 @@ private fun PorticoTramoContent(
         Text(
             text = "Tramos",
             style = MaterialTheme.typography.labelMedium,
-            color = TextSecondary)
+            color = Color.White.copy(alpha = 0.8f)
+        )
 
         detalle.tramos.forEach { tramo ->
             Card(
                 shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(containerColor = InputBackground))
-            {
-                Column(modifier = Modifier.padding(12.dp))
-                {
+                colors = CardDefaults.cardColors(containerColor = NavyBlue)
+            ) {
+                Column(modifier = Modifier.padding(12.dp)) {
                     DetalleRow("Entrada", "${tramo.nombreEntrada} (${tramo.entrada})")
                     DetalleRow("Salida", "${tramo.nombreSalida} (${tramo.salida})")
 

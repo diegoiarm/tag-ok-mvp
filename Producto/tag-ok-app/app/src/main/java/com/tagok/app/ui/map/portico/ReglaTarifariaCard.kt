@@ -32,14 +32,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.tagok.app.domain.model.portico.CalendarioTarifario
 import com.tagok.app.domain.model.portico.ReglaTarifaria
 import com.tagok.app.domain.model.portico.ReglaTemporal
-import com.tagok.app.ui.theme.Blue40
-import com.tagok.app.ui.theme.InputBackground
-import com.tagok.app.ui.theme.TextSecondary
+import com.tagok.app.ui.theme.NavyBlue
 
 @Composable
 fun ReglasTarifariasCard(
@@ -47,33 +46,37 @@ fun ReglasTarifariasCard(
     calendario: CalendarioTarifario,
     tipoTarifaActual: String,
     diaActual: String?,
-    tipoAuto: String)
-{
+    tipoAuto: String
+) {
     val calendarioPorTipo: Map<String, List<ReglaTemporal>> = remember(calendario) {
         calendario.reglas.groupBy { it.tipoTarifa }
     }
 
-    Text("Tarifas", style = MaterialTheme.typography.labelMedium, color = TextSecondary)
+    Text(
+        "Tarifas",
+        style = MaterialTheme.typography.labelMedium,
+        color = Color.White.copy(alpha = 0.8f)
+    )
 
     Card(
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = InputBackground))
-    {
+        colors = CardDefaults.cardColors(containerColor = NavyBlue)
+    ) {
         Column(
             modifier = Modifier
                 .heightIn(max = 200.dp)
                 .verticalScroll(rememberScrollState())
                 .padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp))
-        {
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
             reglas.forEachIndexed { index, regla ->
-                Column(verticalArrangement = Arrangement.spacedBy(4.dp))
-                {
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
                         text = regla.aplicaA.joinToString(", ").toVehiculoDisplay(),
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.SemiBold,
-                        color = TextSecondary)
+                        color = Color.White.copy(alpha = 0.7f)
+                    )
 
                     regla.valores.forEach { valor ->
                         TarifaRow(
@@ -81,18 +84,18 @@ fun ReglasTarifariasCard(
                             monto = valor.valor,
                             reglasCalendario = calendarioPorTipo[valor.tipoTarifa] ?: emptyList(),
                             esActual = valor.tipoTarifa == tipoTarifaActual && regla.aplicaA.contains(tipoAuto),
-                            diaActual = diaActual)
+                            diaActual = diaActual
+                        )
                     }
                 }
                 if (index < reglas.lastIndex)
-                    HorizontalDivider(color = InputBackground.copy(alpha = 0.5f))
+                    HorizontalDivider(color = Color.White.copy(alpha = 0.2f))
             }
         }
     }
 }
 
-private fun String.toVehiculoDisplay() = when (this)
-{
+private fun String.toVehiculoDisplay() = when (this) {
     "CAMION_REMOLQUE" -> "Camión con remolque"
     "CAMION" -> "Camión"
     "CAMIONETA" -> "Camioneta"
@@ -108,57 +111,59 @@ private fun TarifaRow(
     monto: Double,
     reglasCalendario: List<ReglaTemporal>,
     esActual: Boolean,
-    diaActual: String?)
-{
+    diaActual: String?
+) {
     var expandido by remember { mutableStateOf(esActual) }
     val tieneCalendario = reglasCalendario.isNotEmpty()
 
     val bgModifier = if (esActual)
         Modifier
             .clip(RoundedCornerShape(6.dp))
-            .background(Blue40.copy(alpha = 0.08f))
+            .background(Color.White.copy(alpha = 0.15f))
     else Modifier
 
-    Column(modifier = bgModifier)
-    {
+    Column(modifier = bgModifier) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .then(if (tieneCalendario) Modifier.clickable { expandido = !expandido } else Modifier)
                 .padding(horizontal = 6.dp, vertical = 4.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically)
-        {
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp))
-            {
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
                 Text(
                     text = tipoTarifa,
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = if (esActual) FontWeight.SemiBold else FontWeight.Normal,
-                    color = if (esActual) MaterialTheme.colorScheme.onSurface else TextSecondary)
+                    color = if (esActual) Color.White else Color.White.copy(alpha = 0.7f)
+                )
 
                 if (tieneCalendario)
                     Icon(
                         imageVector = if (expandido) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
                         contentDescription = null,
-                        tint = if (esActual) Blue40 else TextSecondary,
-                        modifier = Modifier.size(14.dp))
+                        tint = if (esActual) Color.White else Color.White.copy(alpha = 0.5f),
+                        modifier = Modifier.size(14.dp)
+                    )
             }
 
             Text(
                 text = "${monto.toInt()} CLP",
                 style = MaterialTheme.typography.bodySmall,
                 fontWeight = if (esActual) FontWeight.Bold else FontWeight.SemiBold,
-                color = Blue40)
+                color = Color.White
+            )
         }
 
-        AnimatedVisibility(visible = expandido)
-        {
+        AnimatedVisibility(visible = expandido) {
             CalendarioTarifaContent(
                 reglas = reglasCalendario,
-                diaActual = diaActual)
+                diaActual = diaActual
+            )
         }
     }
 }
@@ -166,21 +171,21 @@ private fun TarifaRow(
 @Composable
 private fun CalendarioTarifaContent(
     reglas: List<ReglaTemporal>,
-    diaActual: String?)
-{
+    diaActual: String?
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 8.dp, top = 4.dp, bottom = 6.dp),
-        verticalArrangement = Arrangement.spacedBy(6.dp))
-    {
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
         reglas.forEach { regla ->
             val esDiaActual = regla.tipoDia == diaActual
 
             val fondoFila = if (esDiaActual)
                 Modifier
                     .background(
-                        Blue40.copy(alpha = 0.1f),
+                        Color.White.copy(alpha = 0.1f),
                         RoundedCornerShape(6.dp)
                     )
                     .padding(4.dp)
@@ -188,19 +193,21 @@ private fun CalendarioTarifaContent(
 
             Column(
                 modifier = fondoFila,
-                verticalArrangement = Arrangement.spacedBy(2.dp))
-            {
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
                 Text(
                     text = regla.tipoDia,
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = if (esDiaActual) FontWeight.Bold else FontWeight.Medium,
-                    color = if (esDiaActual) Blue40 else TextSecondary)
+                    color = if (esDiaActual) Color.White else Color.White.copy(alpha = 0.7f)
+                )
 
                 regla.tramos.forEach { tramo ->
                     Text(
                         text = "${tramo.horaInicio} – ${tramo.horaFin}",
                         style = MaterialTheme.typography.labelSmall,
-                        color = TextSecondary)
+                        color = Color.White.copy(alpha = 0.6f)
+                    )
                 }
             }
         }

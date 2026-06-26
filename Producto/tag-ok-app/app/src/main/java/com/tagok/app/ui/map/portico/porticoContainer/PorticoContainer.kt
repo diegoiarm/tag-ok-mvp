@@ -1,6 +1,5 @@
 package com.tagok.app.ui.map.portico.porticoContainer
 
-import PorticoRouteDetail
 import android.content.Context
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
@@ -21,6 +20,7 @@ import com.tagok.app.domain.model.routes.Route
 import com.tagok.app.domain.model.routes.Tramo
 import com.tagok.app.domain.vehiculo.TipoVehiculo
 import com.tagok.app.ui.map.portico.PorticoDetail
+import com.tagok.app.ui.map.portico.PorticoRouteDetail
 import com.tagok.app.ui.map.portico.PorticosLayer
 import com.tagok.app.ui.map.vectorToBitmap
 
