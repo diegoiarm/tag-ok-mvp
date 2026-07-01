@@ -101,14 +101,12 @@ Los conductores urbanos enfrentan incertidumbre financiera y falta de trazabilid
 ```
 tag-ok-mvp/
 │
-├── .claude/                           # Configuración de Claude (opencode)
 ├── .github/                           # Workflows / CI
 ├── .vscode/                           # Configuración del editor
 │
 ├── .env                               # Variables de entorno (local)
 ├── .env.example                       # Plantilla de variables de entorno
 ├── .gitignore
-├── CLAUDE.md                          # Instrucciones para Claude Code
 ├── README.md
 ├── SETUP_ENTORNO.md                   # Guía de setup del entorno
 │
@@ -180,30 +178,83 @@ tag-ok-mvp/
 │   │
 │   ├── tag-ok-app/                    # App Android (Kotlin / Jetpack Compose)
 │   │   └── app/src/main/java/com/tagok/app/
-│   │       ├── data/
-│   │       │   ├── dto/               # PorticoResponse, RouteResponse, TarifaCalculada, Cruce
-│   │       │   ├── local/             # GeofenceClient, BroadcastReceiver, LocationEventBus
-│   │       │   ├── mapper/            # RouteMapper
-│   │       │   ├── remote/            # RouteApi, ApiConfig, HttpClientProvider, AuthPlugin
-│   │       │   ├── repository/        # RouteRepository, PresupuestoRepository, VehiculoRepository
-│   │       │   └── GeocodingRepository.kt
-│   │       ├── domain/
-│   │       │   ├── interfaces/        # IRouteRepository
-│   │       │   └── model/             # Point, Portico, Route
-│   │       ├── ui/
-│   │       │   ├── auth/              # LoginScreen, AuthViewModel
-│   │       │   ├── boleta/            # BoletaScreen, comparacion/
-│   │       │   ├── home/              # HomeScreen, HomeViewModel
-│   │       │   ├── map/               # MapScreen, MapViewModel (Mapbox)
-│   │       │   ├── navigation/        # NavGraph
-│   │       │   ├── perfil/            # PerfilScreen, PerfilViewModel
-│   │       │   ├── planificar/        # PlanificarViajeScreen
-│   │       │   ├── presupuesto/       # PresupuestoScreen, PresupuestoViewModel
-│   │       │   ├── register/          # RegisterScreen, RegisterViewModel
-│   │       │   ├── theme/             # Color, Theme, Type
-│   │       │   └── vehiculos/         # VehiculosScreen, VehiculosViewModel
 │   │       ├── MainActivity.kt
-│   │       └── SupabaseClient.kt
+│   │       ├── SupabaseClient.kt
+│   │       ├── data/
+│   │       │   ├── auth/              # AuthTokenProvider
+│   │       │   ├── dto/
+│   │       │   │   ├── boleta/        # BoletaDtos, ComparacionDtos
+│   │       │   │   ├── history/       # HistorialDtos
+│   │       │   │   ├── notificacion/  # NotificacionDtos
+│   │       │   │   ├── portico/       # PorticoResponse, CalendarioTarifarioResponse, TramoResponse, etc.
+│   │       │   │   ├── presupuesto/   # PresupuestoDtos
+│   │       │   │   ├── route/         # RouteRequest/Response, CobroPortico/Tramo/RutaResponse
+│   │       │   │   ├── tarifa/        # TarifaCalculadaResponse, CruceResponse
+│   │       │   │   ├── vehiculo/      # VehiculoDts
+│   │       │   │   ├── Cruce.kt
+│   │       │   │   ├── PorticoCruzadoRequest.kt
+│   │       │   │   ├── RouteSegment.kt
+│   │       │   │   ├── TarifaCalculada.kt
+│   │       │   │   └── TarifaRequest.kt
+│   │       │   ├── map/               # GeofenceBroadcastReceiver
+│   │       │   ├── mapper/            # BoletaMapper, HistorialMapper, PorticoMapper, RouteMapper, etc.
+│   │       │   ├── remote/
+│   │       │   │   ├── exceptions/    # ApiErrorType, ApiException
+│   │       │   │   ├── interfaces/    # ClientsInterfaces
+│   │       │   │   ├── ApiClient.kt
+│   │       │   │   ├── ApiConfig.kt
+│   │       │   │   ├── BoletaApi.kt, HistoryApi.kt, NotificacionApi.kt, PorticoApi.kt
+│   │       │   │   ├── PresupuestoApi.kt, RouteApi.kt, TarifaApi.kt, VehiculoApi.kt
+│   │       │   │   └── HttpClientProvider.kt
+│   │       │   ├── repository/        # BoletaRepository, HistoryRepository, PorticoRepository, RouteRepository, etc.
+│   │       │   ├── GeocodeSuggestion.kt
+│   │       │   ├── GeocodingRepository.kt
+│   │       │   ├── Presupuesto.kt
+│   │       │   └── Vehiculo.kt
+│   │       ├── di/
+│   │       │   ├── ServiceLocator.kt
+│   │       │   └── modules/           # ApiModule, AppModule, LocationModule, NetworkModule, RepositoryModule, ServiceModule, ViewModelModule
+│   │       ├── domain/
+│   │       │   ├── exceptions/        # ApplicationError, ApplicationErrorMapper
+│   │       │   ├── interfaces/        # RepositoryInterfaces
+│   │       │   ├── model/
+│   │       │   │   ├── boleta/        # BoletaModels, ComparacionModels
+│   │       │   │   ├── history/       # HistorialModels
+│   │       │   │   ├── location/      # PorticoGeofence
+│   │       │   │   ├── notificacion/  # NotificacionModels
+│   │       │   │   ├── portico/       # PorticoType, CalendarioTarifario, TramoPortico, ReglaTarifaria, etc.
+│   │       │   │   ├── presupuesto/   # PresupuestoModels
+│   │       │   │   ├── routes/        # Point, Portico, Route, Toll, Tramo
+│   │       │   │   ├── tarifa/        # TarifaCalculada, TarifaModels
+│   │       │   │   └── vehiculo/      # VehiculoModels
+│   │       │   ├── services/
+│   │       │   │   ├── interfaces/    # ServiceInterfaces, ILocationProvider
+│   │       │   │   ├── AlertaService.kt
+│   │       │   │   ├── ApplicationService.kt
+│   │       │   │   ├── BoletaService.kt
+│   │       │   │   ├── HistoryService.kt
+│   │       │   │   ├── LocationProvider.kt
+│   │       │   │   ├── PlanificarService.kt
+│   │       │   │   └── PorticoService.kt
+│   │       │   └── vehiculo/          # TipoVehiculo
+│   │       └── ui/
+│   │           ├── auth/              # LoginScreen, AuthViewModel
+│   │           ├── boleta/            # BoletaScreen, BoletaViewModel, comparacion/ (ComparacionScreen, FacturaPicker)
+│   │           ├── common/            # DateUtils, EmptyState, ErrorContent, LoadingContent, etc.
+│   │           ├── components/
+│   │           │   ├── map/           # DirectionField, MapControls, RouteResult
+│   │           │   └── routes/        # TollItems
+│   │           ├── historial/         # HistorialScreen, HistorialViewModel, components/ (calendar, day, month, year, shared), model/, utils/
+│   │           ├── home/              # HomeScreen, HomeViewModel
+│   │           ├── map/               # MapScreen, MapViewModel, portico/ (PorticoContainer, PorticoDetail, PorticoLayer, etc.), route/ (RouteLayer)
+│   │           ├── navigation/        # NavGraph
+│   │           ├── notificaciones/    # NotificacionesScreen, NotificacionesViewModel
+│   │           ├── perfil/            # PerfilScreen, PerfilViewModel
+│   │           ├── planificar/        # PlanificarViajeScreen, PlanificarViajeViewModel, RouteBottomCard
+│   │           ├── presupuesto/       # PresupuestoScreen, PresupuestoViewModel
+│   │           ├── register/          # RegisterScreen, RegisterViewModel
+│   │           ├── theme/             # BrandColors, Color, Theme, Type
+│   │           └── vehiculos/         # VehiculosScreen, VehiculosViewModel
 │   │
 │   ├── supabase/                      # Configuración y edge functions
 │   │   ├── config.toml
@@ -372,6 +423,48 @@ Proyecto desarrollado bajo metodología **Scrum** + **Aprendizaje Basado en Proy
 | Paulina Troncoso | UX/UI y Desarrollo Móvil |
 | Ricardo Sánchez | Backend y Base de Datos |
 | Diego Rodríguez | Frontend Web y QA |
+
+---
+
+> **Recomendación sobre osm-importer:** La importación de datos OSM es un proceso intensivo que solo debe ejecutarse una vez durante la configuración inicial del entorno. Los archivos JSON de calles por comuna ya están incluidos en el repositorio y el script SQL `calles.sql` (~54 MB) contiene los datos precargados. Evita re-ejecutar el importador a menos que necesites actualizar la red vial. El contenedor Docker de `osm-importer` está excluido del arranque normal (`docker compose up`) por esta razón.
+>
+> **Pipeline de ejecución:**
+>
+> 1. **`JsonFileScanner`** — Escanea el directorio `datos-calles/` en busca de archivos JSON
+> 2. **`DatabaseInitializer`** — Ejecuta los scripts SQL en orden:
+>    - `00_clean_tables.sql` — Elimina tablas `edge` y `edge_vertices_pgr` si existen
+>    - `01_extensions.sql` — Habilita PostGIS y pgRouting
+>    - `02_edge_table.sql` — Crea la tabla `edge` (id, element_id, name, type, surface, lanes, maxspeed, oneway, geometry, cost, reverse_cost, source, target)
+>    - `03_indexes.sql` — Crea índices GIST (geometry), source, target, element_id, type
+> 3. **`OsmJsonParser`** — Parsea el JSON OSM, filtra por bounding box de Santiago y transforma cada elemento en una fila en la tabla `edge`
+> 4. **`RoutingInitializer`** — Ejecuta los scripts finales:
+>    - `04_create_topology.sql` — `pgr_createTopology('edge', ...)` construye el grafo de pgRouting (aprox. 1-2 min)
+>    - `05_cost.sql` — Calcula `cost` y `reverse_cost` para cada arista
+>
+> **Cómo se calcula el costo (05_cost.sql):**
+>
+> ```sql
+> cost = (longitud_geografia / (velocidad_kmh * 1000 / 3600)) * factor_tipo_via
+> ```
+>
+> | Tipo de vía | Velocidad (km/h) | Factor |
+> |-------------|:-:|:-:|
+> | motorway, motorway_link | 100 / 60 | 0.5 |
+> | trunk, trunk_link | 80 / 50 | 0.7 |
+> | primary, primary_link | 60 / 40 | 2.5 |
+> | secondary, secondary_link | 50 / 30 | 2.5 |
+> | tertiary, tertiary_link | 40 / 20 | 2.5 |
+> | residential | 30 | 2.5 |
+> | service | 20 | 2.5 |
+> | unclassified | 30 | 2.5 |
+>
+> **Cómo editar los costos:** Modifica directamente `05_cost.sql` en `Producto/osm-importer/src/main/resources/database-scripts/`. Puedes cambiar las velocidades (`speed_kmh`) o los factores multiplicadores (`WHEN type = '...' THEN X`) para que el algoritmo de ruteo favorezca o evite ciertos tipos de vía. Si el importador ya se ejecutó, puedes actualizar los costos manualmente con:
+>
+> ```sql
+> UPDATE edge SET cost = ... , reverse_cost = ... ;
+> ```
+>
+> `reverse_cost` se asigna como `-1` en vías de un solo sentido (`oneway = 1`) o igual al `cost` si son bidireccionales.
 
 ---
 
