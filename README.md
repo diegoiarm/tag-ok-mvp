@@ -18,48 +18,63 @@ Los conductores urbanos enfrentan incertidumbre financiera y falta de trazabilid
 
 ## Componentes del sistema
 
-### Gateway-Service - Punto de entrada único al backend
-`Java 21 / Spring Boot 3 / Spring Gateway Webflux / Netty` - Puerto `8080`
+### Gateway-Service — Punto de entrada único al backend
+
+```java
+// Java 21 / Spring Boot 3 / Spring Gateway Webflux / Netty — Puerto 8080
+```
 
 - Enrruta peticiones a los servicios
 - Integra OAuth, con Supabase como servidor, para autenticar peticiones
-- Actua como mediador entre peticiones para APIs externas
+- Actúa como mediador entre peticiones para APIs externas
 
-### routes-service - API de rutas y tarifas
-`Java 21 / Spring Boot 3 / PostgreSQL + PostGIS + pgRouting / Tomcat`
+### routes-service — API de rutas y tarifas
 
-- Calcula rutas óptimas en Santiago usando el algoritmo pgr_dijkstra sobre datos OSM (50k+ segmentos de calle).
-- Determina qué pórticos TAG cruza una ruta y calcula el costo según calendario tarifario y tipo de vehículo.
-- Expone pórticos, autopistas y tarifas mediante una API REST.
-- Soporta dos estrategias de cobro: por pórtico cruzado y por tramo recorrido.
+```java
+// Java 21 / Spring Boot 3 / PostgreSQL + PostGIS + pgRouting / Tomcat
+```
 
-### history-service - Servicio de historial
-`Java 21 / Spring Boot 3 / MongoDB / Tomcat`
+- Calcula rutas óptimas en Santiago usando el algoritmo `pgr_dijkstra` sobre datos OSM (50k+ segmentos de calle)
+- Determina qué pórticos TAG cruza una ruta y calcula el costo según calendario tarifario y tipo de vehículo
+- Expone pórticos, autopistas y tarifas mediante una API REST
+- Soporta dos estrategias de cobro: por pórtico cruzado y por tramo recorrido
 
-- Persiste el historial de cruces de pórticos por usuario.
-- Guarda rutas calculadas con sus detalles de cobro.
-- Base de datos documental para flexibilidad en el esquema de historial.
+### history-service — Servicio de historial
 
-### routes-ui - Panel web administrativo
-`React 19 / TypeScript / Vite / Leaflet` - Puerto `5173`
+```java
+// Java 21 / Spring Boot 3 / MongoDB / Tomcat
+```
 
-- Mapa interactivo con visualización de pórticos y rutas calculadas (Leaflet + GeoJSON).
-- Gestión de autopistas, pórticos y tarifas.
-- Autenticación con Supabase Auth.
-- Data fetching con TanStack React Query.
+- Persiste el historial de cruces de pórticos por usuario
+- Guarda rutas calculadas con sus detalles de cobro
+- Base de datos documental para flexibilidad en el esquema de historial
+
+### routes-ui — Panel web administrativo
+
+```typescript
+// React 19 / TypeScript / Vite / Leaflet — Puerto 5173
+```
+
+- Mapa interactivo con visualización de pórticos y rutas calculadas (Leaflet + GeoJSON)
+- Gestión de autopistas, pórticos y tarifas
+- Autenticación con Supabase Auth
+- Data fetching con TanStack React Query
 
 ### tag-ok-app — Aplicación móvil para conductores
-`Kotlin / Jetpack Compose / Android`
 
-- Planificación de viajes con cálculo de costo TAG antes de salir.
-- Mapa interactivo con rutas y pórticos activos.
-- Gestión de vehículos y presupuestos personales.
-- Registro de historial de cruces y gastos.
-- Autenticación con Supabase Auth.
+```kotlin
+// Kotlin / Jetpack Compose / Android
+```
 
-### Broker de eventos ApacheKafka
+- Planificación de viajes con cálculo de costo TAG antes de salir
+- Mapa interactivo con rutas y pórticos activos
+- Gestión de vehículos y presupuestos personales
+- Registro de historial de cruces y gastos
+- Autenticación con Supabase Auth
 
-- Comunica servicios internamente de manera asincrona, desacoplandolos y permitiendo escalabilidad horizontal
+### Broker de eventos Apache Kafka
+
+- Comunica servicios internamente de manera asíncrona, desacoplándolos y permitiendo escalabilidad horizontal
 - Un evento tiene un productor, pero puede tener muchos consumidores
 
 ---
@@ -70,13 +85,13 @@ Los conductores urbanos enfrentan incertidumbre financiera y falta de trazabilid
 |------|-----------|
 | App móvil | Kotlin, Jetpack Compose, Material 3 |
 | Panel web | React 19, TypeScript, Vite, Leaflet, TanStack Query |
-| API gateway | Java 21, Spring Boot 3, SpringWebFlux |
-| API principal | Java 21, Spring Boot 3, JPA/Hibernate |
-| API historial | Java 21, Spring Boot 3, Spring Data MongoDB |
+| API gateway | `Java 21`, Spring Boot 3, Spring WebFlux |
+| API principal | `Java 21`, Spring Boot 3, JPA/Hibernate |
+| API historial | `Java 21`, Spring Boot 3, Spring Data MongoDB |
 | Base de datos | PostgreSQL + PostGIS + pgRouting |
 | Historial | MongoDB |
 | Autenticación | Supabase Auth |
-| Brocker de eventos | Apache Kafka + Zookeeper |
+| Broker de eventos | Apache Kafka + Zookeeper |
 | Infraestructura local | Docker Compose |
 
 ---
@@ -86,15 +101,31 @@ Los conductores urbanos enfrentan incertidumbre financiera y falta de trazabilid
 ```
 tag-ok-mvp/
 │
-├── Producto/                          # Todo el código fuente
-│   ├── docker-compose.yml             # PostgreSQL+PostGIS, pgAdmin, MongoDB
+├── .claude/                           # Configuración de Claude (opencode)
+├── .github/                           # Workflows / CI
+├── .vscode/                           # Configuración del editor
+│
+├── .env                               # Variables de entorno (local)
+├── .env.example                       # Plantilla de variables de entorno
+├── .gitignore
+├── CLAUDE.md                          # Instrucciones para Claude Code
+├── README.md
+├── SETUP_ENTORNO.md                   # Guía de setup del entorno
+│
+├── Producto/                          # Código fuente del producto
+│   ├── docker-compose.yml             # PostgreSQL+PostGIS, pgAdmin, MongoDB, Kafka
+│   │
 │   ├── porticos/                      # Datos JSON de pórticos por autopista
 │   │   ├── autopistaCentral.json
 │   │   ├── costaneraNorte.json
+│   │   ├── porticoVacio.json
 │   │   ├── vespucioNorte.json
 │   │   ├── vespucioOrienteI.json
-│   │   ├── vespucioSur.json
-│   │   └── ...
+│   │   └── vespucioSur.json
+│   │
+│   ├── gateway-service/               # API Gateway (Spring Cloud Gateway, WebFlux)
+│   │   └── src/main/java/com/tagok/gateway_service/
+│   │       └── config/                # SecurityConfig.java, CorsConfig
 │   │
 │   ├── routes-service/                # API REST — rutas y tarifas
 │   │   └── src/main/java/com/tagok/routes_service/
@@ -104,10 +135,10 @@ tag-ok-mvp/
 │   │       │   ├── calendario/        # CalendarioTarifario, RangoHorario, ReglaTemporal, TipoDia
 │   │       │   ├── portico/           # Portico
 │   │       │   ├── tarifa/            # ReglaTarifaria, Tarifa, TarifaCalculada, CalculadorTarifa
-│   │       │   │   └── calculo/       # Strategy pattern: CalculadorPorPortico, CalculadorPorTramo
+│   │       │   │   └── calculo/       # Strategy: CalculadorPorPortico, CalculadorPorTramo
 │   │       │   ├── tramo/             # Tramo
-│   │       │   └── vehiculo/          # TipoVehiculo (MOTO, AUTO, CAMIONETA, BUS, CAMION, CAMION_REMOLQUE)
-│   │       ├── dto/                   # Request y Response por recurso
+│   │       │   └── vehiculo/          # TipoVehiculo
+│   │       ├── dto/                   # Request / Response
 │   │       ├── repository/            # AutopistaRepository, PorticoRepository, RouteRepository (pgRouting)
 │   │       └── service/
 │   │           ├── application/       # AutopistaService, PorticoService, RouteService, TarifaService
@@ -115,74 +146,109 @@ tag-ok-mvp/
 │   │
 │   ├── history-service/               # Servicio de historial (MongoDB)
 │   │   └── src/main/java/com/tagok/history_service/
-│   │       ├── controller/            # HistorialController, RutaGuardadaController
-│   │       ├── domain/                # Historial, RutaGuardada, PorticoCruce, PorticoRuta, Segmento, Vehiculo
+│   │       ├── controller/            # HistorialController, RutaGuardadaController, BoletaController
+│   │       ├── domain/                # Historial, RutaGuardada, PorticoCruce, Boleta
+│   │       ├── ia/                    # ExtractorFacturaIA (Gemini adapter)
 │   │       ├── repository/            # HistorialRepository, RutaGuardadaRepository
-│   │       └── service/               # HistorialService, RutaGuardadaService
+│   │       └── service/               # HistorialService, RutaGuardadaService, ComparadorFacturas
 │   │
-│   ├── osm-importer/                  # Herramienta de importación de datos OSM
+│   ├── osm-importer/                  # Importación de datos OSM → PostGIS
 │   │   └── src/main/
 │   │       ├── java/com/roony/
-│   │       │   ├── domain/            # BoundingBox, BoundingBoxFilter, Element, Geometry, Tags
+│   │       │   ├── domain/            # BoundingBox, Element, Geometry, Tags
 │   │       │   └── infrastructure/
 │   │       │       ├── database/      # DatabaseInitializer, RoutingInitializer
 │   │       │       ├── filesystem/    # JsonFileScanner
-│   │       │       ├── middleware/    # Pipeline de procesamiento (BoundsFilter, SqlExport)
+│   │       │       ├── middleware/    # Pipeline (BoundsFilter, SqlExport)
 │   │       │       └── parser/        # OsmJsonParser, ElementMapper
 │   │       └── resources/
-│   │           ├── database-scripts/  # SQL secuencial: extensiones, edge table, topología, costos
-│   │           └── datos-calles/      # JSON OSM por comuna (Cerrillos, La Florida, Las Condes, etc.)
+│   │           ├── database-scripts/  # SQL: extensiones, edge table, topología, costos
+│   │           └── datos-calles/      # JSON OSM por comuna
 │   │
-│   ├── routes-ui/                     # Panel web administrativo (React + TypeScript)
+│   ├── routes-ui/                     # Panel web (React 19 + TypeScript + Vite)
 │   │   └── src/
 │   │       ├── api/                   # axios.ts, porticos.ts, routes.ts
 │   │       ├── app/
-│   │       │   ├── context/           # AuthContext.tsx (Supabase)
+│   │       │   ├── context/           # AuthContext.tsx
 │   │       │   ├── layout/            # MainLayout.tsx
 │   │       │   ├── lib/               # supabase.ts
 │   │       │   └── pages/             # Home.tsx, Login.tsx
-│   │       ├── components/            # Mapa.tsx, PorticoMark.tsx, RouteLayer.ts, CalendarioTarifario.tsx, CobroMark.tsx
-│   │       ├── features/
-│   │       │   └── admin/pages/       # AdminPage.tsx, UsuariosPage.tsx
-│   │       ├── hooks/                 # usePorticos, usePortico, useRoute, useCalles, useUsuarios
+│   │       ├── components/            # Mapa.tsx, PorticoMark, RouteLayer, CalendarioTarifario
+│   │       ├── features/admin/pages/  # AdminPage.tsx, UsuariosPage.tsx
+│   │       ├── hooks/                 # usePorticos, useRoute, useUsuarios
 │   │       └── types/                 # types.ts
 │   │
-│   └── tag-ok-app/                    # App móvil Android (Kotlin / Jetpack Compose)
-│       └── app/src/main/java/com/tagok/app/
-│           ├── data/
-│           │   ├── dto/               # PorticoResponse, RouteResponse, TarifaCalculada, Cruce, etc.
-│           │   ├── local/             # GeofenceClient, GeofenceBroadcastReceiver, LocationEventBus
-│           │   ├── mapper/            # RouteMapper
-│           │   ├── remote/            # RouteApi, HttpClientProvider
-│           │   ├── repository/        # RouteRepository
-│           │   ├── GeocodingRepository.kt
-│           │   ├── PresupuestoRepository.kt
-│           │   └── VehiculoRepository.kt
-│           ├── domain/
-│           │   ├── interfaces/        # IRouteRepository
-│           │   └── model/             # Point, Portico, Route
-│           ├── ui/
-│           │   ├── auth/              # LoginScreen, AuthViewModel
-│           │   ├── boleta/            # BoletaScreen
-│           │   ├── home/              # HomeScreen, HomeViewModel
-│           │   ├── map/               # MapScreen, MapViewModel
-│           │   ├── navigation/        # NavGraph
-│           │   ├── perfil/            # PerfilScreen, PerfilViewModel
-│           │   ├── planificar/        # PlanificarViajeScreen
-│           │   ├── presupuesto/       # PresupuestoScreen, PresupuestoViewModel
-│           │   ├── register/          # RegisterScreen, RegisterViewModel
-│           │   ├── theme/             # Color, Theme, Type
-│           │   └── vehiculos/         # VehiculosScreen, VehiculosViewModel
-│           ├── MainActivity.kt
-│           └── SupabaseClient.kt
+│   ├── tag-ok-app/                    # App Android (Kotlin / Jetpack Compose)
+│   │   └── app/src/main/java/com/tagok/app/
+│   │       ├── data/
+│   │       │   ├── dto/               # PorticoResponse, RouteResponse, TarifaCalculada, Cruce
+│   │       │   ├── local/             # GeofenceClient, BroadcastReceiver, LocationEventBus
+│   │       │   ├── mapper/            # RouteMapper
+│   │       │   ├── remote/            # RouteApi, ApiConfig, HttpClientProvider, AuthPlugin
+│   │       │   ├── repository/        # RouteRepository, PresupuestoRepository, VehiculoRepository
+│   │       │   └── GeocodingRepository.kt
+│   │       ├── domain/
+│   │       │   ├── interfaces/        # IRouteRepository
+│   │       │   └── model/             # Point, Portico, Route
+│   │       ├── ui/
+│   │       │   ├── auth/              # LoginScreen, AuthViewModel
+│   │       │   ├── boleta/            # BoletaScreen, comparacion/
+│   │       │   ├── home/              # HomeScreen, HomeViewModel
+│   │       │   ├── map/               # MapScreen, MapViewModel (Mapbox)
+│   │       │   ├── navigation/        # NavGraph
+│   │       │   ├── perfil/            # PerfilScreen, PerfilViewModel
+│   │       │   ├── planificar/        # PlanificarViajeScreen
+│   │       │   ├── presupuesto/       # PresupuestoScreen, PresupuestoViewModel
+│   │       │   ├── register/          # RegisterScreen, RegisterViewModel
+│   │       │   ├── theme/             # Color, Theme, Type
+│   │       │   └── vehiculos/         # VehiculosScreen, VehiculosViewModel
+│   │       ├── MainActivity.kt
+│   │       └── SupabaseClient.kt
+│   │
+│   ├── supabase/                      # Configuración y edge functions
+│   │   ├── config.toml
+│   │   ├── supabase-schema.sql
+│   │   └── functions/
+│   │       ├── list-users/            # Edge function: listar usuarios
+│   │       ├── update-user-status/    # Edge function: cambiar estado
+│   │       └── update-user-role/      # Edge function: cambiar rol
+│   │
+│   ├── kafka/                         # Configuración de Kafka
+│   │   ├── init-topics.sh
+│   │   └── server.properties
+│   │
+│   ├── scripts/                       # Scripts de simulación
+│   │   ├── seed-alertas.ps1
+│   │   ├── simular-boleta-vespucio-sur.ps1
+│   │   ├── simular-cruces.ps1
+│   │   └── verificar-alertas.ps1
+│   │
+│   └── sql/                           # Scripts SQL auxiliares
+│       ├── asignarPorticoAEdge.sql
+│       ├── calles.sql
+│       ├── createTopology.sql
+│       ├── porticosTest.sql
+│       ├── script.sql
+│       └── vespucioNorte.json
 │
 ├── Documentación/
 │   ├── Aseguramiento de Calidad y Planificación/
 │   │   └── Carta Gantt.xlsx
-│   ├── Definición Técnica y Configuración/
-│   └── Diagramas Técnicos de Estructura y Lógica/
-│       ├── Diagrama de Casos de Uso.png
-│       └── Diagrama de Ishikawa - Tag OK.png
+│   ├── Diagramas Técnicos de Estructura y Lógica/
+│   │   ├── Diagrama de Arquitectura.png
+│   │   ├── Diagrama de Casos de Uso.png
+│   │   └── Diagrama de Ishikawa - Tag OK.png
+│   ├── Manual de Usuario - Administrador.pdf
+│   ├── Manual de Usuario - Conductor.pdf
+│   ├── Manual de usuario - TAG OK Admin Web.md
+│   ├── Manual de usuario - TAG OK.md
+│   ├── Plan de Despliegue.pdf
+│   ├── Plan de Pruebas.pdf
+│   ├── Plan Implementación ambiente desarrollo backend.pdf
+│   ├── Plan Implementación ambiente desarrollo móvil.pdf
+│   ├── Plan Implementación ambiente desarrollo web.pdf
+│   ├── Reporte de Plan de Pruebas Ejecutadas.html
+│   └── Resumen Estado de Avance Casos de Uso.xlsx
 │
 └── Gestión/
     ├── 1.1.2 Documento de registro de definición e identificación del proyecto.pdf
@@ -191,81 +257,109 @@ tag-ok-mvp/
 
 ---
 
-## API endpoints principales
+## API endpoints
 
----
+El punto de entrada es el **API gateway** (`gateway-service`, puerto `8080`). Enrruta según el prefijo de la ruta:
 
-El sistema cuenta como punto de entrada el API gateway (gateway-service), las peticiones se envian a este servicio y es quien
-está encargado de enrrutarlas.
+| Ruta base | Servicio destino |
+|-----------|-----------------|
+| `/api/routes/**` | routes-service |
+| `/api/history/**` | history-service |
 
-El servicio expone el puerto 8080, contando con rutas
+> **Seguridad:** Actualmente el gateway usa `.permitAll()` para desarrollo. Valida el JWT vía `oauth2ResourceServer` pero no rechaza peticiones sin token. En producción se puede restringir cambiando a `.anyExchange().authenticated()` en `SecurityConfig.java`.
 
-| /api/routes/** | Servicio de rutas |
-| /api/history/** | Servicio de historial |
+La documentación detallada de cada endpoint (modelos, métodos, respuestas) está en Swagger/OpenAPI:
 
-Además de contar con la documentación generada por Swagger/OpenAPI
-url local, del recurso: http://localhost:8080/swagger-ui/index.html
-
-Esta implementación mapea tanto los modelos, rutas de recursos, metodos http y respuestas para cada servicio, funcionando como
-documentación del api.
+```
+http://localhost:8080/swagger-ui/index.html
+```
 
 ---
 
 ## Requisitos previos
 
-- Docker Desktop
-- Java 21 + Maven
-- Android Studio (para la app móvil)
+- **Docker Desktop**
+- **Java 21** + Maven
+- **Android Studio** (para la app móvil)
 
 ---
 
-## Esquema de supabase
+## Esquema de Supabase
 
-- El esquema de tablas que usa supabase se encuentra en ./Producto/supabase/supabase-schema.sql
+- El esquema de tablas que usa Supabase se encuentra en `./Producto/supabase/supabase-schema.sql`
+- Contiene las tablas necesarias junto a las funciones de presupuesto (edge functions)
 
-- Te da las tablas necesarias junto a las funciones de presupuesto (edge functions)
-
+---
 
 ## Notas de configuración
 
-Antes de iniciar el sistema, se debe hacer una configuración en el archivo de entorno '.env', donde se colocaran las urls de autenticacion, apis externas y API KEYS
+Antes de iniciar el sistema, se debe hacer una configuración en el archivo de entorno **`.env`**, donde se colocarán las URLs de autenticación, APIs externas y API keys.
 
 ---
 
 ## Instalación y ejecución
 
-El sistema se encuentra bajo docker, cuenta con un archivo docker-compose.yml que gestiona la construcción de imagenes,
-para la ejecución dentro de una máquina.
+El sistema se encuentra bajo Docker, cuenta con un archivo `docker-compose.yml` que gestiona la construcción de imágenes para la ejecución dentro de una máquina.
 
-- Lo principal es Tener Docker Desktop abierto y ejecutandose en el equipo, junt con la compatibilidad de virtualización.
+1. Tener **Docker Desktop** abierto y ejecutándose en el equipo, junto con la compatibilidad de virtualización.
 
-- Instalar SDK, Maven para compilar proyectos java.
+2. Instalar **SDK**, **Maven** para compilar proyectos Java.
 
-- Ir a la carpeta ./tag-ok-mvp/Producto, aqui se encuentra el archivo docker-compose.yml, aqui se abren dos aristas.
+3. Ir a la carpeta `./tag-ok-mvp/Producto`, aquí se encuentra el archivo `docker-compose.yml`. Se abren dos aristas:
 
-- -- Inicializar solo el backend: 'docker compose up gateway-service -d'
-- -- Inicializar el dashboard + backend: 'docker compose up frontend -d'
+   - Inicializar solo el backend:
+     ```bash
+     docker compose up gateway-service -d
+     ```
 
-- El archivo docker, esta configurado para levantar todas las dependencias.
+   - Inicializar el dashboard + backend:
+     ```bash
+     docker compose up frontend -d
+     ```
 
-- El sistema, necesita los datos de las calles de santiago y pórticos. Se encuentran en el repositorio.
+4. El archivo Docker está configurado para levantar todas las dependencias.
 
-- Para la carga de pórticos, se puede hacer desde el Dashboard de administración, cargando todos los archivos json, en ./Producto/porticos, el sistema solo aceptara los que tengan el formato requerido y se hará la carga masiva.
+5. El sistema necesita los datos de las calles de Santiago y pórticos. Se encuentran en el repositorio.
 
-- Para cargar las calles se necesita de osm-importer, lo que realiza este programa, recoge un archivo de exportación en formato JSON, de Open Street Maps, lo formatea a los datos que necesitamos, y los importa a la base de datos del servicio de rutas. Para compliarlo se debe ir a ./Producto/osm-importer, alli:
+6. Para la carga de pórticos, se puede hacer desde el Dashboard de administración, cargando todos los archivos JSON en `./Producto/porticos`. El sistema solo aceptará los que tengan el formato requerido y se hará la carga masiva.
 
-- -- 'mvn compile' <-- Compila el proyecto
-- -- 'mvn dependency:copy-dependencies' <-- Carga las dependencias
-- -- 'java -cp "target/classes;target/dependency/*" com.roony.Main' <-- Ejecuta el archivo compilado,
+   También se puede hacer mediante la API directamente (curl / Postman):
 
-- se podría tener el JAR, les comparto el código fuente si se necesitara a futuro alguna modificación =) 
+   ```bash
+   POST /api/routes/v1/porticos/bulk
+   Content-Type: application/json
+   ```
 
-- Con estos dos pasos el sistema ya esta listo para empezar a funcionar.
+   ```json
+   [
+     {
+       "nombre": "string",
+       "ubicacion": { "lat": -33.1234, "lng": -70.5678 },
+       "activo": true,
+       "autopistaId": 1,
+       "tipoCobro": "POR_PORTICO",
+       "tramoId": null
+     }
+   ]
+   ```
 
+   > `tipoCobro`: `POR_PORTICO` | `POR_TRAMO` — `tramoId` solo es requerido si `tipoCobro` es `POR_TRAMO`.
 
-### 5. App Android
+7. Para cargar las calles se necesita de `osm-importer`. Este programa recoge un archivo de exportación en formato JSON de Open Street Maps, lo formatea a los datos que necesitamos y los importa a la base de datos del servicio de rutas. Para compilarlo ir a `./Producto/osm-importer`:
 
-Abrir `Producto/tag-ok-app` en Android Studio y ejecutar en emulador o dispositivo físico.
+   ```bash
+   mvn compile
+   mvn dependency:copy-dependencies
+   java -cp "target/classes;target/dependency/*" com.roony.Main
+   ```
+
+   > Se podría tener el JAR, comparto el código fuente si se necesitara a futuro alguna modificación =)
+
+8. Con estos dos pasos el sistema ya está listo para empezar a funcionar.
+
+### App Android
+
+Abrir `Producto/tag-ok-app` en **Android Studio** y ejecutar en emulador o dispositivo físico.
 
 ---
 
