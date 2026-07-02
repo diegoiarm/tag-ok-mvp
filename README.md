@@ -424,6 +424,14 @@ El sistema se encuentra bajo Docker, cuenta con un archivo `docker-compose.yml` 
 
    > `10.0.2.2` es la dirección especial del emulador Android que resuelve al `localhost` del host. Si usas dispositivo físico, reemplázala por la IP local de la máquina donde corre el gateway (ej. `192.168.1.100`).
 
+3. El **token de Mapbox** se configura en `Producto/tag-ok-app/local.properties` (archivo ignorado por git):
+
+   ```properties
+   MAPBOX_ACCESS_TOKEN=pk.xxxxx
+   ```
+
+   El `build.gradle.kts` lo lee desde `local.properties` y lo inyecta en `BuildConfig.MAPBOX_ACCESS_TOKEN`, usado en `MainActivity.kt:22`. Como respaldo, también puede definirse en `~/.gradle/gradle.properties` de forma global. No está hardcodeado en el código Kotlin, pero queda en el proyecto local de cada desarrollador. Solicita el token gratis en [mapbox.com](https://account.mapbox.com/access-tokens/).
+
 ---
 
 ## Equipo de desarrollo
