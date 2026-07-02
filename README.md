@@ -410,7 +410,19 @@ El sistema se encuentra bajo Docker, cuenta con un archivo `docker-compose.yml` 
 
 ### App Android
 
-Abrir `Producto/tag-ok-app` en **Android Studio** y ejecutar en emulador o dispositivo físico.
+1. Abrir `Producto/tag-ok-app` en **Android Studio** y ejecutar en emulador o dispositivo físico.
+
+2. Antes de compilar, configurar la URL del gateway en `Producto/tag-ok-app/app/src/main/java/com/tagok/app/data/remote/ApiConfig.kt`:
+
+   ```kotlin
+   // Para ejecutar en emulador (localhost de la máquina anfitriona):
+   const val BASE_URL = "http://10.0.2.2:8080/api"
+
+   // Para ejecutar en dispositivo físico con el backend en la misma red:
+   // const val BASE_URL = "http://<IP_LOCAL>:8080/api"
+   ```
+
+   > `10.0.2.2` es la dirección especial del emulador Android que resuelve al `localhost` del host. Si usas dispositivo físico, reemplázala por la IP local de la máquina donde corre el gateway (ej. `192.168.1.100`).
 
 ---
 
