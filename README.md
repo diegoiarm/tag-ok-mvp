@@ -374,6 +374,8 @@ El sistema se encuentra bajo Docker, cuenta con un archivo `docker-compose.yml` 
 
 6. Para la carga de pórticos, se puede hacer desde el Dashboard de administración, cargando todos los archivos JSON en `./Producto/porticos`. El sistema solo aceptará los que tengan el formato requerido y se hará la carga masiva.
 
+   > ⚠ Los archivos JSON en `./Producto/porticos/` fueron creados y digitados manualmente, por lo que están sujetos a errores humanos (coordenadas, códigos, tarifas, etc.). Verifica los datos antes de usarlos en producción.
+
    También se puede hacer mediante la API directamente (curl / Postman):
 
    ```bash
@@ -485,6 +487,10 @@ Proyecto desarrollado bajo metodología **Scrum** + **Aprendizaje Basado en Proy
 > ```
 >
 > `reverse_cost` se asigna como `-1` en vías de un solo sentido (`oneway = 1`) o igual al `cost` si son bidireccionales.
+
+---
+
+La descripción detallada de cada modelo de dominio (rutas e historial) con sus campos y tipos está en [`MODELOS.md`](./MODELOS.md).
 
 ---
 
